@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Bridge Hydraulic Calculator — PWD Field Tool</title>
+<style>
+/* ═══════════════════════════════════════════════
+   BRIDGE HYDRAULIC CALCULATOR
+   Palette: deep teal infrastructure + orange signal
+   Signature: vertical calculation pipeline
+   Mobile-first, printable output
+═══════════════════════════════════════════════ */
+:root {
+  --teal:     #0b3d52;
+  --teal2:    #1a5570;
+  --teal3:    #2a7090;
+  --orange:   #f07c1e;
+  --orange-lt:#fff4e8;
+  --sky:      #4a9ab5;
+  --sky-lt:   #e8f4f8;
+  --green:    #1a7a4a;
+  --green-lt: #e6f5ec;
+  --red:      #c0392b;
+  --red-lt:   #fdf0ee;
+  --bg:       #f0f4f6;
+  --surface:  #ffffff;
+  --line:     #cdd8e0;
+  --muted:    #5a7080;
+  --ink:      #0d2535;
+  --mono:     'Courier New', monospace;
+  --sans:     -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--bg); color: var(--ink); font-size: 14.5px; line-height: 1.5; }
+
+/* ── HEADER ── */
+.app-header {
+  background: var(--teal); color: #fff;
+  padding: 12px 14px 0; position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+.hdr-top { display: flex; align-items: center; gap: 10px; padding-bottom: 10px; }
+.hdr-icon { font-size: 26px; flex-shrink: 0; }
+.hdr-text h1 { font-size: 13.5px; font-weight: 700; line-height: 1.2; }
+.hdr-text p  { font-size: 10px; color: #8ab8cc; margin-top: 1px; }
+
+/* ── PROGRESS BAR ── */
+.progress-bar { height: 3px; background: rgba(255,255,255,.15); }
+.progress-fill { height: 100%; background: var(--orange); transition: width .3s; }
+
+/* ── PIPELINE TABS ── */
+.pipe-tabs {
+  display: flex; gap: 0; overflow-x: auto; background: var(--teal2);
+  -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px;
+}
+.pipe-tabs::-webkit-scrollbar { display: none; }
+.ptab {
+  flex-shrink: 0; padding: 8px 12px; font-size: 11px; font-weight: 600;
+  color: #6ea8c0; background: transparent; border: none;
+  border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;
+  transition: color .1s, border-color .1s;
+}
+.ptab.active { color: var(--orange); border-bottom-color: var(--orange); }
+.ptab.done   { color: #4ab890; }
+
+/* ── MAIN CONTENT ── */
+.main { max-width: 700px; margin: 0 auto; padding: 0 0 80px; }
+
+/* ── HERO ── */
+.calc-hero {
+  background: linear-gradient(160deg, var(--teal) 0%, var(--teal2) 100%);
+  padding: 20px 16px; color: #fff; text-align: center;
+}
+.calc-hero h2 { font-size: 19px; font-weight: 800; margin-bottom: 4px; }
+.calc-hero p  { font-size: 12px; color: #8ab8cc; line-height: 1.55; }
+.chain-preview {
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px; margin-top: 14px; flex-wrap: wrap;
+}
+.cp-step {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  border-radius: 5px; padding: 4px 8px; font-size: 10px; color: #a8d0e0;
+  font-weight: 600; white-space: nowrap;
+}
+.cp-arrow { color: var(--orange); font-size: 12px; }
+
+/* ── STEP CARD ── */
+.step-card {
+  background: var(--surface); border-radius: 11px;
+  margin: 10px 12px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07);
+  overflow: hidden;
+  border-left: 4px solid var(--line);
+  transition: border-color .15s;
+}
+.step-card.active  { border-left-color: var(--orange); }
+.step-card.done    { border-left-color: var(--green); }
+.step-card.locked  { opacity: .55; pointer-events: none; }
+
+.step-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 14px; cursor: pointer;
+  -webkit-user-select: none; user-select: none;
+}
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--teal); color: #fff;
+  font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background .15s;
+}
+.step-card.done  .step-num { background: var(--green); }
+.step-card.active .step-num { background: var(--orange); }
+.step-info { flex: 1; min-width: 0; }
+.step-title { font-size: 13.5px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.step-subtitle { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.step-result-badge {
+  font-family: var(--mono); font-size: 12px; font-weight: 700;
+  color: var(--orange); background: var(--orange-lt);
+  padding: 3px 8px; border-radius: 6px; white-space: nowrap;
+  flex-shrink: 0;
+}
+.step-result-badge.green { color: var(--green); background: var(--green-lt); }
+.step-chevron { font-size: 18px; color: var(--line); flex-shrink: 0; transition: transform .2s; }
+.step-card.open .step-chevron { transform: rotate(90deg); }
+
+.step-body { display: none; border-top: 1px solid var(--line); }
+.step-card.open .step-body { display: block; }
+
+/* ── FORMULA BOX ── */
+.formula-box {
+  background: #0d1f2a; color: #c8dce6;
+  padding: 10px 14px; font-family: var(--mono); font-size: 12.5px;
+  line-height: 1.8; border-bottom: 1px solid var(--line);
+}
+.formula-box .ft { font-family: var(--sans); font-size: 9.5px; font-weight: 700;
+  letter-spacing: .8px; color: var(--orange); margin-bottom: 5px; display: block; }
+.formula-box .v { color: #79c0ff; }
+.formula-box .e { color: #ffa657; }
+.formula-box .c { color: #4a6070; font-style: italic; }
+
+/* ── INPUT FIELDS ── */
+.input-grid { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.input-row { display: flex; flex-direction: column; gap: 4px; }
+.input-label {
+  font-size: 11.5px; font-weight: 600; color: var(--muted);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.input-label span { font-size: 10px; color: #8ab8cc; font-weight: 400; }
+.input-field {
+  width: 100%; padding: 10px 12px;
+  border: 1.5px solid var(--line); border-radius: 8px;
+  font-size: 14px; font-family: var(--sans); color: var(--ink);
+  background: var(--surface); outline: none;
+  transition: border-color .12s;
+}
+.input-field:focus { border-color: var(--teal3); }
+.input-field.error { border-color: var(--red); }
+select.input-field { cursor: pointer; }
+
+/* Two column inputs */
+.input-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* ── CROSS SECTION BUILDER ── */
+.xsec-builder { padding: 12px 14px; }
+.xsec-label { font-size: 11.5px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+.xsec-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.xsec-table th {
+  background: var(--teal); color: #fff; padding: 7px 9px;
+  text-align: left; font-size: 11px; font-weight: 700;
+}
+.xsec-table td { padding: 6px 4px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.xsec-table input {
+  width: 100%; padding: 6px 8px; border: 1px solid var(--line);
+  border-radius: 6px; font-size: 13px; font-family: var(--mono);
+  text-align: right; color: var(--ink); background: #fff;
+}
+.xsec-table select {
+  width: 100%; padding: 5px 6px; border: 1px solid var(--line);
+  border-radius: 6px; font-size: 11.5px; color: var(--ink); background: #fff;
+}
+.xsec-table input:focus, .xsec-table select:focus {
+  outline: none; border-color: var(--teal3);
+}
+.xsec-add-btn {
+  margin-top: 8px; padding: 7px 14px; background: transparent;
+  border: 1.5px dashed var(--teal3); border-radius: 7px; color: var(--teal3);
+  font-size: 12.5px; font-weight: 600; cursor: pointer; width: 100%;
+  transition: background .12s;
+}
+.xsec-add-btn:hover { background: var(--sky-lt); }
+.xsec-del { background: none; border: none; color: #c0392b; font-size: 16px; cursor: pointer; padding: 2px 6px; }
+
+/* ── CALC BUTTON ── */
+.calc-btn {
+  display: block; width: calc(100% - 28px); margin: 10px 14px;
+  padding: 13px; background: var(--teal2);
+  color: #fff; font-size: 14px; font-weight: 700;
+  border: none; border-radius: 9px; cursor: pointer;
+  transition: background .12s;
+}
+.calc-btn:hover { background: var(--teal3); }
+.calc-btn.primary { background: var(--orange); }
+.calc-btn.primary:hover { background: #d96e18; }
+
+/* ── RESULT BOX ── */
+.result-box {
+  margin: 0 14px 12px;
+  border-radius: 9px; overflow: hidden;
+  border: 1px solid var(--line);
+}
+.result-head {
+  background: var(--teal); color: #fff;
+  padding: 8px 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .5px;
+}
+.result-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px; border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.result-row:last-child { border: none; }
+.result-row.highlight { background: var(--orange-lt); }
+.result-row.good { background: var(--green-lt); }
+.result-row.bad  { background: var(--red-lt); }
+.result-label { font-size: 12.5px; color: var(--muted); }
+.result-val {
+  font-family: var(--mono); font-size: 14px; font-weight: 800;
+  color: var(--ink);
+}
+.result-row.highlight .result-val { color: var(--orange); }
+.result-row.good .result-val { color: var(--green); }
+.result-row.bad  .result-val { color: var(--red); }
+
+/* ── NOTE / WARN ── */
+.note {
+  margin: 0 14px 8px; padding: 9px 12px;
+  background: var(--orange-lt); border-left: 3px solid var(--orange);
+  border-radius: 0 7px 7px 0; font-size: 12px; color: #6b3a08; line-height: 1.5;
+}
+.warn {
+  margin: 0 14px 8px; padding: 9px 12px;
+  background: var(--red-lt); border-left: 3px solid var(--red);
+  border-radius: 0 7px 7px 0; font-size: 12px; color: #7a1f14; line-height: 1.5;
+}
+.tip {
+  margin: 0 14px 8px; padding: 9px 12px;
+  background: var(--green-lt); border-left: 3px solid var(--green);
+  border-radius: 0 7px 7px 0; font-size: 12px; color: #0f4a2a; line-height: 1.5;
+}
+
+/* ── LEVEL CHAIN ── */
+.level-chain {
+  margin: 0 14px 12px; border-radius: 9px; overflow: hidden;
+  border: 1px solid var(--line);
+}
+.lc-title {
+  background: var(--orange); color: var(--ink);
+  padding: 8px 12px; font-size: 10.5px; font-weight: 800; letter-spacing: .3px;
+}
+.lc-row {
+  display: flex; align-items: center; padding: 8px 12px;
+  border-bottom: 1px solid var(--line); background: #fff; gap: 8px;
+}
+.lc-row:last-child { border: none; }
+.lc-row.result { background: #fffbf0; }
+.lc-label { flex: 1; font-size: 12.5px; color: var(--muted); }
+.lc-op { color: var(--orange); font-size: 16px; font-weight: 800; width: 16px; text-align: center; }
+.lc-val { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--ink); min-width: 90px; text-align: right; }
+.lc-row.result .lc-label { color: var(--teal); font-weight: 700; }
+.lc-row.result .lc-val { color: var(--orange); font-size: 14px; }
+
+/* ── PRINT SECTION ── */
+.print-btn {
+  display: block; margin: 12px 12px 0;
+  padding: 12px; background: var(--teal); color: #fff;
+  border: none; border-radius: 9px; font-size: 14px; font-weight: 700;
+  cursor: pointer; text-align: center; width: calc(100% - 24px);
+}
+
+/* ── SECTION HEADER ── */
+.sec-hdr {
+  padding: 16px 14px 4px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  color: var(--muted); text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.sec-hdr:after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+/* ── PRINT STYLES ── */
+@media print {
+  .app-header, .pipe-tabs, .calc-hero, .calc-btn, .print-btn,
+  .step-head, .formula-box, .xsec-builder { display: none !important; }
+  .step-card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+  .step-body { display: block !important; }
+  .result-box, .level-chain, .lc-row { break-inside: avoid; }
+  body { background: #fff; font-size: 11pt; }
+  .main { padding-bottom: 0; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="hdr-top">
+    <div class="hdr-icon">🌉</div>
+    <div class="hdr-text">
+      <h1>Bridge Hydraulic Calculator</h1>
+      <p>PWD Maharashtra · As per Bridge Design Guidelines 2007 + IRC:78</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <nav class="pipe-tabs" id="pipeTabs">
+    <button class="ptab active" onclick="scrollToStep(1)">1. Discharge</button>
+    <button class="ptab" onclick="scrollToStep(2)">2. Manning's</button>
+    <button class="ptab" onclick="scrollToStep(3)">3. HFL</button>
+    <button class="ptab" onclick="scrollToStep(4)">4. Waterway</button>
+    <button class="ptab" onclick="scrollToStep(5)">5. Scour</button>
+    <button class="ptab" onclick="scrollToStep(6)">6. Scour Levels</button>
+    <button class="ptab" onclick="scrollToStep(7)">7. Afflux</button>
+    <button class="ptab" onclick="scrollToStep(8)">8. Clearance</button>
+    <button class="ptab" onclick="scrollToStep(9)">9. Soffit</button>
+    <button class="ptab" onclick="scrollToStep(10)">10. RTL</button>
+    <button class="ptab" onclick="scrollToStep(11)">11. GA Summary</button>
+  </nav>
+</header>
+
+<div class="main" id="mainContent">
+
+<div class="calc-hero">
+  <h2>Hydraulic Calculation Chain</h2>
+  <p>Enter inputs step by step. Each output feeds the next step.<br>Ends with Soffit Level, RTL and General Arrangement.</p>
+  <div class="chain-preview">
+    <span class="cp-step">Q (Discharge)</span><span class="cp-arrow">→</span>
+    <span class="cp-step">Manning's check</span><span class="cp-arrow">→</span>
+    <span class="cp-step">HFL</span><span class="cp-arrow">→</span>
+    <span class="cp-step">Waterway</span><span class="cp-arrow">→</span>
+    <span class="cp-step">Scour dsm</span><span class="cp-arrow">→</span>
+    <span class="cp-step">Levels</span><span class="cp-arrow">→</span>
+    <span class="cp-step">Afflux</span><span class="cp-arrow">→</span>
+    <span class="cp-step">Clearance</span><span class="cp-arrow">→</span>
+    <span class="cp-step">Soffit</span><span class="cp-arrow">→</span>
+    <span class="cp-step">RTL ✓</span>
+  </div>
+</div>
+
+<!-- ══════ STEP 1 — DESIGN DISCHARGE ══════ -->
+<div class="sec-hdr" id="step1-anchor">Step 1</div>
+<div class="step-card active open" id="step1">
+  <div class="step-head" onclick="toggleStep('step1')">
+    <div class="step-num">1</div>
+    <div class="step-info">
+      <div class="step-title">Design Discharge (Q)</div>
+      <div class="step-subtitle">Empirical formula by region — Inglis / Dicken's</div>
+    </div>
+    <div id="step1-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="formula-box">
+      <span class="ft">INGLIS (Western Ghats)</span>
+      <span class="v">Q</span> <span class="e">=</span> 7000 × <span class="v">A</span> / (<span class="v">A</span> + 4) <span class="c">  cusecs  |  A in sq.miles</span>
+      <span class="ft" style="margin-top:8px">MODIFIED INGLIS (Upper Ghats)</span>
+      <span class="v">Q</span> <span class="e">=</span> 4000 × <span class="v">A</span> / (<span class="v">A</span> + 4) <span class="c">  cusecs</span>
+      <span class="ft" style="margin-top:8px">DICKEN'S (Vidarbha / Marathwada)</span>
+      <span class="v">Q</span> <span class="e">=</span> <span class="v">C</span> × <span class="v">A</span><sup>0.75</sup> <span class="c">  cusecs  |  C = 800–1600</span>
+      <span class="c" style="margin-top:4px;display:block">→ Convert to cumecs: divide by 35.31</span>
+    </div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label class="input-label">Region / Formula<span>Select your district zone</span></label>
+        <select class="input-field" id="formula" onchange="updateFormulaUI()">
+          <option value="">— Select Region —</option>
+          <option value="inglis">Inglis — Western Ghats (Konkan, Nashik, Pune side)</option>
+          <option value="modified">Modified Inglis — Upper Western Ghats (Satara, Kolhapur)</option>
+          <option value="dickens">Dicken's — Vidarbha / Marathwada (Nagpur, Amravati, Aurangabad)</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <label class="input-label">Catchment Area (A)<span>sq.km — will auto-convert to sq.miles</span></label>
+        <input type="number" class="input-field" id="catchArea" placeholder="e.g. 250" step="0.1" oninput="updateCatchConv()">
+      </div>
+      <div class="input-row" id="catchConvRow" style="display:none">
+        <label class="input-label">A in sq.miles (auto-converted)</label>
+        <input type="text" class="input-field" id="catchAreaMiles" readonly style="background:#f7f9fc;color:var(--muted)">
+      </div>
+      <div class="input-row" id="dickensC" style="display:none">
+        <label class="input-label">Dicken's Constant C<span>800–1000 (25–50″ rain) · 1000–1400 (Vidarbha) · 1400–1600 (Ghats)</span></label>
+        <input type="number" class="input-field" id="cValue" placeholder="e.g. 1000" value="1000" min="800" max="1600">
+      </div>
+      <div class="input-row">
+        <label class="input-label">HFL from Local Enquiry (m)<span>Highest flood level observed — enter RL in metres</span></label>
+        <input type="number" class="input-field" id="hflEnquiry" placeholder="e.g. 42.50" step="0.01">
+      </div>
+      <div class="input-row">
+        <label class="input-label">Bed Level at Bridge Site (m)<span>RL of stream bed at proposed bridge centre</span></label>
+        <input type="number" class="input-field" id="bedLevel" placeholder="e.g. 38.20" step="0.01">
+      </div>
+    </div>
+    <button class="calc-btn primary" onclick="calcStep1()">Calculate Design Discharge →</button>
+    <div id="step1-result" style="display:none">
+      <div class="result-box">
+        <div class="result-head">Step 1 Results — Design Discharge</div>
+        <div class="result-row"><span class="result-label">Catchment Area A</span><span class="result-val" id="r-area"></span></div>
+        <div class="result-row"><span class="result-label">Empirical Q (formula)</span><span class="result-val" id="r-qcusec"></span></div>
+        <div class="result-row highlight"><span class="result-label">Design Q (cumecs)</span><span class="result-val" id="r-qcumec"></span></div>
+        <div class="result-row"><span class="result-label">Flood depth at site (HFL − Bed)</span><span class="result-val" id="r-floodDepth"></span></div>
+        <div class="result-row"><span class="result-label">Foundation design Q (+safety, IRC:78)</span><span class="result-val" id="r-qfound"></span></div>
+      </div>
+      <div class="note" id="step1-note"></div>
+      <button class="calc-btn" onclick="openStep('step2')">Proceed to Manning's Verification →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 2 — MANNING'S VERIFICATION ══════ -->
+<div class="sec-hdr" id="step2-anchor">Step 2</div>
+<div class="step-card locked" id="step2">
+  <div class="step-head" onclick="toggleStep('step2')">
+    <div class="step-num">2</div>
+    <div class="step-info">
+      <div class="step-title">Manning's Discharge Verification</div>
+      <div class="step-subtitle">Cross-section data → verify must tally within ±2% of Step 1 Q</div>
+    </div>
+    <div id="step2-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="formula-box">
+      <span class="ft">MANNING'S FORMULA (per compartment)</span>
+      <span class="v">V</span> <span class="e">=</span> (1/<span class="v">n</span>) × <span class="v">R</span><sup>2/3</sup> × <span class="v">S</span><sup>1/2</sup> <span class="c">  m/s</span>
+      <span class="v">Q</span> <span class="e">=</span> Σ (<span class="v">A</span> × <span class="v">V</span>) <span class="c">  sum over all compartments</span>
+      <span class="c">R = A/P  (hydraulic mean depth)  |  n = rugosity coefficient</span>
+    </div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label class="input-label">Bed Slope S<span>hydraulic gradient = fall / horizontal distance</span></label>
+        <input type="number" class="input-field" id="slope" placeholder="e.g. 0.00050" step="0.00001">
+      </div>
+      <div class="input-row">
+        <label class="input-label">Trial HFL for Manning's Check (m RL)<span>Start with enquiry HFL, iterate if needed</span></label>
+        <input type="number" class="input-field" id="trialHFL" placeholder="e.g. 42.50" step="0.01">
+      </div>
+    </div>
+    <div class="xsec-builder">
+      <div class="xsec-label">Cross-Section Compartments (add bed + banks separately)</div>
+      <table class="xsec-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Description</th>
+            <th>Width B (m)</th>
+            <th>Avg Depth D (m)</th>
+            <th>Rugosity n</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="xsecBody">
+          <tr>
+            <td style="text-align:center;color:var(--muted);font-size:12px">1</td>
+            <td><select class="input-field" style="padding:5px 6px;font-size:11.5px">
+              <option>Main channel (bed)</option><option>Left bank (flood plain)</option>
+              <option>Right bank (flood plain)</option><option>Left marginal</option><option>Right marginal</option>
+            </select></td>
+            <td><input type="number" class="xsec-w" placeholder="0.00" step="0.1" style="width:70px"></td>
+            <td><input type="number" class="xsec-d" placeholder="0.00" step="0.01" style="width:70px"></td>
+            <td><select class="xsec-n" style="width:80px">
+              <option value="0.025">0.025 (clean straight)</option>
+              <option value="0.030">0.030 (+ weeds/stones)</option>
+              <option value="0.035">0.035 (winding clean)</option>
+              <option value="0.040">0.040 (winding + pools)</option>
+              <option value="0.045">0.045 (winding + stones)</option>
+              <option value="0.050">0.050 (stony reach)</option>
+              <option value="0.060">0.060 (sluggish weedy)</option>
+              <option value="0.075">0.075 (very weedy)</option>
+              <option value="0.100">0.100 (flood plain trees)</option>
+            </select></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="xsec-add-btn" onclick="addXsecRow()">+ Add Compartment</button>
+    </div>
+    <button class="calc-btn primary" onclick="calcStep2()">Run Manning's Calculation →</button>
+    <div id="step2-result" style="display:none">
+      <div class="result-box">
+        <div class="result-head">Step 2 Results — Manning's Verification</div>
+        <div id="manning-compartment-results"></div>
+        <div class="result-row"><span class="result-label">Total Q (Manning's)</span><span class="result-val" id="r-qmanning"></span></div>
+        <div class="result-row"><span class="result-label">Design Q (Step 1)</span><span class="result-val" id="r-qdesign-check"></span></div>
+        <div class="result-row" id="manning-status-row">
+          <span class="result-label">Match status</span>
+          <span class="result-val" id="r-manning-status"></span>
+        </div>
+        <div class="result-row highlight"><span class="result-label">Design HFL adopted</span><span class="result-val" id="r-designHFL"></span></div>
+        <div class="result-row"><span class="result-label">Total wetted area at HFL</span><span class="result-val" id="r-totalArea"></span></div>
+        <div class="result-row"><span class="result-label">Mean velocity</span><span class="result-val" id="r-meanV"></span></div>
+      </div>
+      <div id="step2-note"></div>
+      <button class="calc-btn" onclick="openStep('step3')">Proceed to HFL Finalisation →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 3 — HFL FINALISATION ══════ -->
+<div class="sec-hdr" id="step3-anchor">Step 3</div>
+<div class="step-card locked" id="step3">
+  <div class="step-head" onclick="toggleStep('step3')">
+    <div class="step-num">3</div>
+    <div class="step-info">
+      <div class="step-title">Design HFL Finalised</div>
+      <div class="step-subtitle">Higher of observed HFL vs computed HFL is adopted</div>
+    </div>
+    <div id="step3-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="input-grid">
+      <div class="input-row">
+        <label class="input-label">HFL from Local Enquiry (m RL)<span>Auto-filled from Step 1</span></label>
+        <input type="number" class="input-field" id="hflFinal1" step="0.01" readonly style="background:#f7f9fc">
+      </div>
+      <div class="input-row">
+        <label class="input-label">HFL from Manning's at Design Q (m RL)<span>Auto-filled from Step 2</span></label>
+        <input type="number" class="input-field" id="hflFinal2" step="0.01" readonly style="background:#f7f9fc">
+      </div>
+      <div class="input-row">
+        <label class="input-label">Any other HFL consideration<span>Backwater from downstream dam, bridge, etc.</span></label>
+        <input type="number" class="input-field" id="hflOther" placeholder="0.00 (leave blank if none)" step="0.01">
+      </div>
+    </div>
+    <button class="calc-btn primary" onclick="calcStep3()">Adopt Design HFL →</button>
+    <div id="step3-result" style="display:none">
+      <div class="result-box">
+        <div class="result-head">Step 3 — Design HFL Adopted</div>
+        <div class="result-row highlight"><span class="result-label">Design HFL (governing)</span><span class="result-val" id="r-finalHFL"></span></div>
+        <div class="result-row"><span class="result-label">Governs from</span><span class="result-val" id="r-hflSource"></span></div>
+      </div>
+      <button class="calc-btn" onclick="openStep('step4')">Proceed to Linear Waterway →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 4 — LINEAR WATERWAY ══════ -->
+<div class="sec-hdr" id="step4-anchor">Step 4</div>
+<div class="step-card locked" id="step4">
+  <div class="step-head" onclick="toggleStep('step4')">
+    <div class="step-num">4</div>
+    <div class="step-info">
+      <div class="step-title">Linear Waterway Required</div>
+      <div class="step-subtitle">Rational method W = C√Q or Area/Depth method</div>
+    </div>
+    <div id="step4-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="formula-box">
+      <span class="ft">METHOD 1 — RATIONAL (alluvial, undefined banks)</span>
+      <span class="v">W</span> <span class="e">=</span> <span class="v">C</span> × √<span class="v">Q</span> <span class="c">  C = 4.5–6.3 (use 4.8 for regime conditions)</span>
+      <span class="ft" style="margin-top:8px">METHOD 2 — AREA/DEPTH (defined cross-section)</span>
+      <span class="v">W</span> <span class="e">=</span> <span class="v">A</span> / <span class="v">D</span> <span class="c">  A = wetted area (m²)  D = max flood depth (m)</span>
+    </div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label class="input-label">Waterway Method</label>
+        <select class="input-field" id="waterwayMethod" onchange="updateWaterwayUI()">
+          <option value="rational">Method 1 — Rational (C × √Q)</option>
+          <option value="area">Method 2 — Area/Depth (A/D)</option>
+        </select>
+      </div>
+      <div class="input-row" id="cConstRow">
+        <label class="input-label">Constant C<span>4.5–4.8 stable; 5.0–6.3 for flash flood/irregular</span></label>
+        <input type="number" class="input-field" id="waterwayC" value="4.8" step="0.1" min="4.5" max="6.3">
+      </div>
+      <div class="input-row" id="waterwayAreaRow" style="display:none">
+        <label class="input-label">Wetted area at HFL A (m²)<span>Sum of all compartment areas at design HFL</span></label>
+        <input type="number" class="input-field" id="waterwayArea" placeholder="e.g. 245.5" step="0.1">
+      </div>
+      <div class="input-row" id="waterwayDepthRow" style="display:none">
+        <label class="input-label">Max flood depth D (m)<span>HFL minus lowest bed level</span></label>
+        <input type="number" class="input-field" id="waterwayDepth" placeholder="e.g. 4.30" step="0.01">
+      </div>
+      <div class="input-row">
+        <label class="input-label">Proposed Linear Waterway (m)<span>Actual clear span(s) proposed — sum of clear spans</span></label>
+        <input type="number" class="input-field" id="proposedWaterway" placeholder="e.g. 18.0" step="0.5">
+      </div>
+    </div>
+    <button class="calc-btn primary" onclick="calcStep4()">Calculate Waterway →</button>
+    <div id="step4-result" style="display:none">
+      <div class="result-box">
+        <div class="result-head">Step 4 — Linear Waterway</div>
+        <div class="result-row"><span class="result-label">Required waterway (formula)</span><span class="result-val" id="r-reqWaterway"></span></div>
+        <div class="result-row"><span class="result-label">Proposed waterway</span><span class="result-val" id="r-propWaterway"></span></div>
+        <div class="result-row" id="waterway-status-row">
+          <span class="result-label">Adequacy</span><span class="result-val" id="r-waterway-status"></span>
+        </div>
+        <div class="result-row highlight"><span class="result-label">Qb — discharge per metre width</span><span class="result-val" id="r-qb"></span></div>
+        <div class="result-row"><span class="result-label">Obstruction %</span><span class="result-val" id="r-obstruction"></span></div>
+      </div>
+      <div id="step4-note"></div>
+      <button class="calc-btn" onclick="openStep('step5')">Proceed to Scour Depth →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 5 — SCOUR DEPTH ══════ -->
+<div class="sec-hdr" id="step5-anchor">Step 5</div>
+<div class="step-card locked" id="step5">
+  <div class="step-head" onclick="toggleStep('step5')">
+    <div class="step-num">5</div>
+    <div class="step-info">
+      <div class="step-title">Mean Scour Depth (dsm)</div>
+      <div class="step-subtitle">Lacey-Inglis formula — IRC:78</div>
+    </div>
+    <div id="step5-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="formula-box">
+      <span class="ft">LACEY-INGLIS SCOUR FORMULA (IRC:78)</span>
+      <span class="v">dsm</span> <span class="e">=</span> 1.34 × (<span class="v">Qb</span>² / <span class="v">Ksf</span>)<sup>1/3</sup>
+      <span class="v">Ksf</span> <span class="e">=</span> 1.76 × √<span class="v">dm</span> <span class="c">  silt factor</span>
+      <span class="v">Qb</span> <span class="c"> = Q / effective linear waterway (m³/s per m width)</span>
+      <span class="v">dm</span> <span class="c"> = weighted mean grain size of bed material (mm)</span>
+    </div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label class="input-label">Bed Material Type<span>Select — Ksf auto-computed</span></label>
+        <select class="input-field" id="bedMaterial" onchange="updateKsf()">
+          <option value="">— Select Bed Material —</option>
+          <option value="0.081">Fine silt (dm = 0.081 mm) → Ksf = 0.50</option>
+          <option value="0.120">Fine silt (dm = 0.120 mm) → Ksf = 0.60</option>
+          <option value="0.158">Fine silt (dm = 0.158 mm) → Ksf = 0.70</option>
+          <option value="0.233">Medium sand (dm = 0.233 mm) → Ksf = 0.85</option>
+          <option value="0.323">Standard sand (dm = 0.323 mm) → Ksf = 1.00</option>
+          <option value="0.505">Medium coarse sand (dm = 0.505 mm) → Ksf = 1.25</option>
+          <option value="0.725">Coarse sand (dm = 0.725 mm) → Ksf = 1.50</option>
+          <option value="0.988">Mixed bajri (dm = 0.988 mm) → Ksf = 1.75</option>
+          <option value="1.290">Heavy sand/gravel (dm = 1.290 mm) → Ksf = 2.00</option>
+          <option value="custom">Enter custom dm value</option>
+        </select>
+      </div>
+      <div class="input-row" id="customDmRow" style="display:none">
+        <label class="input-label">Custom dm (mm)</label>
+        <input type="number" class="input-field" id="customDm" placeholder="e.g. 0.45" step="0.001" oninput="updateKsf()">
+      </div>
+      <div class="input-2col">
+        <div class="input-row">
+          <label class="input-label">dm (mm)</label>
+          <input type="text" class="input-field" id="dmDisplay" readonly style="background:#f7f9fc;font-family:var(--mono);color:var(--muted)">
+        </div>
+        <div class="input-row">
+          <label class="input-label">Ksf (silt factor)</label>
+          <input type="text" class="input-field" id="ksfDisplay" readonly style="background:#f7f9fc;font-family:var(--mono);color:var(--muted)">
+        </div>
+      </div>
+      <div class="input-row">
+        <label class="input-label">River Bend Type at Site</label>
+        <select class="input-field" id="bendType">
+          <option value="1.27">Straight reach / raft foundation</option>
+          <option value="2.00" selected>Vicinity of pier (all cases)</option>
+          <option value="1.27_abut">Abutment (approaches retained)</option>
+          <option value="2.00_abut">Abutment (approaches washed)</option>
+          <option value="1.50">Moderate bend</option>
+          <option value="1.75">Severe bend</option>
+          <option value="2.00_bend">Right-angle bend</option>
+        </select>
+      </div>
+    </div>
+    <button class="calc-btn primary" onclick="calcStep5()">Calculate Scour Depth →</button>
+    <div id="step5-result" style="display:none">
+      <div class="result-box">
+        <div class="result-head">Step 5 — Scour Depth Results</div>
+        <div class="result-row"><span class="result-label">Discharge per metre width (Qb)</span><span class="result-val" id="r-qb2"></span></div>
+        <div class="result-row"><span class="result-label">Silt factor Ksf</span><span class="result-val" id="r-ksf"></span></div>
+        <div class="result-row highlight"><span class="result-label">Mean scour depth (dsm)</span><span class="result-val" id="r-dsm"></span></div>
+        <div class="result-row"><span class="result-label">Design scour at pier (2.0 × dsm)</span><span class="result-val" id="r-dPier"></span></div>
+        <div class="result-row"><span class="result-label">Design scour at abutment — retained (1.27 × dsm)</span><span class="result-val" id="r-dAbutR"></span></div>
+        <div class="result-row"><span class="result-label">Design scour at abutment — washed (2.0 × dsm)</span><span class="result-val" id="r-dAbutW"></span></div>
+      </div>
+      <button class="calc-btn" onclick="openStep('step6')">Proceed to Scour Levels →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 6 — SCOUR LEVELS ══════ -->
+<div class="sec-hdr" id="step6-anchor">Step 6</div>
+<div class="step-card locked" id="step6">
+  <div class="step-head" onclick="toggleStep('step6')">
+    <div class="step-num">6</div>
+    <div class="step-info">
+      <div class="step-title">Scour Levels &amp; Foundation Depth</div>
+      <div class="step-subtitle">Max scour level below HFL → Foundation founding level</div>
+    </div>
+    <div id="step6-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="formula-box">
+      <span class="ft">SCOUR LEVEL BELOW HFL</span>
+      <span class="v">Scour Level</span> <span class="e">=</span> HFL − <span class="v">Design Scour Depth</span>
+      <span class="ft" style="margin-top:8px">FOUNDATION DEPTH (from IRC:78)</span>
+      <span class="v">Foundation RL</span> <span class="e">=</span> Scour Level − <span class="v">embedment depth</span>
+      <span class="c">Min embedment: 2.0m (soil) / 1.5m (rock) below scour level</span>
+    </div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label class="input-label">Foundation Type at Pier</label>
+        <select class="input-field" id="fdnTypePier">
+          <option value="2.0">Soil — Min 2.0m below scour level</option>
+          <option value="1.5">Rock — Min 1.5m below scour level</option>
+          <option value="3.0">Well foundation — Min 3.0m below scour level</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <label class="input-label">Foundation Type at Abutment</label>
+        <select class="input-field" id="fdnTypeAbut">
+          <option value="2.0">Soil — Min 2.0m below scour level</option>
+          <option value="1.5">Rock — Min 1.5m below scour level</option>
+          <option value="3.0">Well foundation — Min 3.0m below scour level</option>
+        </select>
+      </div>
+    </div>
+    <button class="calc-btn primary" onclick="calcStep6()">Calculate Scour Levels →</button>
+    <div id="step6-result" style="display:none">
+      <div class="result-box">
+        <div class="result-head">Step 6 — Scour Levels (all as RL in metres)</div>
+        <div class="result-row"><span class="result-label">Design HFL</span><span class="result-val" id="r-hfl6"></span></div>
+        <div class="result-row"><span class="result-label">Max scour level at pier (HFL − 2.0×dsm)</span><span class="result-val" id="r-scourPier"></span></div>
+        <div class="result-row"><span class="result-label">Max scour level at abutment — retained (HFL − 1.27×dsm)</span><span class="result-val" id="r-scourAbutR"></span></div>
+        <div class="result-row"><span class="result-label">Max scour level at abutment — washed (HFL − 2.0×dsm)</span><span class="result-val" id="r-scourAbutW"></span></div>
+        <div class="result-row highlight"><span class="result-label">Foundation RL at pier (min)</span><span class="result-val" id="r-fdnPier"></span></div>
+        <div class="result-row highlight"><span class="result-label">Foundation RL at abutment (min)</span><span class="result-val" id="r-fdnAbut"></span></div>
+      </div>
+      <button class="calc-btn" onclick="openStep('step7')">Proceed to Afflux →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 7 — AFFLUX ══════ -->
+<div class="sec-hdr" id="step7-anchor">Step 7</div>
+<div class="step-card locked" id="step7">
+  <div class="step-head" onclick="toggleStep('step7')">
+    <div class="step-num">7</div>
+    <div class="step-info">
+      <div class="step-title">Afflux (ha)</div>
+      <div class="step-subtitle">Molesworth formula — must be ≤ 0.60 m</div>
+    </div>
+    <div id="step7-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="formula-box">
+      <span class="ft">MOLESWORTH FORMULA (High-Level Bridge)</span>
+      <span class="v">ha</span> <span class="e">=</span> [<span class="v">V</span>²/17.86 + 0.0153] × [(<span class="v">Q</span>/<span class="v">Q₁</span>)² − 1]
+      <span class="v">V</span> <span class="c"> = mean velocity = Q / total wetted area (m/s)</span>
+      <span class="v">Q₁</span> <span class="c">= unobstructed discharge in bridge opening (m³/s)</span>
+    </div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label class="input-label">Unobstructed discharge Q₁ (m³/s)<span>Discharge through bridge opening, excl. approaches. Usually = Q × (proposed waterway / natural waterway)</span></label>
+        <input type="number" class="input-field" id="q1Input" placeholder="Auto-estimated" step="0.1">
+      </div>
+    </div>
+    <button class="calc-btn primary" onclick="calcStep7()">Calculate Afflux →</button>
+    <div id="step7-result" style="display:none">
+      <div class="result-box">
+        <div class="result-head">Step 7 — Afflux Results</div>
+        <div class="result-row"><span class="result-label">Mean velocity V</span><span class="result-val" id="r-meanV2"></span></div>
+        <div class="result-row"><span class="result-label">Q / Q₁ ratio</span><span class="result-val" id="r-qratio"></span></div>
+        <div class="result-row" id="afflux-status-row">
+          <span class="result-label">Afflux ha</span><span class="result-val" id="r-afflux"></span>
+        </div>
+        <div class="result-row"><span class="result-label">Afflux limit (IRC)</span><span class="result-val">≤ 0.60 m</span></div>
+        <div class="result-row highlight"><span class="result-label">Status</span><span class="result-val" id="r-afflux-status"></span></div>
+      </div>
+      <div id="step7-note"></div>
+      <button class="calc-btn" onclick="openStep('step8')">Proceed to Vertical Clearance →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 8 — VERTICAL CLEARANCE ══════ -->
+<div class="sec-hdr" id="step8-anchor">Step 8</div>
+<div class="step-card locked" id="step8">
+  <div class="step-head" onclick="toggleStep('step8')">
+    <div class="step-num">8</div>
+    <div class="step-info">
+      <div class="step-title">Vertical Clearance</div>
+      <div class="step-subtitle">IRC table — auto-determined from Q</div>
+    </div>
+    <div id="step8-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="input-grid">
+      <div class="input-row">
+        <label class="input-label">Navigation Clearance Required?<span>Maharashtra Maritime Board requirements if river is navigable</span></label>
+        <select class="input-field" id="navClearance">
+          <option value="0">No — non-navigable stream</option>
+          <option value="1">Yes — confirm with Maritime Board</option>
+        </select>
+      </div>
+    </div>
+    <button class="calc-btn primary" onclick="calcStep8()">Determine Vertical Clearance →</button>
+    <div id="step8-result" style="display:none">
+      <div class="result-box">
+        <div class="result-head">Step 8 — Vertical Clearance (IRC Table)</div>
+        <div class="result-row"><span class="result-label">Design discharge Q</span><span class="result-val" id="r-q-clear"></span></div>
+        <div class="result-row highlight"><span class="result-label">Min vertical clearance (IRC)</span><span class="result-val" id="r-clearance"></span></div>
+        <div class="result-row" id="nav-clear-row" style="display:none">
+          <span class="result-label">Navigation clearance</span><span class="result-val">Verify with Maritime Board</span>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="openStep('step9')">Proceed to Soffit Level →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 9 — SOFFIT LEVEL ══════ -->
+<div class="sec-hdr" id="step9-anchor">Step 9</div>
+<div class="step-card locked" id="step9">
+  <div class="step-head" onclick="toggleStep('step9')">
+    <div class="step-num">9</div>
+    <div class="step-info">
+      <div class="step-title">Soffit Level</div>
+      <div class="step-subtitle">HFL + Afflux + Clearance = bottom of superstructure</div>
+    </div>
+    <div id="step9-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <button class="calc-btn primary" onclick="calcStep9()">Calculate Soffit Level →</button>
+    <div id="step9-result" style="display:none">
+      <div class="level-chain">
+        <div class="lc-title">Soffit Level Calculation</div>
+        <div class="lc-row"><span class="lc-label">Design HFL (observed / computed, higher)</span><span class="lc-op">+</span><span class="lc-val" id="lc-hfl"></span></div>
+        <div class="lc-row"><span class="lc-label">Afflux (ha)</span><span class="lc-op">+</span><span class="lc-val" id="lc-afflux"></span></div>
+        <div class="lc-row"><span class="lc-label">Vertical clearance (IRC)</span><span class="lc-op">=</span><span class="lc-val" id="lc-clearance"></span></div>
+        <div class="lc-row result"><span class="lc-label">✓ SOFFIT LEVEL</span><span class="lc-op"></span><span class="lc-val" id="lc-soffit"></span></div>
+      </div>
+      <button class="calc-btn" onclick="openStep('step10')">Proceed to Road Top Level →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 10 — ROAD TOP LEVEL ══════ -->
+<div class="sec-hdr" id="step10-anchor">Step 10</div>
+<div class="step-card locked" id="step10">
+  <div class="step-head" onclick="toggleStep('step10')">
+    <div class="step-num">10</div>
+    <div class="step-info">
+      <div class="step-title">Road Top Level (RTL)</div>
+      <div class="step-subtitle">Soffit + structural depth + wearing coat</div>
+    </div>
+    <div id="step10-badge" class="step-result-badge" style="display:none"></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="input-grid">
+      <div class="input-row">
+        <label class="input-label">Superstructure Type</label>
+        <select class="input-field" id="superstType" onchange="updateGirderDepth()">
+          <option value="0.35">RCC Solid Slab — 3m span (depth ~0.30–0.35m)</option>
+          <option value="0.45">RCC Solid Slab — 5m span (depth ~0.40–0.45m)</option>
+          <option value="0.55">RCC Solid Slab — 7m span (depth ~0.50–0.55m)</option>
+          <option value="0.65">RCC Solid Slab — 10m span (depth ~0.60–0.65m)</option>
+          <option value="1.00">RCC T-Beam — 12m span (total depth ~0.90–1.0m)</option>
+          <option value="1.20">RCC T-Beam — 15m span (total depth ~1.1–1.2m)</option>
+          <option value="1.50">RCC T-Beam — 20m span (total depth ~1.4–1.5m)</option>
+          <option value="1.80">PSC I-Girder — 24m span (total depth ~1.7–1.8m)</option>
+          <option value="custom">Enter custom depth</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <label class="input-label">Structural Depth (m)<span>Soffit to top of slab/girder. Auto-filled or enter custom.</span></label>
+        <input type="number" class="input-field" id="girderDepth" step="0.01" placeholder="e.g. 0.55">
+      </div>
+      <div class="input-row">
+        <label class="input-label">Wearing Coat Thickness (m)<span>Standard 0.075 m (75 mm). CC or BM as per spec.</span></label>
+        <input type="number" class="input-field" id="wcThickness" value="0.075" step="0.005">
+      </div>
+    </div>
+    <button class="calc-btn primary" onclick="calcStep10()">Calculate RTL →</button>
+    <div id="step10-result" style="display:none">
+      <div class="level-chain">
+        <div class="lc-title">Road Top Level Calculation</div>
+        <div class="lc-row"><span class="lc-label">Soffit Level</span><span class="lc-op">+</span><span class="lc-val" id="lc-soffit2"></span></div>
+        <div class="lc-row"><span class="lc-label">Structural depth (slab / girder)</span><span class="lc-op">+</span><span class="lc-val" id="lc-girderd"></span></div>
+        <div class="lc-row"><span class="lc-label">Wearing coat thickness</span><span class="lc-op">=</span><span class="lc-val" id="lc-wc"></span></div>
+        <div class="lc-row result"><span class="lc-label">✓ ROAD TOP LEVEL (RTL)</span><span class="lc-op"></span><span class="lc-val" id="lc-rtl"></span></div>
+      </div>
+      <button class="calc-btn" onclick="openStep('step11')">View General Arrangement Summary →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STEP 11 — GA SUMMARY ══════ -->
+<div class="sec-hdr" id="step11-anchor">Step 11</div>
+<div class="step-card locked" id="step11">
+  <div class="step-head" onclick="toggleStep('step11')">
+    <div class="step-num">11</div>
+    <div class="step-info">
+      <div class="step-title">General Arrangement Summary</div>
+      <div class="step-subtitle">Complete hydraulic calculation sheet — printable</div>
+    </div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div id="ga-summary" style="padding:14px"></div>
+    <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ═══════════════════════════════════════════════
+//  BRIDGE HYDRAULIC CALCULATOR — COMPUTATION ENGINE
+// ═══════════════════════════════════════════════
+
+// State object — all computed values stored here
+const S = {
+  formula: '', catchArea_sqkm: 0, catchArea_sqmiles: 0,
+  hflEnquiry: 0, bedLevel: 0,
+  Q_cusec: 0, Q_cumec: 0, Q_foundation: 0,
+  slope: 0, trialHFL: 0,
+  Q_manning: 0, totalArea: 0, totalPerim: 0, meanV: 0,
+  designHFL: 0, hflSource: '',
+  W_required: 0, W_proposed: 0, Qb: 0, obstruction: 0,
+  dm: 0, Ksf: 0, dsm: 0,
+  afflux: 0, clearance: 0,
+  soffit: 0, girderDepth: 0, wcThick: 0, RTL: 0,
+  stepsUnlocked: 1, stepsDone: []
+};
+
+// ── Helpers ──
+function round(v, d=3){ return Math.round(v * 10**d) / 10**d; }
+function rl(v){ return v.toFixed(2) + ' m RL'; }
+function m(v, d=2){ return v.toFixed(d) + ' m'; }
+function c(v){ return v.toFixed(1) + ' m³/s'; }
+
+function showEl(id){ document.getElementById(id).style.display = ''; }
+function hideEl(id){ document.getElementById(id).style.display = 'none'; }
+function setText(id, val){ const el = document.getElementById(id); if(el) el.textContent = val; }
+
+function setResult(id, val, cls=''){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = val;
+  if(cls) el.className = 'result-val ' + (cls === 'good' ? 'pass-val' : cls === 'bad' ? 'warn-val' : '');
+}
+
+// ── Progress ──
+function updateProgress(){
+  const pct = (S.stepsDone.length / 10) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  // update tabs
+  const tabs = document.querySelectorAll('.ptab');
+  tabs.forEach((t, i) => {
+    t.classList.remove('active','done');
+    if(S.stepsDone.includes(i+1)) t.classList.add('done');
+    else if(i+1 === S.stepsUnlocked) t.classList.add('active');
+  });
+}
+
+function unlockStep(n){
+  const el = document.getElementById('step'+n);
+  if(el){ el.classList.remove('locked'); }
+  S.stepsUnlocked = Math.max(S.stepsUnlocked, n);
+  updateProgress();
+}
+
+function openStep(n){
+  const el = document.getElementById('step'+n);
+  if(el){
+    el.classList.remove('locked');
+    el.classList.add('open','active');
+    setTimeout(() => {
+      document.getElementById('step'+n+'-anchor').scrollIntoView({behavior:'smooth', block:'start'});
+    }, 100);
+  }
+}
+
+function toggleStep(id){
+  const el = document.getElementById(id);
+  if(el.classList.contains('locked')) return;
+  el.classList.toggle('open');
+}
+
+function scrollToStep(n){
+  const anchor = document.getElementById('step'+n+'-anchor');
+  if(anchor) anchor.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── Step 1 UI ──
+function updateFormulaUI(){
+  const f = document.getElementById('formula').value;
+  showEl('catchConvRow');
+  document.getElementById('dickensC').style.display = f === 'dickens' ? '' : 'none';
+}
+
+function updateCatchConv(){
+  const sqkm = parseFloat(document.getElementById('catchArea').value) || 0;
+  const sqmiles = sqkm / 2.5899;
+  document.getElementById('catchAreaMiles').value = round(sqmiles, 3) + ' sq.miles';
+  S.catchArea_sqkm = sqkm;
+  S.catchArea_sqmiles = sqmiles;
+}
+
+// ── Step 1 Calculation ──
+function calcStep1(){
+  const formula = document.getElementById('formula').value;
+  const A_sqkm  = parseFloat(document.getElementById('catchArea').value);
+  const hfl     = parseFloat(document.getElementById('hflEnquiry').value);
+  const bed     = parseFloat(document.getElementById('bedLevel').value);
+  const C       = parseFloat(document.getElementById('cValue').value) || 1000;
+
+  if(!formula){ alert('Please select a region / formula.'); return; }
+  if(!A_sqkm || isNaN(A_sqkm)){ alert('Please enter catchment area.'); return; }
+  if(isNaN(hfl)){ alert('Please enter HFL from local enquiry.'); return; }
+  if(isNaN(bed)){ alert('Please enter bed level.'); return; }
+
+  const A = A_sqkm / 2.5899; // sq.miles
+  let Q_cusec = 0, formulaName = '';
+
+  if(formula === 'inglis'){
+    Q_cusec = 7000 * A / (A + 4);
+    formulaName = 'Inglis (Western Ghats)';
+  } else if(formula === 'modified'){
+    Q_cusec = 4000 * A / (A + 4);
+    formulaName = 'Modified Inglis (Upper Western Ghats)';
+  } else if(formula === 'dickens'){
+    Q_cusec = C * Math.pow(A, 0.75);
+    formulaName = `Dicken's (C=${C})`;
+  }
+
+  const Q_cumec = Q_cusec / 35.31;
+
+  // Safety factor for foundation per IRC:78
+  let safetyPct = A_sqkm < 3000 ? 30 : A_sqkm < 10000 ? 25 : A_sqkm < 40000 ? 15 : 10;
+  const Q_foundation = Q_cumec * (1 + safetyPct/100);
+
+  S.formula = formulaName;
+  S.catchArea_sqkm = A_sqkm;
+  S.catchArea_sqmiles = A;
+  S.Q_cusec = Q_cusec;
+  S.Q_cumec = Q_cumec;
+  S.Q_foundation = Q_foundation;
+  S.hflEnquiry = hfl;
+  S.bedLevel = bed;
+  S.trialHFL = hfl; // seed for step 2
+
+  // Display
+  setText('r-area', round(A_sqkm,1) + ' sq.km = ' + round(A,3) + ' sq.miles');
+  setText('r-qcusec', Math.round(Q_cusec).toLocaleString() + ' cusecs (' + formulaName + ')');
+  setText('r-qcumec', round(Q_cumec,2) + ' m³/s');
+  setText('r-floodDepth', round(hfl - bed, 2) + ' m');
+  setText('r-qfound', round(Q_foundation,2) + ' m³/s (+' + safetyPct + '% for catchment ' + A_sqkm + ' sq.km)');
+
+  // Badge
+  const badge = document.getElementById('step1-badge');
+  badge.textContent = 'Q = ' + round(Q_cumec,1) + ' m³/s';
+  badge.style.display = 'block';
+
+  document.getElementById('step1-result').style.display = '';
+  document.getElementById('step1-note').textContent =
+    'Foundation Design Q = ' + round(Q_foundation,2) + ' m³/s (IRC:78 safety factor +' + safetyPct + '% for catchment area). This augmented value is used only for foundation design — NOT for waterway or afflux.';
+
+  // Seed step 2
+  document.getElementById('trialHFL').value = hfl;
+
+  S.stepsDone.push(1);
+  unlockStep(2);
+  document.getElementById('step1').classList.add('done');
+  document.getElementById('step1').classList.remove('active');
+  updateProgress();
+}
+
+// ── Step 2 Cross Section Rows ──
+function addXsecRow(){
+  const tbody = document.getElementById('xsecBody');
+  const rowCount = tbody.querySelectorAll('tr').length + 1;
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td style="text-align:center;color:var(--muted);font-size:12px">${rowCount}</td>
+    <td><select class="input-field" style="padding:5px 6px;font-size:11.5px">
+      <option>Main channel (bed)</option><option>Left bank (flood plain)</option>
+      <option>Right bank (flood plain)</option><option>Left marginal</option><option>Right marginal</option>
+    </select></td>
+    <td><input type="number" class="xsec-w" placeholder="0.00" step="0.1" style="width:70px"></td>
+    <td><input type="number" class="xsec-d" placeholder="0.00" step="0.01" style="width:70px"></td>
+    <td><select class="xsec-n" style="width:80px">
+      <option value="0.025">0.025</option><option value="0.030">0.030</option>
+      <option value="0.035">0.035</option><option value="0.040">0.040</option>
+      <option value="0.045">0.045</option><option value="0.050">0.050</option>
+      <option value="0.060">0.060</option><option value="0.075">0.075</option>
+      <option value="0.100">0.100</option>
+    </select></td>
+    <td><button class="xsec-del" onclick="this.closest('tr').remove()">×</button></td>`;
+  tbody.appendChild(row);
+}
+
+// ── Step 2 Calculation ──
+function calcStep2(){
+  const slope = parseFloat(document.getElementById('slope').value);
+  const hfl   = parseFloat(document.getElementById('trialHFL').value);
+
+  if(isNaN(slope) || slope <= 0){ alert('Enter bed slope S (e.g. 0.0005)'); return; }
+  if(isNaN(hfl)){ alert('Enter trial HFL'); return; }
+
+  const rows   = document.querySelectorAll('#xsecBody tr');
+  let totalQ = 0, totalA = 0, totalP = 0;
+  let compHtml = '';
+
+  rows.forEach((row, i) => {
+    const B = parseFloat(row.querySelector('.xsec-w')?.value) || 0;
+    const D = parseFloat(row.querySelector('.xsec-d')?.value) || 0;
+    const n = parseFloat(row.querySelector('.xsec-n')?.value) || 0.035;
+    if(B <= 0 || D <= 0) return;
+
+    const A_c  = B * D;
+    const P_c  = B + 2 * D;
+    const R_c  = A_c / P_c;
+    const V_c  = (1/n) * Math.pow(R_c, 2/3) * Math.pow(slope, 0.5);
+    const Q_c  = A_c * V_c;
+
+    totalQ += Q_c; totalA += A_c; totalP += P_c;
+    compHtml += `<div class="result-row">
+      <span class="result-label">Comp.${i+1}: B=${B}m, D=${D}m, n=${n}</span>
+      <span class="result-val">${round(V_c,2)} m/s → Q=${round(Q_c,1)} m³/s</span>
+    </div>`;
+  });
+
+  if(totalQ === 0){ alert('Enter at least one compartment with width and depth.'); return; }
+
+  const designQ = S.Q_cumec;
+  const diff = Math.abs(totalQ - designQ) / designQ * 100;
+  const ok   = diff <= 2;
+  const meanV = totalA > 0 ? totalQ / totalA : 0;
+
+  S.Q_manning = totalQ;
+  S.totalArea  = totalA;
+  S.meanV      = meanV;
+
+  document.getElementById('manning-compartment-results').innerHTML = compHtml;
+  setText('r-qmanning', round(totalQ,2) + ' m³/s');
+  setText('r-qdesign-check', round(designQ,2) + ' m³/s');
+
+  const statusRow = document.getElementById('manning-status-row');
+  const statusEl  = document.getElementById('r-manning-status');
+  if(ok){
+    statusEl.textContent = '✓ Match within ' + round(diff,1) + '% (≤ 2% — OK)';
+    statusEl.style.color = 'var(--green)';
+    statusRow.classList.add('good');
+  } else {
+    statusEl.textContent = '⚠ Difference ' + round(diff,1) + '% > 2% — adjust trial HFL';
+    statusEl.style.color = 'var(--red)';
+    statusRow.classList.add('bad');
+  }
+
+  // Design HFL = higher of enquiry vs trial
+  const adoptedHFL = Math.max(S.hflEnquiry, hfl);
+  S.designHFL = adoptedHFL;
+  S.trialHFL  = hfl;
+
+  setText('r-designHFL', rl(adoptedHFL));
+  setText('r-totalArea',  round(totalA,2) + ' m²');
+  setText('r-meanV',      round(meanV,3)  + ' m/s');
+
+  const badge = document.getElementById('step2-badge');
+  badge.textContent = 'Q_Mann = ' + round(totalQ,1) + ' m³/s';
+  badge.style.display = 'block';
+
+  const note2 = document.getElementById('step2-note');
+  if(!ok){
+    note2.className = 'warn';
+    note2.textContent = 'Difference > 2%: Adjust trial HFL up or down and recalculate until Manning\'s Q matches design Q within 2%.';
+  } else {
+    note2.className = 'tip';
+    note2.textContent = 'Manning\'s Q tallies within 2% — proceed. Design HFL = ' + adoptedHFL.toFixed(2) + ' m RL (higher of enquiry vs computed).';
+  }
+  note2.style.display = '';
+
+  document.getElementById('step2-result').style.display = '';
+
+  // Seed step 3
+  document.getElementById('hflFinal1').value = S.hflEnquiry.toFixed(2);
+  document.getElementById('hflFinal2').value = hfl.toFixed(2);
+
+  if(ok){
+    S.stepsDone.push(2);
+    unlockStep(3);
+    document.getElementById('step2').classList.add('done');
+    document.getElementById('step2').classList.remove('active');
+  }
+  updateProgress();
+}
+
+// ── Step 3 ──
+function calcStep3(){
+  const h1 = parseFloat(document.getElementById('hflFinal1').value) || S.hflEnquiry;
+  const h2 = parseFloat(document.getElementById('hflFinal2').value) || S.trialHFL;
+  const h3 = parseFloat(document.getElementById('hflOther').value) || 0;
+  const arr = [h1,h2,h3].filter(x=>x>0);
+  const maxHFL = Math.max(...arr);
+  const src = maxHFL === h1 ? 'Local enquiry HFL' : maxHFL === h2 ? 'Manning\'s computed HFL' : 'Other (backwater/dam)';
+  S.designHFL = maxHFL;
+  S.hflSource  = src;
+
+  setText('r-finalHFL', rl(maxHFL));
+  setText('r-hflSource', src);
+
+  const badge = document.getElementById('step3-badge');
+  badge.textContent = 'HFL = ' + maxHFL.toFixed(2) + ' m';
+  badge.style.display = 'block';
+  document.getElementById('step3-result').style.display = '';
+
+  S.stepsDone.push(3);
+  unlockStep(4);
+  document.getElementById('step3').classList.add('done');
+  document.getElementById('step3').classList.remove('active');
+
+  // Seed Q1 for afflux
+  document.getElementById('q1Input').placeholder = 'e.g. ' + round(S.Q_cumec * 0.85,1);
+  updateProgress();
+}
+
+// ── Step 4 Waterway ──
+function updateWaterwayUI(){
+  const m = document.getElementById('waterwayMethod').value;
+  document.getElementById('cConstRow').style.display = m === 'rational' ? '' : 'none';
+  document.getElementById('waterwayAreaRow').style.display = m === 'area' ? '' : 'none';
+  document.getElementById('waterwayDepthRow').style.display = m === 'area' ? '' : 'none';
+}
+
+function calcStep4(){
+  const method = document.getElementById('waterwayMethod').value;
+  const Q = S.Q_cumec;
+  let W_req = 0;
+
+  if(method === 'rational'){
+    const C = parseFloat(document.getElementById('waterwayC').value) || 4.8;
+    W_req = C * Math.sqrt(Q);
+  } else {
+    const A_w = parseFloat(document.getElementById('waterwayArea').value);
+    const D_w = parseFloat(document.getElementById('waterwayDepth').value);
+    if(!A_w || !D_w){ alert('Enter wetted area and max depth.'); return; }
+    W_req = A_w / D_w;
+  }
+
+  const W_prop = parseFloat(document.getElementById('proposedWaterway').value);
+  if(!W_prop){ alert('Enter proposed linear waterway.'); return; }
+
+  const Qb = Q / W_prop;
+  const naturalW = W_req > W_prop ? W_prop * 1.2 : W_req * 1.1;
+  const obstruction = Math.max(0, (1 - W_prop / naturalW) * 100);
+
+  S.W_required = W_req;
+  S.W_proposed = W_prop;
+  S.Qb = Qb;
+  S.obstruction = obstruction;
+
+  setText('r-reqWaterway', round(W_req,1) + ' m');
+  setText('r-propWaterway', W_prop + ' m');
+  setText('r-qb', round(Qb,3) + ' m³/s per m width');
+  setText('r-obstruction', round(obstruction,1) + '% (should be < 20–25%)');
+
+  const wsRow = document.getElementById('waterway-status-row');
+  const wsEl  = document.getElementById('r-waterway-status');
+  if(W_prop >= W_req){
+    wsEl.textContent = '✓ Proposed ≥ Required — Adequate';
+    wsEl.style.color = 'var(--green)';
+    wsRow.classList.add('good');
+  } else {
+    wsEl.textContent = '⚠ Proposed < Required — Consider more spans';
+    wsEl.style.color = 'var(--red)';
+    wsRow.classList.add('bad');
+  }
+
+  const n4 = document.getElementById('step4-note');
+  n4.style.display = '';
+  if(obstruction > 25){
+    n4.className = 'warn';
+    n4.textContent = 'Obstruction ' + round(obstruction,1) + '% > 25% — increase linear waterway to reduce obstruction and afflux.';
+  } else {
+    n4.className = 'tip';
+    n4.textContent = 'Qb = ' + round(Qb,3) + ' m³/s/m width — used in Lacey scour formula (Step 5).';
+  }
+
+  const badge = document.getElementById('step4-badge');
+  badge.textContent = 'W = ' + W_prop + ' m | Qb = ' + round(Qb,3);
+  badge.style.display = 'block';
+  document.getElementById('step4-result').style.display = '';
+
+  S.stepsDone.push(4);
+  unlockStep(5);
+  document.getElementById('step4').classList.add('done');
+  document.getElementById('step4').classList.remove('active');
+  updateProgress();
+}
+
+// ── Step 5 Scour ──
+function updateKsf(){
+  const sel = document.getElementById('bedMaterial').value;
+  document.getElementById('customDmRow').style.display = sel === 'custom' ? '' : 'none';
+  let dm = 0;
+  if(sel === 'custom'){
+    dm = parseFloat(document.getElementById('customDm').value) || 0;
+  } else if(sel !== ''){
+    dm = parseFloat(sel);
+  }
+  if(dm > 0){
+    const Ksf = 1.76 * Math.sqrt(dm);
+    document.getElementById('dmDisplay').value = dm;
+    document.getElementById('ksfDisplay').value = round(Ksf, 4);
+    S.dm = dm; S.Ksf = Ksf;
+  }
+}
+
+function calcStep5(){
+  const Qb  = S.Qb;
+  const Ksf = S.Ksf;
+  if(!Ksf){ alert('Select bed material type.'); return; }
+  if(!Qb){ alert('Complete Step 4 first.'); return; }
+
+  const dsm = 1.34 * Math.pow((Qb * Qb) / Ksf, 1/3);
+  S.dsm = dsm;
+
+  setText('r-qb2', round(Qb,3) + ' m³/s/m');
+  setText('r-ksf', round(Ksf,4));
+  setText('r-dsm', round(dsm,3) + ' m');
+  setText('r-dPier',  round(2.0 * dsm, 3) + ' m (2.0 × dsm)');
+  setText('r-dAbutR', round(1.27 * dsm, 3) + ' m (1.27 × dsm)');
+  setText('r-dAbutW', round(2.0 * dsm, 3) + ' m (2.0 × dsm)');
+
+  const badge = document.getElementById('step5-badge');
+  badge.textContent = 'dsm = ' + round(dsm,2) + ' m';
+  badge.style.display = 'block';
+  document.getElementById('step5-result').style.display = '';
+
+  S.stepsDone.push(5);
+  unlockStep(6);
+  document.getElementById('step5').classList.add('done');
+  document.getElementById('step5').classList.remove('active');
+  updateProgress();
+}
+
+// ── Step 6 Scour Levels ──
+function calcStep6(){
+  const hfl = S.designHFL;
+  const dsm = S.dsm;
+
+  const scourPier  = hfl - 2.0 * dsm;
+  const scourAbutR = hfl - 1.27 * dsm;
+  const scourAbutW = hfl - 2.0 * dsm;
+
+  const embedPier  = parseFloat(document.getElementById('fdnTypePier').value);
+  const embdAbut   = parseFloat(document.getElementById('fdnTypeAbut').value);
+
+  const fdnPier = scourPier - embedPier;
+  const fdnAbut = Math.min(scourAbutR, scourAbutW) - embdAbut;
+
+  S.scourPier  = scourPier;
+  S.scourAbutR = scourAbutR;
+  S.scourAbutW = scourAbutW;
+  S.fdnPier    = fdnPier;
+  S.fdnAbut    = fdnAbut;
+
+  setText('r-hfl6', rl(hfl));
+  setText('r-scourPier',  rl(scourPier));
+  setText('r-scourAbutR', rl(scourAbutR));
+  setText('r-scourAbutW', rl(scourAbutW));
+  setText('r-fdnPier',    rl(fdnPier));
+  setText('r-fdnAbut',    rl(fdnAbut));
+
+  const badge = document.getElementById('step6-badge');
+  badge.textContent = 'Fdn Pier ≤ ' + round(fdnPier,2) + ' m';
+  badge.style.display = 'block';
+  document.getElementById('step6-result').style.display = '';
+
+  S.stepsDone.push(6);
+  unlockStep(7);
+  document.getElementById('step6').classList.add('done');
+  document.getElementById('step6').classList.remove('active');
+
+  // Seed afflux Q1
+  const q1est = round(S.Q_cumec * (S.W_proposed / (S.W_proposed / 0.85)), 1);
+  document.getElementById('q1Input').value = round(S.Q_cumec * 0.85, 1);
+  updateProgress();
+}
+
+// ── Step 7 Afflux ──
+function calcStep7(){
+  const Q  = S.Q_cumec;
+  const A  = S.totalArea || 1;
+  const V  = Q / A;
+  const Q1 = parseFloat(document.getElementById('q1Input').value) || Q * 0.85;
+
+  const ratio = Q / Q1;
+  const ha = (V*V/17.86 + 0.0153) * (ratio*ratio - 1);
+  S.afflux = ha;
+  S.meanV2 = V;
+
+  setText('r-meanV2', round(V,3) + ' m/s');
+  setText('r-qratio', round(ratio,3));
+
+  const affluxRow = document.getElementById('afflux-status-row');
+  const affluxEl  = document.getElementById('r-afflux');
+  affluxEl.textContent = round(ha,3) + ' m';
+  if(ha > 0.6){
+    affluxEl.style.color = 'var(--red)';
+    affluxRow.className = 'result-row bad';
+    setText('r-afflux-status', '⚠ EXCEEDS 0.60 m — Increase waterway!');
+    document.getElementById('step7-note').className = 'warn';
+    document.getElementById('step7-note').textContent = 'Afflux ' + round(ha,3) + ' m > 0.60 m limit (IRC). Increase linear waterway (add more spans or wider spans) and re-run from Step 4.';
+    document.getElementById('step7-note').style.display = '';
+  } else {
+    affluxEl.style.color = 'var(--green)';
+    affluxRow.className = 'result-row good';
+    setText('r-afflux-status', '✓ Within limit (' + round(ha,3) + ' m ≤ 0.60 m)');
+    document.getElementById('step7-note').className = 'tip';
+    document.getElementById('step7-note').textContent = 'Afflux within limit. Will be added to HFL for soffit calculation.';
+    document.getElementById('step7-note').style.display = '';
+  }
+
+  const badge = document.getElementById('step7-badge');
+  badge.textContent = 'ha = ' + round(ha,3) + ' m';
+  badge.style.display = 'block';
+  badge.className = ha > 0.6 ? 'step-result-badge' : 'step-result-badge green';
+  document.getElementById('step7-result').style.display = '';
+
+  if(ha <= 0.6){
+    S.stepsDone.push(7);
+    unlockStep(8);
+    document.getElementById('step7').classList.add('done');
+    document.getElementById('step7').classList.remove('active');
+  }
+  updateProgress();
+}
+
+// ── Step 8 Clearance ──
+function calcStep8(){
+  const Q = S.Q_cumec;
+  let cl = 0;
+  if(Q <= 0.3)       cl = 0.15;
+  else if(Q <= 3)    cl = 0.45;
+  else if(Q <= 30)   cl = 0.60;
+  else if(Q <= 300)  cl = 0.90;
+  else if(Q <= 3000) cl = 1.20;
+  else               cl = 1.50;
+
+  S.clearance = cl;
+
+  setText('r-q-clear', round(Q,2) + ' m³/s');
+  setText('r-clearance', cl * 1000 + ' mm (' + cl + ' m)');
+
+  const nav = document.getElementById('navClearance').value;
+  if(nav === '1') document.getElementById('nav-clear-row').style.display = '';
+
+  const badge = document.getElementById('step8-badge');
+  badge.textContent = 'Clear = ' + cl*1000 + ' mm';
+  badge.style.display = 'block';
+  badge.className = 'step-result-badge green';
+  document.getElementById('step8-result').style.display = '';
+
+  S.stepsDone.push(8);
+  unlockStep(9);
+  document.getElementById('step8').classList.add('done');
+  document.getElementById('step8').classList.remove('active');
+  updateProgress();
+}
+
+// ── Step 9 Soffit ──
+function calcStep9(){
+  const hfl      = S.designHFL;
+  const afflux   = S.afflux;
+  const clear    = S.clearance;
+  const soffit   = hfl + afflux + clear;
+  S.soffit = soffit;
+
+  document.getElementById('lc-hfl').textContent         = hfl.toFixed(3) + ' m';
+  document.getElementById('lc-afflux').textContent      = afflux.toFixed(3) + ' m';
+  document.getElementById('lc-clearance').textContent   = clear.toFixed(3) + ' m';
+  document.getElementById('lc-soffit').textContent      = soffit.toFixed(3) + ' m RL';
+
+  const badge = document.getElementById('step9-badge');
+  badge.textContent = 'Soffit = ' + soffit.toFixed(2) + ' m';
+  badge.style.display = 'block';
+  badge.className = 'step-result-badge green';
+  document.getElementById('step9-result').style.display = '';
+
+  S.stepsDone.push(9);
+  unlockStep(10);
+  document.getElementById('step9').classList.add('done');
+  document.getElementById('step9').classList.remove('active');
+  updateProgress();
+}
+
+// ── Step 10 RTL ──
+function updateGirderDepth(){
+  const sel = document.getElementById('superstType').value;
+  if(sel !== 'custom'){
+    document.getElementById('girderDepth').value = sel;
+  } else {
+    document.getElementById('girderDepth').value = '';
+  }
+}
+
+function calcStep10(){
+  const soffit = S.soffit;
+  const gd     = parseFloat(document.getElementById('girderDepth').value);
+  const wc     = parseFloat(document.getElementById('wcThickness').value) || 0.075;
+  if(!gd){ alert('Enter structural depth.'); return; }
+
+  const RTL = soffit + gd + wc;
+  S.girderDepth = gd;
+  S.wcThick     = wc;
+  S.RTL         = RTL;
+
+  document.getElementById('lc-soffit2').textContent  = soffit.toFixed(3) + ' m';
+  document.getElementById('lc-girderd').textContent  = gd.toFixed(3) + ' m';
+  document.getElementById('lc-wc').textContent       = wc.toFixed(3) + ' m';
+  document.getElementById('lc-rtl').textContent      = RTL.toFixed(3) + ' m RL';
+
+  const badge = document.getElementById('step10-badge');
+  badge.textContent = 'RTL = ' + RTL.toFixed(2) + ' m';
+  badge.style.display = 'block';
+  badge.className = 'step-result-badge green';
+  document.getElementById('step10-result').style.display = '';
+
+  S.stepsDone.push(10);
+  unlockStep(11);
+  document.getElementById('step10').classList.add('done');
+  document.getElementById('step10').classList.remove('active');
+  updateProgress();
+
+  buildGASummary();
+}
+
+// ── Step 11 GA Summary ──
+function buildGASummary(){
+  const html = `
+  <div style="font-size:11px;color:var(--muted);margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:10px">
+    <strong style="font-size:14px;color:var(--ink)">Hydraulic Calculation Sheet</strong><br>
+    Bridge Design Guidelines 2007 · IRC:78 · Maharashtra PWD<br>
+    Catchment: ${round(S.catchArea_sqkm,1)} sq.km · Formula: ${S.formula}
+  </div>
+
+  <table style="width:100%;font-size:12.5px;border-collapse:collapse">
+    <tr style="background:var(--teal);color:#fff">
+      <th style="padding:7px 10px;text-align:left;font-size:11px">Parameter</th>
+      <th style="padding:7px 10px;text-align:right;font-size:11px">Value</th>
+      <th style="padding:7px 10px;text-align:left;font-size:11px">Reference</th>
+    </tr>
+    ${gaRow('Catchment Area (A)', round(S.catchArea_sqkm,1)+' sq.km ('+round(S.catchArea_sqmiles,3)+' sq.mi)', 'Topo sheet')}
+    ${gaRow('Design Discharge Q (empirical)', round(S.Q_cusec,0)+' cusecs = '+round(S.Q_cumec,2)+' m³/s', S.formula)}
+    ${gaRow('Foundation Design Q', round(S.Q_foundation,2)+' m³/s', 'IRC:78 Cl.703.1')}
+    ${gaRow('HFL from enquiry', S.hflEnquiry.toFixed(2)+' m RL', 'Local enquiry')}
+    ${gaRow('Manning\'s Q at trial HFL', round(S.Q_manning,2)+' m³/s', 'Manning\'s formula')}
+    ${gaRow('Design HFL (adopted)', S.designHFL.toFixed(3)+' m RL', S.hflSource)}
+    ${gaRow('Bed Level at site', S.bedLevel.toFixed(2)+' m RL', 'Survey')}
+    ${gaRow('Flood depth at HFL', round(S.designHFL - S.bedLevel, 2)+' m', '')}
+    ${gaRow('Required Linear Waterway', round(S.W_required,1)+' m', 'Rational method')}
+    ${gaRow('Proposed Linear Waterway', S.W_proposed+' m', 'Proposed')}
+    ${gaRow('Discharge per metre width (Qb)', round(S.Qb,4)+' m³/s/m', 'For scour')}
+    ${gaRow('Bed material (dm)', S.dm+' mm', 'Field observation')}
+    ${gaRow('Silt factor (Ksf)', round(S.Ksf,4), '1.76√dm')}
+    ${gaRow('Mean scour depth (dsm)', round(S.dsm,3)+' m', 'Lacey-Inglis')}
+    ${gaRow('Design scour at pier (2.0×dsm)', round(2*S.dsm,3)+' m', 'IRC:78')}
+    ${gaRow('Scour level at pier', round(S.designHFL - 2*S.dsm,3)+' m RL', 'HFL − 2.0×dsm')}
+    ${gaRow('Scour level at abutment (retained)', round(S.designHFL - 1.27*S.dsm,3)+' m RL', 'HFL − 1.27×dsm')}
+    ${gaRow('Foundation RL at pier (min)', round(S.fdnPier,3)+' m RL', 'Scour level − embed')}
+    ${gaRow('Foundation RL at abutment (min)', round(S.fdnAbut,3)+' m RL', 'Scour level − embed')}
+    ${gaRow('Afflux (ha)', round(S.afflux,3)+' m', 'Molesworth'+(S.afflux>0.6?' ⚠ EXCEEDS 0.6m!':''))}
+    ${gaRow('Vertical clearance (IRC)', S.clearance*1000+' mm = '+S.clearance+' m', 'IRC:78 Table')}
+    <tr style="background:var(--orange-lt);font-weight:700">
+      <td style="padding:8px 10px;color:var(--teal)">✓ SOFFIT LEVEL</td>
+      <td style="padding:8px 10px;text-align:right;font-family:var(--mono);color:var(--orange);font-size:14px">${S.soffit.toFixed(3)} m RL</td>
+      <td style="padding:8px 10px;color:var(--orange)">HFL + ha + clearance</td>
+    </tr>
+    ${gaRow('Structural depth adopted', S.girderDepth.toFixed(3)+' m', 'Superstructure type')}
+    ${gaRow('Wearing coat thickness', S.wcThick.toFixed(3)+' m', '')}
+    <tr style="background:var(--green-lt);font-weight:700">
+      <td style="padding:8px 10px;color:var(--teal)">✓ ROAD TOP LEVEL (RTL)</td>
+      <td style="padding:8px 10px;text-align:right;font-family:var(--mono);color:var(--green);font-size:14px">${S.RTL.toFixed(3)} m RL</td>
+      <td style="padding:8px 10px;color:var(--green)">Soffit + depth + WC</td>
+    </tr>
+  </table>
+
+  <div style="margin-top:16px;padding:10px 12px;background:#f0f4f6;border-radius:8px;font-size:11px;color:var(--muted)">
+    <strong>Computed by:</strong> Bridge Hydraulic Calculator — PWD Field Engineer Assistant<br>
+    <strong>Reference:</strong> PWD Maharashtra Bridge Design Guidelines 2007 · IRC:78-2000 · IRC SP-13<br>
+    <strong>Note:</strong> These calculations are for preliminary design. Final design must be checked and signed by competent engineer as per PWD procedure.
+  </div>`;
+
+  document.getElementById('ga-summary').innerHTML = html;
+  document.getElementById('step11').classList.remove('locked');
+  document.getElementById('step11').classList.add('open');
+  setTimeout(() => {
+    document.getElementById('step11-anchor').scrollIntoView({behavior:'smooth', block:'start'});
+  }, 200);
+}
+
+function gaRow(label, val, ref){
+  return `<tr>
+    <td style="padding:6px 10px;border-bottom:1px solid var(--line);color:var(--muted)">${label}</td>
+    <td style="padding:6px 10px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--mono);font-weight:700;color:var(--ink)">${val}</td>
+    <td style="padding:6px 10px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)">${ref}</td>
+  </tr>`;
+}
+</script>
+</body>
+</html>
