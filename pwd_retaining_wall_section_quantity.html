@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Retaining Wall — PWD Field Tool</title>
+<style>
+:root{
+  --ink:#1a1f2e;--ink2:#3d4558;--line:#cdd2db;--bg:#eef1f6;
+  --card:#fff;--blue:#1a56a0;--orange:#d97706;--green:#166534;
+  --mono:'Courier New',monospace;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:15px}
+header{background:var(--blue);color:#fff;padding:12px 16px;display:flex;align-items:center;
+  gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+header h1{font-size:15px;font-weight:700;line-height:1.2}
+header p{font-size:10px;opacity:.75;margin-top:1px}
+.card{background:var(--card);border-radius:10px;margin:12px;
+  box-shadow:0 1px 5px rgba(0,0,0,.09);overflow:hidden}
+.card-head{background:var(--blue);color:#fff;font-size:11px;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;padding:7px 14px}
+.card-body{padding:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11.5px;font-weight:600;color:var(--ink2);margin-bottom:4px}
+.field label em{font-weight:400;color:#aaa;font-style:normal;font-size:10.5px;font-family:var(--mono)}
+input[type=number],select{width:100%;padding:10px 12px;border:1.5px solid var(--line);
+  border-radius:7px;font-size:16px;font-family:var(--mono);color:var(--ink);
+  background:#fafbfd;-webkit-appearance:none;appearance:none}
+input:focus,select:focus{outline:none;border-color:var(--blue);background:#fff}
+select{font-size:14px;font-family:var(--sans)}
+.pill{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;
+  font-weight:700;letter-spacing:.3px;margin-bottom:10px}
+.p1{background:#e8f4ff;color:#1a56a0;border:1px solid #bfdbfe}
+.p2{background:#fff3e0;color:#b45309;border:1px solid #fcd34d}
+.fprev{background:#f0f5ff;border:1px solid #c7d7f7;border-radius:7px;
+  padding:9px 13px;font-size:12px;font-family:var(--mono);color:var(--ink2);
+  line-height:1.9;margin-top:4px;display:none}
+.fprev b{color:var(--blue)}
+#calcBtn{display:block;width:calc(100% - 24px);margin:0 12px 12px;padding:14px;
+  background:var(--blue);color:#fff;font-size:16px;font-weight:700;
+  border:none;border-radius:10px;cursor:pointer;box-shadow:0 3px 12px rgba(26,86,160,.3)}
+#calcBtn:active{background:#123f7a}
+#results{display:none}
+#printSheet{background:#fff;border:2px solid #555;margin:12px;overflow:hidden;font-family:Arial,sans-serif}
+.ps-tb{background:#1a1f2e;color:#fff;padding:9px 16px;display:flex;justify-content:space-between;align-items:center}
+.ps-tb h2{font-size:13px;letter-spacing:.3px;font-weight:700}
+.ps-tb span{font-size:10px;opacity:.7}
+.ps-drawing{background:#fff;padding:4px 4px 0}
+#dwgSVG{display:block;width:100%;height:auto}
+.ps-calc{padding:8px 14px 6px;border-top:1.5px solid #333}
+.ps-ct{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  border-bottom:1.5px solid #333;padding-bottom:4px;margin-bottom:7px;color:#1a1f2e}
+.irow{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.itag{background:#f0f5ff;border:1px solid #c7d7f7;border-radius:3px;
+  padding:2px 7px;font-size:11px;font-family:var(--mono)}
+.itag b{color:var(--blue)}
+.cr{display:grid;grid-template-columns:170px 1fr 105px;
+  gap:4px;padding:3px 2px;border-bottom:1px solid #eee;align-items:center;font-size:12px}
+.cr:last-child{border-bottom:none}
+.lbl{font-weight:700;color:#1a1f2e}
+.fml{font-family:var(--mono);font-size:10px;color:#555}
+.res{font-weight:800;font-family:var(--mono);text-align:right;color:var(--blue);font-size:13px}
+.csep{background:#e8f0fe;font-size:10px;font-weight:700;color:var(--blue);
+  padding:2px 4px;letter-spacing:.4px;grid-column:1/-1;border:none;margin-top:3px}
+.ctot{background:#fffbf0}
+.ctot .res{color:var(--orange);font-size:14px}
+.ps-note{background:#f8f9fa;border-top:1.5px solid #aaa;padding:6px 14px;font-size:10px;color:#333;line-height:1.7}
+.ps-note strong{color:#1a1f2e}
+.ps-ft{font-size:9px;color:#666;padding:4px 14px 7px;border-top:1px solid #ddd;
+  display:flex;justify-content:space-between}
+#prtBtn{display:block;width:calc(100% - 24px);margin:0 12px 24px;padding:13px;
+  background:var(--green);color:#fff;font-size:15px;font-weight:700;border:none;border-radius:10px;cursor:pointer}
+@media print{
+  body{background:#fff!important}
+  header,#inputSec,#calcBtn,#prtBtn{display:none!important}
+  #results{display:block!important}
+  #printSheet{border:2px solid #000;margin:0;box-shadow:none}
+  .ps-tb{background:#000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{margin:5mm;size:A4 portrait}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="font-size:22px">🏗️</div>
+  <div>
+    <h1>Retaining Wall — Section Calculator</h1>
+    <p>Maharashtra PWD · Field Tool · H ≤ 2.50 m single section · H > 2.50 m three-step</p>
+  </div>
+</header>
+
+<div id="inputSec" class="card">
+  <div class="card-head">📐 Enter Wall Parameters</div>
+  <div class="card-body">
+    <div class="g2">
+      <div class="field">
+        <label>Wall Height H <em>(m)</em></label>
+        <input type="number" id="inH" min="0.50" max="8.00" step="0.25"
+          placeholder="Enter height" oninput="preview()">
+      </div>
+      <div class="field">
+        <label>Top Width TW <em>(m)</em></label>
+        <input type="number" id="inTW" min="0.30" max="0.80" step="0.05" value="0.60" oninput="preview()">
+      </div>
+    </div>
+    <div id="casePill" style="display:none;margin-bottom:10px"></div>
+    <div class="g2">
+      <div class="field">
+        <label>Length L <em>(m)</em></label>
+        <input type="number" id="inL" min="0.5" max="500" step="0.50" value="1.00">
+      </div>
+      <div class="field">
+        <label>Excavation Depth <em>(m)</em></label>
+        <input type="number" id="inED" min="0.50" max="3.00" step="0.25" value="1.00">
+      </div>
+    </div>
+    <div class="g3">
+      <div class="field">
+        <label>PCC Thickness <em>(m)</em></label>
+        <input type="number" id="inPt" min="0.10" max="0.40" step="0.05" value="0.10">
+      </div>
+      <div class="field">
+        <label>Offset each side <em>(m)</em></label>
+        <input type="number" id="inOff" min="0.15" max="0.60" step="0.05" value="0.30">
+      </div>
+      <div class="field">
+        <label>Concrete Grade</label>
+        <select id="inGr">
+          <option value="M10">M-10</option>
+          <option value="M15" selected>M-15</option>
+          <option value="M20">M-20</option>
+          <option value="M25">M-25</option>
+        </select>
+      </div>
+    </div>
+    <div class="fprev" id="fprev"></div>
+  </div>
+</div>
+
+<button id="calcBtn" onclick="calc()">▶ Generate Section &amp; Quantities</button>
+
+<div id="results">
+<div id="printSheet">
+  <div class="ps-tb">
+    <h2 id="psH">RETAINING WALL CROSS SECTION</h2>
+    <span id="psD"></span>
+  </div>
+  <div class="ps-drawing">
+    <svg id="dwgSVG" xmlns="http://www.w3.org/2000/svg"
+         style="font-family:Arial,sans-serif;display:block;width:100%;height:auto"></svg>
+  </div>
+  <div class="ps-calc">
+    <div class="ps-ct">Quantity Calculation</div>
+    <div class="irow" id="irow"></div>
+    <div id="cgrid"></div>
+  </div>
+  <div class="ps-note" id="psnote"></div>
+  <div class="ps-ft">
+    <span>Prepared by: _________________________ &nbsp;&nbsp; Checked by: _________________________</span>
+    <span>Maharashtra PWD · Field Tool</span>
+  </div>
+</div>
+<button id="prtBtn" onclick="window.print()">🖨️ Print / Export PDF — Hand to Contractor</button>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  FORMULAS
+//  Case 1 — H ≤ 2.50 m
+//    BW = TW + H/4  (front 1:4, back vertical)
+//    Concrete = L×(TW+BW)/2×H
+//    PCC = (L+2off)×(BW+2off)×Pt
+//    EXC = (L+2off)×(BW+2off)×ED
+//
+//  Case 2 — H > 2.50 m
+//    H5  = H/5         (bottom zone height)
+//    Hx  = H − H5      (height above bottom zone)
+//    Hs1 = 2.50        (top zone)
+//    Hs2 = Hx − 2.50  (mid zone)
+//    Hs3 = H5          (bottom zone)
+//    S1  = TW + 2.5/4
+//    S2  = TW + Hx/4 + (Hx−2.5)/6
+//    S3  = TW + Hx/4 + (H−2.5)/6 + H5
+//    BLKbase = S3 + 2×off
+//    C1 = L×(TW+S1)/2×Hs1
+//    C2 = L×(S1+S2)/2×Hs2
+//    C3 = L×(S2+S3)/2×Hs3
+//    Cb = L×S3×0.40
+// ════════════════════════════════════════════════════════
+
+function v(id){return parseFloat(document.getElementById(id).value)}
+function f2(n){return Number(n).toFixed(2)}
+function f3(n){return Number(n).toFixed(3)}
+
+function preview(){
+  const H=v('inH'),TW=v('inTW');
+  const pill=document.getElementById('casePill'),fp=document.getElementById('fprev');
+  if(isNaN(H)||H<=0){pill.style.display='none';fp.style.display='none';return}
+  pill.style.display='block'; fp.style.display='block';
+  if(H<=2.5){
+    pill.innerHTML='<span class="pill p1">▼ H ≤ 2.50 m — Single Trapezoidal Section</span>';
+    const BW=TW+H/4;
+    fp.innerHTML=`BW = TW + H/4 = ${f2(TW)} + ${f2(H)}/4 = <b>${f2(BW)} m</b>`;
+  } else {
+    const H5=H/5,Hx=H-H/5;
+    const S1=TW+2.5/4,S2=TW+Hx/4+(Hx-2.5)/6,S3=TW+Hx/4+(H-2.5)/6+H5;
+    pill.innerHTML='<span class="pill p2">▲ H > 2.50 m — Three-Step Section</span>';
+    fp.innerHTML=`H/5=${f2(H5)}m &nbsp;|&nbsp; S1=${f3(S1)}m &nbsp;|&nbsp; S2=${f3(S2)}m &nbsp;|&nbsp; S3=${f3(S3)}m`;
+  }
+}
+
+function calc(){
+  const H=v('inH'),TW=v('inTW'),L=v('inL'),Pt=v('inPt'),off=v('inOff'),ED=v('inED');
+  const gr=document.getElementById('inGr').value;
+  if([H,TW,L,Pt,off,ED].some(x=>isNaN(x)||x<=0)){alert('Please fill all fields.');return}
+  document.getElementById('psD').textContent=
+    new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  if(H<=2.5) doCase1(H,TW,L,Pt,off,ED,gr);
+  else        doCase2(H,TW,L,Pt,off,ED,gr);
+  document.getElementById('results').style.display='block';
+  setTimeout(()=>document.getElementById('results').scrollIntoView({behavior:'smooth'}),80);
+}
+
+/* ─── CASE 1 ─── */
+function doCase1(H,TW,L,Pt,off,ED,gr){
+  const BW=TW+H/4, PW=BW+2*off, PL=L+2*off;
+  const CONC=L*(TW+BW)/2*H, PCC=PL*PW*Pt, EXC=PL*PW*ED;
+  document.getElementById('psH').textContent='RETAINING WALL CROSS SECTION  (H ≤ 2.50 m)';
+  setTags([{k:'H',v:H+'m'},{k:'TW',v:TW+'m'},{k:'L',v:L+'m'},
+    {k:'Offset',v:off+'m'},{k:'PCC_t',v:Pt+'m'},{k:'Exc.Depth',v:ED+'m'},{k:'Grade',v:gr}]);
+  document.getElementById('cgrid').innerHTML=`
+    <div class="cr"><span class="csep">DIMENSIONS</span></div>
+    <div class="cr"><span class="lbl">Bottom Width (BW)</span>
+      <span class="fml">= TW + H/4 = ${f2(TW)} + ${f2(H)}/4</span>
+      <span class="res">${f2(BW)} m</span></div>
+    <div class="cr"><span class="lbl">PCC Width</span>
+      <span class="fml">= BW + ${f2(off)} + ${f2(off)}</span>
+      <span class="res">${f2(PW)} m</span></div>
+    <div class="cr"><span class="lbl">PCC / Exc. Length</span>
+      <span class="fml">= ${f2(L)} + ${f2(off)} + ${f2(off)}</span>
+      <span class="res">${f2(PL)} m</span></div>
+    <div class="cr"><span class="csep">QUANTITIES</span></div>
+    <div class="cr ctot"><span class="lbl">1) Excavation</span>
+      <span class="fml">= ${f2(PL)} × ${f2(PW)} × ${f2(ED)}</span>
+      <span class="res">${f3(EXC)} m³</span></div>
+    <div class="cr ctot"><span class="lbl">2) PCC (1:4:8)</span>
+      <span class="fml">= ${f2(PL)} × ${f2(PW)} × ${f2(Pt)}</span>
+      <span class="res">${f3(PCC)} m³</span></div>
+    <div class="cr ctot"><span class="lbl">3) Concrete (${gr})</span>
+      <span class="fml">= ${f2(L)} × (${f2(TW)}+${f2(BW)})/2 × ${f2(H)}</span>
+      <span class="res">${f3(CONC)} m³</span></div>`;
+  document.getElementById('psnote').innerHTML=
+    `<strong>Notes:</strong> All dimensions in <strong>metres (m)</strong>. &nbsp;
+     <strong>TW</strong> = Top Width. &nbsp; <strong>BW</strong> = Bottom Width = TW + H/4. &nbsp;
+     Front face slope <strong>1:4</strong>. Back face <strong>Vertical</strong>. &nbsp;
+     PCC offset = <strong>${f2(off)} m</strong> each side. Grade: <strong>${gr}</strong>. &nbsp;
+     Excavation depth assumed: <strong>${f2(ED)} m</strong>. Drawing not to scale.`;
+  drawC1({H,TW,BW,L,Pt,off,PW,gr});
+}
+
+/* ─── CASE 2 ─── */
+function doCase2(H,TW,L,Pt,off,ED,gr){
+  const H5=H/5, Hx=H-H5;
+  const Hs1=2.50, Hs2=Hx-2.50, Hs3=H5;
+  const S1=TW+2.5/4, S2=TW+Hx/4+(Hx-2.5)/6, S3=TW+Hx/4+(H-2.5)/6+H5;
+  const BLK=S3+2*off, PL=L+2*off;
+  const C1=L*(TW+S1)/2*Hs1, C2=L*(S1+S2)/2*Hs2, C3=L*(S2+S3)/2*Hs3, Cb=L*S3*0.40;
+  const Ct=C1+C2+C3+Cb, PCC=PL*BLK*Pt, EXC=PL*BLK*ED;
+  document.getElementById('psH').textContent='RETAINING WALL CROSS SECTION  (H > 2.50 m)';
+  setTags([{k:'H',v:H+'m'},{k:'TW',v:TW+'m'},{k:'L',v:L+'m'},
+    {k:'H/5',v:f2(H5)+'m'},{k:'Offset',v:off+'m'},{k:'PCC_t',v:Pt+'m'},
+    {k:'Exc.Depth',v:ED+'m'},{k:'Grade',v:gr}]);
+  document.getElementById('cgrid').innerHTML=`
+    <div class="cr"><span class="csep">STEP WIDTHS</span></div>
+    <div class="cr"><span class="lbl">S1 (top–mid junction)</span>
+      <span class="fml">= TW + 2.5/4 = ${f2(TW)} + ${f2(2.5/4)}</span>
+      <span class="res">${f3(S1)} m</span></div>
+    <div class="cr"><span class="lbl">S2 (mid–lower junction)</span>
+      <span class="fml">= TW + ${f2(Hx)}/4 + (${f2(Hx)}−2.5)/6</span>
+      <span class="res">${f3(S2)} m</span></div>
+    <div class="cr"><span class="lbl">S3 (wall base)</span>
+      <span class="fml">= TW + ${f2(Hx)}/4 + (${f2(H)}−2.5)/6 + ${f2(H5)}</span>
+      <span class="res">${f3(S3)} m</span></div>
+    <div class="cr"><span class="lbl">Block / PCC Width</span>
+      <span class="fml">= S3 + ${f2(off)} + ${f2(off)}</span>
+      <span class="res">${f3(BLK)} m</span></div>
+    <div class="cr"><span class="csep">STEP HEIGHTS — Hs1 = 2.50 m &nbsp;|&nbsp; Hs2 = ${f2(Hs2)} m &nbsp;|&nbsp; Hs3 (H/5) = ${f2(Hs3)} m &nbsp;|&nbsp; Block = 0.40 m</span></div>
+    <div class="cr"><span class="csep">QUANTITIES</span></div>
+    <div class="cr ctot"><span class="lbl">1) Excavation</span>
+      <span class="fml">= ${f2(PL)} × ${f3(BLK)} × ${f2(ED)}</span>
+      <span class="res">${f3(EXC)} m³</span></div>
+    <div class="cr ctot"><span class="lbl">2) PCC (1:4:8)</span>
+      <span class="fml">= ${f2(PL)} × ${f3(BLK)} × ${f2(Pt)}</span>
+      <span class="res">${f3(PCC)} m³</span></div>
+    <div class="cr"><span class="lbl">3a) Step-1 (top, 2.50m)</span>
+      <span class="fml">= ${f2(L)}×(${f2(TW)}+${f3(S1)})/2×2.50</span>
+      <span class="res">${f3(C1)} m³</span></div>
+    <div class="cr"><span class="lbl">3b) Step-2 (mid, ${f2(Hs2)}m)</span>
+      <span class="fml">= ${f2(L)}×(${f3(S1)}+${f3(S2)})/2×${f2(Hs2)}</span>
+      <span class="res">${f3(C2)} m³</span></div>
+    <div class="cr"><span class="lbl">3c) Step-3 (lower, ${f2(Hs3)}m)</span>
+      <span class="fml">= ${f2(L)}×(${f3(S2)}+${f3(S3)})/2×${f2(Hs3)}</span>
+      <span class="res">${f3(C3)} m³</span></div>
+    <div class="cr"><span class="lbl">3d) Bottom Block (0.40m)</span>
+      <span class="fml">= ${f2(L)} × ${f3(S3)} × 0.40</span>
+      <span class="res">${f3(Cb)} m³</span></div>
+    <div class="cr ctot"><span class="lbl">3) Total Concrete (${gr})</span>
+      <span class="fml">= 3a + 3b + 3c + 3d</span>
+      <span class="res">${f3(Ct)} m³</span></div>`;
+  document.getElementById('psnote').innerHTML=
+    `<strong>Notes:</strong> All dimensions in <strong>metres (m)</strong>. &nbsp;
+     <strong>TW</strong> = Top Width. &nbsp; <strong>S1 / S2 / S3</strong> = Step widths. &nbsp;
+     Back: upper <strong>1:4</strong>, lower <strong>1:6</strong>. &nbsp;
+     Front: upper <strong>1:4</strong>, lower <strong>1:1</strong>. &nbsp;
+     Bottom block = <strong>0.40 m</strong> fixed height. &nbsp;
+     H/5 = <strong>${f2(H5)} m</strong>. &nbsp; Grade: <strong>${gr}</strong>. Drawing not to scale.`;
+  drawC2({H,TW,L,Pt,off,H5,Hx,Hs1,Hs2,Hs3,S1,S2,S3,BLK,gr});
+}
+
+function setTags(arr){
+  document.getElementById('irow').innerHTML=
+    arr.map(o=>`<span class="itag"><b>${o.k}</b>=${o.v}</span>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   DRAWING HELPERS
+══════════════════════════════════════════════════════ */
+function dH(x1,y,x2,y2,lbl,col,fs){
+  if(Math.abs(x2-x1)<5)return'';
+  const mx=(x1+x2)/2;
+  return`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="1"/>
+<line x1="${x1}" y1="${y-6}" x2="${x1}" y2="${y+6}" stroke="${col}" stroke-width="1"/>
+<line x1="${x2}" y1="${y2-6}" x2="${x2}" y2="${y2+6}" stroke="${col}" stroke-width="1"/>
+<text x="${mx}" y="${y-8}" font-size="${fs||11}" fill="${col}" text-anchor="middle"
+  font-weight="bold" font-family="Arial">${lbl}</text>`;
+}
+function dV(x,y1,y2,lbl,col,fs){
+  if(Math.abs(y2-y1)<5)return'';
+  const my=(y1+y2)/2;
+  return`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${col}" stroke-width="1"/>
+<line x1="${x-6}" y1="${y1}" x2="${x+6}" y2="${y1}" stroke="${col}" stroke-width="1"/>
+<line x1="${x-6}" y1="${y2}" x2="${x+6}" y2="${y2}" stroke="${col}" stroke-width="1"/>
+<text x="${x-9}" y="${my+4}" font-size="${fs||11}" fill="${col}" text-anchor="end"
+  font-weight="bold" font-family="Arial">${lbl}</text>`;
+}
+function soil(sl,sr,st,sb){
+  let s=`<rect x="${sl}" y="${st}" width="${sr-sl}" height="${sb-st}" fill="#f5ede0" opacity="0.8"/>`;
+  for(let y=st+12;y<=sb;y+=20)
+    s+=`<line x1="${sr-3}" y1="${y}" x2="${sr-20}" y2="${y+17}" stroke="#b08040" stroke-width="1.1"/>`;
+  return s;
+}
+function legend(lx,ly){
+  let s='';
+  [['#c8d8f0','Concrete'],['#d4c9a0','PCC'],['#f5ede0','Soil']].forEach(([c,l],i)=>{
+    s+=`<rect x="${lx}" y="${ly+i*20}" width="16" height="12" fill="${c}" stroke="#555" stroke-width="0.9"/>`;
+    s+=`<text x="${lx+20}" y="${ly+i*20+10}" font-size="11" fill="#222">${l}</text>`;
+  });
+  return s;
+}
+
+/* ══════════════════════════════════════════════════════
+   CASE 1 SVG — Single trapezoid, large
+   ViewBox 700×420, margins L=130 R=100 T=65 B=115
+══════════════════════════════════════════════════════ */
+function drawC1(d){
+  const VW=700,VH=420,ml=130,mr=100,mt=65,mb=115;
+  const dw=VW-ml-mr,dh=VH-mt-mb;
+  const sc=Math.min(dw/d.PW,dh/(d.H+d.Pt))*0.82;
+  const ox=ml+(dw-d.PW*sc)/2, oy=VH-mb;
+  const px=x=>ox+x*sc, py=y=>oy-y*sc;
+
+  // x-coords (real)
+  const xBk=d.off, xBtF=d.off+d.BW, xTpF=d.off+d.TW, xTpB=d.off;
+  const glY=py(d.Pt+d.H);
+  const soilR=px(xBk), soilL=px(0)-44;
+
+  let s=soil(soilL,soilR,glY,py(d.Pt));
+  // GL
+  s+=`<line x1="${soilL}" y1="${glY}" x2="${px(xBk)+6}" y2="${glY}" stroke="#222" stroke-width="2.2"/>`;
+  for(let i=0;i<8;i++)s+=`<line x1="${soilL+6+i*18}" y1="${glY}" x2="${soilL-2+i*18}" y2="${glY+13}" stroke="#222" stroke-width="1.2"/>`;
+  s+=`<text x="${soilL-3}" y="${glY-7}" font-size="12" font-weight="bold" fill="#222">G.L.</text>`;
+  // PCC
+  s+=`<rect x="${px(0)}" y="${py(d.Pt)}" width="${d.PW*sc}" height="${d.Pt*sc}" fill="#d4c9a0" stroke="#333" stroke-width="1.6"/>`;
+  for(let xi=0.04;xi<d.PW;xi+=0.12)s+=`<line x1="${px(xi)}" y1="${py(0)}" x2="${px(xi+0.07)}" y2="${py(d.Pt)}" stroke="#a08040" stroke-width="0.6" opacity="0.5"/>`;
+  s+=`<text x="${px(d.PW/2)}" y="${py(d.Pt/2)+5}" font-size="13" font-weight="bold" fill="#5c3d10" text-anchor="middle">P.C.C.</text>`;
+  // Wall
+  s+=`<polygon points="${px(xBk)},${py(d.Pt)} ${px(xBtF)},${py(d.Pt)} ${px(xTpF)},${py(d.Pt+d.H)} ${px(xTpB)},${py(d.Pt+d.H)}" fill="#c8d8f0" stroke="#222" stroke-width="2"/>`;
+  // 1:4 label outside front
+  const sx=(px(xBtF)+px(xTpF))/2+16, sy=(py(d.Pt)+py(d.Pt+d.H))/2;
+  const ang=-(Math.atan(d.H/(d.BW-d.TW))*180/Math.PI)|0;
+  s+=`<text x="${sx}" y="${sy+4}" font-size="14" font-weight="bold" fill="#1a1f2e" text-anchor="start" transform="rotate(${ang},${sx},${sy+4})">1:4</text>`;
+
+  // DIMS
+  s+=dH(px(xTpB),py(d.Pt+d.H)-28,px(xTpF),py(d.Pt+d.H)-28,`TW = ${f2(d.TW)} m`,'#000',12);
+  s+=dV(px(0)-65,py(d.Pt+d.H),py(d.Pt),`H = ${f2(d.H)} m`,'#000',12);
+  s+=dV(px(0)-34,py(d.Pt),py(0),`${f2(d.Pt)} m`,'#7c5500',11);
+  // total height ref right
+  const thrX=px(d.PW)+28;
+  s+=`<line x1="${thrX}" y1="${py(0)}" x2="${thrX}" y2="${py(d.Pt+d.H)}" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3"/>`;
+  s+=`<line x1="${thrX-6}" y1="${py(0)}" x2="${thrX+6}" y2="${py(0)}" stroke="#bbb" stroke-width="1"/>`;
+  s+=`<line x1="${thrX-6}" y1="${py(d.Pt+d.H)}" x2="${thrX+6}" y2="${py(d.Pt+d.H)}" stroke="#bbb" stroke-width="1"/>`;
+  s+=`<text x="${thrX+8}" y="${(py(0)+py(d.Pt+d.H))/2+4}" font-size="10" fill="#888">${f2(d.H+d.Pt)} m</text>`;
+  // below PCC
+  const r1Y=py(0)+26;
+  s+=dH(px(0),r1Y,px(xBk),r1Y,`${f2(d.off)} m`,'#666',10);
+  s+=dH(px(xBk),r1Y,px(xBtF),r1Y,`BW = ${f2(d.BW)} m`,'#000',12);
+  s+=dH(px(xBtF),r1Y,px(d.PW),r1Y,`${f2(d.off)} m`,'#666',10);
+  const r2Y=py(0)+50;
+  s+=dH(px(0),r2Y,px(d.PW),r2Y,`PCC Width = ${f2(d.PW)} m`,'#7c5500',12);
+
+  // Title
+  s+=`<text x="${VW/2}" y="22" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">RETAINING WALL CROSS SECTION  (H ≤ 2.50 m)</text>`;
+  s+=`<text x="${VW/2}" y="38" font-size="10.5" fill="#555" text-anchor="middle">Back Face: Vertical (Soil Side)  ·  Front Face: Slope 1:4  ·  Drawing not to scale</text>`;
+  s+=legend(VW-mr+8,mt+4);
+
+  const svg=document.getElementById('dwgSVG');
+  svg.setAttribute('viewBox',`0 0 ${VW} ${VH}`);
+  svg.innerHTML=s;
+}
+
+/* ══════════════════════════════════════════════════════
+   CASE 2 SVG — Three-step section matching AutoCAD
+   Back face (LEFT)  = PERFECTLY VERTICAL (constant x)
+   Front face (RIGHT) = all width gain, steps out going down
+   ViewBox 700×490, margins L=130 R=120 T=65 B=125
+══════════════════════════════════════════════════════ */
+function drawC2(d){
+  // ═══ GEOMETRY (origin = PCC left edge = 0) ═══
+  // Back face: goes RIGHT going UP (wall narrows on back side going up)
+  //   bk_base = off                       (wall/block left edge)
+  //   bk_s3t  = off + Hs3/6              (1:6 retreats right going up through Step3)
+  //   bk_s2t  = off + Hs3/6 + Hs2/6     (1:6 continues through Step2)
+  //   bk_top  = bk_s2t                   (VERTICAL in Step1 — stays)
+  //
+  // Front face: goes LEFT going UP (wall narrows on front side going up)
+  //   fr_base = off + S3                  (wall/block right edge)
+  //   fr_s3t  = fr_base - Hs3            (1:1 in Step3 going up)
+  //   fr_s2t  = fr_s3t  - Hs2/4          (1:4 in Step2 going up)
+  //   fr_top  = fr_s2t  - Hs1/4          (1:4 continues in Step1 going up)
+  //
+  // Block: left=bk_base, right=fr_base, height=0.40m (same x as wall base)
+  // PCC:   left=0,       right=BLK,     height=Pt    (off extra each side of block)
+
+  const BLK_H = 0.40;
+  const Hs1=d.Hs1, Hs2=d.Hs2, Hs3=d.Hs3;
+
+  // Back x coords
+  const bk_base = d.off;
+  const bk_s3t  = d.off + Hs3/6;
+  const bk_s2t  = d.off + Hs3/6 + Hs2/6;
+  const bk_top  = bk_s2t;  // vertical in Step1
+
+  // Front x coords
+  const fr_base = d.off + d.S3;
+  const fr_s3t  = fr_base - Hs3;
+  const fr_s2t  = fr_s3t  - Hs2/4;
+  const fr_top  = fr_s2t  - Hs1/4;
+
+  // Y levels (from PCC bottom = 0)
+  const yBot    = 0;
+  const yPCCtop = d.Pt;
+  const yBlktop = d.Pt + BLK_H;
+  const yS3t    = yBlktop + Hs3;
+  const yS2t    = yS3t   + Hs2;
+  const yTop    = yS2t   + Hs1;
+
+  // Scale to fit
+  const VW=700, VH=500, ml=155, mr=115, mt=65, mb=132;
+  const dw=VW-ml-mr, dh=VH-mt-mb;
+  const sc = Math.min(dw/d.BLK, dh/yTop) * 0.80;
+  const ox = ml + (dw - d.BLK*sc)/2;
+  const oy = VH - mb;
+  const px = x => ox + x*sc;
+  const py = y => oy - y*sc;
+
+  let s='';
+
+  // ── SOIL hatch left of back face (at GL) ──
+  const soilL=px(bk_top)-46, soilR=px(bk_top), glY=py(yTop);
+  s+=`<rect x="${soilL}" y="${glY}" width="${soilR-soilL}" height="${py(yBlktop)-glY}"
+         fill="#f5ede0" opacity="0.8"/>`;
+  for(let y=glY+12; y<=py(yBlktop); y+=20)
+    s+=`<line x1="${soilR-3}" y1="${y}" x2="${soilR-20}" y2="${y+17}"
+           stroke="#b08040" stroke-width="1.1"/>`;
+  // GL line
+  s+=`<line x1="${soilL}" y1="${glY}" x2="${px(bk_top)+6}" y2="${glY}"
+         stroke="#222" stroke-width="2.2"/>`;
+  for(let i=0;i<9;i++)
+    s+=`<line x1="${soilL+5+i*18}" y1="${glY}" x2="${soilL-2+i*18}" y2="${glY+13}"
+           stroke="#222" stroke-width="1.2"/>`;
+  s+=`<text x="${soilL-3}" y="${glY-6}" font-size="12" font-weight="bold" fill="#222">G.L.</text>`;
+
+  // ── PCC SLAB: x=0 to BLK, y=0 to Pt ──
+  s+=`<rect x="${px(0)}" y="${py(yPCCtop)}" width="${d.BLK*sc}" height="${d.Pt*sc}"
+         fill="#d4c9a0" stroke="#222" stroke-width="1.5"/>`;
+  for(let xi=0.05;xi<d.BLK;xi+=0.14)
+    s+=`<line x1="${px(xi)}" y1="${py(0)}" x2="${px(xi+0.07)}" y2="${py(yPCCtop)}"
+           stroke="#a08040" stroke-width="0.5" opacity="0.5"/>`;
+  s+=`<text x="${px(d.BLK/2)}" y="${py(d.Pt/2)+4}" font-size="11"
+         font-weight="bold" fill="#5c3d10" text-anchor="middle">P.C.C.</text>`;
+
+  // ── CONCRETE BLOCK: x=bk_base to fr_base, y=Pt to Pt+0.40 ──
+  s+=`<rect x="${px(bk_base)}" y="${py(yBlktop)}" width="${d.S3*sc}" height="${BLK_H*sc}"
+         fill="#c8d8f0" stroke="#222" stroke-width="1.5"/>`;
+  s+=`<text x="${px((bk_base+fr_base)/2)}" y="${py(yPCCtop+BLK_H/2)+4}"
+         font-size="10" fill="#1a3a6a" text-anchor="middle">Block 0.40 m</text>`;
+
+  // ── WALL BODY: 8-point polygon ──
+  const wpts=[
+    `${px(bk_top)},${py(yTop)}`,
+    `${px(bk_s2t)},${py(yS2t)}`,
+    `${px(bk_s3t)},${py(yS3t)}`,
+    `${px(bk_base)},${py(yBlktop)}`,
+    `${px(fr_base)},${py(yBlktop)}`,
+    `${px(fr_s3t)},${py(yS3t)}`,
+    `${px(fr_s2t)},${py(yS2t)}`,
+    `${px(fr_top)},${py(yTop)}`,
+  ].join(' ');
+  s+=`<polygon points="${wpts}" fill="#c8d8f0" stroke="#222" stroke-width="2"/>`;
+
+  // Step junction horizontal lines across wall
+  s+=`<line x1="${px(bk_s2t)}" y1="${py(yS2t)}" x2="${px(fr_s2t)}" y2="${py(yS2t)}"
+         stroke="#333" stroke-width="1.4"/>`;
+  s+=`<line x1="${px(bk_s3t)}" y1="${py(yS3t)}" x2="${px(fr_s3t)}" y2="${py(yS3t)}"
+         stroke="#333" stroke-width="1.4"/>`;
+
+  // ── SLOPE LABELS outside ──
+  // 1:4 front upper (Step1)
+  const a4=(Math.atan((fr_s2t-fr_top)/Hs1)*180/Math.PI)|0;
+  const f4x=px((fr_top+fr_s2t)/2)+14, f4y=(py(yTop)+py(yS2t))/2;
+  s+=`<text x="${f4x}" y="${f4y+4}" font-size="14" font-weight="bold" fill="#000"
+         text-anchor="start" transform="rotate(${a4},${f4x},${f4y+4})">1:4</text>`;
+  // 1:6 back lower (Step2+3)
+  const b6x=px((bk_s2t+bk_s3t)/2)-12, b6y=(py(yS2t)+py(yS3t))/2;
+  s+=`<text x="${b6x}" y="${b6y+4}" font-size="14" font-weight="bold"
+         fill="#000" text-anchor="end">1:6</text>`;
+  // 1:1 front bottom (Step3)
+  const a1=(Math.atan((fr_base-fr_s3t)/Hs3)*180/Math.PI)|0;
+  const f1x=px((fr_s3t+fr_base)/2)+14, f1y=(py(yS3t)+py(yBlktop))/2;
+  s+=`<text x="${f1x}" y="${f1y+4}" font-size="14" font-weight="bold" fill="#000"
+         text-anchor="start" transform="rotate(${a1},${f1x},${f1y+4})">1:1</text>`;
+
+  // ── DIMENSIONS ──
+  // TW above top
+  s+=dH(px(bk_top),py(yTop)-30,px(fr_top),py(yTop)-30,`TW = ${f2(d.TW)} m`,'#000',12);
+
+  // H left — wall height only
+  s+=dV(px(0)-68,py(yTop),py(yBlktop),`H = ${f2(d.H)} m`,'#000',13);
+  // Block + PCC thickness left
+  s+=dV(px(0)-36,py(yBlktop),py(yPCCtop),`0.40m`,'#7c5500',10);
+  s+=dV(px(0)-36,py(yPCCtop),py(0),`${f2(d.Pt)}m`,'#7c5500',10);
+
+  // Zone heights right
+  const zx=px(d.BLK)+28;
+  s+=dV(zx,py(yBlktop),py(yS3t),`H/5=${f2(Hs3)}m`,'#777',10);
+  s+=dV(zx,py(yS3t),py(yS2t),`${f2(Hs2)}m`,'#777',10);
+  s+=dV(zx,py(yS2t),py(yTop),`2.50m`,'#777',10);
+
+  // S1 at yS2t level — between bk_s2t and fr_s2t
+  s+=dH(px(bk_s2t),py(yS2t)+18,px(fr_s2t),py(yS2t)+18,`S1 = ${f3(d.S1)} m`,'#1a56a0',11);
+  // S2 at yS3t level — between bk_s3t and fr_s3t
+  s+=dH(px(bk_s3t),py(yS3t)+18,px(fr_s3t),py(yS3t)+18,`S2 = ${f3(d.S2)} m`,'#1a56a0',11);
+  // S3 at wall base level — between bk_base and fr_base
+  s+=dH(px(bk_base),py(yBlktop)+18,px(fr_base),py(yBlktop)+18,`S3 = ${f3(d.S3)} m`,'#1a56a0',11);
+
+  // Below PCC row1: off | S3 | off
+  const r1y=py(0)+28;
+  s+=dH(px(0),r1y,px(d.off),r1y,`${f2(d.off)}`,'#666',10);
+  s+=dH(px(d.off),r1y,px(d.off+d.S3),r1y,`S3 = ${f3(d.S3)} m`,'#000',11);
+  s+=dH(px(d.off+d.S3),r1y,px(d.BLK),r1y,`${f2(d.off)}`,'#666',10);
+  // Row2: PCC width
+  const r2y=py(0)+54;
+  s+=dH(px(0),r2y,px(d.BLK),r2y,`PCC / Block Width = ${f3(d.BLK)} m`,'#7c5500',12);
+
+  // Step labels inside wall
+  s+=`<text x="${(px(bk_top)+px(fr_top))/2+8}" y="${py((yTop+yS2t)/2)+5}"
+         font-size="11" fill="#1a3a6a" text-anchor="middle" font-style="italic">Step 1</text>`;
+  s+=`<text x="${(px(bk_s2t)+px(fr_s2t))/2+8}" y="${py((yS2t+yS3t)/2)+5}"
+         font-size="11" fill="#1a3a6a" text-anchor="middle" font-style="italic">Step 2</text>`;
+  s+=`<text x="${(px(bk_s3t)+px(fr_s3t))/2+8}" y="${py((yS3t+yBlktop)/2)+5}"
+         font-size="11" fill="#1a3a6a" text-anchor="middle" font-style="italic">Step 3</text>`;
+
+  // Title
+  s+=`<text x="${VW/2}" y="22" font-size="14" font-weight="bold"
+         fill="#000" text-anchor="middle">RETAINING WALL CROSS SECTION  (H > 2.50 m)</text>`;
+  s+=`<text x="${VW/2}" y="38" font-size="10.5" fill="#555" text-anchor="middle">
+      Back: Vertical upper 2.50 m · 1:6 lower  ·  Front: 1:4 continuous · 1:1 bottom  ·  Not to scale</text>`;
+  s+=legend(VW-mr+8,mt+4);
+
+  const svg=document.getElementById('dwgSVG');
+  svg.setAttribute('viewBox',`0 0 ${VW} ${VH}`);
+  svg.innerHTML=s;
+}
+</script>
