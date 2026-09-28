@@ -1,0 +1,17 @@
+# Local files and archives
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+*.zip
+*.sha256.txt
+
+# Private/source-gated project assets are not approved for public hosting
+*.pdf
+*.xlsx
+*.xls
+*.docx
+*.csv
+rulebook_source_master*.json
+drawings/
