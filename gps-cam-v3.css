@@ -1,0 +1,31 @@
+/* GPS Cam V3 — field evidence UX */
+:root{--g-accent:var(--accent,#0b6cff);--g-bg:#06101d;--g-card:#0a1926;--g-line:#24485c;--g-muted:#83a8ba;--g-ink:#eefaff}
+html[data-theme="dark"]{--g-bg:#06101d;--g-card:#0a1926;--g-line:#24485c;--g-muted:#83a8ba;--g-ink:#eefaff}
+body{background:var(--g-bg)!important}
+.app{max-width:900px!important;background:radial-gradient(circle at 90% 0,color-mix(in srgb,var(--g-accent) 28%,#06101d) 0,#07111f 34%,#06101d 72%)!important}
+header{border-bottom-color:color-mix(in srgb,var(--g-accent) 30%,#17344a)!important}
+.title b{font-size:16px!important;letter-spacing:-.2px}.title small{color:#9bdcff!important}
+.status{position:sticky;top:63px;z-index:4;background:linear-gradient(#06101df0,#06101dbd);backdrop-filter:blur(10px);padding-top:8px!important}
+.pill{border-color:#24485c!important;background:#0a1c2ae8!important}
+.viewer{border-radius:22px!important;box-shadow:0 24px 60px #0009!important}
+.hud{display:flex;flex-direction:column;gap:2px;max-width:70%;line-height:1.2}
+.hud .hud-sub{color:#bdd6e4;font-weight:600}
+.grid-overlay{position:absolute;inset:0;pointer-events:none;display:none}
+.grid-overlay.on{display:block}
+.grid-overlay:before,.grid-overlay:after{content:"";position:absolute;inset:0}
+.grid-overlay:before{background:linear-gradient(to right,transparent 33.2%,rgba(255,255,255,.24) 33.2%,rgba(255,255,255,.24) 33.6%,transparent 33.6%,transparent 66.3%,rgba(255,255,255,.24) 66.3%,rgba(255,255,255,.24) 66.7%,transparent 66.7%)}
+.grid-overlay:after{background:linear-gradient(to bottom,transparent 33.2%,rgba(255,255,255,.24) 33.2%,rgba(255,255,255,.24) 33.6%,transparent 33.6%,transparent 66.3%,rgba(255,255,255,.24) 66.3%,rgba(255,255,255,.24) 66.7%,transparent 66.7%)}
+.level-line{position:absolute;left:15%;right:15%;top:50%;height:2px;background:#f7c948;box-shadow:0 0 0 1px #0008;display:none;pointer-events:none}
+.level-line.on{display:block}.level-line:after{content:"";position:absolute;left:50%;top:-5px;width:10px;height:10px;border-radius:50%;background:#f7c948;transform:translateX(-50%)}
+.quick-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 12px 8px}
+.quick-meta .meta{background:#091a28cc;border:1px solid #193a4f;border-radius:13px;padding:9px}
+.quick-meta .meta small{display:block;color:#83a8ba;font-size:10px}.quick-meta .meta b{font-size:13px}
+.card{border-radius:18px!important}.card h3{color:#91e9f2!important}
+.field input,.field textarea{border-radius:12px!important}
+.actions-top{display:flex;gap:8px;flex-wrap:wrap;margin:8px 12px 2px}
+.actions-top .btn{flex:1 1 120px}
+.photo-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 12px 12px}
+.photo-actions .btn{min-height:44px}
+.register-filter{display:flex;gap:8px;margin:8px 0 10px}.register-filter input{flex:1;background:#07131e;color:#f1fbff;border:1px solid #24485c;border-radius:10px;padding:9px}
+.regrow{border-radius:12px;padding:9px!important;margin:5px 0;background:#07131e70;border:1px solid #183448!important}
+@media(max-width:620px){.quick-meta{grid-template-columns:repeat(2,1fr)}.photo-actions{grid-template-columns:1fr 1fr}.status{top:61px}.actions-top .btn{flex:1 1 45%}}
