@@ -23,7 +23,7 @@ small,.small{font-size:.78rem;color:var(--mut);line-height:1.35}.effect{font-siz
 footer{margin-top:18px;color:var(--mut);font-size:.76rem;line-height:1.4}
 @media(max-width:700px){.tabs{grid-template-columns:repeat(3,1fr)}.grid,.grid3,.resultGrid{grid-template-columns:1fr}header{border-radius:0 0 14px 14px}}
 @media print{.tabs,.noPrint,.actions{display:none!important}body{background:#fff}.wrap{max-width:none;padding:0}.card{box-shadow:none;break-inside:avoid}header{margin:0;border-radius:0}}
-</style></head>
+</style><link rel="stylesheet" href="./app-global.css"></head>
 <body><div class="wrap">
 <header><h1>Concrete Material Requirement & Batching V2.1</h1>
 <div class="sub">Maharashtra PWD source consumption • m³ + brass • weight-based AJAX/RMC batching • source-controlled notes</div></header>
@@ -235,4 +235,4 @@ setupPair('qCat','qItem','qSource');setupPair('aCat','aItem','aSource');setupPai
 $('nRow').innerHTML='<option value="">No source row selected</option>'+allRows().map(r=>`<option value="${r.cat}|${r.id}">${r.label} — ${r.name}</option>`).join('');
 $('nomGrid').innerHTML=NOMINAL.map(([g,r])=>`<div class="card"><b>${g}</b><div class="ratio">${r}</div><small>Cement : Fine aggregate : Coarse aggregate</small></div>`).join('');
 toggleABasis();calcQty();calcAjax();calcRMC();renderNotes();
-</script></body></html>
+</script><script src="./app-shell.js"></script></body></html>
