@@ -1,0 +1,58 @@
+{
+  "name": "PWD Tools — Field Test R1",
+  "short_name": "PWD Tools",
+  "description": "Offline-first PWD field app for road chainage, structures, inspections, photos and road video.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f8fc",
+  "theme_color": "#0b2d5b",
+  "lang": "en",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Road & Structures",
+      "short_name": "Structures",
+      "url": "./pwd_road_structures.html"
+    },
+    {
+      "name": "Route & Chainage",
+      "short_name": "Route",
+      "url": "./pwd_route_distance_chainage.html"
+    },
+    {
+      "name": "Road Video",
+      "short_name": "Video",
+      "url": "./road_video_survey.html"
+    }
+  ]
+}

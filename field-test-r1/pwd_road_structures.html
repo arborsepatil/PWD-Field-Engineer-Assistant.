@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f8fc">
+<title>PWD Tools · Road & Structures</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./app-shell.css">
+<link rel="stylesheet" href="./road-structure.css">
+</head>
+<body class="app-page">
+<main class="rs-shell">
+  <header class="rs-top">
+    <a class="rs-back" href="./index.html" aria-label="Back">‹</a>
+    <a class="brand" href="./index.html" style="text-decoration:none">
+      <img src="./icon.svg" alt="">
+      <div><div class="brand-title">PWD <span>Tools</span></div><div class="brand-sub">Field Engineering Assistant</div></div>
+    </a>
+    <span id="netStatus" class="rs-online">● Offline ready</span>
+  </header>
+
+  <section class="rs-hero">
+    <div class="rs-eyebrow">Road & Structure Register</div>
+    <h1 id="heroTitle">My Roads</h1>
+    <p id="heroSub">Register structures once. Inspect them quickly for years.</p>
+    <div class="rs-road-meta" id="roadMeta"></div>
+  </section>
+
+  <nav class="rs-tabs" aria-label="Road structure module">
+    <button class="rs-tab on" data-view="roads">ROADS</button>
+    <button class="rs-tab" data-view="structures">STRUCTURES</button>
+    <button class="rs-tab" data-view="inspect">INSPECT</button>
+    <button class="rs-tab" data-view="guide">GUIDE</button>
+  </nav>
+
+  <section id="view-roads" class="rs-panel on">
+    <div class="rs-card">
+      <h2>Select road</h2>
+      <p>Choose the road you are working on. Your last road stays selected.</p>
+      <div id="roadList" class="rs-road-list"></div>
+    </div>
+    <div class="rs-card">
+      <h2>Quick start</h2>
+      <p>Field work should stay simple.</p>
+      <div class="rs-btn-row">
+        <button class="rs-btn" id="quickInspect">Start inspection</button>
+        <button class="rs-btn ghost" id="openRouteTool">Route & chainage</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-structures" class="rs-panel">
+    <div class="rs-card">
+      <h2>Structures</h2>
+      <p>Permanent inventory + repeat inspection history.</p>
+      <div class="rs-filter" id="structureFilters">
+        <button class="on" data-filter="all">All</button>
+        <button data-filter="culvert">Culverts</button>
+        <button data-filter="bridge">Bridges</button>
+        <button data-filter="wall">Walls</button>
+        <button data-filter="construction">Under construction</button>
+      </div>
+    </div>
+    <div id="structureList" class="rs-list"></div>
+    <button class="rs-btn full" id="addStructureFromList">+ Add Structure</button>
+  </section>
+
+  <section id="view-inspect" class="rs-panel">
+    <div class="rs-live">
+      <div class="label">Current chainage</div>
+      <div id="liveChainage" class="ch rs-mono">0+000</div>
+      <div id="liveSub" class="sub">Enter chainage or use the Route & Chainage tool.</div>
+    </div>
+    <div class="rs-card">
+      <div class="rs-grid">
+        <div class="rs-field"><label>Chainage</label><input id="fieldChainage" value="0+000" inputmode="decimal"></div>
+        <div class="rs-field"><label>GPS</label><button class="rs-btn ghost" id="gpsBtn">Capture GPS</button></div>
+      </div>
+      <div id="gpsText" class="rs-help">No GPS fix captured for this action.</div>
+    </div>
+    <div class="rs-actions">
+      <button class="rs-action structure" id="addStructureBtn">＋ Structure</button>
+      <button class="rs-action photo" id="quickPhotoBtn">📷 Photo</button>
+      <button class="rs-action issue" id="addIssueBtn">⚠ Issue</button>
+      <button class="rs-action video" id="roadVideoBtn">🎥 Road Video</button>
+    </div>
+    <div class="rs-card" style="margin-top:10px">
+      <h2>Last captured</h2>
+      <p id="lastCaptured">Nothing captured yet.</p>
+    </div>
+    <div class="rs-note rs-good-note"><b>Offline-first:</b> structures, inspections, issues and optimized photos are saved on this device first.</div>
+  </section>
+
+  <section id="view-guide" class="rs-panel rs-guide">
+    <div class="rs-card">
+      <h2>Simple User Guide</h2>
+      <p>Search what you want to do. Each answer is step-by-step.</p>
+      <div class="rs-field"><input id="guideSearch" placeholder="e.g. pipe culvert, missed CD, offline, reconstructed"></div>
+    </div>
+    <div id="guideList"></div>
+    <a class="rs-btn ghost full" href="./road_structure_guide.html" style="display:block;text-align:center;text-decoration:none">Open full manual</a>
+  </section>
+</main>
+
+<nav class="rs-bottom" aria-label="Road module navigation">
+  <button class="on" data-view="roads"><span>🛣️</span>Roads</button>
+  <button data-view="structures"><span>🌉</span>Structures</button>
+  <button data-view="inspect"><span>📍</span>Inspect</button>
+  <button data-view="guide"><span>💡</span>Guide</button>
+</nav>
+
+<div id="sheet" class="rs-sheet-backdrop" aria-hidden="true"><div class="rs-sheet"><div class="rs-handle"></div><div id="sheetBody"></div></div></div>
+<div id="toast" class="rs-toast"></div>
+
+<script src="./app-shell.js"></script>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const ROAD_KEY='pwd_rs_selected_road_v1', LAST_KEY='pwd_rs_last_v1';
+const ROADS=[
+{id:'MDR44',code:'MDR-44',name:'Aarawali–Murdav–Kumbharkhani–Kuchambe–Pachambe–Ratambi–Yedgewadi',start:0,end:33000,kind:'Main'},
+{id:'MDR44B',code:'MDR-44 Branch',name:'Yegaon Branch',start:0,end:200,kind:'Branch'},
+{id:'MDR46',code:'MDR-46',name:'Tural–Kadwai–Chikhali–Tambedi–Aantravali–Kalambaste',start:0,end:17500,kind:'Main'},
+{id:'MDR46B',code:'MDR-46 Branch',name:'Chikhali–Masrang Branch',start:0,end:3500,kind:'Branch'},
+{id:'MDR47',code:'MDR-47',name:'Sangmeshwar–Nayari–Nivali–Neradwadi',start:0,end:21200,kind:'Main'},
+{id:'MDR47B',code:'MDR-47 Branch',name:'Nayari–Tiware Branch',start:0,end:1800,kind:'Branch'}
+];
+const ICONS={pipe:'◉',box:'▣',slab:'▤',causeway:'≈',vented:'≋',bridge:'🌉',minor:'🌉',major:'🌉',wall:'▥',other:'◆'};
+const LABELS={pipe:'Pipe Culvert',box:'Box Culvert',slab:'Slab Culvert',causeway:'Causeway',vented:'Vented Causeway',bridge:'Bridge',minor:'Minor Bridge',major:'Major Bridge',wall:'Retaining Wall',other:'Other Structure'};
+let selectedRoad=ROADS.find(r=>r.id===localStorage.getItem(ROAD_KEY))||ROADS[4];
+let currentGps=null,currentFilter='all',pendingPhotos=[];
+
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),1800)}
+function parseCh(v){v=String(v||'').trim().replace(/\s+/g,'');if(/^\d+(?:\.\d+)?$/.test(v))return Number(v);const m=v.match(/^(\d+)[+\/]([0-9]+(?:\.\d+)?)$/);return m?Number(m[1])*1000+Number(m[2]):NaN}
+function fmtCh(m){if(!Number.isFinite(m))return'—';const km=Math.floor(Math.abs(m)/1000),rem=Math.round((Math.abs(m)-km*1000)*100)/100;return(m<0?'-':'')+km+'+'+String(rem%1?rem.toFixed(2):Math.round(rem)).padStart(3,'0')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function uid(prefix){return prefix+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)}
+function today(){return new Date().toISOString()}
+function road(){return selectedRoad}
+
+// IndexedDB — records first, media blobs separately.
+const DBNAME='pwd-road-structures-v1',DBVER=1;
+function openDB(){return new Promise((resolve,reject)=>{const q=indexedDB.open(DBNAME,DBVER);q.onupgradeneeded=()=>{const db=q.result;if(!db.objectStoreNames.contains('assets')){const s=db.createObjectStore('assets',{keyPath:'id'});s.createIndex('roadId','roadId');s.createIndex('chainageM','chainageM');}if(!db.objectStoreNames.contains('inspections')){const s=db.createObjectStore('inspections',{keyPath:'id'});s.createIndex('assetId','assetId');s.createIndex('roadId','roadId');}if(!db.objectStoreNames.contains('issues')){const s=db.createObjectStore('issues',{keyPath:'id'});s.createIndex('roadId','roadId');}if(!db.objectStoreNames.contains('media')){const s=db.createObjectStore('media',{keyPath:'id'});s.createIndex('parentId','parentId');}};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)});}
+async function tx(store,mode,fn){const db=await openDB();return new Promise((resolve,reject)=>{const t=db.transaction(store,mode),s=t.objectStore(store);let out;try{out=fn(s)}catch(e){reject(e);return}t.oncomplete=()=>resolve(out);t.onerror=()=>reject(t.error)})}
+async function put(store,obj){const db=await openDB();return new Promise((resolve,reject)=>{const t=db.transaction(store,'readwrite');t.objectStore(store).put(obj);t.oncomplete=()=>resolve(obj);t.onerror=()=>reject(t.error)})}
+async function all(store){const db=await openDB();return new Promise((resolve,reject)=>{const q=db.transaction(store).objectStore(store).getAll();q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>reject(q.error)})}
+async function one(store,id){const db=await openDB();return new Promise((resolve,reject)=>{const q=db.transaction(store).objectStore(store).get(id);q.onsuccess=()=>resolve(q.result||null);q.onerror=()=>reject(q.error)})}
+async function byIndex(store,index,val){const db=await openDB();return new Promise((resolve,reject)=>{const q=db.transaction(store).objectStore(store).index(index).getAll(IDBKeyRange.only(val));q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>reject(q.error)})}
+async function del(store,id){const db=await openDB();return new Promise((resolve,reject)=>{const t=db.transaction(store,'readwrite');t.objectStore(store).delete(id);t.oncomplete=()=>resolve();t.onerror=()=>reject(t.error)})}
+
+function setView(id){document.querySelectorAll('.rs-panel').forEach(x=>x.classList.toggle('on',x.id==='view-'+id));document.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('on',x.dataset.view===id));if(id==='structures')renderStructures();if(id==='guide')renderGuide();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+
+function renderRoads(){
+ $('roadList').innerHTML=ROADS.map(r=>`<button class="rs-road ${r.id===selectedRoad.id?'active':''}" data-road="${r.id}"><span class="ico">🛣️</span><span><b>${esc(r.code)}</b><small>${esc(r.name)} · ${fmtCh(r.start)}–${fmtCh(r.end)}</small></span><span class="go">›</span></button>`).join('');
+ document.querySelectorAll('[data-road]').forEach(b=>b.onclick=()=>selectRoad(b.dataset.road,true));
+ updateHeader();
+}
+function selectRoad(id,jump=false){selectedRoad=ROADS.find(r=>r.id===id)||selectedRoad;localStorage.setItem(ROAD_KEY,selectedRoad.id);renderRoads();$('fieldChainage').value=fmtCh(selectedRoad.start);updateChainage();if(jump)setView('inspect')}
+function updateHeader(){
+ $('heroTitle').textContent=selectedRoad.code;
+ $('heroSub').textContent=selectedRoad.name;
+ $('roadMeta').innerHTML=`<span class="rs-chip">${selectedRoad.kind}</span><span class="rs-chip">${fmtCh(selectedRoad.start)} → ${fmtCh(selectedRoad.end)}</span><span class="rs-chip ok">Offline-first</span>`;
+}
+function updateChainage(){const m=parseCh($('fieldChainage').value);$('liveChainage').textContent=Number.isFinite(m)?fmtCh(m):'—';$('liveSub').textContent=selectedRoad.code+' · '+selectedRoad.name}
+$('fieldChainage').addEventListener('input',updateChainage);
+
+async function captureGPS(){
+ if(!navigator.geolocation){toast('GPS unavailable on this device');return null}
+ $('gpsText').textContent='Getting high-accuracy GPS fix…';
+ return new Promise(resolve=>navigator.geolocation.getCurrentPosition(p=>{currentGps={lat:p.coords.latitude,lon:p.coords.longitude,acc:Number(p.coords.accuracy)||null,alt:Number.isFinite(p.coords.altitude)?p.coords.altitude:null,t:p.timestamp||Date.now()};$('gpsText').textContent=`GPS ${currentGps.lat.toFixed(6)}, ${currentGps.lon.toFixed(6)} · ±${Math.round(currentGps.acc||0)} m`;toast('GPS captured');resolve(currentGps)},e=>{$('gpsText').textContent='GPS not captured · '+e.message;toast('GPS fix failed');resolve(null)},{enableHighAccuracy:true,timeout:15000,maximumAge:0}));
+}
+$('gpsBtn').onclick=captureGPS;
+
+function openSheet(html){$('sheetBody').innerHTML=html;$('sheet').classList.add('open');$('sheet').setAttribute('aria-hidden','false')}
+function closeSheet(){pendingPhotos.forEach(x=>x.url&&URL.revokeObjectURL(x.url));pendingPhotos=[];$('sheet').classList.remove('open');$('sheet').setAttribute('aria-hidden','true')}
+$('sheet').addEventListener('click',e=>{if(e.target===$('sheet'))closeSheet()});
+
+function conditionPicker(id='condition',value='good'){
+ return `<div class="rs-statuses" id="${id}">${[['good','Good'],['fair','Fair'],['poor','Poor'],['critical','Critical']].map(x=>`<button type="button" class="rs-status ${x[0]===value?'on':''}" data-value="${x[0]}">${x[1]}</button>`).join('')}</div>`
+}
+function wireStatus(id='condition'){const box=$(id);box?.querySelectorAll('.rs-status').forEach(b=>b.onclick=()=>{box.querySelectorAll('.rs-status').forEach(x=>x.classList.remove('on'));b.classList.add('on')})}
+function statusValue(id='condition'){return $(id)?.querySelector('.rs-status.on')?.dataset.value||'good'}
+function typeFields(type){
+ const field=(id,label,ph='',typeAttr='number')=>`<div class="rs-field"><label>${label}</label><input id="${id}" ${typeAttr==='number'?'type="number" step="0.01" inputmode="decimal"':''} placeholder="${ph}"></div>`;
+ if(type==='pipe')return `<div class="rs-grid">${field('d1','No. of pipes','e.g. 2')}${field('d2','Pipe diameter (mm)','e.g. 900')}${field('d3','Barrel length (m)','optional')}${field('d4','Headwall length (m)','optional')}</div>`;
+ if(type==='box'||type==='slab')return `<div class="rs-grid">${field('d1','No. of cells / spans','e.g. 2')}${field('d2','Clear width (m)','e.g. 2.0')}${field('d3','Clear height (m)','e.g. 1.5')}${field('d4','Overall length (m)','optional')}</div>`;
+ if(type==='causeway'||type==='vented')return `<div class="rs-grid">${field('d1','Overall length (m)','')}${field('d2','Roadway width (m)','')}${field('d3','No. of vents','optional')}${field('d4','Vent size W×H (m)','e.g. 1.0×1.0','text')}</div>`;
+ if(type==='bridge'||type==='minor'||type==='major')return `<div class="rs-grid">${field('d1','Start chainage','e.g. 12+420','text')}${field('d2','End chainage','e.g. 12+475','text')}${field('d3','Span arrangement','e.g. 3×10 m','text')}${field('d4','Approx. width (m)','')}</div>`;
+ if(type==='wall')return `<div class="rs-grid">${field('d1','Start chainage','e.g. 8+260','text')}${field('d2','End chainage','e.g. 8+345','text')}${field('d3','Approx. height (m)','')}${field('d4','Side','LHS / RHS','text')}</div>`;
+ return `<div class="rs-grid">${field('d1','Main dimension','optional','text')}${field('d2','Secondary dimension','optional','text')}</div>`;
+}
+function assetId(type,ch){const c=Number.isFinite(ch)?String(Math.round(ch)).padStart(6,'0'):'UNK';const prefix=['bridge','minor','major'].includes(type)?'BR':type==='wall'?'RW':'CD';return `${selectedRoad.code.replace(/[^A-Z0-9]/gi,'')}-${prefix}-${c}`}
+
+function openAddStructure(){
+ const ch=parseCh($('fieldChainage').value);openSheet(`
+ <div class="rs-sheet-head"><div><h2>Add Structure</h2><p>${esc(selectedRoad.code)} · ${fmtCh(ch)}</p></div><button class="rs-close" id="closeSheet">×</button></div>
+ <div class="rs-field"><label>Structure type</label><select id="assetType">${Object.entries(LABELS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+ <div class="rs-section-title">Basic dimensions</div><div id="dynamicFields">${typeFields('pipe')}</div>
+ <div class="rs-section-title">Condition</div>${conditionPicker('condition','good')}
+ <div class="rs-grid" style="margin-top:12px"><div class="rs-field"><label>Lifecycle status</label><select id="assetStatus"><option value="existing">Existing</option><option value="under-construction">Under Construction</option></select></div><div class="rs-field"><label>Year of construction — optional</label><input id="assetYear" inputmode="numeric" placeholder="Known year or leave blank"></div><div class="rs-field"><label>Crossing / local name — optional</label><input id="assetName" placeholder="Nallah / local name"></div></div>
+ <div class="rs-section-title">Photos</div><label class="rs-photo-pick" for="assetPhotos">📷 Add photos</label><input class="rs-photo-input" id="assetPhotos" type="file" accept="image/*" capture="environment" multiple><div id="photoPreview" class="rs-media-preview"></div>
+ <div class="rs-field" style="margin-top:12px"><label>Note — optional</label><textarea id="assetNote" placeholder="Only something useful"></textarea></div>
+ <div class="rs-note">Unknown information? Leave it blank and use <b>Complete later</b>. Do not guess.</div>
+ <div class="rs-btn-row"><button class="rs-btn ghost" id="saveLater">Save · Complete Later</button><button class="rs-btn success" id="saveAsset">Save Structure</button></div>`);
+ $('closeSheet').onclick=closeSheet;wireStatus();$('assetType').onchange=()=>{$('dynamicFields').innerHTML=typeFields($('assetType').value)};$('assetPhotos').onchange=e=>loadPhotos(e.target.files,'photoPreview');$('saveAsset').onclick=()=>saveAsset(false);$('saveLater').onclick=()=>saveAsset(true);
+}
+
+async function compressImage(file){
+ try{const bmp=await createImageBitmap(file),max=1800,scale=Math.min(1,max/Math.max(bmp.width,bmp.height)),w=Math.max(1,Math.round(bmp.width*scale)),h=Math.max(1,Math.round(bmp.height*scale)),cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(bmp,0,0,w,h);bmp.close?.();const blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',.8));return blob||file}catch{return file}
+}
+async function loadPhotos(files,previewId){pendingPhotos.forEach(x=>x.url&&URL.revokeObjectURL(x.url));pendingPhotos=[];for(const f of Array.from(files||[]).slice(0,8)){const blob=await compressImage(f);pendingPhotos.push({id:uid('media'),blob,name:f.name,type:blob.type||f.type,createdAt:today(),url:URL.createObjectURL(blob)})}$(previewId).innerHTML=pendingPhotos.map(p=>`<img src="${p.url}" alt="Selected field photo">`).join('');}
+async function saveMedia(parentId,parentType){for(const p of pendingPhotos)await put('media',{id:p.id,parentId,parentType,blob:p.blob,name:p.name,type:p.type,createdAt:p.createdAt});}
+async function saveAsset(incomplete){
+ const type=$('assetType').value,ch=parseCh($('fieldChainage').value),dims=[1,2,3,4].map(i=>$('d'+i)?.value?.trim()||'');
+ if(!Number.isFinite(ch)){toast('Enter valid chainage first');return}
+ const asset={id:uid('asset'),assetCode:assetId(type,ch),roadId:selectedRoad.id,roadCode:selectedRoad.code,chainageM:ch,type,label:LABELS[type],condition:statusValue(),status:$('assetStatus').value,year:$('assetYear').value.trim()||null,name:$('assetName').value.trim()||null,dims,note:$('assetNote').value.trim()||'',gps:currentGps,inventoryIncomplete:!!incomplete,revision:1,createdAt:today(),updatedAt:today()};
+ await put('assets',asset);await saveMedia(asset.id,'asset');localStorage.setItem(LAST_KEY,JSON.stringify({what:asset.label,ch:asset.chainageM,time:Date.now()}));closeSheet();toast('Structure saved locally');$('lastCaptured').textContent=`${asset.label} · ${fmtCh(asset.chainageM)} · saved locally`;renderStructures();
+}
+
+function typeGroup(a){if(['pipe','box','slab','causeway','vented'].includes(a.type))return'culvert';if(['bridge','minor','major'].includes(a.type))return'bridge';if(a.type==='wall')return'wall';return'other'}
+async function renderStructures(){
+ const list=(await byIndex('assets','roadId',selectedRoad.id)).sort((a,b)=>a.chainageM-b.chainageM).filter(a=>currentFilter==='all'||(currentFilter==='construction'?a.status==='under-construction':typeGroup(a)===currentFilter));
+ if(!list.length){$('structureList').innerHTML='<div class="rs-card rs-empty"><div class="big">🌉</div>No structures saved for this view yet.</div>';return}
+ $('structureList').innerHTML=list.map(a=>`<button class="rs-item" data-asset="${a.id}" style="width:100%;text-align:left;color:inherit"><span class="icon">${ICONS[a.type]||'◆'}</span><span><b>${esc(a.label)}</b><small>${fmtCh(a.chainageM)} · ${esc(a.assetCode)}${a.inventoryIncomplete?' · Inventory incomplete':''}</small></span><span class="right"><span class="rs-badge ${a.condition}">${esc(conditionLabel(a.condition))}</span></span></button>`).join('');
+ document.querySelectorAll('[data-asset]').forEach(b=>b.onclick=()=>openAsset(b.dataset.asset));
+}
+function conditionLabel(v){return({'good':'Good','fair':'Fair','poor':'Poor','critical':'Critical','under-construction':'Under construction'})[v]||v}
+$('structureFilters').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('structureFilters').querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');currentFilter=b.dataset.filter;renderStructures()});
+
+async function openAsset(id){
+ const a=await one('assets',id);if(!a)return;const ins=(await byIndex('inspections','assetId',id)).sort((x,y)=>new Date(y.createdAt)-new Date(x.createdAt));const media=await byIndex('media','parentId',id);const photoUrls=media.filter(m=>m.blob).slice(0,6).map(m=>({u:URL.createObjectURL(m.blob),id:m.id}));
+ const dimNames=dimensionNames(a.type);const dimHtml=a.dims.map((v,i)=>v?`<div class="rs-detail"><div class="k">${esc(dimNames[i]||'Detail')}</div><div class="v">${esc(v)}</div></div>`:'').join('');
+ openSheet(`<div class="rs-sheet-head"><div><h2>${esc(a.label)}</h2><p>${fmtCh(a.chainageM)} · ${esc(a.assetCode)}</p></div><span class="rs-badge ${a.condition}">${conditionLabel(a.condition)}</span><button class="rs-close" id="closeSheet">×</button></div>
+ <div class="rs-detail-grid"><div class="rs-detail"><div class="k">Road</div><div class="v">${esc(a.roadCode)}</div></div><div class="rs-detail"><div class="k">Status</div><div class="v">${esc(a.status)}</div></div>${dimHtml}<div class="rs-detail"><div class="k">Year</div><div class="v">${esc(a.year||'Unknown')}</div></div><div class="rs-detail"><div class="k">Revision</div><div class="v">${a.revision||1}</div></div></div>
+ ${a.inventoryIncomplete?'<div class="rs-note">Inventory incomplete. Open Edit / Complete Later when convenient.</div>':''}
+ ${photoUrls.length?`<div class="rs-section-title">Photos</div><div class="rs-media-preview">${photoUrls.map(x=>`<img src="${x.u}" alt="Structure photo">`).join('')}</div>`:''}
+ <div class="rs-section-title">History</div><div class="rs-timeline">${ins.length?ins.slice(0,8).map(i=>`<div class="rs-event"><span class="dot"></span><div><b>${conditionLabel(i.condition)} · ${new Date(i.createdAt).toLocaleDateString()}</b><small>${esc((i.issues||[]).join(', ')||'Routine inspection')}${i.note?' · '+esc(i.note):''}</small></div></div>`).join(''):'<div class="rs-help">No repeat inspections yet.</div>'}</div>
+ <div class="rs-btn-row" style="margin-top:14px"><button class="rs-btn" id="inspectAsset">Inspect</button><button class="rs-btn ghost" id="lifecycleBtn">Lifecycle</button></div>
+ <button class="rs-btn ghost full" id="editAsset" style="margin-top:8px">Edit / Complete Later</button>`);
+ $('closeSheet').onclick=()=>{photoUrls.forEach(x=>URL.revokeObjectURL(x.u));closeSheet()};$('inspectAsset').onclick=()=>openInspection(a);$('lifecycleBtn').onclick=()=>openLifecycle(a);$('editAsset').onclick=()=>openEditAsset(a);
+}
+function dimensionNames(type){if(type==='pipe')return['No. of pipes','Pipe diameter (mm)','Barrel length (m)','Headwall length (m)'];if(type==='box'||type==='slab')return['Cells / spans','Clear width (m)','Clear height (m)','Overall length (m)'];if(type==='causeway'||type==='vented')return['Overall length (m)','Roadway width (m)','No. of vents','Vent size'];if(['bridge','minor','major'].includes(type))return['Start chainage','End chainage','Span arrangement','Approx. width (m)'];if(type==='wall')return['Start chainage','End chainage','Approx. height (m)','Side'];return['Detail 1','Detail 2','Detail 3','Detail 4']}
+
+function issuePicker(){const issues=['Silt / blockage','Vegetation','Crack','Settlement','Scour / erosion','Headwall damage','Wing wall damage','Deck / road surface','Leakage / seepage','Other'];return `<div class="rs-issue-chips" id="inspectionIssues">${issues.map(x=>`<button type="button" class="rs-issue-chip" data-value="${esc(x)}">${esc(x)}</button>`).join('')}</div>`}
+function openInspection(a){pendingPhotos=[];openSheet(`<div class="rs-sheet-head"><div><h2>Inspect ${esc(a.label)}</h2><p>${fmtCh(a.chainageM)} · permanent dimensions stay unchanged</p></div><button class="rs-close" id="closeSheet">×</button></div><div class="rs-section-title">Condition</div>${conditionPicker('inspectionCondition',a.condition)}<div class="rs-section-title">Observed issue — optional</div>${issuePicker()}<div class="rs-section-title">Photos</div><label class="rs-photo-pick" for="inspectionPhotos">📷 Add inspection photos</label><input class="rs-photo-input" id="inspectionPhotos" type="file" accept="image/*" capture="environment" multiple><div id="inspectionPreview" class="rs-media-preview"></div><div class="rs-field" style="margin-top:12px"><label>Short note — optional</label><textarea id="inspectionNote" placeholder="Only what changed / what needs attention"></textarea></div><button class="rs-btn success full" id="saveInspection">Save Inspection</button>`);$('closeSheet').onclick=closeSheet;wireStatus('inspectionCondition');$('inspectionIssues').querySelectorAll('.rs-issue-chip').forEach(b=>b.onclick=()=>b.classList.toggle('on'));$('inspectionPhotos').onchange=e=>loadPhotos(e.target.files,'inspectionPreview');$('saveInspection').onclick=()=>saveInspection(a)}
+async function saveInspection(a){const issues=[...$('inspectionIssues').querySelectorAll('.on')].map(x=>x.dataset.value),condition=statusValue('inspectionCondition'),rec={id:uid('insp'),assetId:a.id,roadId:a.roadId,chainageM:a.chainageM,condition,issues,note:$('inspectionNote').value.trim(),gps:currentGps,createdAt:today()};await put('inspections',rec);await saveMedia(rec.id,'inspection');a.condition=condition;a.updatedAt=today();await put('assets',a);localStorage.setItem(LAST_KEY,JSON.stringify({what:'Inspection · '+a.label,ch:a.chainageM,time:Date.now()}));closeSheet();toast('Inspection saved locally');renderStructures()}
+
+function openLifecycle(a){openSheet(`<div class="rs-sheet-head"><div><h2>Lifecycle Event</h2><p>${esc(a.label)} · ${fmtCh(a.chainageM)}</p></div><button class="rs-close" id="closeSheet">×</button></div><div class="rs-field"><label>Event</label><select id="lifeEvent"><option value="repair">Repair / Rehabilitation</option><option value="widening">Widening</option><option value="reconstruction">Reconstruction</option><option value="under-construction">Under Construction</option><option value="completed">Construction Completed</option><option value="removed">Removed / Abandoned</option></select></div><div class="rs-field" style="margin-top:10px"><label>Short note</label><textarea id="lifeNote" placeholder="What changed?"></textarea></div><div class="rs-note">Reconstruction keeps the old history. The asset revision increases instead of erasing the previous record.</div><button class="rs-btn full" id="saveLife">Save Event</button>`);$('closeSheet').onclick=closeSheet;$('saveLife').onclick=async()=>{const ev=$('lifeEvent').value,note=$('lifeNote').value.trim();await put('inspections',{id:uid('life'),assetId:a.id,roadId:a.roadId,chainageM:a.chainageM,condition:a.condition,issues:['Lifecycle: '+ev],note,createdAt:today(),lifecycle:true});if(ev==='reconstruction'){a.revision=(a.revision||1)+1;a.inventoryIncomplete=true;a.status='existing'}else if(ev==='under-construction')a.status='under-construction';else if(ev==='completed')a.status='existing';else if(ev==='removed')a.status='removed';a.updatedAt=today();await put('assets',a);closeSheet();toast('Lifecycle history saved');renderStructures()}}
+
+function openEditAsset(a){pendingPhotos=[];openSheet(`<div class="rs-sheet-head"><div><h2>Edit Inventory</h2><p>${esc(a.assetCode)} · permanent details</p></div><button class="rs-close" id="closeSheet">×</button></div><div class="rs-field"><label>Structure type</label><select id="assetType">${Object.entries(LABELS).map(([k,v])=>`<option value="${k}" ${k===a.type?'selected':''}>${v}</option>`).join('')}</select></div><div class="rs-section-title">Basic dimensions</div><div id="dynamicFields">${typeFields(a.type)}</div><div class="rs-grid" style="margin-top:10px"><div class="rs-field"><label>Year</label><input id="assetYear" value="${esc(a.year||'')}"></div><div class="rs-field"><label>Crossing / local name</label><input id="assetName" value="${esc(a.name||'')}"></div></div><div class="rs-field" style="margin-top:10px"><label>Note</label><textarea id="assetNote">${esc(a.note||'')}</textarea></div><button class="rs-btn full" id="saveEdit">Save Inventory</button>`);$('closeSheet').onclick=closeSheet;for(let i=1;i<=4;i++)if($('d'+i))$('d'+i).value=a.dims?.[i-1]||'';$('assetType').onchange=()=>{$('dynamicFields').innerHTML=typeFields($('assetType').value)};$('saveEdit').onclick=async()=>{a.type=$('assetType').value;a.label=LABELS[a.type];a.dims=[1,2,3,4].map(i=>$('d'+i)?.value?.trim()||'');a.year=$('assetYear').value.trim()||null;a.name=$('assetName').value.trim()||null;a.note=$('assetNote').value.trim();a.inventoryIncomplete=false;a.updatedAt=today();await put('assets',a);closeSheet();toast('Inventory updated');renderStructures()}}
+
+function openQuickIssue(){const ch=parseCh($('fieldChainage').value);pendingPhotos=[];openSheet(`<div class="rs-sheet-head"><div><h2>Road Issue</h2><p>${esc(selectedRoad.code)} · ${fmtCh(ch)}</p></div><button class="rs-close" id="closeSheet">×</button></div><div class="rs-field"><label>Issue type</label><select id="roadIssueType"><option>Pothole / surface damage</option><option>Edge failure</option><option>Settlement</option><option>Waterlogging</option><option>Drainage issue</option><option>Shoulder erosion</option><option>Landslide / slope issue</option><option>Safety hazard</option><option>Other</option></select></div><div class="rs-field" style="margin-top:10px"><label>Short note — optional</label><textarea id="roadIssueNote"></textarea></div><div class="rs-section-title">Photo</div><label class="rs-photo-pick" for="issuePhotos">📷 Add photo</label><input class="rs-photo-input" id="issuePhotos" type="file" accept="image/*" capture="environment" multiple><div id="issuePreview" class="rs-media-preview"></div><button class="rs-btn full" id="saveRoadIssue" style="margin-top:12px">Save Issue</button>`);$('closeSheet').onclick=closeSheet;$('issuePhotos').onchange=e=>loadPhotos(e.target.files,'issuePreview');$('saveRoadIssue').onclick=async()=>{if(!Number.isFinite(ch)){toast('Enter valid chainage first');return}const rec={id:uid('issue'),roadId:selectedRoad.id,roadCode:selectedRoad.code,chainageM:ch,type:$('roadIssueType').value,note:$('roadIssueNote').value.trim(),gps:currentGps,createdAt:today(),status:'open'};await put('issues',rec);await saveMedia(rec.id,'issue');localStorage.setItem(LAST_KEY,JSON.stringify({what:rec.type,ch,time:Date.now()}));closeSheet();$('lastCaptured').textContent=`${rec.type} · ${fmtCh(ch)} · saved locally`;toast('Issue saved locally')}}
+
+function openQuickPhoto(){const ch=parseCh($('fieldChainage').value);pendingPhotos=[];openSheet(`<div class="rs-sheet-head"><div><h2>Quick Photo</h2><p>${esc(selectedRoad.code)} · ${fmtCh(ch)}</p></div><button class="rs-close" id="closeSheet">×</button></div><label class="rs-photo-pick" for="quickPhotos">📷 Take / choose photo</label><input class="rs-photo-input" id="quickPhotos" type="file" accept="image/*" capture="environment" multiple><div id="quickPreview" class="rs-media-preview"></div><div class="rs-field" style="margin-top:10px"><label>Caption — optional</label><input id="quickCaption" placeholder="What is this photo showing?"></div><button class="rs-btn full" id="saveQuickPhoto" style="margin-top:12px">Save Photo</button>`);$('closeSheet').onclick=closeSheet;$('quickPhotos').onchange=e=>loadPhotos(e.target.files,'quickPreview');$('saveQuickPhoto').onclick=async()=>{if(!pendingPhotos.length){toast('Add a photo first');return}const id=uid('photo'),rec={id,roadId:selectedRoad.id,roadCode:selectedRoad.code,chainageM:ch,caption:$('quickCaption').value.trim(),gps:currentGps,createdAt:today(),type:'Quick Photo'};await put('issues',rec);await saveMedia(id,'quick-photo');localStorage.setItem(LAST_KEY,JSON.stringify({what:'Photo',ch,time:Date.now()}));closeSheet();$('lastCaptured').textContent=`Photo · ${fmtCh(ch)} · saved locally`;toast('Photo saved locally')}}
+
+function openVideoInfo(){location.href='./road_video_survey.html'}
+
+const GUIDES=[
+['Start road inspection','Choose your road → open Inspect → enter current chainage → Capture GPS if useful → tap Structure, Photo, Issue or Road Video.'],
+['New pipe culvert','Tap + Structure → Pipe Culvert → enter number of pipes, diameter and main length → choose condition → take photos → Save.'],
+['New box / slab culvert','Tap + Structure → Box/Slab Culvert → cells/spans, clear width, clear height, overall length → condition → photos → Save.'],
+['New bridge','Tap + Structure → Bridge / Minor / Major → enter start/end chainage, span arrangement and approximate width → condition → photos → Save.'],
+['Retaining wall','Tap + Structure → Retaining Wall → start/end chainage, approximate height, LHS/RHS → condition → photo → Save.'],
+['Repeat inspection','Open Structures → tap structure → Inspect → select condition → select observed issue only if present → photos/note if useful → Save.'],
+['Under construction','Register the structure and choose Under Construction. Use Lifecycle later for construction completed, repair, widening or reconstruction.'],
+['Reconstructed structure','Open the old structure → Lifecycle → Reconstruction. Old history stays; revision increases and dimensions can be completed again.'],
+['Unknown dimensions','Leave the field blank → Save · Complete Later. Never guess a dimension just because the app asks.'],
+['Missed CD and returned','Keep your field inspection active. Return safely to the CD, correct the chainage, capture the structure, then continue.'],
+['Offline work','Keep working normally. Records and optimized photos save on the phone first. Sync can be added later when network returns.'],
+['GPS poor','Do not rely on a poor fix. Wait for a better fix or save the structure with chainage and complete GPS later.'],
+['Wrong entry','Open the structure → Edit / Complete Later → correct permanent inventory. Future history remains separate.'],
+['Road video','Use 1 km stretch-wise video. GPS and chainage stay synchronized; event markers let the report jump to the exact video location.']
+];
+function renderGuide(){const q=$('guideSearch').value.toLowerCase().trim(),rows=GUIDES.filter(g=>!q||g.join(' ').toLowerCase().includes(q));$('guideList').innerHTML=rows.map(g=>`<details><summary>${esc(g[0])}</summary><div class="steps">${esc(g[1]).replaceAll(' → ','<br><b>→</b> ')}</div></details>`).join('')||'<div class="rs-card rs-empty">No match. Try a simpler word.</div>'}
+$('guideSearch').addEventListener('input',renderGuide);
+
+$('quickInspect').onclick=()=>setView('inspect');$('openRouteTool').onclick=()=>location.href='./pwd_route_distance_chainage.html';$('addStructureFromList').onclick=()=>{setView('inspect');setTimeout(openAddStructure,80)};$('addStructureBtn').onclick=openAddStructure;$('addIssueBtn').onclick=openQuickIssue;$('quickPhotoBtn').onclick=openQuickPhoto;$('roadVideoBtn').onclick=openVideoInfo;
+
+function updateNetwork(){const online=navigator.onLine;$('netStatus').textContent=online?'● Online · local save':'● Offline · saved locally';$('netStatus').style.color=online?'var(--ok)':'var(--warn)'}window.addEventListener('online',updateNetwork);window.addEventListener('offline',updateNetwork);
+
+async function boot(){renderRoads();try{const live=JSON.parse(localStorage.getItem('pwd_live_chainage')||'null');if(live&&Number.isFinite(live.chainageM)&&Date.now()-live.time<6*60*60*1000)$('fieldChainage').value=fmtCh(live.chainageM)}catch{}updateChainage();updateNetwork();try{await openDB()}catch(e){console.error(e);toast('Local database unavailable')}try{const last=JSON.parse(localStorage.getItem(LAST_KEY)||'null');if(last)$('lastCaptured').textContent=`${last.what} · ${fmtCh(last.ch)} · ${new Date(last.time).toLocaleString()}`}catch{}renderGuide();}
+boot();
+})();
+</script>
+</body></html>
