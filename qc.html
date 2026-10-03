@@ -7,21 +7,82 @@
 
 <section id="materials" class="qc-panel on"><div class="workflow"><div class="wf"><span>📘</span>Rule / Source</div><div class="wf"><span>👁️</span>Field Check</div><div class="wf"><span>🧪</span>Lab Test</div><div class="wf"><span>⏱️</span>Frequency</div><div class="wf"><span>✅</span>Acceptance</div><div class="wf"><span>🛑</span>Engineer Action</div><div class="wf"><span>📝</span>Record</div></div><div class="searchbox"><span>🔎</span><input id="qSearch" placeholder="Search cement, concrete, bitumen, steel, soil…"></div><div class="qc-grid" id="matGrid"></div></section>
 
-<section id="frequency" class="qc-panel"><div class="qc-card"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><h3 style="flex:1">Recovered frequency references</h3><a class="openbtn" href="./pdf_viewer.html?doc=qcfreq" style="text-decoration:none;margin:0">View Frequency PDF</a></div><p>These are selected frequencies explicitly recovered from the user’s QC handbook/SSR notes. They are shown as historical/source-controlled reference data, not automatically as the current contract requirement.</p><div style="overflow:auto;margin-top:10px"><table class="qc-table"><thead><tr><th>Work / material</th><th>Test</th><th>Recovered frequency</th><th>Status</th></tr></thead><tbody>
-<tr><td>Earthwork / subgrade</td><td>CBR</td><td>1 test (average of 3 specimens) per 3000 m³</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>Earthwork / subgrade</td><td>Plasticity Index</td><td>2 tests per 3000 m³</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>Earthwork / subgrade</td><td>Moisture before compaction</td><td>2 tests per 3000 m³</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>Earthwork / subgrade</td><td>Density</td><td>1 set of 10 measurements per 3000 m² on each layer</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>GSB</td><td>Gradation</td><td>1 per 400 m³</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>GSB</td><td>Atterberg limits</td><td>1 per 400 m³</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>GSB</td><td>Moisture before compaction</td><td>1 per 400 m³</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>GSB</td><td>Density</td><td>1 per 1000 m²</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>WBM</td><td>Aggregate Impact Value</td><td>1 per 1000 m³ aggregate</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>WBM</td><td>Grading</td><td>1 per 250 m³</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>WBM</td><td>Combined flakiness + elongation</td><td>1 per 500 m³</td><td><span class="status v">SSR-derived</span></td></tr>
-<tr><td>Cement</td><td>QC package frequency</td><td>1 per 50 MT</td><td><span class="status r">Recovered card metadata</span></td></tr>
-<tr><td>Coarse aggregate</td><td>QC package frequency</td><td>1 per 200 m³</td><td><span class="status r">Recovered card metadata</span></td></tr>
-</tbody></table></div></div></section>
+<section id="frequency" class="qc-panel">
+<div class="qc-card">
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <div style="flex:1"><h3 style="margin:0">MoRTH Section 900 · Minimum QC Frequencies</h3><p style="margin-top:5px">Source-checked from Tables 900-3 and 900-4 of MoRTH Specifications for Road & Bridge Works, 5th Revision 2013. The source calls these desirable minimum frequencies; the Engineer may require additional tests.</p></div>
+    <a class="openbtn" href="./pdf_viewer.html?doc=morth" style="text-decoration:none;margin:0">View MoRTH PDF</a>
+  </div>
+  <div class="source-note" style="margin-top:10px"><b>Use rule:</b> Contract/project specifications and Engineer directions still control. These rows reproduce the verified minimum-frequency framework; they do not reduce any stricter project requirement.</div>
+</div>
+
+<div class="qc-card" style="margin-top:10px">
+<h3>GSB · Granular Sub-base <a href="./morth_reader.html?clause=401" style="font-size:11px;color:var(--accent);text-decoration:none">Open 401 →</a></h3>
+<div style="overflow:auto"><table class="qc-table"><thead><tr><th>Test</th><th>Minimum frequency</th><th>Status</th></tr></thead><tbody>
+<tr><td>Gradation</td><td>1 test per 400 m³</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Atterberg limits</td><td>1 test per 400 m³</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Moisture content before compaction</td><td>1 test per 400 m³</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Density of compacted layer</td><td>1 test per 1000 m²</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Deleterious constituents</td><td>As required</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>CBR</td><td>As required</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+</tbody></table></div>
+</div>
+
+<div class="qc-card" style="margin-top:10px">
+<h3>WBM · Water Bound Macadam <a href="./morth_reader.html?clause=404" style="font-size:11px;color:var(--accent);text-decoration:none">Open 404 →</a></h3>
+<div style="overflow:auto"><table class="qc-table"><thead><tr><th>Test</th><th>Minimum frequency</th><th>Status</th></tr></thead><tbody>
+<tr><td>Aggregate Impact Value</td><td>1 test per 1000 m³ of aggregate</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Grading of aggregate</td><td>1 test per 250 m³</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Combined Flakiness + Elongation Indices</td><td>1 test per 500 m³ of aggregate</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Atterberg limits of binding material</td><td>1 test per 50 m³ of binding material</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Atterberg limits of screenings</td><td>1 test per 100 m³ of aggregate</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+</tbody></table></div>
+</div>
+
+<div class="qc-card" style="margin-top:10px">
+<h3>WMM · Wet Mix Macadam <a href="./morth_reader.html?clause=406" style="font-size:11px;color:var(--accent);text-decoration:none">Open 406 →</a></h3>
+<div style="overflow:auto"><table class="qc-table"><thead><tr><th>Test</th><th>Minimum frequency</th><th>Status</th></tr></thead><tbody>
+<tr><td>Aggregate Impact Value</td><td>1 test per 1000 m³ of aggregate</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Grading of aggregate</td><td>1 test per 200 m³ of aggregate</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Combined Flakiness + Elongation Indices</td><td>1 test per 500 m³ of aggregate</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Atterberg limits of portion passing 425 micron sieve</td><td>1 test per 200 m³ of aggregate</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+<tr><td>Density of compacted layer</td><td>1 set of 3 tests per 1000 m²</td><td><span class="status v">MoRTH 900-3</span></td></tr>
+</tbody></table></div>
+</div>
+
+<div class="qc-card" style="margin-top:10px">
+<h3>Prime Coat / Tack Coat / Fog Spray <a href="./morth_reader.html?clause=502" style="font-size:11px;color:var(--accent);text-decoration:none">Prime 502 →</a> <a href="./morth_reader.html?clause=503" style="font-size:11px;color:var(--accent);text-decoration:none">Tack 503 →</a></h3>
+<div style="overflow:auto"><table class="qc-table"><thead><tr><th>Test / control</th><th>Minimum frequency</th><th>Status</th></tr></thead><tbody>
+<tr><td>Quality of binder</td><td>Samples per lot and tests as per IS 73, IS 217 and IS 8887, as applicable</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Binder temperature for application</td><td>At regular close intervals</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Rate of spread of binder</td><td>3 tests per day</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+</tbody></table></div>
+</div>
+
+<div class="qc-card" style="margin-top:10px">
+<h3>DBM / Bituminous Concrete <a href="./morth_reader.html?clause=505" style="font-size:11px;color:var(--accent);text-decoration:none">DBM 505 →</a> <a href="./morth_reader.html?clause=507" style="font-size:11px;color:var(--accent);text-decoration:none">BC 507 →</a></h3>
+<div style="overflow:auto"><table class="qc-table"><thead><tr><th>Test / control</th><th>Minimum frequency</th><th>Status</th></tr></thead><tbody>
+<tr><td>Quality of binder</td><td>Samples per lot and tests as per IS 73 or IRC:SP:53 / IS 15462</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>AIV / Los Angeles Abrasion</td><td>1 test per 350 m³ of aggregate for each source and whenever quality changes</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Flakiness + Elongation Indices</td><td>1 test per 350 m³ of aggregate for each source and whenever quality changes</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Soundness · sodium/magnesium sulphate</td><td>1 test for each source and whenever quality changes</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Water absorption</td><td>1 test for each source and whenever quality changes</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Sand equivalent</td><td>1 test for each source and whenever quality changes</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Plasticity Index</td><td>1 test for each source and whenever quality changes</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Polished Stone Value</td><td>1 test for each source and whenever quality changes</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Fractured faces</td><td>1 test per 350 m³ of aggregate when crushed gravel is used</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Mix grading</td><td>1 set on individual constituents and mixed aggregate from dryer per 400 t of mix, minimum 2 tests/day/plant</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Stability + flow + density + voids analysis incl. theoretical maximum specific gravity</td><td>3 tests for each 400 t of mix, subject to minimum 2 tests/day/plant</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Moisture susceptibility · AASHTO T283</td><td>1 test for each mix type whenever coarse/fine aggregate quality or source changes</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Binder / aggregate / mix temperatures during laying & compaction</td><td>At regular intervals</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Binder content</td><td>1 set per 400 t of mix, minimum 2 tests/day/plant</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Rate of spread of mix material</td><td>After every 5th truck load</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+<tr><td>Density of compacted layer</td><td>1 test per 700 m²</td><td><span class="status v">MoRTH 900-4</span></td></tr>
+</tbody></table></div>
+</div>
+
+<div class="source-note" style="margin-top:10px"><b>Section 900 note:</b> daily, weekly and monthly test-result reports should identify sampling/testing location, deviations and remedial action; the test record is to be certified by the Engineer as prescribed by the source.</div>
+</section>
 
 <section id="actions" class="qc-panel"><div class="qc-card"><h3>Engineer decision sequence</h3><div class="decision"><div class="row"><b>1 · Before work / before hiding</b><p>Verify source, identity, dimensions, approved mix/JMF/drawing, readiness and sampling need. Do not let the next layer or concrete hide an unresolved issue.</p></div><div class="row"><b>2 · During execution</b><p>Measure objective process variables: layer thickness, moisture/density, temperature, slump/workability, rate of spread, cube sampling, rebar spacing/cover, truck/load identity.</p></div><div class="row"><b>3 · After work</b><p>Check finished dimensions/performance and link the evidence to the work location, chainage/member and relevant test report.</p></div><div class="row"><b>4 · If doubtful</b><p>Increase random checks, isolate the affected lot/location, preserve evidence, obtain the specified formal test, and avoid acceptance from a screening-only tool.</p></div><div class="row"><b>5 · If failed / nonconforming</b><p>Stop or hold the next dependent operation as appropriate, document the result, follow project/specification nonconformance procedure and seek the competent design/authority decision where structural significance exists.</p></div></div></div></section>
 
@@ -32,8 +93,8 @@ const materials=[
 {id:'fine',icon:'🏖️',name:'Fine Aggregate',src:'IS 383 + PWD QC Card 03',field:['Source change','Bulking/moisture condition','Visible silt/clay and organic contamination'],lab:['Grading/zone','Silt/deleterious matter','Specific gravity / absorption where required'],freq:'Use applicable source/frequency table for work item.',accept:'Recovered card contains detailed limits; re-check controlling source before current acceptance.',status:'review'},
 {id:'concrete',icon:'🧱',name:'Concrete',src:'IS 456 / IS 10262 / IS 516 / IS 1199 / IS 13311 + Card 04',field:['Pre-pour rebar/cover/shutter checks','Batching / w-c control','Slump/workability','Placement, vibration and curing','Cube sample identity'],lab:['Compressive strength cubes','Mix design / trials','Core or NDT where investigation requires'],freq:'Use concrete sampling frequency from controlling specification.',accept:'Cube acceptance, exposure/durability and NDT interpretation must follow cited standard and project conditions.',status:'review'},
 {id:'mortar',icon:'🧱',name:'Mortar',src:'PWD QC Card 05 + applicable IS',field:['Mix proportion / batching','Surface preparation','Thickness / joint control','Curing'],lab:['Mortar strength when specified','Cement/sand tests'],freq:'Project/item dependent.',accept:'No universal pass number should be invented outside the applicable mortar class/item.',status:'review'},
-{id:'soil',icon:'🌍',name:'Soil / Murum',src:'IS 2720 series + PWD QC Card 06',field:['Layer thickness','Moisture condition','Compaction','Source change','Line/level/camber'],lab:['CBR','Atterberg limits','Proctor MDD/OMC','Gradation','Field density'],freq:'See Frequency tab for recovered SSR frequencies.',accept:'Compare density/CBR/plasticity with item/specification requirement.',status:'verified'},
-{id:'bitumen',icon:'🛣️',name:'Bitumen',src:'IS 73 + MoRTH + PWD QC Card 07',field:['Binder identity / grade','Temperature','Surface preparation','Spray/spread uniformity','Plant/truck/paver process where applicable'],lab:['Binder quality tests','Binder content','Mix grading / Marshall / density as applicable'],freq:'Work/JMF/source dependent.',accept:'Compare against the approved JMF and applicable MoRTH/IS provisions.',status:'review'},
+{id:'soil',icon:'🌍',name:'Soil / Murum',src:'IS 2720 series + PWD QC Card 06',field:['Layer thickness','Moisture condition','Compaction','Source change','Line/level/camber'],lab:['CBR','Atterberg limits','Proctor MDD/OMC','Gradation','Field density'],freq:'MoRTH 900-3 verified frequencies available.',accept:'Compare density/CBR/plasticity with item/specification requirement.',status:'verified'},
+{id:'bitumen',icon:'🛣️',name:'Bitumen',src:'IS 73 + MoRTH + PWD QC Card 07',field:['Binder identity / grade','Temperature','Surface preparation','Spray/spread uniformity','Plant/truck/paver process where applicable'],lab:['Binder quality tests','Binder content','Mix grading / Marshall / density as applicable'],freq:'MoRTH 900-4 verified frequencies available for Prime/Tack/DBM/BC.',accept:'Compare against the approved JMF and applicable MoRTH/IS provisions.',status:'review'},
 {id:'steel',icon:'🔩',name:'Steel Bar',src:'IS 1786 + PWD QC Card 08',field:['Diameter and weight/m check','Spacing, laps, hooks and cover','Rust/condition and heat/lot identity'],lab:['Yield/proof stress','UTS','Elongation','Bend/rebend','Mass per metre'],freq:'Lot/source/project dependent.',accept:'Declared grade and IS 1786 requirements control.',status:'review'},
 {id:'water',icon:'💧',name:'Water',src:'PWD QC Card 09 + concrete/water provisions',field:['Source identity','Visible contamination','Source change'],lab:['Chemical suitability as specified'],freq:'Source/change/project dependent.',accept:'Use concrete/specification water-quality limits; card values require source check.',status:'review'},
 {id:'bricks',icon:'🧱',name:'Bricks',src:'PWD QC Card 10 + IS 1077 / IS 3495',field:['Dimensions, breakage and uniformity','Soaking / bond control before masonry'],lab:['Compressive strength','Water absorption','Efflorescence'],freq:'Lot/project dependent.',accept:'Declared class + applicable IS/project requirement.',status:'review'},
