@@ -18,8 +18,8 @@ const RECORDS=[
 ];
 
 const pqc=RECORDS.find(r=>r.clause==='602');
-pqc.page='Printed p.263 onward · first verified batch covers materials, mix/QC controls and Table 900-6';
-pqc.read='First source-checked batch for pavement-quality cement concrete. This batch covers approved materials, cement content, flexural-strength basis, water-cement ratio, workability, aggregate grading and selected Section 900 QC controls. Joint/detail construction remains for later verification.';
+pqc.page='Printed p.263 onward · materials, mix/QC, construction, trial, traffic and selected joint/texture controls source-checked';
+pqc.read='Source-checked in staged batches for pavement-quality cement concrete. Current verified coverage includes approved materials, mix design basis, workability, selected construction controls, dowel/joint tolerances, texturing, trial length, opening to traffic and selected Section 900 QC controls. Full joint/seal/detail coverage remains for later verification.';
 pqc.quick=[
 '602.2.1 — Material sources with relevant test data require Engineer approval at least 45 days before scheduled trial-length work; later source changes also require 45-day prior notice with test data.',
 '602.2.2 — With prior approval, source lists OPC 43, OPC 53, Portland Slag Cement and PPC. Preference is at least 43 grade or higher.',
@@ -36,7 +36,23 @@ pqc.quick=[
 '903.5.2.1 — Flexural test results prevail over compressive results for pavement-concrete strength compliance.',
 '903.5.2.2 — Where concrete quality/compaction is suspect, source provides core investigation at 2 cores per 150 m³, subject to Engineer requirement and the source acceptance procedure.',
 'Table 900-6 — PQC QC includes daily/source aggregate tests, workability, thickness, joint/alignment/texture checks and concrete-strength sampling.',
-'⚠ Source-control alert — Clause 903.5.2.1 and Table 900-6 use different wording/numbers for beam/cube sampling per 150 m³. This app does not silently choose one. Resolve against Contract/Engineer/current amendment before using a single automated sampling count.'
+'⚠ Source-control alert — Clause 903.5.2.1 and Table 900-6 use different wording/numbers for beam/cube sampling per 150 m³. This app does not silently choose one. Resolve against Contract/Engineer/current amendment before using a single automated sampling count.',
+'602.6.5.2 — Unless drawings state otherwise, dowel bars are positioned at slab mid-depth within ±20 mm and centered about the intended joint line within ±25 mm.',
+'602.6.5.2 — For dowels supported on cradles before paving, the source gives alignment tolerances including ±2 mm per 300 mm for all bars, two-thirds within ±3 mm per 500 mm, and adjacent-bar difference not more than 3 mm per 300 mm in either plane.',
+'602.9.1 — Method Statement covering the paving system is approved before work; paving/batching/ancillary capacity is planned for at least 500 m/day and slip-form paving speed is not less than 1.0 m/min.',
+'602.9.4.8 — After texturing and before curing compound, chainage is embossed on the slab at every 100 m.',
+'602.9.4.10 — If surface-regularity compliance fails on two consecutive working days, normal paving stops until the cause is identified and corrected.',
+'602.9.5.3 — Slip-form vibrators have variable output; source minimum maximum-energy capability is 2.5 kW per metre width per 300 mm slab depth for laying speed up to 1.5 m/min.',
+'602.9.5.5–602.9.5.6 — Full-width paving is preferred unless Contract/site conditions and Engineer allow part-width paving; an adjacent lane is paved only after the previous lane has cured at least 14 days and can carry the paving machine.',
+'602.9.10 — Over culverts, provide contraction joints at both ends of the culvert slab. Source nominal reinforcement is 10 mm dia @150 mm both directions, 50 mm below slab top, stopped 50 mm short of the contraction joint, and repeated in the next panel on either side.',
+'602.9.11.1 — Tined grooves are 3 mm wide and 3–4 mm deep; remove bleeding water before texturing.',
+'602.9.11.2 — Texture depth is checked by Sand Patch at least once for each day of paving and when additionally required by the Engineer.',
+'602.9.12 — Apply approved curing compound immediately after texturing with mechanical spraying; the source calls for two applications to obtain uniform coverage.',
+'602.11.1–602.11.4 — Trial paving is at least one month before main paving; method statement is submitted at least one month before trial. Trial length is ≥100 m for mechanised work or ≥50 m for hand-guided work, full carriageway width, outside the main carriageway, and includes the proposed joint types.',
+'602.11.3 — Trial is constructed in two parts over at least parts of two separate working days: minimum 50 m/day mechanised or 25 m/day hand-guided.',
+'602.11.5.4 — Trial-strength correlation uses at least 30 beams and 30 cubes from paired same-location/batch samples, with different pairs from different batches/locations and 28-day laboratory testing.',
+'602.13 — No vehicular traffic on finished PQC within 28 days. Opening requires completion of 28-day curing, permanent joint sealing/cure, shoulder completion and written Engineer permission.',
+'602.14 — Surface regularity, level, thickness and strength acceptance refers to Clause 903.5; distress acceptance refers to IRC:SP:83. The source requires replacement for the stated higher-severity crack conditions.'
 ];
 pqc.tables=[
 {name:'Table 600-3 · Aggregate Gradation for Pavement Quality Concrete',status:'checked',headers:['Sieve','% by weight passing','Source'],rows:[
@@ -57,7 +73,26 @@ pqc.tables=[
 {name:'PQC · Strength Sampling Source Conflict',status:'pending',headers:['Source location','Wording represented','App status'],rows:[
 ['Clause 903.5.2.1','At least 3 beams and 3 cube specimens; wording also refers to one set of three each for 7-day and 28-day tests per 150 m³ / part, plus daily minimum language','REVIEW REQUIRED'],
 ['Table 900-6 · Concrete strength','2 cubes and 2 beams per 150 m³ / part (one for 7-day and other for 28-day) OR minimum 6 cubes and 6 beams per day, whichever is more','REVIEW REQUIRED']
-],note:'The app will not automate PQC beam/cube sampling until this internal source inconsistency is reconciled against Contract/current amendment/Engineer direction.'}
+],note:'The app will not automate PQC beam/cube sampling until this internal source inconsistency is reconciled against Contract/current amendment/Engineer direction.'},
+{name:'PQC · Construction / Trial / Traffic Controls',status:'checked',headers:['Control','Source requirement','Reference'],rows:[
+['Paving system capacity','At least 500 m/day','602.9.1'],
+['Slip-form paving speed','≥1.0 m/min','602.9.1'],
+['Chainage marking','Every 100 m before curing compound','602.9.4.8'],
+['Surface regularity failure','Stop normal work after failure on 2 consecutive working days until corrected','602.9.4.10'],
+['Adjacent lane on cured slab','Previous lane cured ≥14 days and capable of carrying paver','602.9.5.6'],
+['Tined-groove geometry','3 mm wide × 3–4 mm deep','602.9.11.1'],
+['Trial timing','≥1 month before main paving','602.11.1'],
+['Trial length · mechanised','≥100 m, full carriageway width','602.11.2'],
+['Trial length · hand-guided','≥50 m, full carriageway width','602.11.2'],
+['Traffic opening','After 28-day curing + sealed/cured joints + shoulders + written Engineer permission','602.13']
+],note:'Construction controls are source-derived from the currently verified Clause 602 batch.'},
+{name:'PQC · Dowel / Culvert Controls',status:'checked',headers:['Control','Source requirement','Reference'],rows:[
+['Dowel vertical position','Mid-depth ±20 mm unless drawings state otherwise','602.6.5.2'],
+['Dowel centering about joint','±25 mm','602.6.5.2'],
+['Cradle-supported dowel alignment','All bars ±2 mm/300 mm; 2/3 within ±3 mm/500 mm; adjacent-bar difference ≤3 mm/300 mm','602.6.5.2'],
+['Culvert-slab nominal reinforcement','10 mm dia @150 mm both directions, 50 mm below top','602.9.10'],
+['Reinforcement termination at contraction joint','Stop 50 mm short of joint; also provide in next slab panel on either side','602.9.10']
+],note:'Use drawing-specific details where drawings differ; the clause itself says “unless shown otherwise on the drawings” for dowel positioning.'}
 ];
 pqc.calc='No PQC mix-design or sampling-count calculator is enabled. Approved flexural-strength mix design is a separate controlled workflow, and the Section 900 sampling conflict must be resolved before automation.';
 
