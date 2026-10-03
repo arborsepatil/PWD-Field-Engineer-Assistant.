@@ -142,6 +142,19 @@
 </div>
 
 <div class="qc-card" style="margin-top:10px">
+<h3>Slurry Seal / Micro-Surfacing <a href="./morth_reader.html?clause=512" style="font-size:11px;color:var(--accent);text-decoration:none">512 →</a></h3>
+<div style="overflow:auto"><table class="qc-table"><thead><tr><th>Test / control</th><th>Minimum frequency</th><th>Status</th></tr></thead><tbody>
+<tr><td>Aggregate quality · Sand Equivalent / Water Absorption / Soundness</td><td>1 per source / site</td><td><span class="status v">MoRTH 900-4 · Serial 7</span></td></tr>
+<tr><td>Quality of emulsion</td><td>1 per lot of 20 t as per IS 8887</td><td><span class="status v">MoRTH 900-4 · Serial 7</span></td></tr>
+<tr><td>Aggregate moisture</td><td>2 tests per day</td><td><span class="status v">MoRTH 900-4 · Serial 7</span></td></tr>
+<tr><td>Aggregate gradation</td><td>2 tests per day at site</td><td><span class="status v">MoRTH 900-4 · Serial 7</span></td></tr>
+<tr><td>Binder content</td><td>2 tests per lane per km</td><td><span class="status v">MoRTH 900-4 · Serial 7</span></td></tr>
+<tr><td>Calibration of machine</td><td>Once per project</td><td><span class="status v">MoRTH 900-4 · Serial 7</span></td></tr>
+<tr><td>Quantity of slurry · by weight of aggregate</td><td>Daily · source notes travel time of machine</td><td><span class="status v">MoRTH 900-4 · Serial 7</span></td></tr>
+</tbody></table></div>
+<div class="source-note"><b>Scope note:</b> Table 900-4 Serial 7 covers Slurry Seal and Micro-Surfacing. These are desirable minimum frequencies under Clause 903.1; the Engineer may require additional testing. Clause 512 material/mix limits remain controlling for slurry seal.</div>
+</div>
+<div class="qc-card" style="margin-top:10px">
 <h3>DBM / Bituminous Concrete <a href="./morth_reader.html?clause=505" style="font-size:11px;color:var(--accent);text-decoration:none">DBM 505 →</a> <a href="./morth_reader.html?clause=507" style="font-size:11px;color:var(--accent);text-decoration:none">BC 507 →</a></h3>
 <div style="overflow:auto"><table class="qc-table"><thead><tr><th>Test / control</th><th>Minimum frequency</th><th>Status</th></tr></thead><tbody>
 <tr><td>Quality of binder</td><td>Samples per lot and tests as per IS 73 or IRC:SP:53 / IS 15462</td><td><span class="status v">MoRTH 900-4</span></td></tr>
@@ -176,7 +189,7 @@ const materials=[
 {id:'concrete',icon:'🧱',name:'Concrete',src:'IS 456 / IS 10262 / IS 516 / IS 1199 / IS 13311 + Card 04',field:['Pre-pour rebar/cover/shutter checks','Batching / w-c control','Slump/workability','Placement, vibration and curing','Cube sample identity'],lab:['Compressive strength cubes','Mix design / trials','Core or NDT where investigation requires'],freq:'Use concrete sampling frequency from controlling specification.',accept:'Cube acceptance, exposure/durability and NDT interpretation must follow cited standard and project conditions.',status:'review'},
 {id:'mortar',icon:'🧱',name:'Mortar',src:'PWD QC Card 05 + applicable IS',field:['Mix proportion / batching','Surface preparation','Thickness / joint control','Curing'],lab:['Mortar strength when specified','Cement/sand tests'],freq:'Project/item dependent.',accept:'No universal pass number should be invented outside the applicable mortar class/item.',status:'review'},
 {id:'soil',icon:'🌍',name:'Soil / Murum',src:'IS 2720 series + PWD QC Card 06',field:['Layer thickness','Moisture condition','Compaction','Source change','Line/level/camber'],lab:['CBR','Atterberg limits','Proctor MDD/OMC','Gradation','Field density'],freq:'MoRTH 900-3 verified frequencies available.',accept:'Compare density/CBR/plasticity with item/specification requirement.',status:'verified'},
-{id:'bitumen',icon:'🛣️',name:'Bitumen',src:'IS 73 + MoRTH + PWD QC Card 07',field:['Binder identity / grade','Temperature','Surface preparation','Spray/spread uniformity','Plant/truck/paver process where applicable'],lab:['Binder quality tests','Binder content','Mix grading / Marshall / density as applicable'],freq:'MoRTH 900-4 verified frequencies available for Prime/Tack/Surface Dressing/Seal/BM/Premix/DBM/BC.',accept:'Compare against the approved JMF and applicable MoRTH/IS provisions.',status:'review'},
+{id:'bitumen',icon:'🛣️',name:'Bitumen',src:'IS 73 + MoRTH + PWD QC Card 07',field:['Binder identity / grade','Temperature','Surface preparation','Spray/spread uniformity','Plant/truck/paver process where applicable'],lab:['Binder quality tests','Binder content','Mix grading / Marshall / density as applicable'],freq:'MoRTH 900-4 verified frequencies available for Prime/Tack/Surface Dressing/Seal/BM/Premix/Slurry-Micro/DBM/BC.',accept:'Compare against the approved JMF and applicable MoRTH/IS provisions.',status:'review'},
 {id:'steel',icon:'🔩',name:'Steel Bar',src:'IS 1786 + PWD QC Card 08',field:['Diameter and weight/m check','Spacing, laps, hooks and cover','Rust/condition and heat/lot identity'],lab:['Yield/proof stress','UTS','Elongation','Bend/rebend','Mass per metre'],freq:'Lot/source/project dependent.',accept:'Declared grade and IS 1786 requirements control.',status:'review'},
 {id:'water',icon:'💧',name:'Water',src:'PWD QC Card 09 + concrete/water provisions',field:['Source identity','Visible contamination','Source change'],lab:['Chemical suitability as specified'],freq:'Source/change/project dependent.',accept:'Use concrete/specification water-quality limits; card values require source check.',status:'review'},
 {id:'bricks',icon:'🧱',name:'Bricks',src:'PWD QC Card 10 + IS 1077 / IS 3495',field:['Dimensions, breakage and uniformity','Soaking / bond control before masonry'],lab:['Compressive strength','Water absorption','Efflorescence'],freq:'Lot/project dependent.',accept:'Declared class + applicable IS/project requirement.',status:'review'},
