@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f8fc">
+<title>PWD Tools · Road & Structure User Manual</title>
+<link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="stylesheet" href="./app-shell.css"><link rel="stylesheet" href="./road-structure.css">
+<style>.manual-head{display:flex;gap:10px;align-items:center;margin-bottom:12px}.manual-toc{display:flex;gap:6px;overflow:auto;padding-bottom:4px}.manual-toc a{white-space:nowrap;text-decoration:none;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850}.manual-section{scroll-margin-top:18px}.manual-section h2{font-size:20px;margin:0 0 8px}.manual-section details{border:1px solid var(--line);border-radius:15px;background:var(--card);padding:11px 12px;margin:7px 0}.manual-section summary{font-weight:900;font-size:12px;cursor:pointer}.manual-steps{font-size:11px;line-height:1.7;color:var(--muted);padding-top:8px}.manual-steps b{color:var(--ink)}.rule{border-left:4px solid var(--accent);padding:10px 12px;border-radius:10px;background:var(--soft);font-size:11px;font-weight:750;margin:10px 0}.danger-rule{border-left-color:var(--danger);background:color-mix(in srgb,var(--danger) 7%,var(--card))}</style>
+</head>
+<body class="app-page"><main class="rs-shell">
+<div class="manual-head"><a class="rs-back" href="./pwd_road_structures.html">‹</a><a class="brand" href="./index.html" style="text-decoration:none"><img src="./icon.svg" alt=""><div><div class="brand-title">PWD <span>Tools</span></div><div class="brand-sub">Simple User Manual</div></div></a></div>
+<section class="rs-hero"><div class="rs-eyebrow">Road & Structure Module</div><h1>Step-by-Step Guide</h1><p>Short instructions for normal work, mistakes, offline use and unusual cases.</p></section>
+<div class="rs-card" style="margin-top:10px"><div class="rs-field"><label>Search manual</label><input id="manualSearch" placeholder="pipe culvert, offline, wrong chainage, video, reconstructed..."></div></div>
+<nav class="manual-toc"><a href="#start">Start</a><a href="#structures">Structures</a><a href="#inspection">Inspection</a><a href="#video">Video</a><a href="#offline">Offline</a><a href="#problems">Problems</a><a href="#office">Office</a></nav>
+
+<section id="start" class="rs-card manual-section"><h2>1. Start work</h2>
+<details open data-manual><summary>Start a road inspection</summary><div class="manual-steps"><b>1.</b> Open <b>Road & Structures</b>.<br><b>2.</b> Select your road.<br><b>3.</b> Open <b>Inspect</b>.<br><b>4.</b> Enter the current chainage or use the route/chainage tool.<br><b>5.</b> Capture GPS if needed.<br><b>6.</b> Tap <b>Structure</b>, <b>Photo</b>, <b>Issue</b> or <b>Road Video</b> as you work.</div></details>
+<details data-manual><summary>Change to another road</summary><div class="manual-steps">Finish or save the current item first. Open <b>Roads</b>, select the new road, then continue. Never save a structure under the wrong road just to save time.</div></details>
+<details data-manual><summary>Start midway, not from Ch. 0+000</summary><div class="manual-steps">Select the road and enter the actual chainage where you start. You do not need to begin from the road start.</div></details>
+<div class="rule">Field rule: <b>record what you know, leave unknown things blank, and never guess.</b></div></section>
+
+<section id="structures" class="rs-card manual-section"><h2>2. Register structures</h2>
+<details data-manual><summary>New pipe culvert</summary><div class="manual-steps">Tap <b>+ Structure → Pipe Culvert</b>. Enter number of pipes, pipe diameter, main barrel length if measured, headwall length if useful, condition and photos. Save. Construction year can be added later.</div></details>
+<details data-manual><summary>New box culvert</summary><div class="manual-steps">Tap <b>+ Structure → Box Culvert</b>. Enter number of cells, clear width, clear height and overall length. Select condition, add photos and save.</div></details>
+<details data-manual><summary>New slab culvert</summary><div class="manual-steps">Select <b>Slab Culvert</b>. Enter spans/cells, clear width, clear height and overall length. Add condition and photos.</div></details>
+<details data-manual><summary>New causeway / vented causeway</summary><div class="manual-steps">Select <b>Causeway</b> or <b>Vented Causeway</b>. Enter overall length, roadway width, number of vents if present and vent size if known. Add photos and condition.</div></details>
+<details data-manual><summary>New bridge</summary><div class="manual-steps">Select <b>Bridge</b>, <b>Minor Bridge</b> or <b>Major Bridge</b> only when known. Enter start chainage, end chainage, span arrangement and approximate width. If classification is uncertain, choose <b>Bridge</b> and classify later.</div></details>
+<details data-manual><summary>Bridge abutment naming</summary><div class="manual-steps">Use <b>start-side abutment</b> and <b>end-side abutment</b> in field notes. If official drawing names A1/A2 are known, add them later. Avoid “left abutment/right abutment” unless direction is clearly defined.</div></details>
+<details data-manual><summary>New retaining wall</summary><div class="manual-steps">Select <b>Retaining Wall</b>. Enter start chainage, end chainage, approximate height and side (LHS/RHS). The structure is treated as a length, not just one point.</div></details>
+<details data-manual><summary>Unknown year or dimension</summary><div class="manual-steps">Leave it blank. Tap <b>Save · Complete Later</b>. At home/office, open the structure and use <b>Edit / Complete Later</b>.</div></details>
+<details data-manual><summary>Structure already exists in the app</summary><div class="manual-steps">Do not register it again. Open <b>Structures</b>, select the existing structure and tap <b>Inspect</b>.</div></details>
+<details data-manual><summary>Duplicate structure created by mistake</summary><div class="manual-steps">Do not continue adding inspections to both records. Keep the correct record and mark the duplicate for cleanup. A safe merge/delete control will be added after field testing.</div></details>
+<details data-manual><summary>Structure under construction</summary><div class="manual-steps">Register it with condition/status <b>Under Construction</b>. Add the basic dimensions that are already known and progress photos. Later use <b>Lifecycle → Construction Completed</b>.</div></details>
+<details data-manual><summary>Structure reconstructed</summary><div class="manual-steps">Open the old structure → <b>Lifecycle → Reconstruction</b>. The old history stays. The structure revision increases and permanent dimensions can be entered again for the reconstructed structure.</div></details>
+<details data-manual><summary>Structure widened</summary><div class="manual-steps">Open the structure → <b>Lifecycle → Widening</b>. Add a short note. If dimensions changed, update the permanent inventory after the widening is complete.</div></details>
+<details data-manual><summary>Structure repaired</summary><div class="manual-steps">Open the structure → <b>Lifecycle → Repair / Rehabilitation</b>. Add a short note and, when useful, new photos. Do not erase the earlier poor-condition inspection.</div></details>
+<details data-manual><summary>Structure removed or abandoned</summary><div class="manual-steps">Open the structure → <b>Lifecycle → Removed / Abandoned</b>. Keep the history. Do not delete the asset simply because it no longer exists.</div></details>
+</section>
+
+<section id="inspection" class="rs-card manual-section"><h2>3. Repeat inspection</h2>
+<details data-manual><summary>Routine inspection of an existing structure</summary><div class="manual-steps">Open <b>Structures</b> → select the asset → <b>Inspect</b>. Select <b>Good / Fair / Poor / Critical</b>. Mark only issues actually observed. Add a short note/photo only if useful. Save.</div></details>
+<details data-manual><summary>Condition unchanged</summary><div class="manual-steps">Select the same condition, leave issue chips blank, add a photo only if you need current evidence, then save. Do not re-enter dimensions.</div></details>
+<details data-manual><summary>New crack / scour / blockage found</summary><div class="manual-steps">Inspect the existing structure, choose the correct condition, select the observed issue, take a clear photo, add a short note, and save.</div></details>
+<details data-manual><summary>Critical condition</summary><div class="manual-steps">Select <b>Critical</b>, take clear evidence photos, add a concise note and follow your departmental safety/escalation procedure. The app is a record; it does not replace engineering judgment or official action.</div></details>
+<details data-manual><summary>Missed a CD and remembered 1 km later</summary><div class="manual-steps">Keep the inspection active. Return safely by walking/vehicle. At the structure, correct the chainage, capture the CD, then continue. Do not stop and create a fake new survey just because you backtracked.</div></details>
+<details data-manual><summary>Wrong chainage entered</summary><div class="manual-steps">Open the item as soon as possible and correct it. If the permanent asset record is already created, use <b>Edit / Complete Later</b>. Future alignment-based chainage will reduce this problem.</div></details>
+<details data-manual><summary>Quick road issue, not a structure</summary><div class="manual-steps">Open <b>Inspect → Issue</b>. Choose pothole/surface damage, edge failure, settlement, waterlogging, drainage, shoulder erosion, landslide/slope issue, safety hazard or other. Add note/photo and save.</div></details>
+<details data-manual><summary>Quick photo only</summary><div class="manual-steps">Open <b>Inspect → Photo</b>. Take/select the photo, add a short caption if needed and save. The app links it to the selected road, chainage and GPS if captured.</div></details>
+</section>
+
+<section id="video" class="rs-card manual-section"><h2>4. Road video survey</h2>
+<details id="road-video" open data-manual><summary>Standard 1 km video survey</summary><div class="manual-steps"><b>1.</b> Mount/hold the phone safely before moving.<br><b>2.</b> Start Road Video.<br><b>3.</b> The app records video with GPS and chainage.<br><b>4.</b> The recording is divided into 1 km stretches.<br><b>5.</b> Mark important events such as pothole, edge failure, drainage issue or structure.<br><b>6.</b> Finish the survey.<br><b>7.</b> The report lists chainages and can jump directly to the matching video time.</div></details>
+<details data-manual><summary>Start video at Ch. 6+200</summary><div class="manual-steps">The first segment may be Ch. 6+200 to 7+000. After that, use full kilometre stretches such as 7+000–8+000, 8+000–9+000.</div></details>
+<details data-manual><summary>Reverse direction during video</summary><div class="manual-steps">The future alignment-based chainage engine will detect increasing/decreasing direction. Do not assume video time equals increasing chainage when you are travelling backward.</div></details>
+<details data-manual><summary>Important defect near kilometre boundary</summary><div class="manual-steps">Do not lose the event just to cut exactly at the kilometre mark. The app may allow a few seconds of overlap around the boundary while the report still uses the correct chainage.</div></details>
+<details data-manual><summary>Video file is large</summary><div class="manual-steps">Use <b>Standard 1080p/30 fps</b> for normal surveys and <b>Economy 720p/30 fps</b> for long surveys. Keep 1 km segments so files stay manageable. A high-detail mode should be used only when necessary.</div></details>
+<details data-manual><summary>Senior wants only one defect</summary><div class="manual-steps">Open the report and tap the event at that chainage. Playback should jump to that point in the matching 1 km video instead of making the senior watch the whole road.</div></details>
+<div class="rule danger-rule"><b>Safety:</b> do not operate the phone while personally riding/driving. Start recording before moving, stop safely for manual inputs, or use a passenger/operator.</div></section>
+
+<section id="offline" class="rs-card manual-section"><h2>5. Offline, photos and storage</h2>
+<details data-manual><summary>No mobile network at site</summary><div class="manual-steps">Keep working. Structure data, inspections, issues and optimized photos save locally first. Internet is not required for ordinary field capture.</div></details>
+<details data-manual><summary>Photo size</summary><div class="manual-steps">The app reduces normal photos to about 1800 px maximum dimension with practical JPEG quality for storage. Use a future <b>High-detail photo</b> option only for cracks/details that need extra resolution.</div></details>
+<details data-manual><summary>Original phone photo</summary><div class="manual-steps">The working copy inside the app may be optimized. If you need the original high-resolution image for another purpose, keep the original in the device camera/gallery according to your project policy.</div></details>
+<details data-manual><summary>Low phone storage</summary><div class="manual-steps">Stop long video recording before the device becomes critically full. Sync/export completed work when possible and clear only data that has been safely backed up.</div></details>
+<details data-manual><summary>Sync failed</summary><div class="manual-steps">Do not re-enter the field work. The local record remains the primary copy until sync succeeds. Retry when the network is stable.</div></details>
+<details data-manual><summary>Phone restarted / app closed</summary><div class="manual-steps">Saved items remain in local storage. Reopen the app, select the road and continue. Unsaved form fields may be lost, so save a structure/inspection before moving away.</div></details>
+</section>
+
+<section id="problems" class="rs-card manual-section"><h2>6. GPS and common problems</h2>
+<details data-manual><summary>GPS accuracy is poor</summary><div class="manual-steps">Wait for a better fix if location matters. You may save by chainage and complete GPS later. Never treat phone GPS as survey-grade setting-out data.</div></details>
+<details data-manual><summary>GPS point jumps to side of road</summary><div class="manual-steps">Do not move the permanent asset just because of one bad fix. Capture a fresh fix. The planned master-alignment system will project the position to the road and show offset/LHS/RHS.</div></details>
+<details data-manual><summary>Wrong road selected</summary><div class="manual-steps">Do not keep adding data. Correct the road before continuing. If an asset was already saved under the wrong road, flag it for correction instead of duplicating it on the correct road.</div></details>
+<details data-manual><summary>Wrong structure type selected</summary><div class="manual-steps">Open <b>Edit / Complete Later</b>, change the structure type, and re-check the basic dimensions because the field labels will change.</div></details>
+<details data-manual><summary>Photo did not save</summary><div class="manual-steps">Confirm the photo appears in the preview before saving. If not, take/select it again. For an already saved asset, add the photo during the next inspection rather than recreating the asset.</div></details>
+<details data-manual><summary>Internet map unavailable</summary><div class="manual-steps">Continue with road/chainage/structure data. Satellite imagery is supplementary. Field capture must not stop because an online basemap is unavailable.</div></details>
+</section>
+
+<section id="office" class="rs-card manual-section"><h2>7. Complete at home / office</h2>
+<details data-manual><summary>Complete missing inventory later</summary><div class="manual-steps">Open <b>Structures</b> → select asset → <b>Edit / Complete Later</b>. Add year, local/crossing name and any missing permanent dimensions. Save.</div></details>
+<details data-manual><summary>Add data from old register / drawing</summary><div class="manual-steps">Use the existing asset. Add verified permanent information to inventory. Do not create another asset just because the source is an old paper register.</div></details>
+<details data-manual><summary>Prepare report for senior</summary><div class="manual-steps">Use the inspection history/issues/photos. For road video, the report should list km/chainage-wise issues and provide <b>Jump to Video</b> links for each recorded event.</div></details>
+<details data-manual><summary>Export / backup</summary><div class="manual-steps">Use app export/sync when available. Keep structure inventory, inspection history and media linked by the structure ID so photos never become anonymous files.</div></details>
+<details data-manual><summary>Correct permanent inventory after reconstruction</summary><div class="manual-steps">First record <b>Lifecycle → Reconstruction</b>. Then update the new permanent dimensions. The previous revision stays in history.</div></details>
+<div class="rule">Main idea: <b>Permanent inventory once → repeat condition inspections → lifecycle history forever.</b></div></section>
+
+<div class="page-note"><b>Engineering-use boundary:</b> This app supports field documentation and asset management. Approved drawings, survey instruments, departmental records, project specifications and engineering judgment remain controlling.</div>
+</main>
+<script src="./app-shell.js"></script><script>(()=>{const q=document.getElementById('manualSearch');q.addEventListener('input',()=>{const s=q.value.toLowerCase().trim();document.querySelectorAll('[data-manual]').forEach(d=>d.style.display=!s||d.textContent.toLowerCase().includes(s)?'block':'none')})})();</script>
+</body></html>
