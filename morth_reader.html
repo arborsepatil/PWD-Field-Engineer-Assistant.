@@ -2,7 +2,7 @@
 :root{--bg:#f5f8fc;--card:#fff;--line:#dfe7f1;--txt:#0b1830;--muted:#66758d;--blue:#0b6cff;--soft:#edf4ff;--green:#0d9b60;--amber:#c77a00;--red:#d94343;--shadow:0 12px 34px rgba(24,53,91,.08)}
 html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff;--muted:#aebbd0;--soft:#102744;--shadow:0 16px 40px rgba(0,0,0,.24)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.top{position:sticky;top:0;z-index:25;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 12px;display:flex;align-items:center;gap:10px}.top a{color:var(--blue);text-decoration:none;font-weight:850;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.title{flex:1;font-weight:900}.sub{display:block;font-size:10px;color:var(--muted)}.wrap{max-width:1160px;margin:auto;padding:12px 12px 100px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 11%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:12px}.hero h1{font-size:25px;margin:0 0 6px;letter-spacing:-.7px}.hero p{margin:0;color:var(--muted);font-size:12px;max-width:820px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;position:sticky;top:59px;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 12px;min-height:46px}.search input{width:100%;border:0;outline:0;background:transparent;color:var(--txt);font:inherit}.filter{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:14px;padding:0 12px;font-weight:800}.reader{display:grid;grid-template-columns:340px 1fr;gap:12px}.tree{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:560px}.tree-head{padding:11px 12px;background:var(--soft);font-weight:900}.tree-list{max-height:650px;overflow:auto}.node{display:block;width:100%;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--txt);padding:11px 12px;text-align:left}.node b{display:block;font-size:12px}.node small{display:block;color:var(--muted);margin-top:3px}.node.active{background:color-mix(in srgb,var(--blue) 8%,var(--card));border-left:4px solid var(--blue)}.content{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;min-height:560px}.content h2{margin:0 0 4px;font-size:21px}.meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}.badge{display:inline-block;padding:4px 7px;border-radius:999px;border:1px solid var(--line);font-size:10px;font-weight:900}.ok{color:var(--green);background:color-mix(in srgb,var(--green) 8%,var(--card))}.hold{color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--card))}.tabs{display:flex;gap:7px;overflow:auto;margin:10px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:900;white-space:nowrap}.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}.pane{display:none}.pane.on{display:block}.section{border:1px solid var(--line);border-radius:16px;margin-top:10px;overflow:hidden}.section h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;background:var(--soft);padding:9px 11px;margin:0}.section .body{padding:12px}.tableWrap{overflow:auto}.tableWrap table{width:100%;border-collapse:collapse;min-width:620px}.tableWrap th,.tableWrap td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.tableWrap th{background:var(--soft)}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--blue);padding:10px 11px;border-radius:12px;margin-top:10px}.warn{border-left-color:var(--amber);color:var(--amber)}.btn{border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:12px;padding:10px 12px;font-weight:850}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:18px}@media(max-width:900px){.reader{grid-template-columns:1fr}.tree{min-height:0}.tree-list{max-height:270px}}@media(max-width:640px){.toolbar{grid-template-columns:1fr}.hero h1{font-size:22px}}
-</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1818 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
+</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option><option value="1900">Section 1900</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1818 and Structural Steel 1901–1905 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
 const $=id=>document.getElementById(id);
 const section400=[
 ['401','Granular Sub-Base',109],['402','Lime Treated Soil for Improved Sub-Grade/Sub-Base',112],['403','Cement Treated Soil and Cement-Flyash Treated Sub-Base/Base',116],['404','Water Bound Macadam Sub-Base/Base',121],['405','Crushed Cement Concrete Sub-Base',129],['406','Wet Mix Macadam Sub-Base/Base',131],['407','Crusher-Run Macadam Base',136],['408','Shoulders, Islands and Median',139],['409','Cement Concrete Kerb and Kerb with Channel',142],['410','Footpaths and Separators',143]
@@ -23,6 +23,7 @@ const section1500=[['1501','Description',519],['1502','Materials',519],['1503','
 const section1600=[['1601','Description',527],['1602','General',527],['1603','Protection of Reinforcement',527],['1604','Bending of Reinforcement',527],['1605','Placing of Reinforcement',528],['1606','Bar Splices',529],['1607','Testing and Acceptance',531],['1608','Measurement for Payment',531],['1609','Rate',532]];
 const section1700=[['1701','Description',535],['1702','Materials',535],['1703','Grades of Concrete',535],['1704','Proportioning of Concrete',538],['1705','Admixtures',543],['1706','Size of Coarse Aggregates',544],['1707','Equipment',545],['1708','Batching, Mixing, Transporting, Placing and Compaction',546],['1709','Construction Joints',550],['1710','Concreting Under Water',551],['1711','Concreting in Extreme Weather',552],['1712','Protection and Curing',553],['1713','Finishing',555],['1714','Concrete with Blended Cements or Mineral Admixtures',555],['1715','High Performance Concrete',556],['1716','Tolerances',558],['1717','Tests and Standards of Acceptance',558],['1718','Measurements for Payment',562],['1719','Rate',562]];
 const section1800=[['1801','Description',565],['1802','General',565],['1803','Materials',565],['1804','Testing of Prestressing Steel and Anchorages',568],['1805','Workmanship',568],['1806','Supervision',572],['1807','Tensioning Equipment',572],['1808','Post Tensioning',573],['1809','Grouting of Prestressed Tendons',574],['1810','Pre-Tensioning',575],['1811','Protection of Ends',579],['1812','Safety Precautions During Tensioning',579],['1813','Surface Preparation',579],['1814','Transportation, Storage and Handling of Precast Girders',580],['1815','Tolerances',581],['1816','Tests and Standards of Acceptance',581],['1817','Measurements for Payment',581],['1818','Rate',582]];
+const section1900=[['1901','Description',585],['1902','General',585],['1903','Materials',585],['1904','Fabrication',589],['1905','Erection',605],['1906','Painting',614],['1907','Tests and Standards of Acceptance',618],['1908','Measurements for Payment',619],['1909','Rate',620]];
 const RECORDS=[
 ...section400.map((x,i)=>({id:i+1,section:'400',clause:x[0],title:x[1],status:(x[0]==='401'||x[0]==='402'||x[0]==='403'||x[0]==='404'||x[0]==='405'||x[0]==='406'||x[0]==='407'||x[0]==='408'||x[0]==='409'||x[0]==='410')?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section500.map((x,i)=>({id:100+i,section:'500',clause:x[0],title:x[1],status:(x[0]==='501'||x[0]==='502'||x[0]==='503'||x[0]==='504'||x[0]==='505'||x[0]==='506'||x[0]==='507'||x[0]==='508'||x[0]==='509'||x[0]==='510'||x[0]==='511'||x[0]==='512'||x[0]==='513'||x[0]==='514'||x[0]==='515'||x[0]==='516'||x[0]==='517'||x[0]==='518'||x[0]==='519'||x[0]==='520')?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
@@ -38,7 +39,8 @@ const RECORDS=[
 ...section1500.map((x,i)=>({id:1100+i,section:'1500',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1600.map((x,i)=>({id:1200+i,section:'1600',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1700.map((x,i)=>({id:1300+i,section:'1700',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
-...section1800.map((x,i)=>({id:1400+i,section:'1800',clause:x[0],title:x[1],status:(['1801','1802','1803','1804','1805','1806','1807','1808','1809','1810','1811','1812','1813','1814','1815','1816','1817','1818'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
+...section1800.map((x,i)=>({id:1400+i,section:'1800',clause:x[0],title:x[1],status:(['1801','1802','1803','1804','1805','1806','1807','1808','1809','1810','1811','1812','1813','1814','1815','1816','1817','1818'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
+...section1900.map((x,i)=>({id:1500+i,section:'1900',clause:x[0],title:x[1],status:(['1901','1902','1903','1904','1905'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
 ];
 
 const brick1301=RECORDS.find(r=>r.clause==='1301');
@@ -1453,6 +1455,199 @@ ps1818.tables=[{name:'Clause 1818 · Rate Inclusions',status:'checked',headers:[
 ['High-tensile steel','Procurement + placing + tensioning + anchoring + grouting + listed incidental anchorage/duct/recess/protection/testing items + system-supplier payments if any']
 ]}];
 ps1818.calc='No rate calculator is enabled. Contract item wording and source inclusions govern.';
+
+const ss1901=RECORDS.find(r=>r.clause==='1901');
+ss1901.page='Printed p.585 · PDF page mapping QA pending';
+ss1901.read='Source checked for Structural Steel scope.';
+ss1901.quick=[
+'1901 — Structural-steel work includes furnishing, fabrication, transportation, erection and painting of structural steel, rivet steel, cast steel, steel forgings, cast iron and incidental metal construction.',
+'1901 — Kind, size and quantity follow the drawings and these Specifications or Engineer direction.'
+];
+ss1901.tables=[];ss1901.calc='No calculator is applicable.';
+
+const ss1902=RECORDS.find(r=>r.clause==='1902');
+ss1902.page='Printed p.585 · PDF page mapping QA pending';
+ss1902.read='Source checked for supply requirements, rolled-material condition and connection/material boundaries.';
+ss1902.quick=[
+'1902 — General material-supply requirements conform to IS 1387; for this purpose the Contractor is the supplier and the Engineer is the purchaser.',
+'1902 — Finished rolled material shall be smooth/uniform, mill-straightened before shipment and free from cracks, flaws, injurious seams, laps, blisters, ragged/imperfect edges, loose mill scale, rust, pits and other strength/durability-affecting defects.',
+'1902 — Acceptance at the rolling mill, foundry or fabrication plant does not prevent later rejection if material is found defective.',
+'1902 — Unless otherwise specified, high-tensile rivets conforming to IS 1149 are used only for high-tensile steel members conforming to IS 961 and not for mild-steel members.',
+'1902 — Unless otherwise specified, structural joints using high-tensile friction-grip bolts comply with IS 4000.',
+'1902 — Cast iron is not used in bridge structure except where subject to direct compression.'
+];
+ss1902.tables=[];ss1902.calc='No calculator is applicable.';
+
+const ss1903=RECORDS.find(r=>r.clause==='1903');
+ss1903.page='Printed pp.585–589 · PDF page mapping QA pending';
+ss1903.read='Source checked for structural-steel materials, fasteners, welding references, corrosion-resistant steel and paints.';
+ss1903.quick=[
+'1903.1 — All materials conform to Section 1000, subject to the special Structural Steel requirements.',
+'1903.1 — Mild-steel bolts/nuts: IS 226, minimum tensile strength 44 kg/sq.mm and minimum elongation 14%.',
+'1903.1 — High-tensile bolts/nuts: IS 961 with minimum tensile strength 58 kg/sq.mm.',
+'1903.1 — High-strength friction-grip bolts are permitted only on satisfactory evidence of performance to Engineer-specified requirements not covered by these Specifications or to special provisions.',
+'1903.1 — Cast-steel yield stress shall be at least 50% of the minimum tensile strength.',
+'1903.1 — Parallel barrel drifts: tensile strength ≥55 kg/sq.mm and elongation ≥20%, measured on gauge length 4√So, where So is cross-sectional area.',
+'1903.3 — Corrosion-resistant steel for aggressive environment is low-alloy steel containing total alloy content 1–2%, particularly copper, chromium, nickel and phosphorous.',
+'1903.4 — Paint/enamel materials follow drawings or Engineer special provisions. Unless otherwise specified, paints conform to relevant Indian Standards.',
+'1903.4 — Paint testing covers weight for 10 litres of thoroughly mixed paint, drying time, consistency, dry thickness and rate of consumption.'
+];
+ss1903.tables=[
+{name:'Clause 1903 · Material Acceptance Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['MS bolts/nuts tensile strength','≥44 kg/sq.mm'],
+['MS bolts/nuts elongation','≥14%'],
+['HT bolts/nuts tensile strength','≥58 kg/sq.mm'],
+['Cast steel yield stress','≥50% of minimum tensile strength'],
+['Parallel barrel drift tensile strength','≥55 kg/sq.mm'],
+['Parallel barrel drift elongation','≥20% on gauge length 4√So'],
+['Aggressive-environment alloy content','Total 1–2%']
+]},
+{name:'Clause 1903 · Referenced Standards',status:'checked',headers:['Category','Source references'],rows:[
+['Castings / forgings','IS 1030, 1875, 2004, 2644, 2708, 4367'],
+['Fasteners','IS 1148, 1149, 1363 Parts 1–3, 1364 Parts 1–3, 1367 Parts 1–18, 1929, 2155, 3640, 3757, 4000, 5369, 5370, 5372, 5374, 5624, 6610, 6623, 6639, 6649, 7002'],
+['Welding consumables','IS 814 Parts 1–2, 1395, 3613, 6419, 6560, 7280'],
+['Welding / inspection','IS 812, 816, 822, 1024, 1182, 4853, 5334, 7307 Part 1, 7310 Part 1, 7318 Part 1, 9595'],
+['Named paint standards','Bituminous IS 9862; epoxy IS 14925; polyurethane IS 13759; zinc-rich IS 14589']
+]}
+];
+ss1903.calc='No material-design calculator is enabled.';
+
+const ss1904=RECORDS.find(r=>r.clause==='1904');
+ss1904.page='Printed pp.589–605 · PDF page mapping QA pending';
+ss1904.read='Source checked for fabrication approvals, laminations, heat work, edge/hole preparation, riveting/bolting, pins, shop assembly, welding, tolerances, stress relief and joint alignment.';
+ss1904.quick=[
+'1904.1 — Fabrication starts only after approved fabrication/working drawings. Contractor submits programme, identification/erection-mark system, fabrication/welding procedures and QAP to the Engineer at least 15 days before fabrication.',
+'1904.1 — Shop drawings require Engineer approval before work and shall identify location, type, size and extent of welds, distinguishing shop from field welds.',
+'1904.2 — Specified critical plate regions shall be free from laminations; source gives 25 × thickness zones beside welded bearing diaphragms/single-sided bearing stiffeners and 4 × plate thickness on each side of welded cruciform attachments.',
+'1904.3 — Hammering for straightening is not permitted. Heating for straightening requires Engineer approval; steel temperature ≤650°C and accelerated cooling requires Engineer approval.',
+'1904.3.3 — Steel with yield stress >360 MPa shall not be heat curved. During heat bending, steel temperature ≤620°C; no artificial cooling until it naturally cools to 315°C. For flange thickness ≥32 mm, both inside and outside surfaces are heated concurrently.',
+'1904.4.2 — Fitted stiffener ends are ground so the maximum gap over 60% of contact area is ≤0.25 mm.',
+'1904.4.3 — Flame-cut/sheared edge hardness criterion is ≤350 HV 30; one alternative is removal of at least 2 mm or the minimum necessary so hardness becomes <350 HV 30.',
+'1904.4.4 — For high-tensile steel, remove at least 6 mm from a flame-cut edge by machining. Splice/gusset plate edges ≥12 mm thick are machined; those <12 mm are sheared and ground.',
+'1904.5.1 — General bolt/rivet hole clearance: diameter +1.5 mm for bolt/rivet <25 mm; +2 mm for diameter ≥25 mm.',
+'1904.5.1 — Punching is limited to non-main-load secondary members with thickness ≤12 mm for IS 2062 up to Grade E250. Main/multi-thickness holes above the stated 20 mm E250 or 16 mm E300-and-above thresholds are sub-drilled/sub-punched 3 mm undersize and reamed after assembly.',
+'1904.5.1 — Jigs/templates used for repeated drilling are checked at least once every 25 operations. For repeated spans under the stated interchangeability route, one span in ten or any number <10 of each type is trial erected from Engineer-selected random pieces.',
+'1904.5.2 — Where riveted plates exceed three or total thickness is ≥90 mm, rivet holes not drilled through steel-bushed jigs are drilled out in place 3 mm all round after assembly.',
+'1904.5.4 — Close-tolerance/turned-fitted bolt-hole diameter tolerance is nominal shank +0.15 mm / −0.0 mm and reaming follows IS 919 tolerance grade H8.',
+'1904.5.5 — HSFG holes: up to 3 plies, diameter is +1.5 mm. Above 3 plies, outer plies +1.5 mm; inner plies +1.5 to +3.0 mm unless Engineer specifies otherwise.',
+'1904.6.4 — Countersunk rivet head included angle: 90° for plate thickness >14 mm; 120° for thickness ≤14 mm.',
+'1904.6.5 — Mild-steel rivets: 650–700°C for hydraulic riveting and orange colour for pneumatic riveting; high-tensile rivets heated up to 1100°C.',
+'1904.7.3 — Turned-barrel bolt screwed portion is 1.5 mm smaller than barrel unless otherwise specified; threaded portion projects through the nut by at least one thread.',
+'1904.7.5 — Close-tolerance/turned-barrel bolt washer: hole ≥1.5 mm larger than barrel and thickness ≥6 mm. Timber washers follow the source dimensional multiples.',
+'1904.7.8 — Tighten each fastener to the specified value or 70% of specified minimum tensile strength. Check 10% of bolts, but not less than two per connection, by inspection torque; if any turns, check all and re-tighten as necessary.',
+'1904.7.9 — Drift parallel-barrel diameter tolerance is +0 / −0.125 mm relative to nominal hole diameter.',
+'1904.8 — Pin-hole clearance is 0.5–1.0 mm. Tension/compression member pin-hole length tolerance is 1 mm. Pins more than 175 mm in length or diameter are forged and annealed.',
+'1904.9 — Steelwork is temporarily shop-erected for Engineer inspection before dispatch; dismantling follows final drilling and Engineer passing, and parts are durably match-marked for re-erection.',
+'1904.10.1 — Welding requires prior Engineer approval. At material thickness ≥20 mm, special precautions such as pre-heating follow IS 9595. Surfaces within 50 mm of weld location are free from paint/material that may impair welding or create objectionable fumes.',
+'1904.10.1 — Welding is not carried out below 10°C, on wet surfaces, in strong winds or snowy weather unless work/operators are adequately protected.',
+'1904.10.6 — Source prohibits the listed cyclic-loading details including incompletely welded butt joints, one-sided groove welds without backing, intermittent groove/fillet welds, specified bevel/J grooves, and plug/slot welds.',
+'1904.10.7 — When run-on/run-off plates are flame-cut off, cut more than 3 mm away from parent metal, then remove remaining plate metal by grinding or another Engineer-approved method.',
+'1904.10.8 — Stud welds shall be visually crack-free and capable of developing at least the nominal ultimate strength of the studs.',
+'1904.11 — Fabrication tolerances follow drawings/Engineer approval and, unless otherwise specified, Table 1900-2. A specified machined bearing surface fitting within a 0.5 m square has deviation ≤0.25 mm.',
+'Printed source-control note — Table 1900-2 item 7(a) prints “0.005 b to a minimum of 2 mm”. The reader preserves this wording. The extracted layout of item 4 is ambiguous, so it is not silently normalised.',
+'1904.12 — Stress-relief furnace entry temperature ≤300°C; heating rate ≤220°C/h divided by maximum metal thickness, with maximum 220°C/h; maximum temperature 600°C; temperature variation between any two member points ≤80°C; closed-furnace cooling from 300°C at ≤260°C/h divided by maximum metal thickness.',
+'1904.13 — Welding repair of surface defects/exposed edge laminations requires Engineer approval.',
+'1904.14 — Unintended step at bolted splice ≤1 mm for HSFG joints and ≤2 mm for other joints. Welded butt-joint misalignment ≤ lesser of 0.15 × thinner-part thickness or 3 mm; greater deviation arising under the stated tolerance combination is smoothed at slope not steeper than 1:4.'
+];
+ss1904.tables=[
+{name:'Table 1900-1 · Rivet Hole Diameters',status:'checked',headers:['Nominal rivet dia (mm)','Hole dia (mm)'],rows:[
+['12','13.5'],['14','15.5'],['16','17.5'],['18','19.5'],['20','21.5'],['22','23.5'],['24','25.5'],['27','29.0'],['30','32.0'],['33','35.0']
+]},
+{name:'Clause 1904 · High-Value Fabrication Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Fabrication programme/QAP lead time','≥15 days before commencement'],
+['Straightening heat','≤650°C'],
+['Heat-curving prohibition','Yield stress >360 MPa'],
+['Heat-bending temperature','≤620°C'],
+['Artificial cooling gate','Only after natural cooling to 315°C'],
+['Fitted-stiffener gap','≤0.25 mm over 60% contact area'],
+['Cut-edge hardness','≤350 HV 30'],
+['HT steel removal from flame-cut edge','≥6 mm by machining'],
+['Jig/template check','At least once every 25 operations'],
+['Bolt tightening basis','Specified value or 70% of specified minimum tensile strength'],
+['Bolt inspection sample','10%, minimum 2 per connection'],
+['Pin-hole clearance','0.5–1.0 mm'],
+['Weld paint-free zone','50 mm around weld location'],
+['Welding air-temperature gate','No welding below 10°C unless adequately protected'],
+['HSFG splice unintended step','≤1 mm'],
+['Other splice unintended step','≤2 mm'],
+['Butt-joint misalignment','≤ min(0.15 × thinner thickness, 3 mm)']
+]},
+{name:'Table 1900-2 · Unambiguous Extracted Tolerances',status:'checked',headers:['Component / control','Tolerance'],rows:[
+['Length · contact-bearing ends','±1 mm'],
+['Length · component with end-plate connection','+0 / −2 mm'],
+['Other member length ≤12 m','±2 mm'],
+['Other member length >12 m','±3.5 mm'],
+['Width · built-up girders','±3 mm'],
+['Width · member inserted in other member','+0 / −3 mm'],
+['Depth · solid/open-web girders','+3 / −2 mm'],
+['Web centre-line vs flange centre-line at contact surface','3 mm'],
+['Web plate flatness over length = member depth','0.005 d, maximum 2 mm'],
+['Flange tilt · other places','0.015 b, maximum 4 mm'],
+['Squareness · cleat/end-plate abutting ends','1/600 depth, maximum 1.5 mm']
+]},
+{name:'Table 1900-2 · Source-Control Holds',status:'hold',headers:['Printed / extracted item','Reader treatment'],rows:[
+['Item 4 · straightness','Extracted table layout is ambiguous; no normalised public row pending visual QA'],
+['Item 7(a) · flange tilt at splices/stiffeners/supports/top flange/bearings','Printed as “0.005 b to a minimum of 2 mm”; wording retained, not corrected']
+]}
+];
+ss1904.calc='No fabrication-tolerance calculator is enabled while Table 1900-2 contains unresolved source-layout/wording issues.';
+
+const ss1905=RECORDS.find(r=>r.clause==='1905');
+ss1905.page='Printed pp.605–614 · PDF page mapping QA pending';
+ss1905.read='Source checked for erection planning/equipment, storage, assembly, field inspection, material/connection testing, weld NDT and member inspection.';
+ss1905.quick=[
+'1905.1 — Erection provisions apply to steel bridge superstructures/main members spanning between supports; Contractor erects structural steel and completes temporary/removal work to drawings/specifications and Engineer satisfaction.',
+'1905.2 — Contractor submits fabricator-prepared erection plans and a detailed stage-wise scheme with calculations, erection-equipment capacities, temporary loads, site conditions, temporary fasteners and working instructions.',
+'1905.2 — Site supply includes 12½% wastage allowance on net field rivets/bolts/washers, or minimum five of each item. Service bolts/nuts/washers/drifts are 60% of field rivets per span by size: 45% bolts and 15% drifts, unless Engineer specifies reduction under the stated condition.',
+'1905.2 — Test erection equipment, machinery, tools, tackles and ropes before actual erection. Deflection/vibratory tests are conducted on supporting structures, launching truss and the structure under erection.',
+'1905.2 — NDT of welded joints follows designer directives. Source asks frequent checking/quality-surveillance but gives no standalone numeric general frequency beyond specific tests stated later.',
+'1905.2 — Safety requirements cite IS 7205, IS 7273 and IS 7269. Engineer approval is required before work for erection methodology/procedure, temporary-work drawings, erection equipment and tools/plant; approval does not transfer Contractor safety responsibility.',
+'1905.3 — Excessively rusted, bent or damaged steel is rejected. Materials are stored above ground, protected from dirt/corrosion/distortion; electrodes are kept dry/warm; fasteners stored above ground with protective oil coating; paint under cover in airtight containers.',
+'1905.3 — Handling/safe-working references include IS 7293 and IS 7969.',
+'1905.5 — Bolted-part contact-surface slope shall not exceed 1 in 20 normal to bolt axis unless a suitable tapered washer is used.',
+'1905.5 — Riveted/bolted joints are normally assembled with at least 50% of holes filled by service bolts and barrel drifts in ratio 4:1 before final joining.',
+'1905.6 — No protective treatment is applied until appropriate inspection/testing. Final girder dimension/camber check follows completion of welding/heating and cooling to uniform temperature.',
+'1905.6.3 — Structural-steel mechanical/chemical testing cites IS 226, 2062, 11587, 1977, 8500 and 961. Rolling/cutting tolerance follows IS 1852.',
+'1905.6.3 — Plate/rolled-section thickness-tolerance measurements are taken at least 15 mm from the edge. Lamination checks in Clause 1904.2 areas use ultrasonic or another specified method.',
+'1905.6.4.1 — HSFG bolts/joints are inspected/tested to IS 4000; black/high-strength bolt joints are checked to Clause 1904.7.8.',
+'1905.6.4.2 — Riveted-joint firmness: 0.2 mm filler gauge shall not enter under rivet head by more than 3 mm; loose/defective rivets are replaced. Flame-cut/sheared-edge hardness testing, where code hardness criteria are adopted, uses six specimens.',
+'1905.6.4.3 — Welder qualification: IS 7318 Part 1; approved welding-procedure tests: IS 7310 Part 1; metal-arc welding: IS 9595; inspection method: IS 822; testing extent follows relevant standards or Engineer agreement.',
+'1905.7 — Destructive/NDT procedure tests of welds follow IS 7307 Part I.',
+'1905.7.1 — All welds are visually inspected. Transverse-to-primary-stress undercut ≤0.25 mm; parallel-to-primary-stress undercut ≤0.8 mm.',
+'1905.7.1 — Continuous fillet weld may under-run nominal size by 1.6 mm without correction only if undersized portion ≤10% of weld length; no such under-run is allowed at girder web-to-flange weld ends for length equal to twice flange width.',
+'1905.7.1 — General fillet-weld piping porosity: ≤1 per 100 mm and maximum diameter 2.4 mm. Stiffener-to-web exception: sum of diameters ≤9.5 mm in any 25 mm length and ≤19 mm in any 300 mm length.',
+'1905.7.1 — Full-penetration groove weld in butt joints transverse to computed tensile stress has no piping porosity. Other groove welds: ≤1 piping porosity per 100 mm, max diameter 2.4 mm.',
+'1905.7.1 — Magnetic-particle testing follows IS 5334; radiography may follow IS 1182/4853; ultrasonic acceptance follows IS 4260 or other relevant IS agreed by Engineer; liquid penetrant follows IS 3658.',
+'1905.7.1 — NDT extent: all transverse butt welds in tension flanges; 10% length of longitudinal/transverse butt welds in tension flanges; 5% length in compression flanges; and all transverse butt welds in webs adjacent to tension flanges as specified by Engineer.',
+'1905.7.3 — Stud test: strike side of head with 2 kg hammer to Engineer satisfaction. Selected stud struck once with 6 kg hammer shall displace ≤0.25 × stud height and show no weld crack/lack of fusion; failed studs are replaced.',
+'1905.7.4 — Fabricated members are checked against Table 1900-2 over full length. Inspection stages include after fabrication before later operations, after specified site joints, and after site assembly for the listed components. Exceeding deviation is recorded for Engineer decision on acceptance/rectification/rejection.'
+];
+ss1905.tables=[
+{name:'Clause 1905 · Erection / Inspection Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Field fastener wastage allowance','12½% of net quantity, or minimum 5 each'],
+['Service bolts + drifts','60% of field rivets: 45% bolts + 15% drifts'],
+['Bolted-part contact slope','≤1 in 20 unless tapered washer'],
+['Temporary hole filling for joint assembly','≥50%; service bolts:barrel drifts = 4:1'],
+['Thickness-tolerance measurement point','≥15 mm from edge'],
+['Rivet filler gauge','0.2 mm gauge; penetration under head ≤3 mm'],
+['Flame/sheared-edge hardness specimens','6 where hardness criteria are adopted'],
+['Transverse-weld undercut','≤0.25 mm'],
+['Parallel-weld undercut','≤0.8 mm'],
+['Permitted fillet-weld under-run','1.6 mm, affected length ≤10%'],
+['General piping porosity','≤1/100 mm; dia ≤2.4 mm'],
+['Stiffener-web porosity sum','≤9.5 mm/25 mm and ≤19 mm/300 mm'],
+['Stud hammer test','2 kg hammer; selected stud 6 kg hammer'],
+['Selected stud displacement','≤0.25 × stud height']
+]},
+{name:'Clause 1905.7.1 · Required NDT Extent',status:'checked',headers:['Weld category','Source extent'],rows:[
+['Transverse butt welds in tension flanges','All'],
+['Longitudinal/transverse butt welds in tension flanges','10% of length'],
+['Longitudinal/transverse butt welds in compression flanges','5% of length'],
+['Transverse butt welds in webs adjacent to tension flanges','All, as specified by Engineer']
+]}
+];
+ss1905.calc='No erection/NDT frequency calculator is enabled. Designer directives, relevant standards and Engineer-agreed inspection extent remain visible boundaries.';
+
 
 
 
