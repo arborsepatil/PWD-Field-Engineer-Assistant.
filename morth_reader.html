@@ -2,7 +2,7 @@
 :root{--bg:#f5f8fc;--card:#fff;--line:#dfe7f1;--txt:#0b1830;--muted:#66758d;--blue:#0b6cff;--soft:#edf4ff;--green:#0d9b60;--amber:#c77a00;--red:#d94343;--shadow:0 12px 34px rgba(24,53,91,.08)}
 html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff;--muted:#aebbd0;--soft:#102744;--shadow:0 16px 40px rgba(0,0,0,.24)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.top{position:sticky;top:0;z-index:25;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 12px;display:flex;align-items:center;gap:10px}.top a{color:var(--blue);text-decoration:none;font-weight:850;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.title{flex:1;font-weight:900}.sub{display:block;font-size:10px;color:var(--muted)}.wrap{max-width:1160px;margin:auto;padding:12px 12px 100px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 11%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:12px}.hero h1{font-size:25px;margin:0 0 6px;letter-spacing:-.7px}.hero p{margin:0;color:var(--muted);font-size:12px;max-width:820px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;position:sticky;top:59px;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 12px;min-height:46px}.search input{width:100%;border:0;outline:0;background:transparent;color:var(--txt);font:inherit}.filter{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:14px;padding:0 12px;font-weight:800}.reader{display:grid;grid-template-columns:340px 1fr;gap:12px}.tree{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:560px}.tree-head{padding:11px 12px;background:var(--soft);font-weight:900}.tree-list{max-height:650px;overflow:auto}.node{display:block;width:100%;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--txt);padding:11px 12px;text-align:left}.node b{display:block;font-size:12px}.node small{display:block;color:var(--muted);margin-top:3px}.node.active{background:color-mix(in srgb,var(--blue) 8%,var(--card));border-left:4px solid var(--blue)}.content{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;min-height:560px}.content h2{margin:0 0 4px;font-size:21px}.meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}.badge{display:inline-block;padding:4px 7px;border-radius:999px;border:1px solid var(--line);font-size:10px;font-weight:900}.ok{color:var(--green);background:color-mix(in srgb,var(--green) 8%,var(--card))}.hold{color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--card))}.tabs{display:flex;gap:7px;overflow:auto;margin:10px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:900;white-space:nowrap}.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}.pane{display:none}.pane.on{display:block}.section{border:1px solid var(--line);border-radius:16px;margin-top:10px;overflow:hidden}.section h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;background:var(--soft);padding:9px 11px;margin:0}.section .body{padding:12px}.tableWrap{overflow:auto}.tableWrap table{width:100%;border-collapse:collapse;min-width:620px}.tableWrap th,.tableWrap td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.tableWrap th{background:var(--soft)}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--blue);padding:10px 11px;border-radius:12px;margin-top:10px}.warn{border-left-color:var(--amber);color:var(--amber)}.btn{border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:12px;padding:10px 12px;font-weight:850}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:18px}@media(max-width:900px){.reader{grid-template-columns:1fr}.tree{min-height:0}.tree-list{max-height:270px}}@media(max-width:640px){.toolbar{grid-template-columns:1fr}.hero h1{font-size:22px}}
-</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1713 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
+</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
 const $=id=>document.getElementById(id);
 const section400=[
 ['401','Granular Sub-Base',109],['402','Lime Treated Soil for Improved Sub-Grade/Sub-Base',112],['403','Cement Treated Soil and Cement-Flyash Treated Sub-Base/Base',116],['404','Water Bound Macadam Sub-Base/Base',121],['405','Crushed Cement Concrete Sub-Base',129],['406','Wet Mix Macadam Sub-Base/Base',131],['407','Crusher-Run Macadam Base',136],['408','Shoulders, Islands and Median',139],['409','Cement Concrete Kerb and Kerb with Channel',142],['410','Footpaths and Separators',143]
@@ -36,7 +36,7 @@ const RECORDS=[
 ...section1400.map((x,i)=>({id:1000+i,section:'1400',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1500.map((x,i)=>({id:1100+i,section:'1500',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1600.map((x,i)=>({id:1200+i,section:'1600',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
-...section1700.map((x,i)=>({id:1300+i,section:'1700',clause:x[0],title:x[1],status:(['1701','1702','1703','1704','1705','1706','1707','1708','1709','1710','1711','1712','1713'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
+...section1700.map((x,i)=>({id:1300+i,section:'1700',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
 ];
 
 const brick1301=RECORDS.find(r=>r.clause==='1301');
@@ -986,6 +986,108 @@ sc1713.tables=[{name:'Clause 1713 · Finishing / Defect Controls',status:'checke
 ['Serious sagging / honeycombing','Reject']
 ]}];
 sc1713.calc='No repair calculator is enabled.';
+
+const sc1714=RECORDS.find(r=>r.clause==='1714');
+sc1714.page='Printed pp.555–556 · PDF page mapping QA pending';
+sc1714.read='Source checked for blended-cement/mineral-admixture concrete and additional durability testing.';
+sc1714.quick=[
+'1714.1 — Blended cement/mineral-admixture use is permitted for durability. Site blending is permitted only with specific automated process-control facility or equivalent RMC plant.',
+'1714.2 — Modified setting/strength-gain properties of PPC/PSC/mineral-admixture concrete must be considered for de-shuttering, prestressing time, curing and early-age loading.',
+'1714.3 — Chemical-admixture compatibility with blended/mineral systems shall be demonstrated by the Clause 1705 trials.',
+'1714.4 — RCPT at 56 days is required for extreme, very severe and severe exposure. Source limits: 800, 1200 and 1500 Coulombs respectively.',
+'1714.4 — Water-permeability testing follows DIN 1048 Part 5 and Clause 1717.7.5.'
+];
+sc1714.tables=[{name:'Clause 1714 · RCPT Limits at 56 Days',status:'checked',headers:['Exposure','Maximum charge passed'],rows:[
+['Extreme','800 Coulombs'],
+['Very severe','1200 Coulombs'],
+['Severe','1500 Coulombs']
+]}];
+sc1714.calc='No durability-test calculator is enabled.';
+
+const sc1715=RECORDS.find(r=>r.clause==='1715');
+sc1715.page='Printed pp.556–558 · PDF page mapping QA pending';
+sc1715.read='Source checked for High Performance Concrete materials, mix limits, workability, placement temperature, prototype trials and curing.';
+sc1715.quick=[
+'1715.1 — HPC is used where high strength/early strength/workability, low permeability and high durability are required, with stringent batch-to-batch quality control.',
+'1715.2 — Fly ash: 20–35% of total OPC + fly ash mass. GGBS: 50–70% of total OPC + GGBS mass.',
+'1715.2 — Total cementitious content ≥380 kg/m³; Portland-cement component alone ≤450 kg/m³.',
+'1715.2 — Water/cementitious ratio should generally ≤0.33 and shall never exceed 0.40.',
+'1715.4 / Table 1700-8 — Source provides characteristic and initial target mean strengths for M40–M90.',
+'1715.6 — HPC placement temperature shall not exceed 25°C; mixing-stage temperature should be lower to allow for transport rise.',
+'1715.7 — Mock-up/prototype trials may be required to confirm satisfactory placement/compaction and allow mix/reinforcement-detail adjustment.',
+'1715.8 — Final moist curing starts after final set and continues at least 14 days.',
+'1715.9 — Printed source points to Clause 1714.3 for additional tests; the RCPT/water-permeability tests are printed under 1714.4. App preserves this source-reference discrepancy.'
+];
+sc1715.tables=[{name:'Clause 1715 · HPC Core Limits',status:'checked',headers:['Control','Requirement'],rows:[
+['Fly ash','20–35% of OPC + fly ash mass'],
+['GGBS','50–70% of OPC + GGBS mass'],
+['Total cementitious content','≥380 kg/m³'],
+['Portland-cement component','≤450 kg/m³'],
+['w/cementitious ratio','Generally ≤0.33; absolute max 0.40'],
+['Placement temperature','≤25°C'],
+['Final moist curing','≥14 days']
+]}];
+sc1715.calc='No HPC mix-design calculator is enabled.';
+
+const sc1716=RECORDS.find(r=>r.clause==='1716');
+sc1716.page='Printed p.558 · PDF page mapping QA pending';
+sc1716.read='Source checked for tolerances.';
+sc1716.quick=['1716 — Dimensional/shape tolerances follow the relevant specification provisions, drawings or Engineer direction.'];
+sc1716.tables=[];sc1716.calc='No tolerance calculator is applicable.';
+
+const sc1717=RECORDS.find(r=>r.clause==='1717');
+sc1717.page='Printed pp.558–562 · PDF page mapping QA pending';
+sc1717.read='Source checked for lot definition, cube sampling/frequency, compressive acceptance, core acceptance, density and permeability testing.';
+sc1717.quick=[
+'1717.2–1717.3 — Acceptance is by random, lot-by-lot 28-day cube strength. A lot is ≤30 m³, one grade, and used in the same identifiable bridge component.',
+'1717.4–1717.5 — Each sample consists of 3 cubes at 28 days. Sample strength is their average; individual cube variation shall not exceed ±15% of the average or the sample result is invalid.',
+'1717.6 / Table 1700-9 — Minimum samples per grade: 1–5 m³:1; 6–15:2; 16–30:3; 31–50:4; >51: 4 + one per additional 50 m³ or part. At least one sample per shift.',
+'1717.7.1 — Cube acceptance requires: mean of any 4 consecutive non-overlapping samples > characteristic strength +3 MPa, and every sample ≥ characteristic strength −3 MPa.',
+'1717.7.1 — If cube criteria fail or grade is doubtful, core evaluation may be used. Test at least 3 cores. Average equivalent cube strength ≥85% of specified grade strength and no individual core <75%.',
+'1717.7.3–1717.7.4 — Where minimum density is specified, mean of any 4 consecutive samples shall meet specified value and no individual result <97.5% of specified density.',
+'1717.7.5 — Water-permeability test uses 150 mm dia ×160 mm specimen, 0.5 N/mm² water pressure for 3 days; mean max penetration of 3 specimens ≤25 mm.',
+'1717.7.6 — If acceptance is not met, deficiency is investigated as Engineer directs; unacceptable concrete is removed. Sub-standard acceptance may require additional Contractor-funded work.'
+];
+sc1717.tables=[
+{name:'Table 1700-9 · Minimum Concrete Sampling',status:'checked',headers:['Quantity of concrete','Minimum samples'],rows:[
+['1–5 m³','1'],
+['6–15 m³','2'],
+['16–30 m³','3'],
+['31–50 m³','4'],
+['51 m³ and above','4 + 1 per additional 50 m³ or part']
+],note:'At least one sample per shift. Each sample = 3 cubes for 28-day testing.'},
+{name:'Clause 1717 · Strength / Core Acceptance',status:'checked',headers:['Control','Requirement'],rows:[
+['4-sample mean','> fck + 3 MPa'],
+['Any sample','≥ fck − 3 MPa'],
+['Minimum cores','3'],
+['Core average equivalent cube strength','≥85% specified strength'],
+['Any individual core','≥75% specified strength'],
+['Individual cube variation within sample','±15% of sample average'],
+['Water permeability','Mean max penetration ≤25 mm']
+]}
+];
+sc1717.calc='No automatic acceptance calculator is enabled here because lot boundaries, invalid samples and Engineer-directed investigations must be handled explicitly.';
+
+const sc1718=RECORDS.find(r=>r.clause==='1718');
+sc1718.page='Printed p.562 · PDF page mapping QA pending';
+sc1718.read='Source checked for measurement.';
+sc1718.quick=[
+'1718 — Structural concrete is measured in m³.',
+'1718 — In RCC/PSC, reinforcement, prestressing cable and sheathing volumes are not deducted.',
+'1718 — Slab is measured continuously through; beam is measured as the portion below the slab.'
+];
+sc1718.tables=[];sc1718.calc='No quantity calculator is enabled in the reader.';
+
+const sc1719=RECORDS.find(r=>r.clause==='1719');
+sc1719.page='Printed p.562 · PDF page mapping QA pending';
+sc1719.read='Source checked for rate inclusions and sub-standard strength reduction formula.';
+sc1719.quick=[
+'1719 — Structural-concrete rate covers materials, labour, plant, mixing, transport, placing, vibration/compaction, finishing, curing, testing, QA and supervision.',
+'1719 — Unless separately itemised, concrete rate includes formwork under Section 1500.',
+'1719 — If Engineer accepts deficient compressive-strength concrete as sub-standard, source gives percentage rate reduction = (Design Strength − Observed Strength) / Design Strength ×100.'
+];
+sc1719.tables=[];sc1719.calc='No automatic sub-standard payment calculator is enabled because acceptance itself is Engineer-controlled.';
+
 
 
 
