@@ -2,7 +2,7 @@
 :root{--bg:#f5f8fc;--card:#fff;--line:#dfe7f1;--txt:#0b1830;--muted:#66758d;--blue:#0b6cff;--soft:#edf4ff;--green:#0d9b60;--amber:#c77a00;--red:#d94343;--shadow:0 12px 34px rgba(24,53,91,.08)}
 html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff;--muted:#aebbd0;--soft:#102744;--shadow:0 16px 40px rgba(0,0,0,.24)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.top{position:sticky;top:0;z-index:25;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 12px;display:flex;align-items:center;gap:10px}.top a{color:var(--blue);text-decoration:none;font-weight:850;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.title{flex:1;font-weight:900}.sub{display:block;font-size:10px;color:var(--muted)}.wrap{max-width:1160px;margin:auto;padding:12px 12px 100px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 11%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:12px}.hero h1{font-size:25px;margin:0 0 6px;letter-spacing:-.7px}.hero p{margin:0;color:var(--muted);font-size:12px;max-width:820px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;position:sticky;top:59px;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 12px;min-height:46px}.search input{width:100%;border:0;outline:0;background:transparent;color:var(--txt);font:inherit}.filter{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:14px;padding:0 12px;font-weight:800}.reader{display:grid;grid-template-columns:340px 1fr;gap:12px}.tree{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:560px}.tree-head{padding:11px 12px;background:var(--soft);font-weight:900}.tree-list{max-height:650px;overflow:auto}.node{display:block;width:100%;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--txt);padding:11px 12px;text-align:left}.node b{display:block;font-size:12px}.node small{display:block;color:var(--muted);margin-top:3px}.node.active{background:color-mix(in srgb,var(--blue) 8%,var(--card));border-left:4px solid var(--blue)}.content{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;min-height:560px}.content h2{margin:0 0 4px;font-size:21px}.meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}.badge{display:inline-block;padding:4px 7px;border-radius:999px;border:1px solid var(--line);font-size:10px;font-weight:900}.ok{color:var(--green);background:color-mix(in srgb,var(--green) 8%,var(--card))}.hold{color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--card))}.tabs{display:flex;gap:7px;overflow:auto;margin:10px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:900;white-space:nowrap}.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}.pane{display:none}.pane.on{display:block}.section{border:1px solid var(--line);border-radius:16px;margin-top:10px;overflow:hidden}.section h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;background:var(--soft);padding:9px 11px;margin:0}.section .body{padding:12px}.tableWrap{overflow:auto}.tableWrap table{width:100%;border-collapse:collapse;min-width:620px}.tableWrap th,.tableWrap td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.tableWrap th{background:var(--soft)}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--blue);padding:10px 11px;border-radius:12px;margin-top:10px}.warn{border-left-color:var(--amber);color:var(--amber)}.btn{border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:12px;padding:10px 12px;font-weight:850}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:18px}@media(max-width:900px){.reader{grid-template-columns:1fr}.tree{min-height:0}.tree-list{max-height:270px}}@media(max-width:640px){.toolbar{grid-template-columns:1fr}.hero h1{font-size:22px}}
-</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option><option value="1900">Section 1900</option><option value="2000">Section 2000</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1818 and Structural Steel 1901–1909 and Bearings 2001–2004 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
+</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option><option value="1900">Section 1900</option><option value="2000">Section 2000</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1818 and Structural Steel 1901–1909 and Bearings 2001–2007 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
 const $=id=>document.getElementById(id);
 const section400=[
 ['401','Granular Sub-Base',109],['402','Lime Treated Soil for Improved Sub-Grade/Sub-Base',112],['403','Cement Treated Soil and Cement-Flyash Treated Sub-Base/Base',116],['404','Water Bound Macadam Sub-Base/Base',121],['405','Crushed Cement Concrete Sub-Base',129],['406','Wet Mix Macadam Sub-Base/Base',131],['407','Crusher-Run Macadam Base',136],['408','Shoulders, Islands and Median',139],['409','Cement Concrete Kerb and Kerb with Channel',142],['410','Footpaths and Separators',143]
@@ -42,7 +42,7 @@ const RECORDS=[
 ...section1700.map((x,i)=>({id:1300+i,section:'1700',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1800.map((x,i)=>({id:1400+i,section:'1800',clause:x[0],title:x[1],status:(['1801','1802','1803','1804','1805','1806','1807','1808','1809','1810','1811','1812','1813','1814','1815','1816','1817','1818'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1900.map((x,i)=>({id:1500+i,section:'1900',clause:x[0],title:x[1],status:(['1901','1902','1903','1904','1905','1906','1907','1908','1909'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
-...section2000.map((x,i)=>({id:1600+i,section:'2000',clause:x[0],title:x[1],status:(['2001','2002','2003','2004'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
+...section2000.map((x,i)=>({id:1600+i,section:'2000',clause:x[0],title:x[1],status:(['2001','2002','2003','2004','2005','2006','2007'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
 ];
 
 const brick1301=RECORDS.find(r=>r.clause==='1301');
@@ -1857,6 +1857,153 @@ br2004.tables=[{name:'Clause 2004 · Special Bearing Acceptance Tests',status:'c
 ['Pin · load test','If required, design horizontal load only']
 ]}];
 br2004.calc='No special-bearing design calculator is enabled. Manufacturer design and Engineer approval govern.';
+
+const br2005=RECORDS.find(r=>r.clause==='2005');
+br2005.page='Printed pp.633–648 · PDF page mapping QA pending';
+br2005.read='Source checked for elastomeric-bearing materials, manufacturing tolerances, acceptance levels/testing, installation and maintenance.';
+br2005.quick=[
+'2005 — Elastomeric bearings accommodate translation and/or rotation by elastic deformation.',
+'2005.1 — Chloroprene Rubber (CR) only is permitted. Reclaimed rubber, vulcanized waste, natural rubber, EPDM, IIR and CIIR are not permitted.',
+'2005.1 — Polychloroprene content ≥60% and ash content ≤5% by weight.',
+'2005.1.2 — Table 2000-1 hardness grades are 50±5, 60±5 and 70±5 IRHD. Minimum tensile strength is 17 MPa for moulded test piece and 14 MPa for test piece from bearing for all three grades.',
+'2005.1.2 — Minimum elongation at break for moulded/bearing test pieces respectively: 450/400% for 50 IRHD, 400/350% for 60 IRHD, and 300/250% for 70 IRHD.',
+'2005.1.2 — Compression set after 24 h at 100±1°C is <35%. Accelerated ageing for 72 h at 100±1°C allows maximum changes: hardness ±5 IRHD, tensile strength ±15%, elongation ±30%.',
+'2005.1.3 — At 23±2°C, shear modulus G: 0.7±0.15 MPa for 50±5 IRHD; 0.9±0.18 MPa for 60±5; 1.15±0.20 MPa for 70±5.',
+'2005.1.4 — Elastomer-to-steel adhesion strength by IS 3400 Part XIV Method A shall be ≥7 kN/m.',
+'2005.1.5 — Adverse-climate ozone test: 96 h at 40±1°C, 30% strain and 100 pphm ozone. Any visually detected cracking makes the material unsatisfactory.',
+'2005.1.6 — Steel laminates conform to IS 2062/IS 1079 or equivalent international grade; yield stress ≥250 MPa. Fibre glass/similar fabric laminates are not permitted.',
+'2005.2 — Laminated bearing is moulded as a single unit and vulcanised under heat/pressure; separate moulding and later bonding/cutting from large cast is not permitted. Bond peel strength during vulcanisation shall be ≥7 N/mm width.',
+'2005.3 — Manufacturing tolerances follow Table 2000-3; destructive cutting of a finished bearing may be needed to verify individual elastomer-layer/laminate dimensions and flatness if manufacturer and buyer agree.',
+'2005.4 — Acceptance testing is lot-by-lot at manufacturer plant under Inspector supervision. Testing delayed >180 days beyond production requires special Engineer approval and modified acceptance specification if deemed necessary.',
+'2005.4.1 — Large lot = 24 bearings or more; small lot = fewer than 24. Engineer approves lot size/composition.',
+'2005.4.2 — Level 1 applies to large lots unless otherwise specified and uses two extra bearings for destructive testing. Level 2 applies to small lots and uses one extra bearing; one randomly selected bearing for material tests is excluded from accepted lot.',
+'2005.4.3.1 — All bearings receive visual/tolerance checks and axial loading corresponding to design load at serviceability limit state. One bearing per lot repeats the test during acceptance with stiffness measurement.',
+'2005.4.3.1 — Individual bearing stiffness variation from lot mean shall not exceed 20% of mean. If visual defect/unacceptable stiffness occurs, all bearings in the lot are retested and only passing bearings accepted.',
+'Printed source-control note — Clause 2005.4.3.1 Note 1 prints Specific Gravity variation as “+ 02.” in the connected source extraction. The reader does not reinterpret this value.',
+'2005.4.3.1 — Level 1 complete-bearing testing uses two randomly selected bearings for shear modulus, one of that pair for compression stiffness, and destructive shear-bond testing on two identical bearings or specified sample bearings, to Appendix 3 of IRC 83 Part II.',
+'2005.4.3.2 — Level 2 general/specially moulded test-piece inspection follows Level 1; shear modulus uses two randomly selected bearings that may remain in accepted lot, while remaining tests use two randomly selected bearings excluded from accepted lot.',
+'2005.4.4 — Special acceptance inspection may include NABL-accredited independent testing, samples cut from test/finished bearings and ULS-condition testing; bearings tested at ULS condition cannot be used in the structure.',
+'2005.4.5–2005.4.7 — Inspector certifies accepted/rejected lots; manufacturer provides QC and inspection certificates; Engineer is sole authority for lot acceptance and may order special/tightened acceptance inspection.',
+'2005.7 — Installation: bearing surfaces true horizontal within maximum tolerance 0.2% perpendicular to load; plan control-line position ±3 mm; concrete local irregularity ±1 mm in height.',
+'2005.8 — Annual routine or special maintenance inspection covers contact, shear deflection, cracks/splits/bulges, displacement evidence, sliding surfaces and protection. Damaged bearings are replaced immediately; adjacent bearings on same support line are also replaced to avoid stiffness differences.'
+];
+br2005.tables=[
+{name:'Table 2000-1 · Elastomer Properties',status:'checked',headers:['Property','50±5 IRHD','60±5 IRHD','70±5 IRHD'],rows:[
+['Min tensile · moulded / bearing','17 / 14 MPa','17 / 14 MPa','17 / 14 MPa'],
+['Min elongation · moulded / bearing','450 / 400%','400 / 350%','300 / 250%'],
+['Compression set · 24 h, 100±1°C','<35%','<35%','<35%'],
+['Ageing · hardness change','±5 IRHD','±5 IRHD','±5 IRHD'],
+['Ageing · tensile change','±15%','±15%','±15%'],
+['Ageing · elongation change','±30%','±30%','±30%']
+]},
+{name:'Table 2000-2 · Shear Modulus',status:'checked',headers:['Hardness','G'],rows:[
+['50±5 IRHD','0.7±0.15 MPa'],['60±5 IRHD','0.9±0.18 MPa'],['70±5 IRHD','1.15±0.20 MPa']
+]},
+{name:'Table 2000-3 · Manufacturing Tolerances',status:'checked',headers:['Control','Source tolerance'],rows:[
+['Overall plan dimensions','−3 / +6 mm'],
+['Total mean bearing thickness','−2.5% / +5%'],
+['Top-to-bottom parallelism','1 in 200'],
+['Side-to-side parallelism','1 in 100'],
+['Inner elastomer layer','±12%, max 2 mm'],
+['Outer elastomer layer','+20%, max 1 mm'],
+['Side cover','−0 / +3 mm'],
+['Laminate plan dimension','−3 / +0 mm'],
+['Laminate thickness','±10%'],
+['Laminate parallelism to base','1 in 100'],
+['Bearing load-surface flatness','0.3% of dia/diagonal or 2% of mean thickness, whichever higher'],
+['Steel laminate flatness','1% of dia/diagonal, max 1.5 mm']
+]},
+{name:'Clause 2005 · Acceptance / Installation Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Delayed acceptance test','>180 days after production → special Engineer approval'],
+['Large lot','≥24 bearings'],
+['Small lot','<24 bearings'],
+['Level 1 extra bearings','2'],
+['Level 2 extra bearing','1'],
+['Stiffness variation','≤20% of lot mean'],
+['Installation surface tolerance','0.2% perpendicular to load'],
+['Plan position','±3 mm'],
+['Concrete local irregularity','±1 mm'],
+['Routine maintenance inspection','Annual']
+]}
+];
+br2005.calc='No elastomeric-bearing design calculator is enabled. Appendix 3 of IRC 83 Part II and Engineer-approved acceptance programme govern the cited performance tests.';
+
+const br2006=RECORDS.find(r=>r.clause==='2006');
+br2006.page='Printed pp.648–659 · PDF page mapping QA pending';
+br2006.read='Source checked for pot-bearing materials, manufacture/tolerances, lot testing, finished-bearing acceptance, installation and maintenance.';
+br2006.quick=[
+'2006.1 — Pot bearing uses a metal piston on unreinforced elastomer confined in a metal cylinder for rotation; movement, when required, uses PTFE against stainless steel with sealing rings.',
+'2006.2.2 — Cast steel is Grade 280-520W or 340-570W of IS 1030. Stainless steel is AISI 316L or O2Cr17Ni12MO2 of IS 6911.',
+'2006.2.4 — PTFE is pure, free-sintered, unfilled/no regenerated material; Grade A of BS 3784 or equivalent. Machined/drilled dimples from solid sheet are not permitted. PTFE-to-backing adhesive peel strength ≥4 N/mm width.',
+'2006.2.5 — Confined elastomer hardness 50±5 IRHD and minimum tensile strength 15.5 MPa; other listed properties refer to IRC 83 Part II Table 1.',
+'2006.3 — Main bearing components are monolithic; welding is not permitted for manufacture of main components. Piston/cylinder and pin/cylinder mating surfaces are metallurgically hardened to ≥300 BHN.',
+'2006.3 — Brass split sealing rings: 2 mm thick × 20 mm wide. Pressure pad ≤480 mm dia uses minimum 2 ring layers; >480 mm uses minimum 3 layers.',
+'2006.3 — Non-working/contact surfaces are blast-cleaned to SA 2½ as per IS 9954. Protective coating total dry film thickness ≥160 μm.',
+'2006.3.1 — Manufacturing tolerances follow Table 2000-5/2000-6; PTFE fit and component-fit limits are explicitly stated.',
+'2006.4 — Routine tests apply to each acceptance lot. Type test on process/finished bearing: one randomly selected for each lot, for each bearing type and load capacity. Similar-bearing lot size = 25 or part thereof; each type is a separate lot.',
+'2006.4.2 — Welding process test is DP plus visual inspection to IS 822. Major-component hardness: ≥120 BHN for mild steel and ≥150 BHN for cast/forged steel. All major metallic components receive UT to Level 3 of IS 9565.',
+'2006.4.2 — If a finished bearing fails load test, that bearing is rejected and all bearings of that type/load capacity are load-tested before acceptance.',
+'2006.4.3 — All finished bearings are visually inspected and dimension-checked. At least one or a pair of each type/different vertical capacity is randomly load-tested.',
+'2006.4.3 — Pot/PTFE bearing test load = 1.25 × design vertical load; Pin/Metallic Guide = 1.25 × specified design horizontal load; combined-axis Pot/PTFE tests = 1.1 × respective design loads.',
+'2006.4.3 — Test load is applied in stages and held 30 min. Pot-bearing vertical deflection under sustained test load shall not increase by >4% of confined elastomeric pressure-pad thickness.',
+'2006.4.3 — Visual defects, PTFE cold flow reducing height by >0.5 mm, internal-seal damage, pressure-pad extrusion or metal-contact cracks lead to rejection.',
+'2006.4.3 — Sliding-bearing friction test uses design vertical load and permanent vertical load; measured coefficient shall not exceed two-thirds of the Table 2000-7 value for actual PTFE pressure.',
+'2006.5.5 — Bearing centre lines within ±3 mm of correct position. Bearing level/mean level tolerance is ±0.0001 × sum of adjacent continuous-girder spans, capped at ±5 mm. Horizontal plane tolerance 1 in 200 in any direction.',
+'2006.6 — Inspect pot bearings yearly for first 5 years after installation, then every 2 years; also inspect after unusual occurrences such as oversized loads, earthquakes or high-flood debris.'
+];
+br2006.tables=[
+{name:'Table 2000-5 · Pot Bearing Manufacturing Tolerances',status:'checked',headers:['Control','Source tolerance'],rows:[
+['Assembled bearing plan','−0 / +5 mm or 0.5% plan dimension, whichever higher'],
+['Overall height','−0 / +3 mm or 1% overall height, whichever higher'],
+['Top/bottom parallelism','1 in 200'],
+['Confined pressure-pad height','−0 / +0.5%'],
+['Machined steel thickness','−0 / +1 mm'],
+['Unmachined cast-steel dimensions','Class 2 of IS 4897'],
+['Stainless sliding surface flatness','0.0004 L'],
+['Stainless sliding surface finish','Ra ≤0.25 μm']
+]},
+{name:'Clause 2006 · PTFE / Fit Tolerances',status:'checked',headers:['Control','Source requirement'],rows:[
+['PTFE flatness · <800 mm dia/diag','0.2 mm'],
+['PTFE flatness · ≥800 mm','0.025% of dia/diag'],
+['Dimple centre spacing tolerance','±0.5 mm'],
+['Dimple depth tolerance','±0.5 mm'],
+['Dimple diameter tolerance','±1.0 mm'],
+['PTFE-to-recess gap','Max of 0.5 mm or 0.1% plan dimension, but ≤1 mm'],
+['Piston-cylinder fit','+0.75 to +1.25 mm'],
+['Pressure pad-cylinder fit','≤ max(0.5% pad dia, 1 mm)'],
+['Pin-cylinder fit','+1.5 to +2 mm'],
+['Guide-to-adjacent component fit','+2 to +4 mm']
+]},
+{name:'Clause 2006 · Inspection / Load Test Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Lot size','25 bearings or part thereof, per similar type'],
+['Type-test selection','1 per lot for each type/load capacity'],
+['MS component hardness','≥120 BHN'],
+['Cast/forged component hardness','≥150 BHN'],
+['Major metallic UT','Level 3 IS 9565'],
+['Pot/PTFE vertical load test','1.25 × design vertical load'],
+['Pin/Metallic Guide load test','1.25 × design horizontal load'],
+['Combined-axis Pot/PTFE','1.1 × respective design loads'],
+['Load hold','30 min'],
+['Pot deflection growth','≤4% of pressure-pad thickness'],
+['PTFE cold-flow rejection trigger','Height reduction >0.5 mm']
+]},
+{name:'Table 2000-7 · Friction Reference',status:'checked',headers:['Average pressure on PTFE','Table maximum coefficient','Acceptance ceiling = 2/3 of table value'],rows:[
+['5 MPa','0.08','≤0.0533…'],
+['10 MPa','0.06','≤0.04'],
+['20 MPa','0.04','≤0.0267…'],
+['≥30 MPa','0.03','≤0.02']
+]}
+];
+br2006.calc='No friction/pass-fail calculator is enabled. Although Clause 2006 gives a two-thirds criterion, actual average PTFE pressure and approved bearing test setup remain test inputs and Engineer/Inspector-controlled.';
+
+const br2007=RECORDS.find(r=>r.clause==='2007');
+br2007.page='Printed p.659 · PDF page mapping QA pending';
+br2007.read='Source checked for patented-item certification/test-proof approval boundary.';
+br2007.quick=[
+'2007 — For patented items, submit manufacturer certificate with test proofs along with design and obtain Engineer approval before use in the work.'
+];
+br2007.tables=[];br2007.calc='No calculator is applicable.';
+
 
 
 
