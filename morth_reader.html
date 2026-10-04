@@ -2,7 +2,7 @@
 :root{--bg:#f5f8fc;--card:#fff;--line:#dfe7f1;--txt:#0b1830;--muted:#66758d;--blue:#0b6cff;--soft:#edf4ff;--green:#0d9b60;--amber:#c77a00;--red:#d94343;--shadow:0 12px 34px rgba(24,53,91,.08)}
 html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff;--muted:#aebbd0;--soft:#102744;--shadow:0 16px 40px rgba(0,0,0,.24)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.top{position:sticky;top:0;z-index:25;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 12px;display:flex;align-items:center;gap:10px}.top a{color:var(--blue);text-decoration:none;font-weight:850;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.title{flex:1;font-weight:900}.sub{display:block;font-size:10px;color:var(--muted)}.wrap{max-width:1160px;margin:auto;padding:12px 12px 100px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 11%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:12px}.hero h1{font-size:25px;margin:0 0 6px;letter-spacing:-.7px}.hero p{margin:0;color:var(--muted);font-size:12px;max-width:820px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;position:sticky;top:59px;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 12px;min-height:46px}.search input{width:100%;border:0;outline:0;background:transparent;color:var(--txt);font:inherit}.filter{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:14px;padding:0 12px;font-weight:800}.reader{display:grid;grid-template-columns:340px 1fr;gap:12px}.tree{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:560px}.tree-head{padding:11px 12px;background:var(--soft);font-weight:900}.tree-list{max-height:650px;overflow:auto}.node{display:block;width:100%;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--txt);padding:11px 12px;text-align:left}.node b{display:block;font-size:12px}.node small{display:block;color:var(--muted);margin-top:3px}.node.active{background:color-mix(in srgb,var(--blue) 8%,var(--card));border-left:4px solid var(--blue)}.content{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;min-height:560px}.content h2{margin:0 0 4px;font-size:21px}.meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}.badge{display:inline-block;padding:4px 7px;border-radius:999px;border:1px solid var(--line);font-size:10px;font-weight:900}.ok{color:var(--green);background:color-mix(in srgb,var(--green) 8%,var(--card))}.hold{color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--card))}.tabs{display:flex;gap:7px;overflow:auto;margin:10px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:900;white-space:nowrap}.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}.pane{display:none}.pane.on{display:block}.section{border:1px solid var(--line);border-radius:16px;margin-top:10px;overflow:hidden}.section h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;background:var(--soft);padding:9px 11px;margin:0}.section .body{padding:12px}.tableWrap{overflow:auto}.tableWrap table{width:100%;border-collapse:collapse;min-width:620px}.tableWrap th,.tableWrap td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.tableWrap th{background:var(--soft)}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--blue);padding:10px 11px;border-radius:12px;margin-top:10px}.warn{border-left-color:var(--amber);color:var(--amber)}.btn{border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:12px;padding:10px 12px;font-weight:850}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:18px}@media(max-width:900px){.reader{grid-template-columns:1fr}.tree{min-height:0}.tree-list{max-height:270px}}@media(max-width:640px){.toolbar{grid-template-columns:1fr}.hero h1{font-size:22px}}
-</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1706 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
+</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1713 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
 const $=id=>document.getElementById(id);
 const section400=[
 ['401','Granular Sub-Base',109],['402','Lime Treated Soil for Improved Sub-Grade/Sub-Base',112],['403','Cement Treated Soil and Cement-Flyash Treated Sub-Base/Base',116],['404','Water Bound Macadam Sub-Base/Base',121],['405','Crushed Cement Concrete Sub-Base',129],['406','Wet Mix Macadam Sub-Base/Base',131],['407','Crusher-Run Macadam Base',136],['408','Shoulders, Islands and Median',139],['409','Cement Concrete Kerb and Kerb with Channel',142],['410','Footpaths and Separators',143]
@@ -36,7 +36,7 @@ const RECORDS=[
 ...section1400.map((x,i)=>({id:1000+i,section:'1400',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1500.map((x,i)=>({id:1100+i,section:'1500',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1600.map((x,i)=>({id:1200+i,section:'1600',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
-...section1700.map((x,i)=>({id:1300+i,section:'1700',clause:x[0],title:x[1],status:(['1701','1702','1703','1704','1705','1706'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
+...section1700.map((x,i)=>({id:1300+i,section:'1700',clause:x[0],title:x[1],status:(['1701','1702','1703','1704','1705','1706','1707','1708','1709','1710','1711','1712','1713'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
 ];
 
 const brick1301=RECORDS.find(r=>r.clause==='1301');
@@ -841,6 +841,152 @@ sc1706.tables=[{name:'Table 1700-7 · Maximum Nominal Coarse Aggregate',status:'
 ['Any other item','As Engineer specifies']
 ],note:'Also restrict to the smallest geometric limit from reinforcement spacing, cover and member thickness.'}];
 sc1706.calc='No aggregate-size selector is automated because component geometry, cover and reinforcement spacing must all be checked together.';
+
+const sc1707=RECORDS.find(r=>r.clause==='1707');
+sc1707.page='Printed pp.545–546 · PDF page mapping QA pending';
+sc1707.read='Source checked for structural-concrete production, transport and compaction equipment.';
+sc1707.quick=[
+'1707 — For bridge length <200 m, source permits batch-type mixer with minimum 200 L size, automatic water measurement and integral weigher.',
+'1707 — For bridge length ≥200 m, source requires fully automatic batching/mixing plant with minimum 15 m³/h capacity.',
+'1707 — Accuracy of cement, water, aggregate and admixture measuring devices shall each be within ±3% of the batch quantity.',
+'1707 — Internal vibrators are 25–70 mm; form vibrators minimum 500 W.'
+];
+sc1707.tables=[{name:'Clause 1707 · Equipment / Accuracy',status:'checked',headers:['Control','Requirement'],rows:[
+['Batch mixer · bridge <200 m','≥200 L'],
+['Batching plant · bridge ≥200 m','≥15 m³/h'],
+['Cement / water / aggregate / admixture measurement','±3%'],
+['Internal vibrator size','25–70 mm'],
+['Form vibrator','≥500 W']
+]}];
+sc1707.calc='No equipment-capacity calculator is enabled.';
+
+const sc1708=RECORDS.find(r=>r.clause==='1708');
+sc1708.page='Printed pp.546–550 · PDF page mapping QA pending';
+sc1708.read='Source checked for batching, mixing, transporting, placing and compaction.';
+sc1708.quick=[
+'1708.1 — Contractor submits concreting programme and proposed batching/mixing/transport/placing equipment for Engineer approval before concreting.',
+'1708.2 — Cement, aggregate and mineral admixture are batched by mass; water by weight or calibrated volume; aggregate moisture is checked frequently and water/mass corrections are made.',
+'1708.3.1 — All concrete is machine mixed; hand mixing is prohibited. Mixing time shall never be less than 2 minutes.',
+'1708.3.1 — Adding water after initial mixing is complete is not permitted. Mixer unused >30 min shall be thoroughly cleaned before a new batch and before changing cement type.',
+'1708.3.2 — Ready-mix concrete to IS 4926 may be used with Engineer approval.',
+'1708.5 — Concrete placement needs Engineer approval; if concreting does not start within 24 h, approval must be obtained again.',
+'1708.5 — Fresh concrete shall not be placed against concrete already in position for >30 min unless a proper construction joint is formed.',
+'1708.5 — General free-fall guidance ≤1.5 m and never >2 m. Larger free-fall requires suitable self-compacting concrete.',
+'1708.5 — Horizontal layer compacted depth ≤450 mm with internal vibrators and ≤300 mm otherwise.',
+'1708.5 — Fresh concrete temperature at placement: ≥5°C, preferably ≤30°C, and never >40°C.',
+'1708.5 — Site-mixed concrete is placed/compacted within 30 min of discharge; continuously agitated concrete within 1 h of cement addition and within 30 min of agitator discharge.',
+'1708.6 — Internal vibrators are inserted vertically through the layer and a few centimetres into the layer below; avoid contact with reinforcement/ducts and avoid over-vibration.'
+];
+sc1708.tables=[{name:'Clause 1708 · Placement Controls',status:'checked',headers:['Control','Requirement'],rows:[
+['Minimum mixing time','2 min'],
+['Water addition after initial mixing','Not permitted'],
+['Mixer idle cleaning trigger','>30 min'],
+['Engineer approval validity before placement','Re-approve if concreting not started within 24 h'],
+['Fresh-on-old without construction joint','≤30 min'],
+['Concrete free fall','Normally ≤1.5 m; absolute max 2 m'],
+['Layer depth · internal vibrator','≤450 mm'],
+['Layer depth · other compaction','≤300 mm'],
+['Placement temperature','≥5°C; preferably ≤30°C; never >40°C'],
+['Site-mix placement after discharge','≤30 min']
+]}];
+sc1708.calc='No transport-time or compaction calculator is enabled. Mix/admixture/site conditions and Engineer approval remain controlling.';
+
+const sc1709=RECORDS.find(r=>r.clause==='1709');
+sc1709.page='Printed pp.550–551 · PDF page mapping QA pending';
+sc1709.read='Source checked for construction-joint location and preparation.';
+sc1709.quick=[
+'1709 — Avoid construction joints where possible; do not change/add joint locations shown on drawings without express Engineer approval.',
+'1709 — Locate joints away from high-stress regions and, where possible, away from aggressive zones; seal joints in aggressive zones if unavoidable.',
+'1709 — In beams/slabs, avoid joints near supports; no construction joint between soffit and webs of box girders.',
+'1709 — Before resuming, remove laitance, roughen/clean appropriately and pre-wet without puddles. Do not place a first mortar/grout layer at the joint.',
+'1709 — Joint surface shall be free of release agent, dust and curing membrane; reinforcement remains fixed at correct cover.'
+];
+sc1709.tables=[];sc1709.calc='No joint-location calculator is enabled.';
+
+const sc1710=RECORDS.find(r=>r.clause==='1710');
+sc1710.page='Printed pp.551–552 · PDF page mapping QA pending';
+sc1710.read='Source checked for underwater structural concrete.';
+sc1710.quick=[
+'1710 — Underwater method/equipment/materials/mix require Engineer approval before work.',
+'1710 — Water temperature shall be ≥5°C; concrete temperature at deposition 16–30°C.',
+'1710 — Water flow through placement space is reduced to <3 m/min where practicable.',
+'1710 — Do not pump while underwater concrete is being placed or for 24 h afterward.',
+'1710 — Underwater concreting is by tremie only, with minimum 2 tremies for any operation.',
+'1710 — Tremie pipe diameter shall be at least 200 mm and its lower end remains below the plastic-concrete surface continuously after placement starts.',
+'1710 — Tremie concreting should continue without interruption for the full height of the member.'
+];
+sc1710.tables=[{name:'Clause 1710 · Underwater Concrete Controls',status:'checked',headers:['Control','Requirement'],rows:[
+['Water temperature','≥5°C'],
+['Concrete deposition temperature','16–30°C'],
+['Water flow through placement zone','<3 m/min'],
+['Pumping after placement','Not during placement or for 24 h after'],
+['Minimum tremies','2'],
+['Tremie diameter','≥200 mm'],
+['Tremie outlet','Keep below plastic concrete throughout']
+]}];
+sc1710.calc='No tremie-design calculator is enabled.';
+
+const sc1711=RECORDS.find(r=>r.clause==='1711');
+sc1711.page='Printed pp.552–553 · PDF page mapping QA pending';
+sc1711.read='Source checked for cold- and hot-weather concreting.';
+sc1711.quick=[
+'1711.1 — Cold-weather concrete temperature at placing shall be ≥5°C and kept above 4°C until hardened.',
+'1711.1 — Aggregate/water heating is permitted as specified, but generally neither aggregate nor water exceeds 65°C; salt/chemicals are not used to prevent freezing.',
+'1711.1 — Concrete exposed to freezing weather uses entrained air; water content ≤30 L per 50 kg cement. Chloride accelerators are not permitted.',
+'1711.2 — Hot-weather wet-concrete temperature at placement shall not exceed 30°C. Chilled water/ice, shaded/wet aggregates and cooler cement may be used.',
+'1711.2 — Ice counts as mixing water and all ice must melt before mixing is considered complete.'
+];
+sc1711.tables=[{name:'Clause 1711 · Extreme Weather Limits',status:'checked',headers:['Control','Requirement'],rows:[
+['Cold-weather placement concrete','≥5°C'],
+['Maintain after cold-weather placement','>4°C until hardened'],
+['Heated aggregate / water','Generally ≤65°C'],
+['Cold-weather water content','≤30 L / 50 kg cement'],
+['Hot-weather placement concrete','≤30°C'],
+['Chloride accelerator','Not permitted']
+]}];
+sc1711.calc='No weather-adjustment calculator is enabled.';
+
+const sc1712=RECORDS.find(r=>r.clause==='1712');
+sc1712.page='Printed pp.553–555 · PDF page mapping QA pending';
+sc1712.read='Source checked for protection, water curing, steam curing and curing compounds.';
+sc1712.quick=[
+'1712.1 — Curing arrangements must be ready before concreting; protection/curing starts immediately after compaction.',
+'1712.1 — Moist curing starts after some hardening, approximately 12 h after mixing.',
+'1712.2 — Sea water shall not be used for curing. Keep concrete continuously wet for minimum 14 days; rapid-hardening cement may reduce to 5 days.',
+'1712.3 — Steam application begins about 4 h after placement, or about 6 h where retarders are used.',
+'1712.3 — Steam-curing temperature change rate is 10–20°C/h; maximum about 70°C. Follow steam curing with at least 7 days water curing.',
+'1712.4 — Curing compound is not used where later finish is required or where concrete surfaces must bond; construction joints are moist cured.',
+'1712.4 — Apply two curing-compound coats; membrane is stripped after 14 days when curing is complete.'
+];
+sc1712.tables=[{name:'Clause 1712 · Curing Controls',status:'checked',headers:['Control','Requirement'],rows:[
+['Moist curing start','≈12 h after mixing, after initial hardening'],
+['Water curing','≥14 days'],
+['Rapid-hardening cement water curing','≥5 days'],
+['Steam start','≈4 h; ≈6 h with retarders'],
+['Steam temperature change','10–20°C/h'],
+['Steam maximum','≈70°C'],
+['Water curing after steam','≥7 days'],
+['Curing compound coats','2']
+]}];
+sc1712.calc='No curing-duration calculator is enabled; cement system and approved method govern.';
+
+const sc1713=RECORDS.find(r=>r.clause==='1713');
+sc1713.page='Printed p.555 · PDF page mapping QA pending';
+sc1713.read='Source checked for finishing and defect review.';
+sc1713.quick=[
+'1713 — After form removal, exposed bars/bolts are cut at least 50 mm inside the concrete and holes filled with cement mortar.',
+'1713 — Minor accepted defects are cleaned, wetted and repaired with compatible mortar; pointed surfaces remain moist for 24 h.',
+'1713 — Engineer examines concrete immediately after stripping and before defects are made good.',
+'1713 — Work with sagging or honeycombing detrimental to structural safety or appearance is rejected.'
+];
+sc1713.tables=[{name:'Clause 1713 · Finishing / Defect Controls',status:'checked',headers:['Control','Requirement'],rows:[
+['Cut-back of exposed bars/bolts','≥50 mm below surface'],
+['Moist curing of pointed repairs','24 h'],
+['Engineer inspection','Immediately after stripping, before repair'],
+['Serious sagging / honeycombing','Reject']
+]}];
+sc1713.calc='No repair calculator is enabled.';
+
 
 
 
