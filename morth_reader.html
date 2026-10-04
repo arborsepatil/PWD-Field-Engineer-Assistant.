@@ -2,7 +2,7 @@
 :root{--bg:#f5f8fc;--card:#fff;--line:#dfe7f1;--txt:#0b1830;--muted:#66758d;--blue:#0b6cff;--soft:#edf4ff;--green:#0d9b60;--amber:#c77a00;--red:#d94343;--shadow:0 12px 34px rgba(24,53,91,.08)}
 html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff;--muted:#aebbd0;--soft:#102744;--shadow:0 16px 40px rgba(0,0,0,.24)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.top{position:sticky;top:0;z-index:25;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 12px;display:flex;align-items:center;gap:10px}.top a{color:var(--blue);text-decoration:none;font-weight:850;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.title{flex:1;font-weight:900}.sub{display:block;font-size:10px;color:var(--muted)}.wrap{max-width:1160px;margin:auto;padding:12px 12px 100px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 11%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:12px}.hero h1{font-size:25px;margin:0 0 6px;letter-spacing:-.7px}.hero p{margin:0;color:var(--muted);font-size:12px;max-width:820px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;position:sticky;top:59px;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 12px;min-height:46px}.search input{width:100%;border:0;outline:0;background:transparent;color:var(--txt);font:inherit}.filter{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:14px;padding:0 12px;font-weight:800}.reader{display:grid;grid-template-columns:340px 1fr;gap:12px}.tree{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:560px}.tree-head{padding:11px 12px;background:var(--soft);font-weight:900}.tree-list{max-height:650px;overflow:auto}.node{display:block;width:100%;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--txt);padding:11px 12px;text-align:left}.node b{display:block;font-size:12px}.node small{display:block;color:var(--muted);margin-top:3px}.node.active{background:color-mix(in srgb,var(--blue) 8%,var(--card));border-left:4px solid var(--blue)}.content{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;min-height:560px}.content h2{margin:0 0 4px;font-size:21px}.meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}.badge{display:inline-block;padding:4px 7px;border-radius:999px;border:1px solid var(--line);font-size:10px;font-weight:900}.ok{color:var(--green);background:color-mix(in srgb,var(--green) 8%,var(--card))}.hold{color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--card))}.tabs{display:flex;gap:7px;overflow:auto;margin:10px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:900;white-space:nowrap}.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}.pane{display:none}.pane.on{display:block}.section{border:1px solid var(--line);border-radius:16px;margin-top:10px;overflow:hidden}.section h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;background:var(--soft);padding:9px 11px;margin:0}.section .body{padding:12px}.tableWrap{overflow:auto}.tableWrap table{width:100%;border-collapse:collapse;min-width:620px}.tableWrap th,.tableWrap td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.tableWrap th{background:var(--soft)}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--blue);padding:10px 11px;border-radius:12px;margin-top:10px}.warn{border-left-color:var(--amber);color:var(--amber)}.btn{border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:12px;padding:10px 12px;font-weight:850}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:18px}@media(max-width:900px){.reader{grid-template-columns:1fr}.tree{min-height:0}.tree-list{max-height:270px}}@media(max-width:640px){.toolbar{grid-template-columns:1fr}.hero h1{font-size:22px}}
-</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1805 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
+</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1810 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
 const $=id=>document.getElementById(id);
 const section400=[
 ['401','Granular Sub-Base',109],['402','Lime Treated Soil for Improved Sub-Grade/Sub-Base',112],['403','Cement Treated Soil and Cement-Flyash Treated Sub-Base/Base',116],['404','Water Bound Macadam Sub-Base/Base',121],['405','Crushed Cement Concrete Sub-Base',129],['406','Wet Mix Macadam Sub-Base/Base',131],['407','Crusher-Run Macadam Base',136],['408','Shoulders, Islands and Median',139],['409','Cement Concrete Kerb and Kerb with Channel',142],['410','Footpaths and Separators',143]
@@ -38,7 +38,7 @@ const RECORDS=[
 ...section1500.map((x,i)=>({id:1100+i,section:'1500',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1600.map((x,i)=>({id:1200+i,section:'1600',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section1700.map((x,i)=>({id:1300+i,section:'1700',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
-...section1800.map((x,i)=>({id:1400+i,section:'1800',clause:x[0],title:x[1],status:(['1801','1802','1803','1804','1805'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
+...section1800.map((x,i)=>({id:1400+i,section:'1800',clause:x[0],title:x[1],status:(['1801','1802','1803','1804','1805','1806','1807','1808','1809','1810'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
 ];
 
 const brick1301=RECORDS.find(r=>r.clause==='1301');
@@ -1190,6 +1190,149 @@ ps1805.tables=[{name:'Clause 1805 · Workmanship Controls',status:'checked',head
 ['Epoxy protection','2 coats × 80 μm dry film']
 ]}];
 ps1805.calc='No tendon-profile or grouting-system calculator is enabled.';
+
+const ps1806=RECORDS.find(r=>r.clause==='1806');
+ps1806.page='Printed p.572 · PDF page mapping QA pending';
+ps1806.read='Source checked for supervision, specialist-agency responsibility and certification boundaries.';
+ps1806.quick=[
+'1806 — Prestressing and grouting shall be entrusted only to specially trained and qualified personnel.',
+'1806 — Prestressing accessories shall come from authorised manufacturers with in-house testing facilities.',
+'1806 — Contractor is required to engage specialised agencies for the total service covering cable fabrication, protection during concreting, prestressing and grouting; the specialised agency provides certification that the work complies with the prescribed specifications.',
+'1806 — Exception: the bridge Contractor may undertake prestressing/grouting only when the Employer is convinced of relevant experience, qualified personnel and sufficient track record for the particular prestressing system.'
+];
+ps1806.tables=[];ps1806.calc='No calculator is applicable.';
+
+const ps1807=RECORDS.find(r=>r.clause==='1807');
+ps1807.page='Printed pp.572–573 · PDF page mapping QA pending';
+ps1807.read='Source checked for stressing equipment, force/elongation measurement, gauge selection and calibration.';
+ps1807.quick=[
+'1807 — Tensioning equipment shall be from authorised manufacturers and approved by the Engineer before use. Hydraulic jacks are power-driven unless otherwise approved by the Engineer.',
+'1807(ii) — Where a tendon contains two or more wires/strands, use a single multi-pull jack capable of simultaneous tensioning of all wires/strands.',
+'1807(iv) — Provide direct force measurement by dynamometer or hydraulic pressure gauge, plus extension measurement to the nearest mm and measurement of grip slip at transfer.',
+'1807 — Dynamometers and pressure gauges, including a master gauge, are calibrated by an approved laboratory immediately prior to use and thereafter at intervals not exceeding 3 months.',
+'1807 — Pressure gauges are concentric-scale type, accurate within 2% of full capacity and at least 100 mm nominal size.',
+'1807 — Select the gauge so that at 75% of tendon breaking load its indication lies between 50% and 80% of full capacity.',
+'1807 — Provide for attachment of the master gauge whenever requested by the Engineer; jack and pump are also calibrated by an approved laboratory prior to use and at intervals not exceeding 3 months.'
+];
+ps1807.tables=[{name:'Clause 1807 · Tensioning Equipment Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Dynamometer / pressure-gauge calibration','Immediately prior to use; then interval ≤3 months'],
+['Jack and pump calibration','Prior to use; then interval ≤3 months'],
+['Pressure-gauge accuracy','Within 2% of full capacity'],
+['Minimum gauge nominal size','100 mm'],
+['Gauge operating window','At 75% tendon breaking load, reading 50–80% of full capacity'],
+['Extension measurement','Nearest 1 mm']
+]}];
+ps1807.calc='No stressing-force calculator is enabled. Approved calibration curves and the prestressing system govern.';
+
+const ps1808=RECORDS.find(r=>r.clause==='1808');
+ps1808.page='Printed pp.573–574 · PDF page mapping QA pending';
+ps1808.read='Source checked for post-tensioning sequence, concrete-strength gate, force/elongation reconciliation and records.';
+ps1808.quick=[
+'1808 — Apply tension gradually and steadily; stressing sequence, applied tensions and elongations follow the approved drawing or Engineer direction.',
+'1808 — Do not apply load to concrete before it reaches the strength specified on the drawing or stipulated by the prestressing-system supplier, whichever is higher.',
+'1808 — Determine tendon force by gauge/dynamometer reading and compare measured elongation with calculated elongation; calculated elongation is adjusted for the modulus of elasticity of the particular steel lot supplied by the manufacturer.',
+'1808(a) — If calculated elongation is reached before specified gauge pressure, continue to specified pressure only while elongation remains ≤1.05 × calculated. If 1.05 × calculated elongation is reached first, stop stressing and inform the Engineer.',
+'1808(b) — If calculated elongation is not reached at specified gauge pressure, increase tension in 5 kg/sq. cm intervals until calculated elongation is reached, provided gauge pressure does not exceed 1.05 × specified gauge pressure.',
+'1808(c) — If elongation at 1.05 × specified gauge pressure is <0.95 × calculated elongation, successively check jack/pump/leads, de-tension and check cable freedom in the duct, then re-establish steel modulus for the lot from an approved laboratory.',
+'1808(c) — If the required elongation is still not obtained, do not proceed with finishing operations such as cutting or sealing without Engineer approval.',
+'1808(d) — For one-end stressing, accurately measure slip at the remote end and allow for it in the measured extension at the jacking end.',
+'1808 — Maintain the complete prestressing record with elongation and jack-pressure data in Appendix 1800/II format.',
+'1808 — Keep stages of prestressing and grouting to a minimum, preferably two for simply supported girders.'
+];
+ps1808.tables=[{name:'Clause 1808 · Force / Elongation Decision Limits',status:'checked',headers:['Condition','Source control'],rows:[
+['Elongation upper comparison','1.05 × calculated elongation'],
+['Pressure upper comparison','1.05 × specified gauge pressure'],
+['Low-elongation trigger','<0.95 × calculated at 1.05 × specified pressure'],
+['Pressure increase when elongation is short','Intervals of 5 kg/sq. cm']
+]}];
+ps1808.calc='No automatic stressing acceptance calculator is enabled; the clause requires calibrated readings, lot-specific modulus and Engineer action at the stated boundaries.';
+
+const ps1809=RECORDS.find(r=>r.clause==='1809');
+ps1809.page='Printed p.574–575 · Appendix 1800/III pp.873–881 · Appendix 1800/IV p.882 · PDF page mapping QA pending';
+ps1809.read='Source checked against Clause 1809 plus Appendix 1800/III grouting requirements and Appendix 1800/IV record requirement.';
+ps1809.quick=[
+'1809 — Prestressed-tendon grouting follows Appendix 1800/III and the grouting record is maintained in Appendix 1800/IV format.',
+'Appendix 1800/III §2 — Use clean potable water conforming to Section 1000; sea or creek water is not permitted. Use fresh OPC free of lumps; pozzolana cement is not permitted.',
+'Appendix 1800/III §2.3 — Sand is not recommended. Where duct internal diameter exceeds 150 mm it may be considered; printed source requires IS 383 sand passing “IS Sieve No. 150”, with sand weight ≤10% of cement unless suitable plasticiser provides proper workability.',
+'Appendix 1800/III §2.4 — Admixtures may conform to IS 9102 when proven beneficial; listed harmful constituents are prohibited. Total unrestrained expansion with an expanding agent shall not exceed 10%; aluminium powder is not recommended.',
+'Appendix 1800/III §2.5.2 — Provide grout openings at both duct ends and vents at all crown/valley points for draped cables; additional vents at intervals ≤20 m are stated as good practice.',
+'Appendix 1800/III §3.2 — Use a positive-displacement grout pump with pressure gauge. Minimum pumping pressure is 0.3 MPa; provide relief/bypass for pressure beyond 1 MPa; target forward grout speed is about 5–10 m/min. Compressed-air-operated injection equipment is prohibited.',
+'Printed source-control note — Appendix 1800/III §3.4 prints grout-screen mesh as “IS:106 (IS:105 if sand is used)”. This reader preserves that wording without interpreting or correcting it.',
+'Appendix 1800/III §4.1 — Water/cement ratio should be as low as practicable and should not normally exceed 0.45; grout temperature shall not exceed 25°C.',
+'Appendix 1800/III §4.2 — Net limits in grout: chloride ≤0.1% by weight of cement; sulphate (SO3) ≤4%; sulphide ions ≤0.01%.',
+'Appendix 1800/III §4.2 — 100 mm grout cubes: compressive strength ≥27 MPa at 7 days or ≥30 MPa at 28 days; 7-day strength is not mandatory if the 28-day requirement is met.',
+'Appendix 1800/III §4.2 — Initial setting time >3 h and <12 h; final setting time ≥24 h; bleeding ≤0.3% of initial volume after 3 h at rest; 24 h volume change by ASTM C 1090 is 1–5%; fluidity test is ASTM C 939.',
+'Appendix 1800/III §4.2 — Source says grout properties should be tested before grouting and tests conducted for each job periodically; it gives no numeric testing interval or sample count.',
+'Appendix 1800/III §5 — Materials are measured by weight. Normal mixing time is 2–3 min; grout remains continuously agitated until injection; no water is added after mixing to increase fluidity and hand mixing is not permitted.',
+'Appendix 1800/III §6.1 — Grout as early as possible and not later than 2 weeks after stressing; when that cannot be met, temporary corrosion protection is required until grouting.',
+'Appendix 1800/III §6.2 — For vertical cables or cables inclined >60° to horizontal, inject from the lowest anchorage/vent. Start at low pressure up to 0.3 MPa; after grout reaches the far end, maintain full injection pressure about 0.5 MPa for at least 1 minute before closing.',
+'Appendix 1800/III §6.2 — If pressure builds much above 1 MPa without grout flow at the other end, discontinue and flush the entire duct with high-pressure water. Reject grout not used within 30 min of mixing.',
+'Appendix 1800/III §7 — If frost is likely within 48 h after injection, heat the member and maintain heat for at least 48 h after injection so grout temperature does not fall below 5°C; grout temperature remains ≤25°C.',
+'Appendix 1800/III §6.1 note — For cables longer than 50 m draped up at both ends, compressed-air removal of water is stated as ineffective; use an outlet/vent at or near the lowest point for drainage.'
+];
+ps1809.tables=[
+{name:'Appendix 1800/III · Grout Acceptance Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Normal maximum w/c ratio','≤0.45'],
+['Maximum grout temperature','25°C'],
+['Chloride','≤0.1% by weight of cement'],
+['Sulphate (SO3)','≤4% by weight of cement'],
+['Sulphide ions','≤0.01% by weight of cement'],
+['100 mm cube strength','≥27 MPa at 7 d OR ≥30 MPa at 28 d'],
+['Initial set','>3 h and <12 h'],
+['Final set','≥24 h'],
+['Bleeding after 3 h','≤0.3% of initial volume'],
+['24 h volume change · ASTM C 1090','1–5% of original volume']
+]},
+{name:'Appendix 1800/III · Grouting Operation Limits',status:'checked',headers:['Control','Source requirement'],rows:[
+['Sand consideration','Duct internal dia >150 mm'],
+['Sand content','≤10% of cement weight, subject to stated workability proviso'],
+['Unrestrained expansion','≤10%'],
+['Additional vent interval · good practice','≤20 m'],
+['Pump pressure · stated minimum','0.3 MPa'],
+['Pump bypass/relief','Beyond 1 MPa'],
+['Forward grout speed','About 5–10 m/min'],
+['Normal mixing time','2–3 min'],
+['Latest grouting after stressing','2 weeks'],
+['Vertical / steep cable trigger','>60° to horizontal: inject from lowest point'],
+['Full injection hold','About 0.5 MPa for ≥1 min'],
+['Mixed-grout rejection','Not used within 30 min'],
+['Cold-weather minimum grout temperature','≥5°C under stated frost precaution']
+]}
+];
+ps1809.calc='No grout calculator is enabled. Appendix 1800/III supplies limits but does not provide a safe standalone design/dosage formula.';
+
+const ps1810=RECORDS.find(r=>r.clause==='1810');
+ps1810.page='Printed pp.575–579 · PDF page mapping QA pending';
+ps1810.read='Source checked for pre-tensioning planning, concrete, stressing-bed, stressing/de-tensioning, slip and cutting controls.';
+ps1810.quick=[
+'1810.1 — Tensioning bed/bench, anchor abutments, steam curing, formwork, de-moulding, lifting, stacking and transportation are specialised work entrusted to engineers experienced in pre-tensioned construction.',
+'1810.2 — Durability requirements follow Tables 1700-2 and 1700-3, except the minimum concrete grade is M40.',
+'1810.5 — Use a fully automated computer-controlled batching plant with moisture measurement/compensation and automatic admixture dispensing.',
+'1810.5 — Concrete sampling/testing follows Section 1700. Prepare additional cubes for strength at form removal and transfer of prestress; source asks for an adequate number cured under conditions identical to the respective girders and gives no dedicated numeric sampling frequency in Clause 1810.',
+'1810.6 — Concrete shall have attained at least 20 MPa compressive strength at removal of forms; girders are not moved until stipulated strength requirements are met.',
+'1810.7 — Stressing-bed abutments and bed are designed for total tensioning force; display the maximum permitted tensioning force adjacent to the bed.',
+'1810.7 — Deflectors in contact with tendons have diameter not less than the tendon diameter or 15 mm, whichever is greater.',
+'1810.7 — Contractor submits the tensioning method, bed layout and tendon deflection points for Engineer approval before manufacture and carries out trial stressing to establish hold-down friction and anchorage slip.',
+'1810.7 — Debonding uses HDPE tubes; PVC tubes are not permitted. Recheck tube locations after pre-tensioning and before concreting, and effectively seal both ends against cement-slurry ingress.',
+'1810.8.1 — After initial slack removal and alignment check, tensioning is controlled by the gauging system and elongation is checked on every strand.',
+'1810.8.1 — Transfer of prestress does not proceed until the Engineer approves the proposed method. Any loose strands are reported to the Engineer, who decides whether affected units should be rejected.',
+'1810.8.1 — Sequence of prestress transfer strictly follows drawings while minimising vertical and horizontal eccentricity throughout.',
+'1810.8.1 — Maximum tendon slip during transfer: 3 mm for bottom strands and 5.5 mm for top strands at any end. If exceeded, the member design is checked for actual slip before acceptance.',
+'1810.8.2 — De-tension gradually. During the process, prestressing force at any stage shall not exceed 90% of 0.1% proof stress.',
+'1810.9 — Use a diamond-bit saw for strand cutting. Factory flame cutting may be used under the stated heating/cutting sequence and symmetrical cutting procedure.'
+];
+ps1810.tables=[{name:'Clause 1810 · Pre-tensioning Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Minimum concrete grade','M40'],
+['Form-removal compressive strength','≥20 MPa'],
+['Deflector diameter','≥ tendon diameter or 15 mm, whichever greater'],
+['Bottom-strand slip at transfer','≤3 mm at any end'],
+['Top-strand slip at transfer','≤5.5 mm at any end'],
+['De-tensioning force cap','≤90% of 0.1% proof stress'],
+['Debonding tube','HDPE; PVC not permitted'],
+['Elongation check','Every strand']
+]}];
+ps1810.calc='No pre-tensioning force/slip calculator is enabled. Drawings, approved stressing method and Engineer acceptance govern.';
+
 
 
 
