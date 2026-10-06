@@ -2,7 +2,7 @@
 :root{--bg:#f5f8fc;--card:#fff;--line:#dfe7f1;--txt:#0b1830;--muted:#66758d;--blue:#0b6cff;--soft:#edf4ff;--green:#0d9b60;--amber:#c77a00;--red:#d94343;--shadow:0 12px 34px rgba(24,53,91,.08)}
 html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff;--muted:#aebbd0;--soft:#102744;--shadow:0 16px 40px rgba(0,0,0,.24)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.top{position:sticky;top:0;z-index:25;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 12px;display:flex;align-items:center;gap:10px}.top a{color:var(--blue);text-decoration:none;font-weight:850;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.title{flex:1;font-weight:900}.sub{display:block;font-size:10px;color:var(--muted)}.wrap{max-width:1160px;margin:auto;padding:12px 12px 100px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 11%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:12px}.hero h1{font-size:25px;margin:0 0 6px;letter-spacing:-.7px}.hero p{margin:0;color:var(--muted);font-size:12px;max-width:820px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;position:sticky;top:59px;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 12px;min-height:46px}.search input{width:100%;border:0;outline:0;background:transparent;color:var(--txt);font:inherit}.filter{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:14px;padding:0 12px;font-weight:800}.reader{display:grid;grid-template-columns:340px 1fr;gap:12px}.tree{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:560px}.tree-head{padding:11px 12px;background:var(--soft);font-weight:900}.tree-list{max-height:650px;overflow:auto}.node{display:block;width:100%;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--txt);padding:11px 12px;text-align:left}.node b{display:block;font-size:12px}.node small{display:block;color:var(--muted);margin-top:3px}.node.active{background:color-mix(in srgb,var(--blue) 8%,var(--card));border-left:4px solid var(--blue)}.content{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;min-height:560px}.content h2{margin:0 0 4px;font-size:21px}.meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}.badge{display:inline-block;padding:4px 7px;border-radius:999px;border:1px solid var(--line);font-size:10px;font-weight:900}.ok{color:var(--green);background:color-mix(in srgb,var(--green) 8%,var(--card))}.hold{color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--card))}.tabs{display:flex;gap:7px;overflow:auto;margin:10px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:900;white-space:nowrap}.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}.pane{display:none}.pane.on{display:block}.section{border:1px solid var(--line);border-radius:16px;margin-top:10px;overflow:hidden}.section h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;background:var(--soft);padding:9px 11px;margin:0}.section .body{padding:12px}.tableWrap{overflow:auto}.tableWrap table{width:100%;border-collapse:collapse;min-width:620px}.tableWrap th,.tableWrap td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.tableWrap th{background:var(--soft)}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--blue);padding:10px 11px;border-radius:12px;margin-top:10px}.warn{border-left-color:var(--amber);color:var(--amber)}.btn{border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:12px;padding:10px 12px;font-weight:850}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:18px}@media(max-width:900px){.reader{grid-template-columns:1fr}.tree{min-height:0}.tree-list{max-height:270px}}@media(max-width:640px){.toolbar{grid-template-columns:1fr}.hero h1{font-size:22px}}
-</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option><option value="1900">Section 1900</option><option value="2000">Section 2000</option><option value="2100">Section 2100</option><option value="2200">Section 2200</option><option value="2300">Section 2300</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1818 and Structural Steel 1901–1909 and Bearings 2001–2010 and Open Foundations 2101–2108 and Substructure 2201–2210 and Concrete Superstructure 2301–2305 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
+</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option><option value="1900">Section 1900</option><option value="2000">Section 2000</option><option value="2100">Section 2100</option><option value="2200">Section 2200</option><option value="2300">Section 2300</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1818 and Structural Steel 1901–1909 and Bearings 2001–2010 and Open Foundations 2101–2108 and Substructure 2201–2210 and Concrete Superstructure 2301–2310 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
 const $=id=>document.getElementById(id);
 const section400=[
 ['401','Granular Sub-Base',109],['402','Lime Treated Soil for Improved Sub-Grade/Sub-Base',112],['403','Cement Treated Soil and Cement-Flyash Treated Sub-Base/Base',116],['404','Water Bound Macadam Sub-Base/Base',121],['405','Crushed Cement Concrete Sub-Base',129],['406','Wet Mix Macadam Sub-Base/Base',131],['407','Crusher-Run Macadam Base',136],['408','Shoulders, Islands and Median',139],['409','Cement Concrete Kerb and Kerb with Channel',142],['410','Footpaths and Separators',143]
@@ -48,7 +48,7 @@ const RECORDS=[
 ...section2000.map((x,i)=>({id:1600+i,section:'2000',clause:x[0],title:x[1],status:(['2001','2002','2003','2004','2005','2006','2007','2008','2009','2010'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section2100.map((x,i)=>({id:1700+i,section:'2100',clause:x[0],title:x[1],status:(['2101','2102','2103','2104','2105','2106','2107','2108'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section2200.map((x,i)=>({id:1800+i,section:'2200',clause:x[0],title:x[1],status:(['2201','2202','2203','2204','2205','2206','2207','2208','2209','2210'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
-...section2300.map((x,i)=>({id:1900+i,section:'2300',clause:x[0],title:x[1],status:(['2301','2302','2303','2304','2305'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
+...section2300.map((x,i)=>({id:1900+i,section:'2300',clause:x[0],title:x[1],status:'partial',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
 ];
 
 const brick1301=RECORDS.find(r=>r.clause==='1301');
@@ -2427,6 +2427,88 @@ cs2305.tables=[
 ]}
 ];
 cs2305.calc='No calculator is enabled. The clause contains direct limits but no safe standalone formula that should imply automatic structural acceptance.';
+
+const cs2306=RECORDS.find(r=>r.clause==='2306');
+cs2306.page='Printed p.682 · PDF page mapping QA pending';
+cs2306.read='Source checked for cast-in-place voided-slab construction controls.';
+cs2306.quick=[
+'2306 — Voided slabs may be reinforced or prestressed concrete; voids may be circular or rectangular.',
+'2306 — Void formers may be made from steel sheet, fibre-reinforced cement, expanded polystyrene, HDPE or similar materials and are generally corrugated for rigidity.',
+'2306 — Void formers should be leak tight, shall be suitably tied down to prevent flotation during concreting, and concrete placement shall ensure full flow into the space beneath the void formers.'
+];
+cs2306.tables=[{name:'Clause 2306 · Voided Slab Field Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Void-former flotation','Suitably tied down during concreting'],
+['Concrete beneath void former','Ensure full flow into the space beneath'],
+['Void-former leakage','Source wording: should be leak tight']
+]}];
+cs2306.calc='No calculator is applicable. Void geometry and structural details remain drawing/design controlled.';
+
+const cs2307=RECORDS.find(r=>r.clause==='2307');
+cs2307.page='Printed pp.682–683 · PDF page mapping QA pending';
+cs2307.read='Source checked for precast and cast-in-situ superstructure tolerances; one extracted precast row is held as a source-control issue.';
+cs2307.quick=[
+'2307.1(a) — For precast top/bottom slab or flange thickness, the extracted source prints “± 5 mm to”. The row is not silently normalized; treat this value as source-control held pending visual/source clarification.',
+'2307.1(b) — Precast web-thickness variation: −5 mm to +10 mm.',
+'2307.1(c) — Precast overall depth or width variation: ±5 mm.',
+'2307.1(d) — Precast overall length and length between bearings: not more than ±10 mm or ±0.1% of span length, whichever is less.',
+'2307.1(e) — Precast deck-slab surface unevenness: 5 mm under a 3 m straight edge/template.',
+'2307.2(a,b) — Cast-in-situ slab/flange thickness and web-thickness variation: −5 mm to +10 mm.',
+'2307.2(c) — Cast-in-situ overall depth or width variation: ±5 mm.',
+'2307.2(d) — Cast-in-situ overall length and length between bearings: not more than ±10 mm or ±0.1% of span length, whichever is less.',
+'2307.2(e) — Cast-in-situ deck-slab surface unevenness: 5 mm under a 3 m straight edge/template.'
+];
+cs2307.tables=[
+{name:'Clause 2307.1 · Precast Superstructure Tolerances',status:'checked',headers:['Control','Tolerance'],rows:[
+['Top/bottom slab or flange thickness','SOURCE HOLD — extracted text prints “± 5 mm to”'],
+['Web thickness','−5 / +10 mm'],
+['Overall depth or width','±5 mm'],
+['Overall length / length between bearings','Lesser of ±10 mm or ±0.1% of span length'],
+['Deck-slab surface unevenness','5 mm under 3 m straight edge/template']
+],note:'The precast thickness row is intentionally not repaired or inferred.'},
+{name:'Clause 2307.2 · Cast In-Situ Superstructure Tolerances',status:'checked',headers:['Control','Tolerance'],rows:[
+['Top/bottom slab or flange thickness','−5 / +10 mm'],
+['Web thickness','−5 / +10 mm'],
+['Overall depth or width','±5 mm'],
+['Overall length / length between bearings','Lesser of ±10 mm or ±0.1% of span length'],
+['Deck-slab surface unevenness','5 mm under 3 m straight edge/template']
+]}
+];
+cs2307.calc='No tolerance calculator is enabled. Direct source limits apply, with the precast thickness row held pending source clarification.';
+
+const cs2308=RECORDS.find(r=>r.clause==='2308');
+cs2308.page='Printed p.683 · PDF page mapping QA pending';
+cs2308.read='Source checked for tests and standards of acceptance.';
+cs2308.quick=[
+'2308 — Materials are tested in accordance with these Specifications and shall meet the prescribed criteria.',
+'2308 — Work shall conform to these Specifications and meet the prescribed standards of acceptance.',
+'2308 — This clause states no standalone numeric sampling frequency or additional acceptance limit.'
+];
+cs2308.tables=[];cs2308.calc='No calculator is applicable. Governing material/work sections supply the detailed criteria.';
+
+const cs2309=RECORDS.find(r=>r.clause==='2309');
+cs2309.page='Printed pp.683–684 · PDF page mapping QA pending';
+cs2309.read='Source checked for concrete-superstructure measurement boundaries.';
+cs2309.quick=[
+'2309 — Superstructure concrete is measured under Section 1700 based on quantity ordered or shown on drawings.',
+'2309 — Untensioned reinforcement steel is measured under Section 1600 based on quantity ordered or shown on drawings.',
+'2309 — Prestressing high-tensile steel is measured under Section 1800 based on quantity ordered or shown on drawings.'
+];
+cs2309.tables=[{name:'Clause 2309 · Measurement Basis',status:'checked',headers:['Item','Governing measurement section'],rows:[
+['Concrete','Section 1700'],
+['Untensioned steel reinforcement','Section 1600'],
+['High-tensile prestressing steel','Section 1800']
+]}];
+cs2309.calc='No payment calculator is enabled in the source-control reader.';
+
+const cs2310=RECORDS.find(r=>r.clause==='2310');
+cs2310.page='Printed p.684 · PDF page mapping QA pending';
+cs2310.read='Source checked for unit-rate inclusions.';
+cs2310.quick=[
+'2310 — Contract unit rates for concrete, untensioned reinforcement and prestressing high-tensile steel include the work required by their respective Sections.',
+'2310 — Rates cover incidental items needed to furnish/provide the superstructure described in Section 2300 and shown on drawings.'
+];
+cs2310.tables=[];cs2310.calc='No rate calculator is enabled. Contract item wording governs.';
+
 
 
 
