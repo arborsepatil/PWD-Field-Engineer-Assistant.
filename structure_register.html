@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b6cff">
+<title>PWD Structures · Digital Structure Register</title>
+<link rel="stylesheet" href="./app-global.css">
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--line:#dfe7f2;--txt:#10213b;--muted:#6d7d94;--blue:#0b6cff;--green:#0d9b60;--amber:#c47a00;--orange:#e56f20;--red:#d94141;--purple:#7155d9;--soft:#edf4ff;--shadow:0 10px 30px rgba(28,57,91,.09)}
+html[data-theme=dark]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f2f7ff;--muted:#a9b7cb;--soft:#102744;--shadow:0 16px 40px rgba(0,0,0,.25)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 12px;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(15px);border-bottom:1px solid var(--line)}
+.top a{color:var(--blue);text-decoration:none;font-weight:900}.top b{flex:1;font-size:15px}.net{font-size:10px;padding:6px 9px;border-radius:999px;background:var(--soft);border:1px solid var(--line);font-weight:900}.net.off{color:var(--amber)}.net.on{color:var(--green)}
+main{max-width:980px;margin:auto;padding:12px 12px 96px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 10%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow);margin-bottom:10px}.hero h1{margin:0 0 4px;font-size:23px}.hero p{margin:0;color:var(--muted);font-size:12px}
+.tabs{position:sticky;top:50px;z-index:12;display:flex;gap:7px;overflow:auto;background:color-mix(in srgb,var(--bg) 95%,transparent);backdrop-filter:blur(12px);padding:8px 0}.tab{flex:1 0 auto;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:10px 13px;font-weight:900}.tab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.panel{display:none}.panel.on{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:15px;margin:10px 0;box-shadow:0 8px 24px rgba(24,53,91,.05)}.card h2{font-size:15px;margin:0 0 10px}.sub{font-size:11px;color:var(--muted);margin:-5px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.field label{display:block;font-size:10px;font-weight:900;letter-spacing:.04em;color:var(--muted);margin:0 0 5px;text-transform:uppercase}.field input,.field select,.field textarea{width:100%;min-height:46px;border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--txt);padding:10px 11px;font-size:14px;outline:none}.field textarea{min-height:76px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 14%,transparent)}.wide{grid-column:1/-1}
+.btn{border:0;border-radius:13px;min-height:46px;padding:11px 13px;font-weight:900;background:var(--soft);color:var(--txt);cursor:pointer}.btn.primary{background:var(--blue);color:#fff}.btn.success{background:var(--green);color:#fff}.btn.danger{background:color-mix(in srgb,var(--red) 10%,var(--card));color:var(--red);border:1px solid color-mix(in srgb,var(--red) 30%,var(--line))}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions .btn{flex:1 1 150px}
+.segment{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.seg{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 7px;font-size:11px;font-weight:900;color:var(--muted)}.seg.on{color:#fff;background:var(--blue);border-color:var(--blue)}
+.asset{border:1px solid var(--line);border-radius:16px;padding:12px;margin:9px 0;background:var(--card)}.asset-top{display:flex;gap:10px;align-items:flex-start}.asset-icon{width:42px;height:42px;border-radius:13px;background:var(--soft);display:grid;place-items:center;font-size:21px}.asset-main{flex:1}.asset-title{font-weight:950}.asset-meta{font-size:11px;color:var(--muted);margin-top:2px}.status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:900;padding:5px 8px;border-radius:999px;border:1px solid var(--line)}.dot{width:7px;height:7px;border-radius:50%}.good .dot{background:var(--green)}.fair .dot{background:var(--amber)}.poor .dot{background:var(--orange)}.critical .dot{background:var(--red)}.unknown .dot{background:#8a98aa}.construction .dot{background:var(--purple)}
+.photo-strip{display:flex;gap:7px;overflow:auto;margin-top:9px}.photo-strip img{width:88px;height:66px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.pill{font-size:10px;font-weight:900;border:1px solid var(--line);border-radius:999px;padding:5px 8px;color:var(--muted);background:var(--soft)}.summary{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.empty{text-align:center;color:var(--muted);padding:28px 10px}.empty b{display:block;color:var(--txt);font-size:16px;margin-bottom:4px}
+.issue-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.check{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12px}
+.mapbox{height:420px;border:1px solid var(--line);border-radius:18px;background:var(--soft);position:relative;overflow:hidden}.mapbox canvas{width:100%;height:100%;display:block}.maplegend{display:flex;gap:9px;flex-wrap:wrap;font-size:10px;color:var(--muted);margin-top:8px}
+.modal{display:none;position:fixed;inset:0;background:#020914b8;z-index:40;padding:16px;overflow:auto}.modal.show{display:block}.sheet{max-width:700px;margin:25px auto;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 24px 70px rgba(0,0,0,.3)}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px}.kv span:first-child{color:var(--muted);font-weight:800}.section-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);font-weight:950;margin:15px 0 6px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#07111f;color:#fff;padding:10px 14px;border-radius:999px;font-size:12px;font-weight:800;z-index:80;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}
+@media(max-width:650px){.grid,.grid3{grid-template-columns:1fr}.wide{grid-column:auto}.segment{grid-template-columns:repeat(2,1fr)}.issue-grid{grid-template-columns:1fr}.mapbox{height:330px}.kv{grid-template-columns:118px 1fr}.hero h1{font-size:20px}}
+</style></head><body>
+<div class="top"><a href="./index.html">‹ PWD Tools</a><b>Structures</b><span id="net" class="net">Checking</span></div>
+<main>
+<section class="hero"><h1>Digital Structure Register</h1><p>Register permanent dimensions once. Add condition inspections, progress photos and lifecycle history later — fully usable offline.</p></section>
+<div class="tabs"><button class="tab on" data-tab="register">REGISTER</button><button class="tab" data-tab="assets">STRUCTURES</button><button class="tab" data-tab="map">MAP</button><button class="tab" data-tab="history">HISTORY</button></div>
+
+<section id="register" class="panel on">
+<div class="card"><h2>1 · Locate & classify</h2><p class="sub">GPS is saved with the asset. Chainage is the engineering reference.</p>
+<div class="grid">
+<div class="field"><label>Road</label><select id="road"><option>MDR-44</option><option>MDR-46</option><option selected>MDR-47</option><option>Other</option></select></div>
+<div class="field"><label>Structure type</label><select id="type" onchange="renderDimensions()"><option value="pipe">Pipe Culvert</option><option value="box">Box Culvert</option><option value="slab">Slab Culvert</option><option value="causeway">Causeway / Vented Causeway</option><option value="bridge">Bridge</option><option value="wall">Retaining Wall</option><option value="other">Other Structure</option></select></div>
+<div class="field"><label>Chainage</label><input id="chainage" placeholder="e.g. 6+735"></div>
+<div class="field"><label>Side / Crossing</label><select id="side"><option value="Across road">Across road</option><option value="LHS">LHS</option><option value="RHS">RHS</option><option value="Centre">Centre</option></select></div>
+<div class="field"><label>Latitude</label><input id="lat" inputmode="decimal" placeholder="GPS"></div>
+<div class="field"><label>Longitude</label><input id="lon" inputmode="decimal" placeholder="GPS"></div>
+</div><div class="actions" style="margin-top:9px"><button class="btn" onclick="captureGPS()">⌖ Capture GPS</button></div>
+</div>
+
+<div class="card"><h2>2 · Permanent inventory</h2><p class="sub">These fields are normally entered once and reused on future inspections.</p>
+<div class="grid">
+<div class="field"><label>Lifecycle status</label><select id="lifecycle" onchange="toggleConstruction()"><option>Existing</option><option>Under Construction</option><option>Under Repair / Rehabilitation</option><option>Reconstructed</option><option>Widened</option><option>Abandoned / Removed</option></select></div>
+<div class="field"><label>Year of construction</label><input id="year" inputmode="numeric" placeholder="Known / approx. / blank"></div>
+<div class="field"><label>Material</label><select id="material"><option>RCC</option><option>PCC</option><option>Stone Masonry</option><option>Brick Masonry</option><option>Steel</option><option>Composite</option><option>Other / Unknown</option></select></div>
+<div class="field"><label>Crossing / local name</label><input id="crossing" placeholder="River, nallah, local bridge name"></div>
+</div>
+<div id="constructionFields" hidden class="grid" style="margin-top:10px">
+<div class="field"><label>Construction stage</label><select id="stage"><option>Foundation</option><option>Substructure</option><option>Superstructure</option><option>Deck / Slab</option><option>Approaches</option><option>Protection Works</option><option>Finishing</option><option>Substantially Complete</option></select></div>
+<div class="field"><label>Progress %</label><input id="progress" type="number" min="0" max="100" step="1" placeholder="Optional"></div>
+</div>
+<div id="dimensions" style="margin-top:10px"></div>
+<div class="field" style="margin-top:10px"><label>Inventory note</label><textarea id="note" placeholder="Only permanent / identifying information. Condition goes in Inspection."></textarea></div>
+</div>
+
+<div class="card"><h2>3 · Initial photographs</h2><p class="sub">Photos stay attached to this structure and remain available offline on this device.</p>
+<div class="field"><label>Structure photos</label><input id="photos" type="file" accept="image/*" capture="environment" multiple></div><div id="photoPreview" class="photo-strip"></div>
+</div>
+<div class="actions"><button class="btn primary" onclick="saveStructure()">✓ Save Structure</button><button class="btn" onclick="resetForm()">Clear</button></div>
+</section>
+
+<section id="assets" class="panel">
+<div class="card"><h2>Structure register</h2>
+<div class="grid"><div class="field"><label>Filter road</label><select id="filterRoad" onchange="renderAssets()"><option>All</option><option>MDR-44</option><option>MDR-46</option><option>MDR-47</option></select></div><div class="field"><label>Search</label><input id="search" oninput="renderAssets()" placeholder="Chainage, ID, type, crossing…"></div></div>
+<div id="assetList"></div></div>
+</section>
+
+<section id="map" class="panel">
+<div class="card"><h2>Offline structure plot</h2><p class="sub">No internet basemap is required. Registered GPS points are plotted locally. A master-road alignment layer can be added next.</p><div class="mapbox"><canvas id="mapCanvas"></canvas></div><div class="maplegend"><span>● Registered structure</span><span>Colour ring = latest condition</span></div></div>
+</section>
+
+<section id="history" class="panel">
+<div class="card"><h2>Recent activity</h2><div id="historyList"></div></div>
+</section>
+</main>
+
+<div id="detailModal" class="modal"><div class="sheet"><div class="actions"><button class="btn" onclick="closeModal()">← Close</button><button id="inspectBtn" class="btn primary">Start Inspection</button><button id="eventBtn" class="btn">Lifecycle Event</button></div><div id="detailBody"></div></div></div>
+
+<div id="inspectModal" class="modal"><div class="sheet">
+<h2 style="margin-top:0">Routine Inspection</h2><p class="sub">Permanent dimensions are not re-entered.</p>
+<div class="segment" id="conditionSeg"><button class="seg" data-c="Good">GOOD</button><button class="seg" data-c="Fair">FAIR</button><button class="seg" data-c="Poor">POOR</button><button class="seg" data-c="Critical">CRITICAL</button></div>
+<div class="section-title">Observed issues · optional</div>
+<div class="issue-grid" id="issues"></div>
+<div class="field" style="margin-top:10px"><label>Inspection remark</label><textarea id="inspNote" placeholder="Condition observation / required action"></textarea></div>
+<div class="field" style="margin-top:10px"><label>Inspection photos</label><input id="inspPhotos" type="file" accept="image/*" capture="environment" multiple></div><div id="inspPreview" class="photo-strip"></div>
+<div class="actions" style="margin-top:12px"><button class="btn success" onclick="saveInspection()">Save Inspection</button><button class="btn" onclick="closeInspect()">Cancel</button></div>
+</div></div>
+
+<div id="eventModal" class="modal"><div class="sheet">
+<h2 style="margin-top:0">Lifecycle Event</h2>
+<div class="grid"><div class="field"><label>Event</label><select id="eventType"><option>Major Repair</option><option>Rehabilitation</option><option>Widening</option><option>Reconstruction Started</option><option>Reconstruction Completed</option><option>Replacement</option><option>Removed / Abandoned</option><option>Other</option></select></div><div class="field"><label>Date</label><input id="eventDate" type="date"></div></div>
+<div class="field" style="margin-top:10px"><label>Event note</label><textarea id="eventNote" placeholder="Work reference / brief description"></textarea></div>
+<div class="actions" style="margin-top:12px"><button class="btn primary" onclick="saveEvent()">Save Event</button><button class="btn" onclick="closeEvent()">Cancel</button></div>
+</div></div>
+
+<div id="toast" class="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+let db,activeId=null,condition='',initialPhotos=[],inspectionPhotos=[];
+const issuesList=['Blockage / Silt','Vegetation','Crack','Settlement','Scour / Erosion','Headwall Damage','Wing Wall Damage','Parapet / Railing','Deck / Wearing Surface','Leakage / Seepage','Approach Damage','Other'];
+const typeName={pipe:'Pipe Culvert',box:'Box Culvert',slab:'Slab Culvert',causeway:'Causeway',bridge:'Bridge',wall:'Retaining Wall',other:'Other Structure'};
+const typeCode={pipe:'PC',box:'BC',slab:'SC',causeway:'CW',bridge:'BR',wall:'RW',other:'ST'};
+const typeIcon={pipe:'◉',box:'▣',slab:'▤',causeway:'≈',bridge:'⌒',wall:'▥',other:'◆'};
+function openDB(){return new Promise((res,rej)=>{let r=indexedDB.open('pwd_structures_v1',1);r.onupgradeneeded=()=>{let d=r.result;if(!d.objectStoreNames.contains('assets'))d.createObjectStore('assets',{keyPath:'id'})};r.onsuccess=()=>{db=r.result;res(db)};r.onerror=()=>rej(r.error)})}
+function allAssets(){return new Promise((res,rej)=>{let r=db.transaction('assets').objectStore('assets').getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}
+function getAsset(id){return new Promise((res,rej)=>{let r=db.transaction('assets').objectStore('assets').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function putAsset(a){return new Promise((res,rej)=>{let r=db.transaction('assets','readwrite').objectStore('assets').put(a);r.onsuccess=()=>res(a);r.onerror=()=>rej(r.error)})}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function net(){let on=navigator.onLine;$('net').textContent=on?'● ONLINE':'● OFFLINE · LOCAL';$('net').className='net '+(on?'on':'off')}
+addEventListener('online',net);addEventListener('offline',net);net();
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+function switchTab(id){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab===id));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('on',x.id===id));if(id==='assets')renderAssets();if(id==='map')drawMap();if(id==='history')renderHistory()}
+function nfield(id,label,unit='',ph=''){return '<div class="field"><label>'+label+(unit?' · '+unit:'')+'</label><input id="'+id+'" type="number" step="any" placeholder="'+ph+'"></div>'}
+function sfield(id,label,opts){return '<div class="field"><label>'+label+'</label><select id="'+id+'">'+opts.map(x=>'<option>'+x+'</option>').join('')+'</select></div>'}
+function renderDimensions(){let t=$('type').value,h='<div class="grid">';
+if(t==='pipe')h+=nfield('d_pipes','No. of pipes','','e.g. 2')+nfield('d_dia','Pipe diameter','mm','e.g. 900')+nfield('d_barrel','Barrel / crossing length','m')+nfield('d_ushw','Upstream headwall length','m')+nfield('d_dshw','Downstream headwall length','m')+sfield('d_wing','Wing walls',['Both sides','Upstream only','Downstream only','None','Not checked']);
+else if(t==='box')h+=nfield('d_cells','No. of cells')+nfield('d_width','Clear opening width','m')+nfield('d_height','Clear opening height','m')+nfield('d_barrel','Barrel length','m')+nfield('d_ushw','Upstream headwall length','m')+nfield('d_dshw','Downstream headwall length','m');
+else if(t==='slab')h+=nfield('d_span','Clear span','m')+nfield('d_width','Roadway / slab width','m')+nfield('d_length','Overall crossing length','m')+nfield('d_ushw','Upstream protection / headwall','m')+nfield('d_dshw','Downstream protection / headwall','m');
+else if(t==='causeway')h+=sfield('d_subtype','Causeway type',['Causeway','Vented Causeway'])+nfield('d_length','Overall length','m')+nfield('d_roadway','Roadway width','m')+nfield('d_vents','No. of vents')+nfield('d_vw','Vent clear width','m')+nfield('d_vh','Vent clear height','m');
+else if(t==='bridge')h+=sfield('d_class','Bridge classification',['Unclassified','Minor Bridge','Major Bridge'])+'<div class="field"><label>Start chainage</label><input id="d_start" placeholder="e.g. 7+420"></div><div class="field"><label>End chainage</label><input id="d_end" placeholder="e.g. 7+485"></div><div class="field"><label>Span arrangement</label><input id="d_spans" placeholder="e.g. 3 × 10 m or 10+15+10"></div>'+nfield('d_nspan','No. of spans')+nfield('d_cw','Carriageway width','m')+nfield('d_deck','Overall deck width','m')+sfield('d_super','Superstructure',['RCC Slab','RCC T-Beam','PSC Girder','Steel','Masonry Arch','Other / Unknown'])+nfield('d_piers','No. of piers')+'<div class="field"><label>Start-side abutment</label><input id="d_a1" value="A1"></div><div class="field"><label>End-side abutment</label><input id="d_a2" value="A2"></div>';
+else if(t==='wall')h+='<div class="field"><label>Start chainage</label><input id="d_start" placeholder="e.g. 8+260"></div><div class="field"><label>End chainage</label><input id="d_end" placeholder="e.g. 8+345"></div>'+nfield('d_length','Length','m')+nfield('d_hmin','Minimum height','m')+nfield('d_hmax','Maximum height','m')+sfield('d_walltype','Wall type',['Random Rubble Masonry','Coursed Rubble Masonry','RCC','Gabion','Other / Unknown'])+sfield('d_weep','Weep holes',['Yes','No','Not checked']);
+else h+='<div class="field wide"><label>Basic dimensions / description</label><input id="d_other" placeholder="Permanent identifying dimensions"></div>';
+$('dimensions').innerHTML=h+'</div>'}
+function toggleConstruction(){let v=$('lifecycle').value;$('constructionFields').hidden=!(v.includes('Construction')||v.includes('Repair'))}
+function captureGPS(){if(!navigator.geolocation){toast('GPS not available');return}toast('Locating…');navigator.geolocation.getCurrentPosition(p=>{$('lat').value=p.coords.latitude.toFixed(6);$('lon').value=p.coords.longitude.toFixed(6);$('lat').dataset.acc=Math.round(p.coords.accuracy||0);toast('GPS captured · ±'+Math.round(p.coords.accuracy||0)+' m')},e=>toast('GPS: '+e.message),{enableHighAccuracy:true,timeout:15000,maximumAge:2000})}
+async function filesToPhotos(files){let out=[];for(const f of [...files].slice(0,8)){out.push(await compressPhoto(f))}return out}
+function compressPhoto(f){return new Promise((res,rej)=>{let r=new FileReader;r.onload=()=>{let i=new Image;i.onload=()=>{let max=1600,scale=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*scale);c.height=Math.round(i.height*scale);c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.80))};i.onerror=rej;i.src=r.result};r.onerror=rej;r.readAsDataURL(f)})}
+$('photos').addEventListener('change',async e=>{initialPhotos=await filesToPhotos(e.target.files);preview(initialPhotos,'photoPreview')});
+$('inspPhotos').addEventListener('change',async e=>{inspectionPhotos=await filesToPhotos(e.target.files);preview(inspectionPhotos,'inspPreview')});
+function preview(a,id){$(id).innerHTML=a.map(x=>'<img src="'+x+'">').join('')}
+function valuesByPrefix(prefix){let o={};document.querySelectorAll('#dimensions [id^="'+prefix+'"]').forEach(x=>o[x.id.replace(prefix,'')]=x.value);return o}
+function normCh(v){let m=String(v||'').trim().match(/^(\d+)\s*[+\/]\s*(\d+(?:\.\d+)?)$/);if(!m)return String(v||'').trim();return Number(m[1])+'+'+String(Math.round(Number(m[2]))).padStart(3,'0')}
+function idFor(a){let ch=normCh(a.chainage).replace('+','').replace(/\D/g,'')||String(Date.now()).slice(-6);return a.road.replace(/[^A-Z0-9]/gi,'')+'-'+typeCode[a.type]+'-'+ch}
+async function saveStructure(){let a={road:$('road').value,type:$('type').value,chainage:normCh($('chainage').value),side:$('side').value,lat:Number($('lat').value)||null,lon:Number($('lon').value)||null,gpsAccuracy:Number($('lat').dataset.acc)||null,lifecycle:$('lifecycle').value,year:$('year').value.trim(),material:$('material').value,crossing:$('crossing').value.trim(),stage:$('stage')?.value||'',progress:$('progress')?.value||'',dimensions:valuesByPrefix('d_'),note:$('note').value.trim(),photos:initialPhotos.slice(),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),inspections:[],events:[]};a.id=idFor(a);if(!a.chainage){toast('Enter chainage');return}let existing=await getAsset(a.id);if(existing&&!confirm('Structure '+a.id+' already exists. Replace its inventory? Existing inspections will be kept.'))return;if(existing){a.inspections=existing.inspections||[];a.events=existing.events||[];if(!a.photos.length)a.photos=existing.photos||[];a.createdAt=existing.createdAt}await putAsset(a);toast('Saved · '+a.id);resetForm();switchTab('assets')}
+function resetForm(){$('chainage').value='';$('crossing').value='';$('year').value='';$('note').value='';$('lat').value='';$('lon').value='';$('lat').dataset.acc='';$('photos').value='';initialPhotos=[];preview([],'photoPreview');renderDimensions()}
+function statusFor(a){let i=(a.inspections||[]).at(-1);if(a.lifecycle==='Under Construction')return['construction','Under Construction'];return i?[i.condition.toLowerCase(),i.condition]:['unknown','Not inspected']}
+function dimSummary(a){let d=a.dimensions||{};if(a.type==='pipe')return [d.pipes&&d.pipes+' pipe'+(d.pipes==='1'?'':'s'),d.dia&&'Ø'+d.dia+' mm'].filter(Boolean).join(' · ');if(a.type==='box')return [d.cells&&d.cells+' cell',d.width&&d.height&&d.width+' × '+d.height+' m'].filter(Boolean).join(' · ');if(a.type==='bridge')return d.spans||((d.nspan||'')+' spans');if(a.type==='wall')return d.length?d.length+' m long':'';if(a.type==='causeway')return d.length?d.length+' m':'';return ''}
+async function renderAssets(){let a=await allAssets(),road=$('filterRoad')?.value||'All',q=($('search')?.value||'').toLowerCase().trim();a=a.filter(x=>(road==='All'||x.road===road)&&(!q||[x.id,x.road,x.chainage,typeName[x.type],x.crossing].join(' ').toLowerCase().includes(q))).sort((x,y)=>x.road.localeCompare(y.road)||String(x.chainage).localeCompare(String(y.chainage)));$('assetList').innerHTML=a.length?a.map(x=>{let s=statusFor(x);return '<div class="asset"><div class="asset-top"><div class="asset-icon">'+typeIcon[x.type]+'</div><div class="asset-main"><div class="asset-title">'+esc(typeName[x.type])+' · Ch '+esc(x.chainage)+'</div><div class="asset-meta">'+esc(x.road)+' · '+esc(x.id)+(x.crossing?' · '+esc(x.crossing):'')+'</div><div class="summary">'+(dimSummary(x)?'<span class="pill">'+esc(dimSummary(x))+'</span>':'')+'<span class="status '+s[0]+'"><i class="dot"></i>'+esc(s[1])+'</span><span class="pill">'+esc(x.lifecycle)+'</span></div></div></div>'+(x.photos?.length?'<div class="photo-strip">'+x.photos.slice(0,4).map(p=>'<img src="'+p+'">').join('')+'</div>':'')+'<div class="actions" style="margin-top:10px"><button class="btn" onclick="openDetail(\''+x.id+'\')">View</button><button class="btn primary" onclick="openInspect(\''+x.id+'\')">Inspect</button></div></div>'}).join(''):'<div class="empty"><b>No structures registered yet</b>Register the first CD work, bridge, causeway or retaining wall.</div>'}
+function kv(k,v){return v?'<div class="kv"><span>'+esc(k)+'</span><b>'+esc(v)+'</b></div>':''}
+async function openDetail(id){activeId=id;let a=await getAsset(id),d=a.dimensions||{},s=statusFor(a);$('detailBody').innerHTML='<h2>'+typeIcon[a.type]+' '+esc(typeName[a.type])+'</h2><div class="summary"><span class="pill">'+esc(a.id)+'</span><span class="status '+s[0]+'"><i class="dot"></i>'+esc(s[1])+'</span></div><div class="section-title">Identity</div>'+kv('Road / Chainage',a.road+' · '+a.chainage)+kv('Side',a.side)+kv('Crossing / Name',a.crossing)+kv('Lifecycle',a.lifecycle)+kv('Year',a.year)+kv('Material',a.material)+kv('GPS',a.lat&&a.lon?a.lat.toFixed(6)+', '+a.lon.toFixed(6)+(a.gpsAccuracy?' · ±'+a.gpsAccuracy+' m':''):'')+'<div class="section-title">Permanent inventory</div>'+Object.entries(d).filter(x=>x[1]).map(([k,v])=>kv(k.replaceAll('_',' ').toUpperCase(),v)).join('')+(a.note?'<div class="section-title">Inventory note</div><p>'+esc(a.note)+'</p>':'')+(a.photos?.length?'<div class="section-title">Initial photos</div><div class="photo-strip">'+a.photos.map(p=>'<img src="'+p+'">').join('')+'</div>':'')+'<div class="section-title">Inspection history</div>'+((a.inspections||[]).length?(a.inspections||[]).slice().reverse().map(i=>'<div class="asset"><b>'+esc(i.condition)+'</b> · '+new Date(i.date).toLocaleString()+'<div class="asset-meta">'+esc((i.issues||[]).join(', ')||'No issue tags')+'</div>'+(i.note?'<p>'+esc(i.note)+'</p>':'')+(i.photos?.length?'<div class="photo-strip">'+i.photos.map(p=>'<img src="'+p+'">').join('')+'</div>':'')+'</div>').join(''):'<div class="sub">No inspections yet.</div>')+'<div class="section-title">Lifecycle history</div>'+((a.events||[]).length?(a.events||[]).slice().reverse().map(e=>'<div class="asset"><b>'+esc(e.type)+'</b> · '+esc(e.date)+'<div class="asset-meta">'+esc(e.note||'')+'</div></div>').join(''):'<div class="sub">No lifecycle events yet.</div>');$('inspectBtn').onclick=()=>{closeModal();openInspect(id)};$('eventBtn').onclick=()=>{closeModal();openEvent(id)};$('detailModal').classList.add('show')}
+function closeModal(){$('detailModal').classList.remove('show')}
+function openInspect(id){activeId=id;condition='';inspectionPhotos=[];$('inspNote').value='';$('inspPhotos').value='';preview([],'inspPreview');document.querySelectorAll('#conditionSeg .seg').forEach(x=>x.classList.remove('on'));$('inspectModal').classList.add('show')}
+function closeInspect(){$('inspectModal').classList.remove('show')}
+document.querySelectorAll('#conditionSeg .seg').forEach(x=>x.onclick=()=>{condition=x.dataset.c;document.querySelectorAll('#conditionSeg .seg').forEach(y=>y.classList.toggle('on',y===x))});
+$('issues').innerHTML=issuesList.map((x,i)=>'<label class="check"><input type="checkbox" value="'+esc(x)+'"> '+esc(x)+'</label>').join('');
+async function saveInspection(){if(!condition){toast('Select condition');return}let a=await getAsset(activeId),issues=[...document.querySelectorAll('#issues input:checked')].map(x=>x.value),i={date:new Date().toISOString(),condition,issues,note:$('inspNote').value.trim(),photos:inspectionPhotos.slice()};a.inspections=a.inspections||[];a.inspections.push(i);a.updatedAt=i.date;await putAsset(a);closeInspect();toast('Inspection saved · '+condition);renderAssets()}
+function openEvent(id){activeId=id;$('eventDate').value=new Date().toISOString().slice(0,10);$('eventNote').value='';$('eventModal').classList.add('show')}
+function closeEvent(){$('eventModal').classList.remove('show')}
+async function saveEvent(){let a=await getAsset(activeId),e={type:$('eventType').value,date:$('eventDate').value,note:$('eventNote').value.trim(),savedAt:new Date().toISOString()};a.events=a.events||[];a.events.push(e);if(e.type==='Reconstruction Started')a.lifecycle='Under Construction';if(e.type==='Reconstruction Completed')a.lifecycle='Reconstructed';if(e.type==='Removed / Abandoned')a.lifecycle='Abandoned / Removed';a.updatedAt=e.savedAt;await putAsset(a);closeEvent();toast('Lifecycle event saved')}
+async function renderHistory(){let a=await allAssets(),rows=[];a.forEach(x=>{rows.push({t:x.createdAt,title:'Registered · '+x.id,sub:typeName[x.type]+' · '+x.road+' Ch '+x.chainage});(x.inspections||[]).forEach(i=>rows.push({t:i.date,title:'Inspection · '+x.id+' · '+i.condition,sub:(i.issues||[]).join(', ')}));(x.events||[]).forEach(e=>rows.push({t:e.savedAt||e.date,title:e.type+' · '+x.id,sub:e.note||''}))});rows.sort((x,y)=>String(y.t).localeCompare(String(x.t)));$('historyList').innerHTML=rows.length?rows.slice(0,80).map(r=>'<div class="asset"><b>'+esc(r.title)+'</b><div class="asset-meta">'+new Date(r.t).toLocaleString()+(r.sub?' · '+esc(r.sub):'')+'</div></div>').join(''):'<div class="empty">No activity yet.</div>'}
+async function drawMap(){let a=(await allAssets()).filter(x=>Number.isFinite(x.lat)&&Number.isFinite(x.lon)),c=$('mapCanvas'),box=c.getBoundingClientRect(),dpr=devicePixelRatio||1;c.width=Math.max(1,Math.round(box.width*dpr));c.height=Math.max(1,Math.round(box.height*dpr));let x=c.getContext('2d');x.scale(dpr,dpr);let W=box.width,H=box.height;x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--soft');x.fillRect(0,0,W,H);if(!a.length){x.fillStyle='#718096';x.textAlign='center';x.font='700 14px system-ui';x.fillText('Register GPS structures to see them here',W/2,H/2);return}let lats=a.map(z=>z.lat),lons=a.map(z=>z.lon),minLat=Math.min(...lats),maxLat=Math.max(...lats),minLon=Math.min(...lons),maxLon=Math.max(...lons),pad=.0004;minLat-=pad;maxLat+=pad;minLon-=pad;maxLon+=pad;let px=lon=>24+(lon-minLon)/(maxLon-minLon||1)*(W-48),py=lat=>H-24-(lat-minLat)/(maxLat-minLat||1)*(H-48);x.strokeStyle='#c9d5e6';x.lineWidth=1;for(let i=1;i<5;i++){x.beginPath();x.moveTo(0,H*i/5);x.lineTo(W,H*i/5);x.stroke();x.beginPath();x.moveTo(W*i/5,0);x.lineTo(W*i/5,H);x.stroke()}a.forEach(z=>{let s=statusFor(z),col={good:'#0d9b60',fair:'#c47a00',poor:'#e56f20',critical:'#d94141',construction:'#7155d9',unknown:'#8a98aa'}[s[0]]||'#8a98aa',X=px(z.lon),Y=py(z.lat);x.fillStyle='#fff';x.strokeStyle=col;x.lineWidth=4;x.beginPath();x.arc(X,Y,8,0,Math.PI*2);x.fill();x.stroke();x.fillStyle='#10213b';x.font='900 10px system-ui';x.fillText(z.chainage,X+11,Y+3)})}
+function toast(s){let t=$('toast');t.textContent=s;t.classList.add('show');clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),2200)}
+(async()=>{await openDB();renderDimensions();toggleConstruction();renderAssets();renderHistory();})();
+</script><script src="./app-shell.js"></script></body></html>

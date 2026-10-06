@@ -1,0 +1,72 @@
+name: Build offline Android test APK
+
+on:
+  push:
+    branches: [android-offline-structures-test-v2-latest]
+    paths-ignore:
+      - 'builds/**'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Android platform
+        run: |
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)"
+          test -x "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Package web app into APK assets
+        run: |
+          rm -rf android-apk/app/src/main/assets/www
+          mkdir -p android-apk/app/src/main/assets/www
+          rsync -a ./ android-apk/app/src/main/assets/www/             --exclude '.git'             --exclude '.github'             --exclude 'android-apk'             --exclude 'builds'             --exclude '*.md'
+
+      - name: Build debug APK
+        working-directory: android-apk
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+        run: gradle --no-daemon :app:assembleDebug
+
+      - name: Stage installable APK
+        run: |
+          mkdir -p builds
+          cp android-apk/app/build/outputs/apk/debug/app-debug.apk builds/PWD-Field-Engineer-Assistant-offline-test-v2.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PWD-Field-Engineer-Assistant-offline-test-v2
+          path: builds/PWD-Field-Engineer-Assistant-offline-test-v2.apk
+
+      - name: Publish APK on test branch
+        run: |
+          git config user.name "pwd-apk-builder"
+          git config user.email "actions@users.noreply.github.com"
+          git add builds/PWD-Field-Engineer-Assistant-offline-test-v2.apk
+          git diff --cached --quiet || git commit -m "Build offline Android test APK"
+          git push
