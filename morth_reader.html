@@ -2,7 +2,7 @@
 :root{--bg:#f5f8fc;--card:#fff;--line:#dfe7f1;--txt:#0b1830;--muted:#66758d;--blue:#0b6cff;--soft:#edf4ff;--green:#0d9b60;--amber:#c77a00;--red:#d94343;--shadow:0 12px 34px rgba(24,53,91,.08)}
 html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff;--muted:#aebbd0;--soft:#102744;--shadow:0 16px 40px rgba(0,0,0,.24)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.top{position:sticky;top:0;z-index:25;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 12px;display:flex;align-items:center;gap:10px}.top a{color:var(--blue);text-decoration:none;font-weight:850;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.title{flex:1;font-weight:900}.sub{display:block;font-size:10px;color:var(--muted)}.wrap{max-width:1160px;margin:auto;padding:12px 12px 100px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 11%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:12px}.hero h1{font-size:25px;margin:0 0 6px;letter-spacing:-.7px}.hero p{margin:0;color:var(--muted);font-size:12px;max-width:820px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;position:sticky;top:59px;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 12px;min-height:46px}.search input{width:100%;border:0;outline:0;background:transparent;color:var(--txt);font:inherit}.filter{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:14px;padding:0 12px;font-weight:800}.reader{display:grid;grid-template-columns:340px 1fr;gap:12px}.tree{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:560px}.tree-head{padding:11px 12px;background:var(--soft);font-weight:900}.tree-list{max-height:650px;overflow:auto}.node{display:block;width:100%;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--txt);padding:11px 12px;text-align:left}.node b{display:block;font-size:12px}.node small{display:block;color:var(--muted);margin-top:3px}.node.active{background:color-mix(in srgb,var(--blue) 8%,var(--card));border-left:4px solid var(--blue)}.content{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;min-height:560px}.content h2{margin:0 0 4px;font-size:21px}.meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}.badge{display:inline-block;padding:4px 7px;border-radius:999px;border:1px solid var(--line);font-size:10px;font-weight:900}.ok{color:var(--green);background:color-mix(in srgb,var(--green) 8%,var(--card))}.hold{color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--card))}.tabs{display:flex;gap:7px;overflow:auto;margin:10px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:900;white-space:nowrap}.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}.pane{display:none}.pane.on{display:block}.section{border:1px solid var(--line);border-radius:16px;margin-top:10px;overflow:hidden}.section h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;background:var(--soft);padding:9px 11px;margin:0}.section .body{padding:12px}.tableWrap{overflow:auto}.tableWrap table{width:100%;border-collapse:collapse;min-width:620px}.tableWrap th,.tableWrap td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.tableWrap th{background:var(--soft)}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--blue);padding:10px 11px;border-radius:12px;margin-top:10px}.warn{border-left-color:var(--amber);color:var(--amber)}.btn{border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:12px;padding:10px 12px;font-weight:850}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:18px}@media(max-width:900px){.reader{grid-template-columns:1fr}.tree{min-height:0}.tree-list{max-height:270px}}@media(max-width:640px){.toolbar{grid-template-columns:1fr}.hero h1{font-size:22px}}
-</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option><option value="1900">Section 1900</option><option value="2000">Section 2000</option><option value="2100">Section 2100</option><option value="2200">Section 2200</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1818 and Structural Steel 1901–1909 and Bearings 2001–2010 and Open Foundations 2101–2108 and Substructure 2201–2210 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
+</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title">MoRTH<span class="sub">Specifications for Road & Bridge Works · 5th Revision 2013</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>MoRTH Specifications</h1><p>Clause hierarchy, JE Quick View, tables and source traceability are separate layers. Source text remains in the private publication; the public reader exposes only verified metadata and concise source-derived engineering facts.</p></section><div class="toolbar"><label class="search">🔎<input id="search" placeholder="Search section, clause, table or keyword"></label><select id="status" class="filter"><option value="all">All status</option><option value="partial">Source checked · partial</option><option value="index">Index verified</option><option value="pending">Verification pending</option></select><select id="sectionFilter" class="filter"><option value="all">All sections</option><option value="400">Section 400</option><option value="500">Section 500</option><option value="600">Section 600</option><option value="700">Section 700</option><option value="800">Section 800</option><option value="900">Section 900</option><option value="1000">Section 1000</option><option value="1100">Section 1100</option><option value="1200">Section 1200</option><option value="1300">Section 1300</option><option value="1400">Section 1400</option><option value="1500">Section 1500</option><option value="1600">Section 1600</option><option value="1700">Section 1700</option><option value="1800">Section 1800</option><option value="1900">Section 1900</option><option value="2000">Section 2000</option><option value="2100">Section 2100</option><option value="2200">Section 2200</option><option value="2300">Section 2300</option></select></div><section class="reader"><aside class="tree"><div class="tree-head">Sections / Clauses</div><div id="treeList" class="tree-list"></div></aside><article class="content" id="content"></article></section><div class="note warn"><b>Release boundary:</b> only specifically checked clause facts are marked source-checked. GSB 401, Lime Treated Soil 402, Cement Treated Soil 403, WBM 404, Crushed CC 405, WMM 406, Crusher-Run 407, Shoulders/Median 408, Kerb 409, Footpaths 410, Bituminous General 501, Prime 502, Tack 503, BM 504, DBM 505, Sand Asphalt 506, BC 507, Premix 508, Surface Dressing 509, Open Premix 510, Seal Coat 511, Slurry Seal 512, Fog Spray 513, Micro-Surfacing 514, SMA 515, Mastic Asphalt 516, Clause 517, Cold Mix 518, Recycling 519, Aggregate Supply 520, DLC 601, PQC 602, Geosynthetics 701–708, Traffic Signs 801, Overhead Signs 802 and Road Markings 803, Road Studs/Solar Studs 804, Roadside Appurtenances 805–810 and Crash Barriers 811, Road Traffic Signals 812, Construction-Zone Safety 813 and Traffic Impact Attenuators 814, Semi-Automatic Toll Collection 815 and ATMS 816, QC General 901, Alignment/Regularity 902 and Construction QC 903 and Materials for Structures 1001–1015 and Pile Foundations 1101–1119 and Well Foundations 1201–1216 and Brick Masonry 1301–1316 and Stone/Concrete Block Masonry 1401–1414 and Formwork 1501–1513 and Steel Reinforcement 1601–1609 and Structural Concrete 1701–1719 and Prestressing 1801–1818 and Structural Steel 1901–1909 and Bearings 2001–2010 and Open Foundations 2101–2108 and Substructure 2201–2210 and Concrete Superstructure 2301–2305 content is source-checked; full clause text and the rest of the book stay pending until individually verified against the source PDF.</div><div class="footer">PWD Tools · MoRTH source-control reader · private source retained</div></main><script>
 const $=id=>document.getElementById(id);
 const section400=[
 ['401','Granular Sub-Base',109],['402','Lime Treated Soil for Improved Sub-Grade/Sub-Base',112],['403','Cement Treated Soil and Cement-Flyash Treated Sub-Base/Base',116],['404','Water Bound Macadam Sub-Base/Base',121],['405','Crushed Cement Concrete Sub-Base',129],['406','Wet Mix Macadam Sub-Base/Base',131],['407','Crusher-Run Macadam Base',136],['408','Shoulders, Islands and Median',139],['409','Cement Concrete Kerb and Kerb with Channel',142],['410','Footpaths and Separators',143]
@@ -27,6 +27,7 @@ const section1900=[['1901','Description',585],['1902','General',585],['1903','Ma
 const section2000=[['2001','Description',623],['2002','General',623],['2003','Steel Bearings',624],['2004','Special Bearings',631],['2005','Elastomeric Bearings',633],['2006','Pot Bearings',648],['2007','Inspection and Testing',659],['2008','Test and Standards of Acceptance',659],['2009','Measurements for Payment',659],['2010','Rate',660]];
 const section2100=[['2101','Description',663],['2102','Materials',663],['2103','General',663],['2104','Workmanship',663],['2105','Tests and Standards of Acceptance',666],['2106','Tolerances',666],['2107','Measurement for Payment',666],['2108','Rate',667]];
 const section2200=[['2201','Description',669],['2202','Materials',669],['2203','General',669],['2204','Piers and Abutments',669],['2205','Pier Cap and Abutment Cap',671],['2206','Dirt Wall, Return Wall and Wing Wall',671],['2207','Tests and Standards of Acceptance',671],['2208','Tolerances in Concrete Elements',671],['2209','Measurements for Payment',672],['2210','Rate',672]];
+const section2300=[['2301','Description',675],['2302','Materials',675],['2303','General',675],['2304','Reinforced Concrete Construction',675],['2305','Prestressed Concrete Construction',676],['2306','Cast In-Place Voided Slabs',682],['2307','Tolerances',682],['2308','Tests and Standards of Acceptance',683],['2309','Measurement for Payment',683],['2310','Rate',684]];
 const RECORDS=[
 ...section400.map((x,i)=>({id:i+1,section:'400',clause:x[0],title:x[1],status:(x[0]==='401'||x[0]==='402'||x[0]==='403'||x[0]==='404'||x[0]==='405'||x[0]==='406'||x[0]==='407'||x[0]==='408'||x[0]==='409'||x[0]==='410')?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section500.map((x,i)=>({id:100+i,section:'500',clause:x[0],title:x[1],status:(x[0]==='501'||x[0]==='502'||x[0]==='503'||x[0]==='504'||x[0]==='505'||x[0]==='506'||x[0]==='507'||x[0]==='508'||x[0]==='509'||x[0]==='510'||x[0]==='511'||x[0]==='512'||x[0]==='513'||x[0]==='514'||x[0]==='515'||x[0]==='516'||x[0]==='517'||x[0]==='518'||x[0]==='519'||x[0]==='520')?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
@@ -46,7 +47,8 @@ const RECORDS=[
 ...section1900.map((x,i)=>({id:1500+i,section:'1900',clause:x[0],title:x[1],status:(['1901','1902','1903','1904','1905','1906','1907','1908','1909'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section2000.map((x,i)=>({id:1600+i,section:'2000',clause:x[0],title:x[1],status:(['2001','2002','2003','2004','2005','2006','2007','2008','2009','2010'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
 ...section2100.map((x,i)=>({id:1700+i,section:'2100',clause:x[0],title:x[1],status:(['2101','2102','2103','2104','2105','2106','2107','2108'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
-...section2200.map((x,i)=>({id:1800+i,section:'2200',clause:x[0],title:x[1],status:(['2201','2202','2203','2204','2205','2206','2207','2208','2209','2210'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
+...section2200.map((x,i)=>({id:1800+i,section:'2200',clause:x[0],title:x[1],status:(['2201','2202','2203','2204','2205','2206','2207','2208','2209','2210'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'})),
+...section2300.map((x,i)=>({id:1900+i,section:'2300',clause:x[0],title:x[1],status:(['2301','2302','2303','2304','2305'].includes(x[0]))?'partial':'index',page:'Printed p.'+x[2],read:'Source index checked. Full clause text is not republished in the public shell.',quick:[],tables:[],calc:'No calculator enabled until the relevant formula/table logic is source-verified.'}))
 ];
 
 const brick1301=RECORDS.find(r=>r.clause==='1301');
@@ -2305,6 +2307,127 @@ sub2210.quick=[
 '2210 — Rates include all incidental items required for furnishing/providing the substructure as specified and shown on drawings.'
 ];
 sub2210.tables=[];sub2210.calc='No rate calculator is enabled. Contract item wording governs.';
+
+const cs2301=RECORDS.find(r=>r.clause==='2301');
+cs2301.page='Printed p.675 · PDF page mapping QA pending';
+cs2301.read='Source checked for concrete-superstructure scope.';
+cs2301.quick=[
+'2301 — Work covers furnishing and providing concrete superstructure in accordance with drawings, these Specifications or Engineer direction.'
+];
+cs2301.tables=[];cs2301.calc='No calculator is applicable.';
+
+const cs2302=RECORDS.find(r=>r.clause==='2302');
+cs2302.page='Printed p.675 · PDF page mapping QA pending';
+cs2302.read='Source checked for governing material section.';
+cs2302.quick=[
+'2302 — Materials for concrete superstructure conform to Section 1000.'
+];
+cs2302.tables=[];cs2302.calc='No calculator is applicable.';
+
+const cs2303=RECORDS.find(r=>r.clause==='2303');
+cs2303.page='Printed p.675 · PDF page mapping QA pending';
+cs2303.read='Source checked for method statement, setting-out and governing work-section references.';
+cs2303.quick=[
+'2303.1 — Contractor submits the construction method statement for Engineer approval well before superstructure work starts.',
+'2303.1 — Method statement covers material sources; formwork design/erection/removal; concrete production/transport/laying/curing; prestressing system where applicable; execution/supervision personnel; tests and sampling; equipment; QMS including Quality Manual; safety; and other relevant information.',
+'2303.2 — Dimensions, lines and levels are set out and checked against permanent reference lines and permanent bench mark so the finished superstructure follows drawings and Engineer approval.',
+'2303.3 — Formwork, reinforcement, structural concrete and prestressing conform to Sections 1500, 1600, 1700 and 1800 respectively.'
+];
+cs2303.tables=[{name:'Clause 2303 · Governing Work Sections',status:'checked',headers:['Work','Governing section'],rows:[
+['Formwork','Section 1500'],
+['Steel reinforcement','Section 1600'],
+['Structural concrete','Section 1700'],
+['Prestressing','Section 1800']
+]}];
+cs2303.calc='No calculator is applicable. Method, drawings and Engineer approval govern.';
+
+const cs2304=RECORDS.find(r=>r.clause==='2304');
+cs2304.page='Printed pp.675–676 · PDF page mapping QA pending';
+cs2304.read='Source checked for reinforced-concrete solid-slab and T-beam/slab construction controls.';
+cs2304.quick=[
+'2304.1 — Solid slab is cast in one go; for continuous slabs, the first full span plus the next adjacent span up to the point of contraflexure is cast in one go, with the sequence repeated for additional spans.',
+'2304.1 — No other construction joint is allowed except with express Engineer permission; longitudinal joints in very wide slabs may be permitted with Engineer approval.',
+'2304.1 — The source explicitly prints Clause 1710 as the construction-joint cross-reference. This printed reference is preserved and not silently changed.',
+'2304.1 — Near expansion joints, slab portions are cast with reinforcement and joint embedments; a later-stage pour is allowed only if permitted by the Engineer.',
+'2304.1 — Where a wearing coat follows, slab surface is left rough but true to drawing lines/levels before hardening; after surface hardening it is covered with clean moist sand and cured under Section 1700.',
+'2304.1 — Where bearings are provided, they are placed to drawings before slab casting.',
+'2304.2 — RCC T-beam/slab construction joints follow drawings or Engineer direction. No construction joint is permitted between the bottom bulb and web.',
+'2304.2 — If the drawing does not show a joint, a joint may be provided at the web/fillet junction below the deck slab only with Engineer approval.',
+'2304.2 — Deck-slab portions near expansion joints may be cast later only with Engineer permission; finished surface is rough but true to drawing lines/levels and bearing setting follows drawings.'
+];
+cs2304.tables=[{name:'Clause 2304 · RCC Superstructure Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Solid slab casting','Entire slab in one go'],
+['Continuous slab sequence','First full span + adjacent span to point of contraflexure in one go'],
+['Other solid-slab construction joint','Only with express Engineer permission'],
+['Very wide slab longitudinal joint','May be permitted with Engineer approval'],
+['Printed construction-joint reference','Clause 1710 — preserved as printed'],
+['T-beam joint between bottom bulb and web','Not permitted'],
+['Undrawn T-beam joint location','Web/fillet junction below deck slab, only with Engineer approval'],
+['Later pour near expansion joint','Only with Engineer permission'],
+['Bearing placement for solid slab','Before slab casting, where provided']
+]}];
+cs2304.calc='No calculator is enabled. Casting sequence, joint location and bearing setting remain drawing/Engineer controlled where stated.';
+
+const cs2305=RECORDS.find(r=>r.clause==='2305');
+cs2305.page='Printed pp.676–682 · PDF page mapping QA pending';
+cs2305.read='Source checked for PSC girder, box girder, segmental construction, epoxy jointing, ducts, couplers and precast pre-tensioned girder controls.';
+cs2305.quick=[
+'2305.1 — PSC girders may be precast or cast in-situ and post-tensioned or pre-tensioned as drawings/Engineer direct. Precast method statement includes casting yard plus shifting/launching methodology and equipment.',
+'2305.1 — PSC girder top flange, web and bottom flange are concreted in a single operation without a construction joint.',
+'2305.2 — Simply supported box girders use minimum construction joints approved by Engineer; continuous-box sequence and joint locations strictly follow drawings. The box section has only one construction joint in the web below the fillet between deck slab and web.',
+'2305.3 — Segmental in-situ work using form travellers maintains untensioned reinforcement continuity with full lap length; construction equipment/live load shall not exceed design values; pre-cambering is controlled to achieve the final permanent-load profile.',
+'2305.3.1 — Segmental concrete grade, minimum cement, maximum water-cement ratio and durability requirements are governed by Tables 1700-2 and 1700-3.',
+'2305.3.2 — Precast segment forms for sides, bottom, inside and headers are steel; compaction may use needle vibrators or form vibrators with needle vibrators.',
+'2305.3.2 — Long Line or Short Bench precasting may be used. After the first segment, succeeding segments are match-cast and uniquely identified; approved bond breaker is used where required.',
+'2305.3.2 — Segments are not moved until stipulated strength is met. Concrete compressive strength at form removal is at least 20 MPa; lifting/assembly also requires adequate handling strength.',
+'2305.3.2 — Before erection/assembly, a full-scale mock-up of lifting/holding equipment is required to demonstrate adequacy and efficacy.',
+'2305.3.3 — Match-cast segment length tolerance is ±5 mm; overall span between bearings ±10 mm; listed web/flange/depth/diaphragm dimensions ±5 mm; edge/soffit grade ±1 mm/m; tendon-hole location ±3 mm; shear-key position ±5 mm.',
+'2305.3.5 — For epoxy joints, mating faces are cleaned of bond breaker; about 1 mm epoxy is applied to each mating face; epoxy should not have crossed 70% of shelf life.',
+'2305.3.5 — Temporary axial compression is at least 0.3 MPa for at least 24 h. No epoxy batch is used after more than 20 min from combining components.',
+'2305.3.5 — The source extraction prints “application of temporary axial surface” in the separate 60-minute timing sentence. That wording is preserved as a source-control issue; no substitute term is inferred.',
+'2305.3.5.2 — Epoxy selection bands are 5–20°C fast, 15–30°C medium-fast and 25–40°C slow reacting. Mixer speed should not exceed 400 rpm; mixing time should not exceed 3 min.',
+'2305.3.5.2 — Epoxy is tested to FIP-1978. The source separately prints 24 h compressive-strength values of 60 MPa and 40 MPa in different property lines; both are retained and no single 24 h value is inferred.',
+'2305.3.6 — Each superstructure unit made of precast segments has suitable cast-in-situ pour/stitch locations, at least one, for longitudinal alignment.',
+'2305.3.8 — Dry-jointed segment ducts are necessarily HDPE; epoxy-jointed segments may use metallic or HDPE ducts. Ducts are corrugated and sized/thickened to Clause 1802.2.2.',
+'2305.3.9 — At one section, not more than 50% of prestressing cables are coupled. Couplers are staggered longitudinally by at least one segment length or twice girder overall depth, whichever is more; two immediately adjacent cables are not coupled at one section.',
+'2305.4 — Precast pre-tensioned girder construction requirements follow Section 1800.'
+];
+cs2305.tables=[
+{name:'Clause 2305.3.3 · Precasting Tolerances',status:'checked',headers:['Control','Tolerance'],rows:[
+['Match-cast segment length · non-cumulative','±5 mm'],
+['Overall span length between bearings','±10 mm'],
+['Web/flange dimensions, overall depth, diaphragm thickness','±5 mm'],
+['Grade of edge and soffit','±1 mm/m'],
+['Tendon-hole location','±3 mm'],
+['Shear-key position','±5 mm']
+]},
+{name:'Clause 2305.3.5–2305.3.5.2 · Epoxy Joint Controls',status:'checked',headers:['Control','Source requirement'],rows:[
+['Epoxy on each mating face','About 1 mm'],
+['Shelf life at application','Not crossed 70%'],
+['Temporary axial compression','≥0.3 MPa for ≥24 h'],
+['Batch age after combining components','Do not use if >20 min'],
+['Printed mixing-to-application sentence','≤60 min; extracted wording says “temporary axial surface”'],
+['Mixer speed','≤400 rpm'],
+['Mixing time','≤3 min'],
+['Fast / medium-fast formulation temperature during mixing','≤40°C'],
+['Slow formulation temperature during mixing','≤60°C'],
+['Pot life','20 min at upper temperature limit'],
+['Open time','60 min at upper temperature limit'],
+['Compressive strength property line','60 MPa at 24 h; 75 MPa at 168 h · 50 mm cube · lower temperature limit'],
+['Shear strength','12 MPa · lower temperature limit'],
+['Curing-rate property line','20 MPa at 12 h; 40 MPa at 24 h; 75 MPa at 168 h · 50 mm cube · lower temperature limit']
+],note:'Source-control flag: Clause 2305.3.5.2 prints 60 MPa at 24 h in the compressive-strength line and 40 MPa at 24 h in the curing-rate line. The reader does not reconcile them.'},
+{name:'Clause 2305.3.8–2305.3.9 · Duct / Coupler Controls',status:'checked',headers:['Control','Requirement'],rows:[
+['Dry-jointed segment duct','HDPE required'],
+['Epoxy-jointed segment duct','Metallic or HDPE'],
+['Duct geometry','Corrugated; size/thickness per 1802.2.2'],
+['Cables coupled at one section','≤50%'],
+['Coupler longitudinal stagger','≥ segment length or 2 × girder overall depth, whichever is more'],
+['Immediately adjacent cables coupled at same section','Not permitted']
+]}
+];
+cs2305.calc='No calculator is enabled. The clause contains direct limits but no safe standalone formula that should imply automatic structural acceptance.';
+
 
 
 
