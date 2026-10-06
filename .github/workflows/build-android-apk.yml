@@ -5,6 +5,8 @@ on:
     branches: [android-offline-structures-test-v1]
     paths-ignore:
       - 'builds/**'
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
