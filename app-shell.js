@@ -20,6 +20,11 @@
       nextReaderSection.onload=()=>{
         const latestClauses=document.createElement('script');
         latestClauses.src='./morth-section-2611-2612.js';
+        latestClauses.onload=()=>{
+          const closeSection2600=document.createElement('script');
+          closeSection2600.src='./morth-section-2613-2615.js';
+          document.body.appendChild(closeSection2600);
+        };
         document.body.appendChild(latestClauses);
       };
       document.body.appendChild(nextReaderSection);
