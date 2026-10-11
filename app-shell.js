@@ -21,5 +21,6 @@
     };
     document.body.appendChild(sourceReaderExtension);
   }
+  if(location.pathname.endsWith('/qc.html')) {const qc=document.createElement('script');qc.src='./morth-qc-2610.js';document.body.appendChild(qc);}
   document.getElementById('pwdCalcFab')?.addEventListener('click',openCalc);document.getElementById('pwdGuideFab')?.addEventListener('click',openGuide);window.PWDUI.openCalc=openCalc;window.PWDUI.openGuide=openGuide;document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.sheet-backdrop.open').forEach(x=>x.classList.remove('open'))});
 })();
