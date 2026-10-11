@@ -232,6 +232,117 @@
   ];
   strip.calc="No automatic acceptance or movement/design calculator. Approved movement, anchor design, manufacturer and contractual requirements remain governing; Table 2600-1 source-control issues prevent a combined pass/fail tool.";
 
+
+  // MoRTH 5th Revision (2013), 2607–2608, printed pp.730–734.
+  // Preserve all suspicious printed figures/cross-references as SOURCE-CONTROL.
+  const modular=list.find(r=>r.clause==="2607");
+  modular.status="partial";
+  modular.page="Printed pp.730–732 · PDF page mapping QA pending";
+  modular.read="Source checked against Clause 2607.1–2607.4, cross-referenced 2606.1, 2606.3 and 2605.3(i), and manufacturer-controlled supports and fabrication. The manufacturer/Designer/Engineer governs joint design and selected module count.";
+  modular.quick=[
+    "2607.1 — A modular strip/box seal joint comprises two or more cells of individual capacity 80 mm for total horizontal movements exceeding 80 mm. System accommodates three-direction movement and rotation about three axes as required by design.",
+    "2607.1 — Edge beams, central beams/lamellas and transverse support bars deliver joint loads to deck via anchor system. Edge/central beams follow Clause 2606.1(i).",
+    "2607.1(ii) — Edge beam anchorage follows Clause 2606.1(ii). Joist-box/control covers may have studs and/or loop anchors with anchor plates.",
+    "2607.1(iii) — Sealing elements follow Clause 2606.1(iii); minimum gap for inserting neoprene seal is 25 mm.",
+    "2607.1(iv) — Manufacturer-recommended support and control system must make all joint modules open/close equally through movement cycles; single/multiple support-bar or swivel system with resilient/shock-absorption and elastic/sliding controls.",
+    "2607.1(iv) — During maximum deck contraction and joint opening, maximum surface gap between consecutive central beams is 80 mm.",
+    "2607.2 — Steel for edge/central beams, support bars and components follows listed equivalent DIN/EN/ASTM/CAN-CSA grades. Sealing element is chloroprene rubber (CR) with properties per Table 2600-1; other materials follow manufacturer recommendations.",
+    "2607.3 — Edge/lamella profiles cover full carriageway width; shop fabrication, anchorage assembly and transport follow manufacturer's approved specifications.",
+    "2607.3 — Steel corrosion protection follows Clause 2606.3(iv); all steel insert/anchor surfaces, including embedded/concrete-contact, follow Clause 2605.3(i).",
+    "2607.4 — Manufacturer-prescribed storage/transport arrangements; manufacturer supplies all seals and installation accessories."
+  ];
+  modular.tables=[
+    {name:"2607.1 · Modular Joint Movement / Arrangement",status:"checked",
+      headers:["Field or design parameter","Requirement / boundary"],rows:[
+        ["Number of modules/cells","At least 2"],
+        ["Individual module horizontal movement capacity","80 mm"],
+        ["Intended total horizontal movement","Greater than 80 mm"],
+        ["Movement / rotation","Three directions and rotation about all three axes according to design"],
+        ["Maximum surface gap, consecutive centre beams","80 mm at full opening under maximum deck contraction"],
+        ["Minimum neoprene-seal insertion gap","25 mm"],
+        ["Edge and central beams","As Clause 2606.1(i)"],
+        ["Edge anchorage","As Clause 2606.1(ii)"],
+        ["Sealing elements","As Clause 2606.1(iii)"],
+        ["Control system","Ensure equal opening/closing of all modules; manufacturer specifications govern"]
+      ],
+      note:"80 mm/cell is stated as individual capacity; do not automatically select number of modules from bridge length or presume Engineer design approval."},
+    {name:"2607.2–4 · Materials, Corrosion, Fabrication and Supply",status:"checked",
+      headers:["Category","Controlling requirement"],rows:[
+        ["Structural steel","Source-listed equivalent DIN RST 37-2/37-3/52-3; EN S235JRG2/S355K2G3; ASTM A36/A588; CAN/CSA G40.21 Grade 300W"],
+        ["Seal material","Chloroprene Rubber, Table 2600-1; unresolved Table 2600-1 issues preserved"],
+        ["Other materials","Manufacturer specification"],
+        ["Profiles","Full carriageway width"],
+        ["Fabrication/transport","Manufacturer specifications; assembled joint"],
+        ["Steel section corrosion protection","Clause 2606.3(iv)"],
+        ["Inserts/anchor surfaces","Clause 2605.3(i), including embedded surfaces"],
+        ["Storage and accessories","Manufacturer requirements, with required sealants/accessories supplied"]
+      ],note:"Do not substitute requirements from other expansion-joint systems where Clause 2607 specifies a particular cross-reference."}
+  ];
+  modular.calc="No modular-joint sizing calculator: the number of cells and true movement demand require approved structural design and manufacturer documentation. 80 mm is an individual module capacity, not automatic construction approval.";
+
+  const plug=list.find(r=>r.clause==="2608");
+  plug.status="partial";
+  plug.page="Printed pp.732–734 · PDF page mapping QA pending";
+  plug.read="Source checked against Clause 2608.1–2608.2 and Table 2600-2. Suspicious or internally inconsistent printed gradation columns, aggregate indicators and binder units are SOURCE-CONTROL HOLD issues, not corrected or auto-approved.";
+  plug.quick=[
+    "2608.1 — Asphaltic plug joint comprises polymer-modified bitumen binder, single-size aggregate, metallic closure/bridging plate and heat-resistant foam caulking/backer rod.",
+    "2608.1 — Stated satisfactory ambient service temperature range: −5°C to +50°C.",
+    "2608.2(i) — Proprietary binder needs specified low-temperature flexibility, installation fluidity and high-temperature flow resistance. Source binder softening-point minimum 100°C, flow-resistance maximum 3 mm (70°C/5h).",
+    "2608.2(i) — Printed cone-penetration row reads 'at 25°C, 0.1 mm (BS:2499): 100 mm max'; unit/notation uncertain and is HELD from auto-acceptance.",
+    "2608.2(i) — Source's extension-test text and safe-heating entry require manufacturer and approved specialist interpretation. Do not infer field heating or acceptance procedures from this summary.",
+    "2608.2(ii) — Single-size stone is basalt, granite, gritstone or gabro group. Text specifies nominal 12.5 mm stone for joints up to 75 mm depth and 20 mm above; Table 2600-2 instead labels gradation columns 20 mm and 25 mm. Preserve this source mismatch.",
+    "2608.2(ii) — Aggregate flakiness index must not exceed 25%. Other printed PSV/AAV/AIV/ACV values are recorded in the table with possible anomalies flagged; grading table retained by printed headings.",
+    "2608.2(iii) — Closure/bridging plate of weldable IS:2062 structural steel, at least 6 mm thick and 200 mm wide. Prefer one continuous length; at most two pieces per traffic lane, welded together.",
+    "2608.2(iii) — Closure plate anchorage holes along longitudinal centreline at maximum 300 mm intervals; anti-corrosive galvanising/coating with minimum 100 µm as printed.",
+    "2608.2(iv) — Backer rod is specified closed-cell polyolefin or open-cell polyurethane cylinder; diameter equals 150% joint opening and density 25–30 kg/m³, heat resistant with recovery."
+  ];
+  plug.tables=[
+    {name:"2608 · Asphaltic Plug Joint Components / Service Limits",status:"checked",
+      headers:["Item","Printed requirement / boundary"],rows:[
+        ["Operating ambient range","−5°C to +50°C"],
+        ["Binder softening point","Minimum 100°C"],
+        ["Binder flow resistance, 70°C for 5 h","Maximum 3 mm per BS:2499"],
+        ["Binder cone penetration at 25°C, 0.1 mm increments","Printed '100 mm max' — unit SOURCE-CONTROL HOLD"],
+        ["Binder extension test","5 cycles to 50%; referenced ASTM D1190 / BS:2499; test setup/outcome alignment held"],
+        ["Aggregate nominal size per running text","12.5 mm for joint depth up to 75 mm; 20 mm for deeper joint"],
+        ["Aggregate flakiness index","≤25%"],
+        ["Service/design approval","Binder suitability, composition and application remain approved proprietary product/Engineer controlled"]
+      ],note:"The source also prints a binder safe-heating entry, but this reader does not give heating instructions. Trained specialist installation and manufacturer documentation govern. Do not normalize cone-penetration unit or merge the text's stone sizes with Table 2600-2 column labels."},
+    {name:"Table 2600-2 · Aggregate Gradation (as printed)",status:"checked",
+      headers:["IS sieve","Printed 20 mm column (% passing)","Printed 25 mm column (% passing)"],
+      rows:[
+        ["26.5 mm","100","—"],
+        ["19.9 mm","85–100","100"],
+        ["13.0 mm","0–35","85–100"],
+        ["9.5 mm","0–7","0–35"],
+        ["6.3 mm","—","0–7"],
+        ["2.3 mm","0–2","0–2"],
+        ["75 micron","0–1","0–1"]
+      ],note:"SOURCE-CONTROL: Running text calls for 12.5/20 mm nominal aggregate by depth, while the printed table headings read 20/25 mm. The sieve designation '19.9 mm' and the printed values are preserved, not normalized. Table is reference only until governing clarification; no auto-gradation pass/fail."},
+    {name:"2608.2 · Aggregate Acceptance References / Source Holds",status:"checked",
+      headers:["Printed characteristic","Value / issue"],rows:[
+        ["PSV","Printed >60"],
+        ["AAV","Printed >05 (suspicious direction and two-digit formatting — SOURCE-CONTROL)"],
+        ["AIV","Printed <18"],
+        ["ACV","Printed 10–25 (no comparison sign)"],
+        ["Aggregate surface","Should promote adhesion"]
+      ],note:"Do not silently reverse AAV inequality, change the ACV expression or import a later MoRTH edition. Interpret only using controlling source or governing amendment."},
+    {name:"2608.2(iii–iv) · Closure Plate / Backer Rod",status:"checked",
+      headers:["Field component","Source criterion"],rows:[
+        ["Closure plate steel","Weldable structural steel IS:2062"],
+        ["Closure plate thickness","≥6 mm"],
+        ["Closure plate width","≥200 mm"],
+        ["Piece count per traffic-lane width","Prefer single length; maximum two pieces welded together"],
+        ["Plate hole centres","≤300 mm, equidistant along longitudinal centre"],
+        ["Plate corrosion protection","Galvanising or approved protective coating at least 100 µm"],
+        ["Foam backer-rod types","Closed-cell polyolefin or open-cell polyurethane"],
+        ["Rod diameter","1.5 × joint opening"],
+        ["Backer-rod density","25–30 kg/m³"],
+        ["Backer characteristics","Heat resistance, flexibility and recovery"]
+      ],note:"Thickness, hole spacing and materials are component controls, not a complete bridge expansion-joint design or onsite heating procedure."}
+  ];
+  plug.calc="No asphaltic-plug material/grading/heating calculator enabled. Running-text/table nominal-size disagreement and printed binder/AAV ambiguities must be resolved from governing source; approved supplier and Contract control.";
+
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2600"]')){
@@ -239,7 +350,7 @@
   }
   const notice=document.querySelector('.note.warn');
   if(notice && notice.innerHTML.includes('and River Training / Protection 2501–2510 content is source-checked')){
-    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2606 content is source-checked');
+    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2608 content is source-checked');
   }
   const clause=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===clause))selected=RECORDS.findIndex(r=>r.clause===clause);
