@@ -129,6 +129,115 @@
   ];
   apron.calc = 'No apron-sizing, hydraulic or automatic material acceptance calculator enabled. IRC:89, foundation/scour design, approved drawings, contract, laboratory results and unresolved Appendix table references govern.';
 
+
+  // Source checked from MoRTH Fifth Revision 2013, printed pp.709–713.
+  // Numeric construction limits, source guidance and designer/Engineer controls are separate.
+  const rp2504=records.find(r=>r.clause==='2504');
+  rp2504.status='partial';
+  rp2504.page='Printed pp.709–711 · PDF page mapping QA pending';
+  rp2504.read='Source checked for slope protection, pitching materials, granular-filter gradation formulae, layer thickness guidance, workmanship and toe protection. Detailed geometries and stone sizes remain approved-drawing / IRC:89 controlled.';
+  rp2504.quick=[
+    '2504.1 — River-side slopes of guide bunds, river training work and embankments are protected by pitching of stone, boulders, M15 cement-concrete blocks or stone in wire crates over a granular filter.',
+    '2504.1 — Rear slopes not attacked directly by river may be protected by 300–600 mm clayey/silty earth covering and turfing; source says “may”, not a universal mandatory system.',
+    '2504.2.1 — Pitching stone thickness/shape follow drawings; stone must be sound, hard and durable. Rounded boulders and weather-damaged stone are not accepted.',
+    '2504.2.1 — Stone size/weight follow IRC:89 5.3.5.1; each stone weighs at least 40 kg. Spalls are at least 25 mm and must suit the voids. Alternate blocks are minimum M15; geosynthetic material, if used, conforms to Section 700.',
+    '2504.2.2 — Graded coarse sand, gravel or stone filter beneath pitching prevents embankment-material loss and buildup of uplift head. Filter gradation must satisfy three separate strict ratio checks shown in Tables.',
+    '2504.2.2 Note 1 — Filter design MAY be unnecessary for CH or CL base soils of LL greater than 30 resistant to surface erosion. If bedding is used in that case, it must be well graded with D85 at least 2× maximum pitching void.',
+    '2504.2.2 Notes 3–4 — Apply each ratio across successive filter layers, treating the finer layer as base for the coarser. Compact filters firmly; thickness generally 200–300 mm, or 150 mm for each layer in a two-layer filter.',
+    '2504.3 — Trim bank to drawing slope; lines and pegs at 3 m intervals. Fill/compact depressions and place the granular filter to drawing thickness.',
+    '2504.3 — Commence pitching from toe wall upward; dry rubble toe wall follows Clause 1405.3 for dry-rubble pitching, while concrete-block pitching toe wall is nominal M15 under Clause 1704.3.',
+    '2504.3 — Place stone normal to slope, with broken joints, tight packing/spalls, larger stones in bottom courses and good bond where multiple courses are needed. Template walls about 1 m wide are specified at suitable intervals where required; NO numeric spacing is given.',
+    '2504.4 — Provide toe wall at guide-bund pitching/launching apron junction to prevent sliding. Dry rubble masonry per Section 1400 or M15 concrete. Bank-slope termination provisions refer to IRC:89 8.2.2.',
+  ];
+  rp2504.tables=[
+    {name:'2504.2.2 · Granular Filter Gradation Conditions',status:'checked',headers:['Ratio','Source requirement'],rows:[
+      ['D15(filter) / D85(base)','< 5'],
+      ['D15(filter) / D15(base)','> 4 AND < 20'],
+      ['D50(filter) / D50(base)','< 25']
+    ],note:'Dxx denotes sieve particle size at which xx% by weight passes. The source inequalities are STRICT (<, >). All three apply, with each finer layer treated as base when multiple filter layers are used. Do not extrapolate to automated hydraulic approval.'},
+    {name:'2504.2.1–2 · Pitching Material & Filter',status:'checked',headers:['Parameter','Source boundary'],rows:[
+      ['Stone size','Design drawing and IRC:89 Clause 5.3.5.1'],
+      ['Single stone mass','≥40 kg'],
+      ['Spall size','≥25 mm; must fit voids'],
+      ['Concrete block alternative','M15 or higher, in accordance with Section 1700'],
+      ['Geosynthetics if used','Conform to Section 700'],
+      ['Filter compacted thickness','Generally 200–300 mm; this is guidance, not a universal design thickness'],
+      ['Two-layer filter thickness','Each layer 150 mm'],
+      ['CH/CL exception','Filter design may be unnecessary only if LL >30 and resistant to surface erosion'],
+      ['Exception bedding condition','If bedding used, well graded and D85 ≥2× maximum void in pitching'],
+      ['Rear-slope alternative','May use 300–600 mm clayey/silty earth and turfing']
+    ],note:'Filter design, selection of exceptional CH/CL case, layer counts, approved cross-section and actual thickness require Engineer/designer judgment.'},
+    {name:'2504.3–4 · Pitching Construction and Toe',status:'checked',headers:['Site control','Source requirement'],rows:[
+      ['Slope profiling lines/pegs','At intervals of 3 m'],
+      ['Depressions','Fill and thoroughly compact before pitching'],
+      ['Filter placement','Firmly compacted, to thickness on drawings'],
+      ['Pitching sequence','From toe wall upward'],
+      ['Dry stone toe wall','Dry rubble masonry conforming to Clause 1405.3'],
+      ['Concrete-block toe wall','Minimum M15 per Clause 1704.3'],
+      ['Stone orientation / joints','Normal to slope; bond multiple courses; break joints; pack voids'],
+      ['Template dry masonry walls','About 1 m wide at suitable intervals — no fixed spacing printed'],
+      ['Toe protection at apron junction','Toe wall to prevent pitching slip, DR masonry per Section 1400 or M15'],
+      ['Other bank-slope tie/termination','IRC:89 Clause 8.2.2 where applicable']
+    ],note:'Source phrase “protection of ties of bank slopes” in 2504.4 is retained as a potential source-control wording issue; no inferred interpretation or dimension is added.'}
+  ];
+  rp2504.calc='Granular filter ratios are presented as exact source conditions; no automatic design/approval calculator is enabled because soil exception, layer arrangement, material tests and drawing approval require engineering review.';
+
+  const rp2505=records.find(r=>r.clause==='2505');
+  rp2505.status='partial';
+  rp2505.page='Printed pp.711–712 · PDF page mapping QA pending';
+  rp2505.read='Source checked for M15 concrete bedding, stone/block flooring, Engineer inspection of excavations, joint/floor level controls and governing concrete/mortar references.';
+  rp2505.quick=[
+    '2505.1 — Flooring of stone or concrete blocks is laid over M15 concrete bedding.',
+    '2505.2 — Engineer inspects trenches before foundations/protection walls: no loose pockets or depressions, properly compacted founding soil with true line/level, concrete and other elements laid on dry bed.',
+    '2505.2 — M15 nominal-mix concrete bedding is 300 mm thick, following Section 1700 except its surface is not given a smooth finish.',
+    '2505.2 — Flat stone or M15 concrete-block flooring is 150 mm thick. Bed on 1:3 cement mortar per Section 1300, fill voids with spalls, fill/finish joints neatly.',
+    '2505.2 — Stone flooring breaks joints; joint thickness must not exceed 20 mm; floor top stays 300 mm below lowest bed level.'
+  ];
+  rp2505.tables=[{name:'2505 · Flooring Over Concrete Bedding',status:'checked',headers:['Item / check','MoRTH requirement'],rows:[
+    ['Trench inspection','Engineer approval of clean, compacted/level and dry founding bed'],
+    ['Concrete bedding','300 mm thick, M15 nominal mix, unsmoothed surface'],
+    ['Stone / block flooring','150 mm thick; concrete block M15'],
+    ['Mortar bedding and joint fill','Cement mortar 1:3, Section 1300'],
+    ['Joints','Broken joints in stonework; maximum thickness 20 mm'],
+    ['Finished floor top','300 mm below lowest riverbed level']
+  ],note:'Do not replace approved flood/hydraulic/foundation drawings with the section’s numeric construction requirements.'}];
+  rp2505.calc='No calculator. Geometric measurements follow approved drawings.';
+
+  const rp2506=records.find(r=>r.clause==='2506');
+  rp2506.status='partial';
+  rp2506.page='Printed p.712 · PDF page mapping QA pending';
+  rp2506.read='Source checked for dry-rubble flooring applicability, preparation and stone placement. Clause 2506 does not provide a universal thickness, stone-size threshold or test frequency.';
+  rp2506.quick=[
+    '2506 — Dry rubble flooring is provided for relatively less important works, such as cross-drainage structures.',
+    '2506 — Base to specified levels/slopes, suitably compacted to provide even bedding.',
+    '2506 — Stones laid closely in one or more layers with proper bond as specified by the Engineer.'
+  ];
+  rp2506.tables=[];rp2506.calc='No universal depth/quantity calculator is justified by Clause 2506. Follow drawings and Engineer instructions.';
+
+  const rp2507=records.find(r=>r.clause==='2507');
+  rp2507.status='partial';
+  rp2507.page='Printed pp.712–713 · PDF page mapping QA pending';
+  rp2507.read='Source checked for upstream/downstream curtain-wall depth, concrete/masonry alternatives, loose-stone flexible apron limits and sequencing.';
+  rp2507.quick=[
+    '2507.1 — Rigid flooring is enclosed by curtain walls tied to wing walls.',
+    '2507.1 — Minimum curtain depth below floor: upstream 2.0 m; downstream 2.5 m.',
+    '2507.1 — Curtain wall material: minimum M15 cement concrete OR stone masonry in 1:3 cement mortar.',
+    '2507.2 — Flexible apron is 1 m thick with loose boulders weighing at least 40 kg.',
+    '2507.2 — Flexible apron extends at least 3 m beyond upstream curtain wall and 6 m beyond downstream curtain wall.',
+    '2507.2 — Floor protection is completed simultaneously with bridge foundation works.'
+  ];
+  rp2507.tables=[{name:'2507 · Curtain Wall and Flexible Apron',status:'checked',headers:['Element','Minimum / requirement'],rows:[
+    ['Upstream curtain wall depth below floor','≥2.0 m'],
+    ['Downstream curtain wall depth below floor','≥2.5 m'],
+    ['Curtain wall material','M15 concrete or stone masonry with 1:3 cement mortar'],
+    ['Flexible apron thickness','1.0 m'],
+    ['Loose boulder mass','≥40 kg per boulder'],
+    ['Flexible apron beyond upstream wall','≥3 m'],
+    ['Flexible apron beyond downstream wall','≥6 m'],
+    ['Timing','Floor protection alongside bridge foundation works']
+  ],note:'These printed minima are not substitute for hydraulic/scour design or approved foundation drawings.'}];
+  rp2507.calc='No automatic curtain-wall/apron design or approval calculation is enabled. Relevant source limits remain visible for Engineer-controlled checking.';
+
   RECORDS.push(...records);
   const filter = document.getElementById('sectionFilter');
   if (filter && !filter.querySelector('option[value="2500"]')) {
