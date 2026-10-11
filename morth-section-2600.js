@@ -343,6 +343,74 @@
   ];
   plug.calc="No asphaltic-plug material/grading/heating calculator enabled. Running-text/table nominal-size disagreement and printed binder/AAV ambiguities must be resolved from governing source; approved supplier and Contract control.";
 
+
+  // 2609 printed pp.734–736. Connected Tables 2600-3 and 2600-4 source checked.
+  const compression=list.find(r=>r.clause==="2609");
+  compression.status="partial";
+  compression.page="Printed pp.734–736 · PDF page mapping QA pending";
+  compression.read="Source checked: 2609.1–2609.2 plus Tables 2600-3 and 2600-4. Preserve unusual '600 in kN/m' wording, foam material wording and numeric rows without printed inequalities as SOURCE-CONTROL holds.";
+  compression.quick=[
+    "2609.1(i) — Joint uses steel-armoured nosing at both edges, anchored to deck, and a continuous preformed chloroprene/closed-cell foam seal compressed into gap with manufacturer-specified adhesive.",
+    "2609.1(ii) — Steel nosing ISA 100×100 angle; leg thickness ≥12 mm; top bleeder holes diameter 12 mm at ≤100 mm centres to prevent concrete voids.",
+    "2609.1(iii) — Anchorage uses headed studs, cast-in plates or loop anchors. Bars engage deck main reinforcement; transverse bars pass through plate/loop anchor systems.",
+    "2609.1(iii) — Anchor plate thickness ≥12 mm; total bar cross-sectional area on EACH side ≥1600 mm² per metre joint; loop spacing ≤250 mm, headed shear stud spacing ≤150 mm.",
+    "2609.1(iii) — Ultimate resistance prints 'not be less than 600 in kN/m any direction'. Interpretation/source typo held; do NOT present as verified individual-anchor acceptance.",
+    "2609.1(iv) — Sealing element continuous across carriageway, kerb and footway as applicable, water tight, resistant to tearing, oils, ozone and ageing; accommodates horizontal movement up to 40 mm and vertical 3 mm.",
+    "2609.2(i) — Nosing/anchorage weldable steel IS:2062 Grade B; sub-zero conditions call for Grade C as stated in 2609.1(iii).",
+    "2609.2(ii)(a) — Extruded multi-web chloroprene seal with self-clearing geometry refers to Table 2600-1; all pre-existing DIN/ASTM source issues remain active.",
+    "2609.2(ii)(b) — Foam is described as closed-cell EVA/polyethylene physically blown with nitrogen AND 'preformed non-extruded non-cellular section'; source contradiction held without correcting.",
+    "2609.2(ii)(b–c) — Foam and chemical-test characteristics are reported in Tables 2600-3/4; do not add min/max signs where the text does not print them.",
+    "2609.2(iii–iv) — Lubricant-cum-adhesive type/application per seal manufacturer/supplier; steel corrosion treatment refers to Clause 2606.3(iv)."
+  ];
+  compression.tables=[
+    {name:"2609.1 · Nosing & Anchorage",status:"checked",
+      headers:["Parameter","Source control"],rows:[
+        ["Nosing steel section","ISA 100×100"],
+        ["Angle leg thickness","≥12 mm"],
+        ["Bleeder holes","12 mm diameter at ≤100 mm centres"],
+        ["Anchor plate thickness","≥12 mm"],
+        ["Total bar section EACH side","≥1600 mm² per metre of joint"],
+        ["Loop anchor spacing","≤250 mm c/c"],
+        ["Headed shear stud spacing","≤150 mm c/c"],
+        ["Anchoring reinforcement","Engage main reinforcement and provide transverse bars through plates/loops"],
+        ["Ultimate anchorage resistance","'not be less than 600 in kN/m any direction' — SOURCE-CONTROL HOLD"],
+        ["Weldable steel","IS:2062 Grade B; sub-zero Grade C"]
+      ],
+      note:"The 600 in kN/m phrase is preserved literally. Do not infer a per-anchor capacity or substitute another edition. Drawings and governing source must resolve it."
+    },
+    {name:"2609.1 · Joint Movement and Sealing",status:"checked",
+      headers:["Control","Source requirement"],rows:[
+        ["Horizontal movement","Up to 40 mm"],
+        ["Vertical movement","3 mm"],
+        ["Seal coverage","Continuous over entire carriageway, kerbs and footpaths if present"],
+        ["Seal","Preformed chloroprene or closed-cell foam, compressed into gap"],
+        ["Adhesive","Type and application by manufacturer/supplier"],
+        ["Corrosion protection","Clause 2606.3(iv)"]
+      ],note:"Bridge movement demand, compatible product selection and installation details require approved structural design/manufacturer documentation."
+    },
+    {name:"Table 2600-3 · Closed Cell Foam Seal Properties",status:"checked",
+      headers:["Property","Printed value"],rows:[
+        ["Density","41.7–51.3 kg/m³"],
+        ["Compression set, ASTM D3575, 25 mm specimen","50% compression 22 h at 23°C; 2 h recovery; 13% set"],
+        ["Working temperature","−70°C to +70°C"],
+        ["Water absorption, 3 months immersion, ASTM 3575","0.09766 kg/m²"],
+        ["Tensile strength","0.8 MPa"],
+        ["Elongation at break, ASTM D3575","195 ±20%"]
+      ],
+      note:"Source has no inequality for printed tensile, absorption or compression-set values. Preserve literally; no automatic acceptance. Printed foam wording 'non-extruded non-cellular' also held."
+    },
+    {name:"Table 2600-4 · Elastomer Chemical Tests",status:"checked",
+      headers:["Property","Test standard","Printed value"],rows:[
+        ["Adhesion strength","IS:3400 Part XIV","7 kN/m"],
+        ["Low-temperature stiffness","ASTM D797","Young's modulus 70 N/mm² (max)"],
+        ["Ash content","IS:3400 Part XXII","5%"],
+        ["IR polymer identification","ASTM D3677","Compare spectra with reference polychloroprene sample"]
+      ],
+      note:"No explicit min/max is printed for adhesion strength or ash content. Use actual governing source before pass/fail interpretation; preserve as reference facts."
+    }
+  ];
+  compression.calc="No automatic acceptance calculator: anchorage-resistance wording and Table 2600-3/4 comparison directions are unresolved. Approved drawings, laboratory/manufacturer evidence and Engineer approval govern.";
+
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2600"]')){
@@ -350,7 +418,7 @@
   }
   const notice=document.querySelector('.note.warn');
   if(notice && notice.innerHTML.includes('and River Training / Protection 2501–2510 content is source-checked')){
-    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2608 content is source-checked');
+    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2609 content is source-checked');
   }
   const clause=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===clause))selected=RECORDS.findIndex(r=>r.clause===clause);
