@@ -238,6 +238,64 @@
   ],note:'These printed minima are not substitute for hydraulic/scour design or approved foundation drawings.'}];
   rp2507.calc='No automatic curtain-wall/apron design or approval calculation is enabled. Relevant source limits remain visible for Engineer-controlled checking.';
 
+
+  // Printed pp.713–714. Acceptance, measurements and rate boundaries are not all QC.
+  const r2508=records.find(r=>r.clause==='2508');
+  r2508.status='partial';
+  r2508.page='Printed p.713 · PDF page mapping QA pending';
+  r2508.read='Source checked: materials must meet applicable material testing criteria, and completed work must meet prescribed standards. No new stand-alone numerical tolerance or test frequency is supplied in 2508.';
+  r2508.quick=[
+    '2508 — Material testing must conform to relevant MoRTH Specifications and their criteria.',
+    '2508 — River training/protection work must meet the relevant prescribed workmanship and acceptance standards.',
+    '2508 — No new independent numerical pass/fail limit or sampling frequency is printed: use the controlling material and work requirements.'
+  ];
+  r2508.tables=[];
+  r2508.calc='No calculator. Acceptance requires the underlying material/work clause, Contract and test data.';
+
+  const r2509=records.find(r=>r.clause==='2509');
+  r2509.status='partial';
+  r2509.page='Printed p.713 · PDF page mapping QA pending';
+  r2509.read='Source checked for measurement units, separately measured materials, incidental items and average excavation depth payment threshold. Do not treat a payment exclusion as QC rejection.';
+  r2509.quick=[
+    '2509 — Guide-bund embankment earthwork is measured in m³ unless otherwise specified.',
+    '2509 — Boulders, concrete blocks, and filled wire crates in aprons are measured in m³.',
+    '2509 — Filter and stone pitching are measured separately in m³ unless otherwise specified.',
+    '2509 — Rubble-stone/CC-block flooring and concrete bedding are measured in m³ by material class.',
+    '2509 — Preparing the flooring bed is incidental to the main item.',
+    '2509 — Apron excavation up to an AVERAGE 150 mm is included; depth beyond 150 mm is separately measured in m³ under Section 300 unless otherwise specified.',
+    '2509 — Engineer-directed prelaying material stacking at site is an incidental activity.'
+  ];
+  r2509.tables=[{name:'2509 · Measurement and Payment Boundaries',status:'checked',headers:['Element','Measurement / boundary'],rows:[
+    ['Guide-bund embankment earthwork','m³, unless otherwise specified'],
+    ['Stone/CC-block apron or filled crates','m³'],
+    ['Filter and stone pitching','Separate m³, unless otherwise specified'],
+    ['Flooring and concrete bedding','m³ by material class'],
+    ['Preparation of flooring base','Incidental'],
+    ['Apron excavation, average depth ≤150 mm','Included in item; not separately measured, unless otherwise specified'],
+    ['Apron excavation deeper than 150 mm average','Separate m³ under Section 300, unless otherwise specified'],
+    ['Directed stacking before laying','Incidental']
+  ],note:'Source says AVERAGE 150 mm for apron excavation, as a payment threshold. It is not a geometric tolerance or separate QC acceptance criterion.'}];
+  r2509.calc='No generic payment calculator; actual approved measurements and Contract schedule/item wording govern.';
+
+  const r2510=records.find(r=>r.clause==='2510');
+  r2510.status='partial';
+  r2510.page='Printed pp.713–714 · PDF page mapping QA pending';
+  r2510.read='Source checked for component-wise contract unit-rate inclusions. No monetary SSR or Contract rates appear in this clause.';
+  r2510.quick=[
+    '2510 — Guide-bund embankment rate covers materials, transport, placing, compacting, labour, equipment, sampling/testing, supervision and incidentals.',
+    '2510 — Apron rate covers materials, labour, equipment and bed dressing/excavation up to average 150 mm; deeper excavation separately payable unless otherwise specified.',
+    '2510 — Slope-pitching rate includes prepared base, laid/compacted filter and stone or block pitching to specified thickness, lines, curves, slopes and levels, with labour/materials/equipment.',
+    '2510 — Flooring rate covers materials, labour, tools/plant required to complete the flooring work.',
+    '2510 — Actual monetary rates and pay items come from the Contract, not the source clause.'
+  ];
+  r2510.tables=[{name:'2510 · Contract Rate Inclusions',status:'checked',headers:['Work','Included'],rows:[
+    ['Guide bund','Materials, haulage, placing, compaction, labour, equipment, tests, supervision and incidentals'],
+    ['Apron','Materials, labour, plant and excavation/bed dressing to average 150 mm'],
+    ['Stone/CC-block pitching','Base preparation, filter, pitching and labour/plant to specified drawing profile'],
+    ['Flooring','Materials, labour and plant required for specified work']
+  ],note:'Contract conditions govern item wording and prices; this clause is not a new QC sampling/acceptance schedule.'}];
+  r2510.calc='No rate calculator; source contains rate coverage, not monetary unit rates.';
+
   RECORDS.push(...records);
   const filter = document.getElementById('sectionFilter');
   if (filter && !filter.querySelector('option[value="2500"]')) {
@@ -251,7 +309,7 @@
     const original = 'and Geotechnical Investigation 2401–2415 content is source-checked';
     if (notice.innerHTML.includes(original)) {
       notice.innerHTML = notice.innerHTML.replace(original,
-        'and Geotechnical Investigation 2401–2415 and River Training / Protection 2501–2502 content is source-checked');
+        'and Geotechnical Investigation 2401–2415 and River Training / Protection 2501–2510 content is source-checked');
     }
   }
   const clause = new URLSearchParams(location.search).get('clause');
