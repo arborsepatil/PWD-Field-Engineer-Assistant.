@@ -411,6 +411,80 @@
   ];
   compression.calc="No automatic acceptance calculator: anchorage-resistance wording and Table 2600-3/4 comparison directions are unresolved. Approved drawings, laboratory/manufacturer evidence and Engineer approval govern.";
 
+
+  // Source control: Fifth Revision (2013), Clause 2610.1–2610.6, printed pp.736–744.
+  // Installation requires manufacturer/supplier engineering supervision and approved drawings.
+  const install=list.find(r=>r.clause==="2610");
+  install.status="partial";
+  install.page="Printed pp.736–744 · PDF page mapping QA pending";
+  install.read="Entire Clause 2610.1–2610.6 source-checked as a connected installation sequence. Entries distinguish inspection HOLD, mandatory dimensional/material controls, manufacturer supervision, and source guidance. Clause 2610.6(iii)(a) prints reference 2610.9.1, which is not present in extracted 2610.1–2610.6; unresolved SOURCE-CONTROL. This field summary does not provide a safe-work installation method.";
+  install.quick=[
+    "2610.1(i–iii) — Expansion joint installation is under close supervision of manufacturer/supplier engineer, with detailed installation manual. Recess dimensions, designed movement gap and joint preset follow approved drawings/manufacturer design data.",
+    "2610.1(iv–v) — Surfacing/wearing coat precedes installation; recess geometry, level, slope/skew, design gap and existing deck reinforcement are checked. Interfering bars may be cut/removed only after consulting Engineer; drawing/structural approval governs any reinforcement change.",
+    "2610.1(vi–viii) — Rigid, sealed shuttering retains drawn dimensions; joint is levelled to carriageway profile and preset based on measured bridge temperature. Manufacturer-controlled support, attachment and release sequence is required.",
+    "2610.1(viii) — Source prefers installation in early morning when temperatures are more uniform. The joint preset is corrected if actual structural temperature falls outside considered tolerance; this is an Engineer/manufacturer-controlled setup, not a fixed universal gap.",
+    "2610.1(ix)(a) — HOLD before final recess concreting: record joint position; Engineer provides WRITTEN confirmation of position and concreting. Concrete strength must be at least superstructure strength and at least M35, with water/cement ratio ≤0.4, low shrinkage and proper compaction/curing.",
+    "2610.1(ix)(b–xi) — Under modular joint boxes concrete fully supports loads. Protect installed joint from site traffic; no traffic loading before carriageway surfacing is complete. Seal length spans entire carriageway for strip/modular joints and must not be damaged.",
+    "2610.2 — Asphaltic plug joint has a separate specialist installation procedure, including substrate readiness, weather restrictions and approved product processing controls. Source installation ambient range is 5°C to 35°C with no installation during rain/snow; distinguish from 2608 SERVICE range −5°C to +50°C.",
+    "2610.2(ix–xi) — Asphaltic plug joint covers complete structural width; minimum joint depth 75 mm, maximum 100 mm; joint width in traffic direction 500–750 mm. These are joint-specific limits, not universal for all deck joints.",
+    "2610.3 — Compression seal joint: recess width on EACH side of joint ≥300 mm; clean/dry condition, approved drawings and manufacturer adhesive/fitting. Install within ambient 5°C to 35°C; no loose-fitting or open joints.",
+    "2610.4–5 — Single strip/box and modular strip/box seal joints require design-based movement gap and structural-temperature preset check; strip seals follow manufacturer's fit requirements, deck surfacing alignment and clean/compacted joint transition. Modular follows 2610.4(i–ii) and requires clean cavities.",
+    "2610.6(i–iv) — Reinforced elastomeric joints require manufacturer drawings, deck recesses and insert-level alignment, supervised spacers, approved reinforcement fixing and pocket concreting without displacement. Elastomeric slab units use manufacturer jig, waterproof joining, stainless fixing hardware, sealant and plugs.",
+    "2610.6(ii–iii) — Source prefers second-stage concreting within 24 h of fixing inserts but gives different spacer arrangements if delayed depending on bearing type; not a blanket 24-hour acceptance deadline. Pocket concreting also prints a reference to 'Clause 2610.9.1' — SOURCE-CONTROL HOLD.",
+    "2610.6(v–vi) — Elastomeric steel-insert preset accounts for monthly vs annual mean temperature and residual creep/shrinkage. Bolt drilling not within 7 days of concreting; for post-tensioned box/beam/slab structures, joint fixing bolts only at least 4 weeks after stressing. Ensure dry clean sealing surfaces and supplier-controlled installation."
+  ];
+  install.tables=[
+    {name:"2610.1 · General Installation and Engineer HOLD Points",status:"checked",
+     headers:["Stage / control","Source requirement / approval boundary"],rows:[
+       ["Supervision","Manufacturer/supplier engineer closely supervises; installation manual supplied"],
+       ["Recess / gap","Drawing or approved manufacturer design dimensions and movement gap"],
+       ["Reinforcement obstruction","Engineer consultation before cutting/removing bars; approved structural detailing controls"],
+       ["Geometry before installation","Check recess dimensions, levels, skew/slope, gap, deck reinforcement"],
+       ["Preset check","Measure bridge structural temperature before installation; manufacturer/Engineer correct preset if needed"],
+       ["Joint position before concreting","Record final joint position; written Engineer confirmation is mandatory"],
+       ["Recess concrete strength","Not less than superstructure grade, with absolute minimum M35"],
+       ["Recess concrete water–cement ratio","≤0.40"],
+       ["Recess concrete execution","Controlled low-shrinkage mix, proper vibration, flush finish, damp curing"],
+       ["Modular joint boxes","Concrete must completely fill beneath boxes"],
+       ["Traffic exposure","Protect joint and do not expose to traffic before carriageway surfacing complete"],
+       ["Seal continuity","Full carriageway width for strip and modular seal systems"]
+     ],note:"Manufacturer-supervised operations remain governed by approved method statements, drawings, Contract and Engineer. The general clause does not prescribe a numeric recess-concrete sampling frequency."},
+    {name:"2610.2–3 · Asphaltic Plug vs Compression Seal",status:"checked",
+     headers:["Joint type / field parameter","Source requirement"],rows:[
+       ["Asphaltic plug · installation ambient temperature","5°C to 35°C; not during rain or snow"],
+       ["Asphaltic plug · traffic-direction width","Minimum 500 mm; maximum 750 mm"],
+       ["Asphaltic plug · total depth","Minimum 75 mm; maximum 100 mm"],
+       ["Asphaltic plug · width coverage","Complete bridge width including kerb/footpath, where present"],
+       ["Asphaltic plug · specialist material processing","Use controlling Clause 2610.2 and manufacturer-supervised approved installation procedure"],
+       ["Compression seal · recess width","≥300 mm on EACH side of the joint"],
+       ["Compression seal · installation ambient temperature","5°C to 35°C"],
+       ["Compression seal · gap/geometry","As approved drawings and rated movement"],
+       ["Compression seal · joint faces and fit","Clean/dry, manufacturer-specified adhesive; no loose-fitting or open joints"]
+     ],note:"The asphaltic PLUG INSTALLATION limit 5–35°C differs from its SERVICE performance range −5–50°C under Clause 2608.1. Source also defines specialist material heating ranges; this quick field view is not an operating procedure for high-temperature substances."},
+    {name:"2610.4–5 · Strip and Modular Joint Installation Controls",status:"checked",
+     headers:["Control","Source requirement / boundary"],rows:[
+       ["Design movement gap","Account for thermal effects, prestress, creep/shrinkage and structural/substructure deformation"],
+       ["Temperature preset","Check actual bridge temperature immediately prior to fixing; adjust preset as approved"],
+       ["Single strip/box seal","Sealing component fitting and continuity per manufacturer, without damage"],
+       ["Surfacing/edge-beam transition","Surfacing flush with steel sections; transition sealed and carefully compacted"],
+       ["Modular strip/box seal","Apply relevant 2610.4(i–ii), clean cavity of debris/water; suitable seal fit"],
+       ["Modular transition","Careful compacted wearing coat to prevent premature depression"]
+     ],note:"No invented fixed clearance or preset amount. The actual joint opening is design/manufacturer/temperature dependent."},
+    {name:"2610.6 · Reinforced Elastomeric Joint Sequencing and Limits",status:"checked",
+     headers:["Control / condition","Specification boundary"],rows:[
+       ["Steel inserts","Pocket location, level, camber and fixing as drawings"],
+       ["Spacers and pocket concreting","Source PREFERENCE to concrete within 24 h after inserts fixed; delayed cases follow bearing-dependent sequence"],
+       ["Bearing-dependent delayed fixing","Do not simultaneously restrain both ends of simply supported spans on simple elastomeric bearings without dowel pins; other bearings need different spacer removal"],
+       ["Pocket concrete","Follow deck-grade/bonding requirement and source cross-reference 2610.9.1 (SOURCE-CONTROL unresolved)"],
+       ["Elastomeric slab","Manufacturer jig, specified contact adhesive, waterproof joint, stainless nuts/lock washers and sealed plugs"],
+       ["Preset calculation authority","Monthly and annual average temperature, time since casting/prestressing and residual creep/shrinkage"],
+       ["Bolt-hole drilling","Not within 7 days of concreting"],
+       ["Post-tensioned structures · fixing bolts","At least 4 weeks after stressing completed"],
+       ["Contact surfaces / sealing","Check straightness/flatness, clean and dry; seal exposed leak paths and bolt cavities"]
+     ],note:"SOURCE-CONTROL: 2610.6(iii)(a) prints 'Clause 2610.9.1' even though no 2610.9.1 appears in the extracted Section 2610. Preserve. The preferred 24-hour timing is not a new hard pass/fail deadline. Special sequencing, welding, drilling and hot work require approved specialist methods."}
+  ];
+  install.calc="No auto-installation preset or bridge expansion calculation. Correct joint gap requires approved temperature-dependent manufacturer/Designer input; source cross-reference 2610.9.1 remains held.";
+
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2600"]')){
@@ -418,7 +492,7 @@
   }
   const notice=document.querySelector('.note.warn');
   if(notice && notice.innerHTML.includes('and River Training / Protection 2501–2510 content is source-checked')){
-    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2609 content is source-checked');
+    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2610 content is source-checked');
   }
   const clause=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===clause))selected=RECORDS.findIndex(r=>r.clause===clause);
