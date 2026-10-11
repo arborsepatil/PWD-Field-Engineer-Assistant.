@@ -17,6 +17,11 @@
     sourceReaderExtension.onload=()=>{
       const nextReaderSection=document.createElement('script');
       nextReaderSection.src='./morth-section-2600.js';
+      nextReaderSection.onload=()=>{
+        const latestClauses=document.createElement('script');
+        latestClauses.src='./morth-section-2611-2612.js';
+        document.body.appendChild(latestClauses);
+      };
       document.body.appendChild(nextReaderSection);
     };
     document.body.appendChild(sourceReaderExtension);
