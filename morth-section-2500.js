@@ -69,6 +69,66 @@
   }];
   guide.calc = 'No calculator. Hydraulic/scour, slope-pitching and apron design stay with approved drawings, IRC:89, relevant clauses and Engineer/Designer approval.';
 
+
+  // 2503 source-checked as one connected apron/mesh/installation clause, pp.704–709.
+  // Appendix 2500/I is read with 2503; ambiguous extracted table references remain held.
+  const apron = records[2];
+  apron.status = 'partial';
+  apron.page = 'Printed pp.704–709 and Appendix 2500/I pp.715–720 · PDF page mapping QA pending';
+  apron.read = 'Source checked: apron stone/crates, boulder dimensions, mesh/wire and box tolerances, hand-woven crates and installation, plus the test and material references in Appendix 2500/I. Ambiguous or internally inconsistent appendix table/cross-references remain SOURCE-CONTROL issues and are not converted into automatic acceptance.';
+  apron.quick = [
+    '2503.1 — An apron protects against scour with boulders placed directly on the riverbed or within wire crates. Stone is to be sound, hard, durable and not readily weathered; angular quarry stone is preferred over rounded boulders.',
+    '2503.1 — If required-size natural stones are not economically available, use at least M15 cement-concrete blocks conforming to Section 1700 or stone-filled wire crates; this does not replace hydraulic/design approval.',
+    '2503.2 — Boulder size follows IRC:89 Clause 5.3.7.2. Individual stones: at least 40 kg; specific gravity at least 2.4. Dry-masonry cross-wall templates about 1 m thick at 30 m intervals support orderly hand-packed apron placement.',
+    '2503.2 — Apron bed is prepared to drawing level/extent. If raised to low water level for laying, stone quantity must be revised for the raised apron/toe geometry.',
+    '2503.3.1 — Mechanically woven crates: hot-dipped galvanised mild-steel mesh, wire diameter at least 2.2 mm and tensile strength at least 350 MPa (IS:280); heavy galvanising per IS:4826.',
+    '2503.3.1 — Corrosive locations: additional nominal 0.5 mm PVC coating, or zinc-alloy coating under EN 10244-2 in place of galvanisation. Use mechanically selvedged edges, double twists, prescribed meshes and diaphragm compartments at 1 m centres.',
+    '2503.3.1 — Gabion mesh families 10×12 / 8×10; revet mattress 6×8. Check the exact wire family, lacing and selvedge size in Tables 2500-2 / 2500-3 rather than applying the general minimum wire diameter to all components.',
+    '2503.3.1.3 — Box size before filling: length/width ±5%; height over 0.3 m ±5%, height 0.3 m or less ±10%. Nominal hexagonal mesh-opening dimension D may vary +16% to −4%.',
+    '2503.3.1.4 — Appendix 2500/I governs mechanical strength, coating, PVC properties, test methods and quantity. Producers certify wire strength, zinc coating mass and PVC thickness. At least three strength tests in each of two mesh directions are specified for conformance; all three results in each direction must pass the applicable table. Retest on change in physical characteristics.',
+    '2503.3.2 — Hand-woven crates use annealed, heavily galvanised wire at least 4 mm diameter, tensile strength 300–450 MPa (IS:280), mesh no larger than 150 mm.',
+    '2503.3.2 — In-situ hand-woven units: dimensions not greater than 7.5 × 3 × 0.6 m nor smaller than 2 × 1 × 0.3 m; large-unit side stays at no more than 1.5 m intervals. Smaller deep/inaccessible units need Engineer approval.',
+    '2503.3.3 — Prepare/level the bed; where possible, position units before filling. Fill by tight hand packing, not indiscriminate dumping. Underwater units require approved specialist lifting/placement and contact-surface lacing; do not infer a numerical acceptance frequency.'
+  ];
+  apron.tables = [
+    {name:'Table 2500-1 and Clause 2503.3.1.3 · Mesh Opening',
+     status:'checked',headers:['Mesh type','Nominal D','Source tolerance'],
+     rows:[['10 × 12','100 mm','+16% / −4%'],['8 × 10','80 mm','+16% / −4%'],['6 × 8','60 mm','+16% / −4%']],
+     note:'Opening D is the mesh specification, not wire diameter; refer to the drawings and the applicable gabion/mattress wire-size table.'},
+    {name:'Tables 2500-2 / 2500-3 · Box and Coating Tolerances',
+     status:'checked',headers:['Parameter','Requirement'],
+     rows:[
+       ['Gabion mesh','10 × 12 or 8 × 10; wire size depends on zinc or PVC-coated configuration in Table 2500-2'],
+       ['Revet mattress mesh','6 × 8; separate wire/selvedge/lacing sizes in Table 2500-3'],
+       ['PVC coating when selected','Nominal 0.50 mm; minimum 0.38 mm under Tables 2500-2 and 2500-3'],
+       ['Length and width (before fill)','Within ±5% of ordered size'],
+       ['Height > 0.3 m (before fill)','Within ±5% of ordered size'],
+       ['Height ≤ 0.3 m (before fill)','Within ±10% of ordered size'],
+       ['Mechanically woven gabion diaphragms','At 1 m centre-to-centre intervals']
+     ],
+     note:'Do not substitute a general wire-size minimum for the detailed configurations. Table 2500-2 has a multi-level zinc/PVC heading: exact selections must be checked against the source table and approved product submittal.'},
+    {name:'Table 2500-4 · Diameter Tolerance of Galvanised Wire',
+     status:'checked',headers:['Nominal wire diameter','Permitted tolerance'],
+     rows:[['2.00 mm','±0.05 mm'],['2.20 mm','±0.06 mm'],['2.40 mm','±0.06 mm'],['2.70 mm','±0.07 mm'],['3.00 mm','±0.08 mm'],['3.40 mm','±0.09 mm'],['3.90 mm','±0.10 mm']],
+     note:'Use with required nominal diameter for the selected wire component; coating-configuration distinctions remain in Tables 2500-2 and 2500-3.'},
+    {name:'Appendix 2500/I · Zinc Coating and Mesh Conformance',
+     status:'checked',headers:['Control','Requirement / source boundary'],
+     rows:[
+       ['Zinc coating mass, 2.00 / 2.20 mm wire','Minimum 240 g/m² (Appendix Table 2500/2)'],
+       ['Zinc coating mass, 2.40 / 2.70 mm wire','Minimum 260 g/m² (Appendix Table 2500/2)'],
+       ['Zinc coating mass, 3.00 / 3.40 mm wire','Minimum 270 g/m² (Appendix Table 2500/2)'],
+       ['Zinc coating mass, 3.90 mm wire','Minimum 280 g/m² (Appendix Table 2500/2)'],
+       ['PVC specific gravity','1.30–1.35; IS:13360 Part 3 Section 1'],
+       ['PVC tensile strength','At least 20.6 MPa; IS:13360 Part 5 Section 1'],
+       ['PVC hardness','Shore D 50–60; IS:13360 Part 5 Section 11'],
+       ['Mesh test count','At least three tests parallel and three perpendicular to twist for strength conformance; all three in each set shall pass Appendix Table 2500/1'],
+       ['Changed mesh physical characteristics','Repeat strength conformance testing'],
+       ['Lot / volume based frequency','Not stated in Appendix; do not invent one']
+     ],
+     note:'SOURCE-CONTROL HOLD: extracted Appendix Table 2500/1 has multi-level headings with uncertain column association. Do not use unverified individual strength figures for auto-pass/fail. Appendix also prints 5.2 twice, refers to Table-2500/4 and Para 5.4 not found within the extracted Appendix; resolve only against governing source.'}
+  ];
+  apron.calc = 'No apron-sizing, hydraulic or automatic material acceptance calculator enabled. IRC:89, foundation/scour design, approved drawings, contract, laboratory results and unresolved Appendix table references govern.';
+
   RECORDS.push(...records);
   const filter = document.getElementById('sectionFilter');
   if (filter && !filter.querySelector('option[value="2500"]')) {
