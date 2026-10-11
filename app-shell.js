@@ -14,6 +14,11 @@
   if(location.pathname.endsWith('/morth_reader.html')) {
     const sourceReaderExtension=document.createElement('script');
     sourceReaderExtension.src='./morth-section-2500.js';
+    sourceReaderExtension.onload=()=>{
+      const nextReaderSection=document.createElement('script');
+      nextReaderSection.src='./morth-section-2600.js';
+      document.body.appendChild(nextReaderSection);
+    };
     document.body.appendChild(sourceReaderExtension);
   }
   document.getElementById('pwdCalcFab')?.addEventListener('click',openCalc);document.getElementById('pwdGuideFab')?.addEventListener('click',openGuide);window.PWDUI.openCalc=openCalc;window.PWDUI.openGuide=openGuide;document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.sheet-backdrop.open').forEach(x=>x.classList.remove('open'))});
