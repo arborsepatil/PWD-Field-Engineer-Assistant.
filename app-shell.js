@@ -23,6 +23,11 @@
         latestClauses.onload=()=>{
           const closeSection2600=document.createElement('script');
           closeSection2600.src='./morth-section-2613-2615.js';
+          closeSection2600.onload=()=>{
+            const section2700=document.createElement('script');
+            section2700.src='./morth-section-2700.js';
+            document.body.appendChild(section2700);
+          };
           document.body.appendChild(closeSection2600);
         };
         document.body.appendChild(latestClauses);
@@ -31,6 +36,15 @@
     };
     document.body.appendChild(sourceReaderExtension);
   }
-  if(location.pathname.endsWith('/qc.html')) {const qc=document.createElement('script');qc.src='./morth-qc-2610.js';document.body.appendChild(qc);}
+  if(location.pathname.endsWith('/qc.html')) {
+    const qc=document.createElement('script');
+    qc.src='./morth-qc-2610.js';
+    qc.onload=()=>{
+      const deckQC=document.createElement('script');
+      deckQC.src='./morth-qc-2700.js';
+      document.body.appendChild(deckQC);
+    };
+    document.body.appendChild(qc);
+  }
   document.getElementById('pwdCalcFab')?.addEventListener('click',openCalc);document.getElementById('pwdGuideFab')?.addEventListener('click',openGuide);window.PWDUI.openCalc=openCalc;window.PWDUI.openGuide=openGuide;document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.sheet-backdrop.open').forEach(x=>x.classList.remove('open'))});
 })();
