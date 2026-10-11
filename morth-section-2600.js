@@ -76,6 +76,83 @@
       ['Transition zone','Anchorage/force transfer without uprooting or deck distress; stable riding surface over service life']
     ],note:'No source numerical pass/fail threshold is supplied in 2603; acceptance is checked against approved design, manufacturer evidence, applicable later clauses and Contract.'}];
   perf.calc='No calculator; Clause 2603 defines performance requirements without a universal design equation.';
+
+  // MoRTH Fifth Revision 2013, 2604–2605, printed pp.725–728.
+  const filler=list.find(r=>r.clause==='2604');
+  filler.status='partial';
+  filler.page='Printed pp.725–726 · PDF page mapping QA pending';
+  filler.read='Source checked for filler-joint components, materials, storage, installation and pre-sealing Engineer inspection. Drawings and manufacturer control apply; the clause gives no sampling frequency.';
+  filler.quick=[
+    '2604.1 — Joint includes corrugated copper plate at least 2 mm thick, installed slightly below wearing coat; 20 mm compressible fibre board edge protection, 20 mm pre-moulded filler to wearing-course top and suitable sealant.',
+    '2604.2(i) — Filler material is drawing-specified bitumen-impregnated felt, elastomer or other suitable material. Impregnated felt conforms to IS:1838 and requires Engineer approval.',
+    '2604.2(i) — Use large filler pieces; assembling small pieces to make the required size should be avoided.',
+    '2604.2(ii–iii) — Store joint materials carefully under cover; Contractor makes good post-delivery damage to Engineer satisfaction at Contractor cost.',
+    '2604.3(i) — Form joint gaps as shown on drawings; wire-brush groove faces clean of loose matter/debris and wash or jet out.',
+    '2604.3(ii) — Place pre-moulded filler just before installing abutting material. Where adjacent faces are installed at different times, place it when the second face is ready.',
+    '2604.3(iii–iv) — Install sealant per manufacturer recommendations; finish it approximately 3 mm below joint upper surface.',
+    '2604.3(v–vi) — Remove spilled joint materials from finished bridge surfaces. Do not seal any joint before Engineer inspection and approval to proceed.'
+  ];
+  filler.tables=[
+    {name:'2604 · Filler Joint Source Controls',status:'checked',
+      headers:['Component / inspection','Requirement / boundary'],
+      rows:[
+        ['Corrugated copper plate','Thickness ≥2 mm, slightly below wearing coat'],
+        ['Compressible edge fibre board','20 mm'],
+        ['Pre-moulded filler','20 mm; to top wearing-course level'],
+        ['Impregnated felt','IS:1838 + Engineer approval when used'],
+        ['Groove condition','Clean thoroughly by wire brush, followed by wash/jetting'],
+        ['Filler installation','Just before abutting material; defer for second joint face if built later'],
+        ['Sealant','Manufacturer procedure; upper finish approximately 3 mm below joint top'],
+        ['Approval HOLD','Engineer inspects and approves joint before sealing'],
+        ['Protection of materials','Covered storage; damaged items rectified at Contractor expense']
+      ],
+      note:'These are component and workmanship controls, not a universal joint-opening or traffic-release time. Plate position, joint gap and materials remain drawing/Contract/manufacturer governed.'}
+  ];
+  filler.calc='No calculator: design gap, movements and installation limits require drawings/manufacturer approval.';
+
+  const elas=list.find(r=>r.clause==='2605');
+  elas.status='partial';
+  elas.page='Printed pp.726–728 · PDF page mapping QA pending';
+  elas.read='Source checked for steel inserts, anchors, bolts, elastomer properties, workshop fabrication, coating, fabricated-unit tolerances and handling. All manufacturer, IRC and design boundaries remain active.';
+  elas.quick=[
+    '2605.1(i) — Elastomeric slab is secured to steel inserts correctly anchored in deck; anchoring bolts directly embedded in deck concrete are prohibited. Steel inserts and anchorage must be manufactured at workshop, not on site.',
+    '2605.1(ii) — Loop anchors with plates: plate thickness ≥12 mm, loop-bar diameter ≥16 mm and anchor spacing ≤250 mm. Alternative sinusoidal anchor-bar diameter ≥12 mm.',
+    '2605.1(iii–vi) — Bolts/nuts are stainless steel and nuts use lock washers. Plug bolt holes with adhesive-fixed elastomeric plugs; manufacturer-specified adhesive/sealant and positioning/spacer jigs apply.',
+    '2605.2 — Mild steel insert/anchorage and reinforcing plates conform to IS:2062 Grade B; cast steel reinforcing plates conform to IS:1030.',
+    '2605.2 — Slab elastomer conforms to IRC:83 (Part II) Clause 915.1; compounded hardness IRHD 60 ±5.',
+    '2605.3(i) — Steel inserts/anchorage, including embedded/concrete-contact surfaces, are sand/shot blasted to SA 2½ and primed with zinc-rich epoxy.',
+    '2605.3(i) — Non-embedded/non-contact surfaces receive additional primer, MIO reinforced high-build epoxy intermediate coat and high-performance epoxy finish; total dry-film thickness ≥150 microns to manufacturer specification.',
+    '2605.3(ii) — Fully mould slab and its reinforcing plates in a single vulcanizing operation; round reinforcement edges and form male/female grooves at adjoining slab units for watertightness. Refer to IRC:83 (Part II) Clause 917.',
+    '2605.3(iii) — Fabrication dimensional tolerances: plan dimensions ±5 mm; overall height ±3 mm.',
+    '2605.4 — Supply bolts, nuts, sealants, plugs and kerb-angle accessories; protect units in covered storage. Damage after delivery must be rectified by Contractor to Engineer satisfaction.'
+  ];
+  elas.tables=[
+    {name:'2605 · Anchors, Inserts and Fasteners',status:'checked',
+      headers:['Control','Requirement'],
+      rows:[
+        ['Fixing method','Slab fixed to workshop-fabricated steel inserts/anchorage; no bolts anchored directly in deck concrete'],
+        ['Loop-anchor plate thickness','≥12 mm'],
+        ['Loop-anchor diameter','≥16 mm'],
+        ['Loop-anchor spacing','≤250 mm'],
+        ['Sinusoidal anchor-bar diameter','≥12 mm'],
+        ['Bolts / nuts','Stainless steel with lock washers'],
+        ['Insert/anchor steel','IS:2062 Grade B; cast reinforcing plates IS:1030']
+      ],note:'Two anchorage systems are alternatives; do not combine their size limits into a nonexistent single design. Approved detailing governs.'},
+    {name:'2605 · Elastomer, Coating and Fabrication',status:'checked',
+      headers:['Parameter','Source criterion / boundary'],
+      rows:[
+        ['Elastomer hardness','IRHD 60 ±5; also IRC:83 (Part II) 915.1'],
+        ['Blast preparation','SA 2½ for steel inserts and anchors, including concrete-contact surfaces'],
+        ['Base corrosion protection','Zinc-rich epoxy primer'],
+        ['Exposed surface protection','Additional primer, MIO high-build epoxy, epoxy finish; total DFT ≥150 µm'],
+        ['Slab fabrication','Single moulding/vulcanising operation; embedded reinforcement integral'],
+        ['Fabrication plan dimensions','±5 mm'],
+        ['Fabrication total height','±3 mm'],
+        ['Handling','Store under cover, replace/repair damage at Contractor expense to Engineer satisfaction']
+      ],note:'Coating stack and minimum DFT specifically apply to surfaces NOT in contact with or embedded in concrete. Fabrication tolerances are not bridge construction tolerances. Manufacturer and IRC requirements remain controlling.'}
+  ];
+  elas.calc='No calculator: anchor design, joint movement capacity and installation suitability need structural design and manufacturer/Engineer approval.';
+
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2600"]')){
@@ -83,7 +160,7 @@
   }
   const notice=document.querySelector('.note.warn');
   if(notice && notice.innerHTML.includes('and River Training / Protection 2501–2510 content is source-checked')){
-    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2603 content is source-checked');
+    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2605 content is source-checked');
   }
   const clause=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===clause))selected=RECORDS.findIndex(r=>r.clause===clause);
