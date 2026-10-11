@@ -153,6 +153,85 @@
   ];
   elas.calc='No calculator: anchor design, joint movement capacity and installation suitability need structural design and manufacturer/Engineer approval.';
 
+
+  // Source controlled MoRTH 2013 pp.728–730: Clause 2606 + Table 2600-1.
+  const strip=list.find(r=>r.clause==="2606");
+  strip.status="partial";
+  strip.page="Printed pp.728–730 · PDF page mapping QA pending";
+  strip.read="Source checked 2606.1–2606.4 and Table 2600-1. DIN and ASTM alternatives are NOT combined. Apparent source ambiguities remain held for governing-source confirmation.";
+  strip.quick=[
+    "2606.1(i) — Edge beam must mechanically retain seal; flange/web steel thickness at least 10 mm throughout, lip thickness at least 6 mm, edge beam height at least 80 mm and cross-sectional area at least 1500 mm².",
+    "2606.1(ii) — Rigid loop anchors welded via anchor plates. Total anchor-loop section on EACH side at least 1600 mm² per metre joint; centre spacing not over 250 mm.",
+    "2606.1(ii) — Anchor-plate thickness at least greater of 0.7 × anchor-loop diameter or 12 mm. Loop orientation 90° to joint with planned deviation ±20°; anchoring reinforcement parallel to loop anchors.",
+    "2606.1(iii) — Continuous preformed/extruded strip, mechanically locked into edge beams; separate mechanical fastening of sealing strip is prohibited. Seal resists tear, oils, petrol, ozone and ageing.",
+    "2606.1(iii) — Perpendicular working movement at least 80 mm up to maximum 100 mm; parallel to joint ±40 mm; gap for inserting chloroprene seal at least 25 mm. Joint structural design still governs required movement.",
+    "2606.2(i–iii) — Edge beam steels from listed equivalent grade families; for subzero conditions IS:2062 Grade C. Anchors IS:2062 Grade B or equivalent. Sealing strip of chloroprene rubber (CR).",
+    "2606.2 Table 2600-1 — DIN and ASTM are ALTERNATIVES selected based on source of supply. Preserve the printed value and test method association; hold disputed or unclear table entries.",
+    "2606.3(i–iii) — Fabricate continuous edge profiles for full carriageway width to actual bridge cross-section; use clamps, weld anchor plates to edge beam and bent loops to plates during pre-installation fabrication.",
+    "2606.3(iv–v) — Corrosion protection: hot-dip galvanising at least 150 µm OR epoxy coating. All insert/anchor surfaces, including concrete-contact, are treated per Clause 2605.3(i).",
+    "2606.3–4 — Transport finished clamped assembly with auxiliary brackets; supply seals/accessories, store covered on suitable wooden pads, and rectify delivery damage to Engineer satisfaction at Contractor cost."
+  ];
+  strip.tables=[
+    {name:"2606.1 · Edge Beam and Anchorage Geometry",status:"checked",
+     headers:["Field criterion","Source value / boundary"],rows:[
+       ["Steel section thickness including flange/web","≥10 mm throughout"],
+       ["Seal retaining lip thickness","≥6 mm"],
+       ["Edge beam minimum height","≥80 mm"],
+       ["Edge beam cross-sectional area","≥1500 mm²"],
+       ["Total rigid anchor loop area EACH side","≥1600 mm² per metre joint length"],
+       ["Anchor loop centre-to-centre spacing","≤250 mm"],
+       ["Anchor plate thickness","≥ greater of 0.7 × loop diameter OR 12 mm"],
+       ["Anchor-loop angle to joint","90° ±20° for planned deviation"],
+       ["Anchoring reinforcement","Parallel to anchor loops"],
+       ["Seal mounting","Mechanical locking profile; no separate mechanical fastening of seal"] ],
+     note:"The 1600 mm² figure is a TOTAL area per metre on EACH side, not the cross-section required for one anchor. Approved design and manufacturer detailing govern."},
+    {name:"2606.1 · Sealing Element Movement",status:"checked",headers:["Characteristic","Source requirement"],rows:[
+       ["Perpendicular working movement","At least 80 mm, maximum 100 mm"],
+       ["Parallel working movement","±40 mm"],
+       ["Minimum gap to insert chloroprene seal","25 mm"],
+       ["Seal configuration","Continuous preformed/extruded, locked in edge beam, resistant to oil, gasoline, ozone and ageing"],
+       ["Watertightness","Joint to provide watertight proprietary locking and ease of replacement"] ],
+     note:"These are system performance/component bounds, NOT a calculated design movement for a specific bridge."},
+    {name:"2606.2 · Material Standards",status:"checked",headers:["Component","Source-controlled standard"],rows:[
+       ["Edge steel, ordinary condition","Equivalent RST 37-2 / 37-3; EN10025 S235JRG2 / S355K2G3; ASTM A36/A588; CAN/CSA G40.21 Grade 300W; IS:2062 Grade B"],
+       ["Edge steel, subzero condition","IS:2062 Grade C"],
+       ["Anchor steel","IS:2062 Grade B or equivalent"],
+       ["Sealing element","Chloroprene Rubber; Table 2600-1"],
+       ["Seal tests","Choose one of DIN OR ASTM based on source of supply"] ],
+     note:"Do not combine DIN results with ASTM thresholds for one seal acceptance decision."},
+    {name:"Table 2600-1 · DIN Chloroprene Property Entries",status:"checked",headers:["Property and method","Printed value / source boundary"],rows:[
+       ["Hardness · DIN 53505","63 + 5 Shore A (printed plus sign; interpretation held)"],
+       ["Tensile · DIN 53504","Minimum 11 MPa"],
+       ["Elongation · DIN 53504","Minimum 350%"],
+       ["Tear · DIN 53507","Minimum 10 N/mm (longitudinal/transverse printed line; check original layout)"],
+       ["Shock elasticity · DIN 53512","Minimum 25%"],
+       ["Abrasion · DIN 53516","Maximum 220 mm³"],
+       ["Residual compression strain · DIN 53517","Max 28% in shared DIN/ASTM property row; exact association held"],
+       ["Hot-air ageing · DIN 53508, 14 days at 70°C","Hardness max +7 Shore A; tensile change max −20%; elongation change max −20%"],
+       ["Ozone ageing · DIN 53509","No cracks"],
+       ["Oil No.1 swelling · DIN 53521","Volume max +5%; hardness max −10 Shore A"],
+       ["Oil No.3 swelling · DIN 53521","Volume max +25%; hardness max −20 Shore A"] ],
+     note:"Only source-controlled printed values, not auto-pass/fail. DIN 53521 swelling uses named ASTM test oils; this does not override the source note selecting one DIN/ASTM specification."},
+    {name:"Table 2600-1 · ASTM Alternative Property Entries",status:"checked",headers:["Property and method","Printed value / held issue"],rows:[
+       ["Hardness · ASTM D2240","55 + 5 Shore A (printed plus sign; interpretation held)"],
+       ["Tensile · ASTM D412","Minimum 13.8 MPa"],
+       ["Elongation · ASTM D412","Minimum 250%"],
+       ["Tear · ASTM D624 (printed Dia C)","Minimum 10 N/mm (verify source table alignment)"],
+       ["Compression strain · ASTM D395 Method B","Max 28% shown for combined DIN/ASTM row; hold alignment"],
+       ["Cold hardening point · ASTM D1043","Min −35°C as printed; interpretation held"] ],
+     note:"Table 2600-1 expressly states only one specification, ASTM or DIN, per source of supply. Printed hardness uses + not unambiguously ±; cold hardening uses Min −35°C; preserve rather than correct. Clarify from actual governing source before numeric pass/fail."},
+    {name:"2606.3–4 · Fabrication, Corrosion and Handling",status:"checked",headers:["Control","Source requirement"],rows:[
+       ["Profile fit","Full carriageway width; align against actual bridge cross-section on fabrication tables"],
+       ["Welds / anchor assembly","Anchor plates to edge beams; loop bars to plates"],
+       ["Corrosion protection","Hot-dip galvanising ≥150 µm OR epoxy-coating"],
+       ["Inserts / anchor surfaces","Clause 2605.3(i) surface treatment including concrete-contact faces"],
+       ["Transport","Clamp finished assembly; auxiliary brackets"],
+       ["Storage","Under cover on wooden padding"],
+       ["Delivered damaged materials","Contractor makes good to Engineer satisfaction"] ],
+     note:"Read fabrication details with Clause 2602.2 prohibition on SITE-manufactured expansion joints. This clause does not waive it."}
+  ];
+  strip.calc="No automatic acceptance or movement/design calculator. Approved movement, anchor design, manufacturer and contractual requirements remain governing; Table 2600-1 source-control issues prevent a combined pass/fail tool.";
+
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2600"]')){
@@ -160,7 +239,7 @@
   }
   const notice=document.querySelector('.note.warn');
   if(notice && notice.innerHTML.includes('and River Training / Protection 2501–2510 content is source-checked')){
-    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2605 content is source-checked');
+    notice.innerHTML=notice.innerHTML.replace('and River Training / Protection 2501–2510 content is source-checked','and River Training / Protection 2501–2510 and Expansion Joints 2601–2606 content is source-checked');
   }
   const clause=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===clause))selected=RECORDS.findIndex(r=>r.clause===clause);
