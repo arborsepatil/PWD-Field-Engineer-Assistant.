@@ -1,6 +1,6 @@
 /* MoRTH Section 2500 extension — source controlled from private Fifth Revision 2013 PDF.
    Loaded only by morth_reader.html via app-shell.js. Keep full publication private.
-   Verified clauses 2501–2502; index only 2503–2510. */
+   Verified clauses 2501–2510; details are source-limited and unresolved source-control issues remain flagged. */
 (() => {
   if (typeof RECORDS === 'undefined' || typeof renderTree !== 'function') return;
   if (RECORDS.some(r => r.clause === '2501')) return;
@@ -238,6 +238,67 @@
   ],note:'These printed minima are not substitute for hydraulic/scour design or approved foundation drawings.'}];
   rp2507.calc='No automatic curtain-wall/apron design or approval calculation is enabled. Relevant source limits remain visible for Engineer-controlled checking.';
 
+
+  // 2508–2510: generic acceptance, measurement and rate boundaries.
+  // Do not translate generic materials conformance or payment into new QC test frequency.
+  const rp2508=records.find(r=>r.clause==='2508');
+  rp2508.status='partial';
+  rp2508.page='Printed p.713 · PDF page mapping QA pending';
+  rp2508.read='Source checked. The clause requires material testing and acceptance of completed work against the applicable specifications; it does not prescribe its own independent numerical limit, sampling quantity or frequency.';
+  rp2508.quick=[
+    '2508 — Test materials in accordance with the applicable MoRTH Specifications and check against the criteria applicable to those materials.',
+    '2508 — Work must conform to the Specifications and applicable standards of acceptance. For actual pass/fail, refer to the governing product, concrete, pitching and material provisions plus Contract/Engineer requirements.',
+    '2508 — No standalone numeric test frequency or separate blanket acceptance threshold is stated here.'
+  ];
+  rp2508.tables=[];
+  rp2508.calc='No calculator. This is a governing acceptance-reference clause, not an independent test method or new pass/fail equation.';
+
+  const rp2509=records.find(r=>r.clause==='2509');
+  rp2509.status='partial';
+  rp2509.page='Printed p.713 · PDF page mapping QA pending';
+  rp2509.read='Source checked for unit-of-measure and excavation/incidental-payment boundaries. These are measurement provisions, not new QC acceptance limits.';
+  rp2509.quick=[
+    '2509 — Guide-bund embankment earthwork: cubic metres unless otherwise specified.',
+    '2509 — Apron boulders, concrete blocks and boulder/block-filled wire crates: cubic metres.',
+    '2509 — Filter and stone pitching: each measured separately in cubic metres unless otherwise specified.',
+    '2509 — Stone/concrete-block flooring and concrete bedding: separate cubic-metre measurement for each class of material.',
+    '2509 — Preparing the flooring base is incidental, not a separate measured quantity.',
+    '2509 — Apron excavation averaging up to 150 mm depth is included in the main apron item unless otherwise specified. Excavation more than 150 mm is measured in cubic metres under Section 300, unless the Contract specifies otherwise.',
+    '2509 — If Engineer directs material stacking at site before laying, the stacking operation is incidental.'
+  ];
+  rp2509.tables=[{name:'2509 · Measurement / Payment Boundaries',status:'checked',headers:['Item','Unit or payment rule'],rows:[
+    ['Guide-bund embankment earthwork','m³ unless otherwise specified'],
+    ['Boulders/blocks/wire-crate fills in apron','m³'],
+    ['Filter and stone pitching','Measured separately in m³ unless otherwise specified'],
+    ['Flooring and cement-concrete bedding','Separate m³ by material class'],
+    ['Preparation of flooring base','Incidental'],
+    ['Apron excavation up to average depth 150 mm','Included in main item unless otherwise specified'],
+    ['Apron excavation beyond 150 mm','Measure separately in m³ under Section 300 unless otherwise specified'],
+    ['Engineer-directed stacking at site','Incidental']
+  ],note:'Contract item wording and drawings determine measured limits; measurement units are not QC test frequencies or engineering approval.'}];
+  rp2509.calc='No payment calculator added: Section 2509 supplies units and exclusions, while approved geometry and Contract-specific measurement boundaries control actual quantities.';
+
+  const rp2510=records.find(r=>r.clause==='2510');
+  rp2510.status='partial';
+  rp2510.page='Printed pp.713–714 · PDF page mapping QA pending';
+  rp2510.read='Source checked for contract unit-rate inclusions. This clause does not establish a technical acceptance threshold.';
+  rp2510.quick=[
+    '2510 — Guide-bund embankment rate includes materials and transport, laying, compaction, labour, equipment, sampling/testing, supervision and incidentals necessary for specified completion.',
+    '2510 — Apron item rate includes materials, labour, plant and excavation/dressing of bed up to an average 150 mm depth. Excavation beyond 150 mm is separately payable unless otherwise specified.',
+    '2510 — Slope pitching rate includes preparing base, laying/compacting filter and placing dry-rubble or M15-block revetment to drawing thickness, line, curves, slope and levels, with related labour, materials and plant.',
+    '2510 — Stone or concrete-block flooring rate includes material, labour, tools and plant to complete the specified item.',
+    '2510 — The scope of rates is a payment boundary only: do not use as a QC sampling mandate or substitute for the Contract schedule.'
+  ];
+  rp2510.tables=[{name:'2510 · Contract Unit-Rate Inclusions',status:'checked',headers:['Item','Included scope'],rows:[
+    ['Guide-bund embankment','Materials/transport, placement, compaction, plant, labour, testing and incidental/supervision costs'],
+    ['Apron','Materials, equipment and labour, plus bed dressing / excavation up to 150 mm average depth'],
+    ['Apron excavation over 150 mm','Separate payment unless otherwise specified'],
+    ['Slope pitching/revetment','Base preparation, filter placement/compaction, pitching, tools/plant and labour'],
+    ['Stone/CC block flooring','All required materials, tools/plant and labour']
+  ],note:'Read with Clause 2509 and the actual Contract schedule; no cost-rate amount is fixed by this clause.'}];
+  rp2510.calc='No SSR or BOQ rate calculator enabled: Contract price and item wording are not provided by MoRTH 2510.';
+
+
   RECORDS.push(...records);
   const filter = document.getElementById('sectionFilter');
   if (filter && !filter.querySelector('option[value="2500"]')) {
@@ -251,7 +312,7 @@
     const original = 'and Geotechnical Investigation 2401–2415 content is source-checked';
     if (notice.innerHTML.includes(original)) {
       notice.innerHTML = notice.innerHTML.replace(original,
-        'and Geotechnical Investigation 2401–2415 and River Training / Protection 2501–2502 content is source-checked');
+        'and Geotechnical Investigation 2401–2415 and River Training / Protection 2501–2510 content is source-checked');
     }
   }
   const clause = new URLSearchParams(location.search).get('clause');
