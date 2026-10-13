@@ -26,6 +26,11 @@
           closeSection2600.onload=()=>{
             const section2700=document.createElement('script');
             section2700.src='./morth-section-2700.js';
+            section2700.onload=()=>{
+              const section2800=document.createElement('script');
+              section2800.src='./morth-section-2800.js';
+              document.body.appendChild(section2800);
+            };
             document.body.appendChild(section2700);
           };
           document.body.appendChild(closeSection2600);
@@ -42,6 +47,11 @@
     qc.onload=()=>{
       const deckQC=document.createElement('script');
       deckQC.src='./morth-qc-2700.js';
+      deckQC.onload=()=>{
+        const repairQC=document.createElement('script');
+        repairQC.src='./morth-qc-2800.js';
+        document.body.appendChild(repairQC);
+      };
       document.body.appendChild(deckQC);
     };
     document.body.appendChild(qc);
