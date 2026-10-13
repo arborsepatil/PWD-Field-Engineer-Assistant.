@@ -1,4 +1,4 @@
-/* MoRTH Fifth Revision 2013, Clauses 2801–2802; selected Clause 2803 QA and Clause 2804 material/safety documentation.
+/* MoRTH Fifth Revision 2013, Clauses 2801–2802; selected Clauses 2803–2805 structural-repair QA and material documentation.
    High-level structural-repair field controls only.
    NO epoxy/chemical handling or dismantling operating procedure. */
 (() => {
@@ -11,7 +11,7 @@
   card.className='qc-card';
   card.style.marginTop='10px';
   const h=document.createElement('h3');
-  h.textContent='MoRTH 2801–2804 — Structural Repair · Pre-Work & QA';
+  h.textContent='MoRTH 2801–2805 — Structural Repair · Pre-Work & QA';
   card.appendChild(h);
   const checks=[
     '2801: Confirm competent assessment, approved repair plan and Engineer instructions before proceeding; repair selection is not a standalone JE checklist decision.',
@@ -29,7 +29,11 @@
     '2804.1.7 / 2804.2.6: Check contractor or manufacturer test evidence, including the 2803.9 epoxy cross-reference; do not invent additional frequencies.',
     '2804.1.8: Confirm specialist chemical-hazard documentation, approved safety controls, exposure protection and appropriate waste-management records.',
     'SOURCE HOLD: Printed 2804.2.1 compressive-strength entry "18.20 N/mm²" and slant-shear label require authoritative clarification before numerical approval.',
-    'LIMIT: 2803–2804 are partial documentary checks; 2805–2815 remain index-only; no repair application, chemical handling or structural approval is authorised.'
+    '2805.1: Confirm manufacturer and product-system identity; verify documented normal-temperature pot life meets the printed minimum of 60 minutes.',
+    '2805.2: Obtain Engineer-reviewed existing-concrete condition and decisions for cracks/spalling, plus contractor inspection sign-off under the approved repair scheme.',
+    '2805.3.1: Verify applicable resin test evidence against the 2803.9 cross-reference; keep batch/system traceability and Engineer material-acceptance decisions.',
+    '2805.3.2: Verify the authorised design-mix-based bonded-interface test report at 28 days and documented no-failure-at-joint criterion before accepting the specialist record.',
+    'LIMIT: 2803–2805 are partial documentary checks; 2806–2815 remain index-only. No repair application, hazardous-material instructions, or structural approval is authorised.'
   ];
   const ul=document.createElement('ul');
   checks.forEach(t=>{const li=document.createElement('li');li.textContent=t;ul.appendChild(li);});
