@@ -1,7 +1,7 @@
 /* MoRTH Section 2800 — Repair of Structures.
    Source: Fifth Revision (2013), printed pp.759 onward.
-   Clauses 2801–2802 verified; 2803–2806 have PARTIAL QA reviews.
-   No specialist repair procedures; 2807–2815 remain index-only. */
+   Clauses 2801–2802 verified; 2803–2809 have PARTIAL QA reviews.
+   No specialist operating procedures; 2810–2815 remain index-only. */
 (() => {
   if (typeof RECORDS === 'undefined' || typeof renderTree !== 'function') return;
   if (RECORDS.some(r => r.section === '2800')) return;
@@ -25,8 +25,8 @@
   const list = idx.map(([clause, title, page], i) => ({
     id:2400+i, section:'2800', clause, title,
     page:'Printed p.'+page+' · PDF viewer page mapping QA pending',
-    status:i<6?'partial':'index',
-    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':i===3?'Selected material testing, safety and QC documentation verified; detailed repair operations withheld.':i===4?'Selected bonding material and test-report controls verified; no specialist application instructions.':i===5?'Selected cement-grouting material approvals and testing records verified; specialist execution is outside this reader.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
+    status:i<9?'partial':'index',
+    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':i===3?'Selected material testing, safety and QC documentation verified; detailed repair operations withheld.':i===4?'Selected bonding material and test-report controls verified; no specialist application instructions.':i===5?'Selected cement-grouting material approvals and testing records verified; specialist execution is outside this reader.':i===6?'Selected shotcrete material and test-panel records source-checked.':i===7?'Selected acrylic coating QA, stock and guarantee records source-checked.':i===8?'Patented coating approval, performance and guarantee records source-checked.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
     quick:[], tables:[],
     calc:'No automated repair-design or acceptance calculator. Use approved repair plans, project specifications, specialist supervision and Engineer approval.'
   }));
@@ -221,6 +221,72 @@
     }
   ];
   cementGrouting.calc='No grouting pressure, drilling geometry, mixing sequence, dose, pump-operation or quantity calculator. Review approved material and test records with the competent Engineer.';
+
+  // 2807–2809: Engineering documentary checks only. No specialist equipment
+  // settings, handling, spraying, chemical procedures or structural approval.
+  const shotcrete=list[6];
+  shotcrete.read='MoRTH Fifth Revision (2013), selected Clause 2807 requirements, printed pp.771–773. Material and test-panel QA records checked; PARTIAL scope. Specialist instructions in original code are not reproduced.';
+  shotcrete.quick=[
+    '2807.2–2807.4: Check supplier identity and conformity documents for cement and aggregates against the IS references cited in the source (including IS:269, IS:383 and IS:9012).',
+    '2807.6–2807.8: Retain approved preconstruction test-panel and authorised laboratory strength results. The source refers to a strength of approximately 25 MPa at 28 days; Engineer approval is essential.',
+    '2807.9–2807.13: Confirm competent existing-member assessment and approved repair/reinforcement plan before considering site-inspection release.',
+    '2807.14–2807.15: Review contractor documentation for rejected/rebound material, curing and weather-related controls under the approved method.',
+    'HOLD: No proportioning, nozzle operation, spraying, surface-removal or reinforcement-replacement instructions or automatic acceptance.'
+  ];
+  shotcrete.tables=[{
+    name:'2807 · Shotcrete Pre-Work and QC Records',status:'checked',
+    headers:['Source','JE documentary review','Authority'],
+    rows:[
+      ['2807.2–2807.4','Cement, aggregate and any specialist material traceability and conformity evidence','Engineer-approved repair material submission'],
+      ['2807.6–2807.8','Test-panel identification, recognised laboratory report and 28-day performance result','Applicable IS:9012 and signed Engineer decision'],
+      ['2807.9–2807.13','Member assessment and repair-design approval; reinforcement inspection hold','Competent structural professional and Engineer'],
+      ['2807.14–2807.15','Rejected material, protection and curing records','Qualified contractor QC and safety plan']
+    ],
+    note:'MoRTH Fifth Revision (2013), pp.771–773. Site documentation suggestions do not invent a new test sampling frequency.'
+  }];
+  shotcrete.calc='No structural safety certificate, mix calculator, rebound reuse or shotcrete operating guide.';
+
+  const acrylic=list[7];
+  acrylic.read='MoRTH Fifth Revision (2013), selected Clause 2808 requirements, printed pp.773–775, including coating performance, laboratory evidence, stock register and performance guarantee. PARTIAL; no application procedure.';
+  acrylic.quick=[
+    '2808.1–2808.2: Verify acrylic elastomeric coating technical certificates for anti-carbonation, UV and moisture-vapour diffusion performance against approved contract criteria.',
+    '2808.3: Verify pre-approval laboratory reports and execution-consignment random-sample testing; keep a site stock register periodically signed by the Engineer.',
+    '2808.6: Confirm authorised experienced technical applicator and minimum five-year performance guarantee from the executing agency.',
+    'SOURCE HOLD: Clause 2808.3 cites Table 2800-1 while its acrylic performance table is printed as Table 2800-2; seek clarification.',
+    'SOURCE HOLD: The printed adhesion-unit notation in Table 2800-2 is questionable; do not guess a corrected unit or numerical acceptance limit.',
+    'HOLD: No product handling, surface preparation, application rate or thickness-calculation procedure is supplied.'
+  ];
+  acrylic.tables=[{
+    name:'2808 · Acrylic Coating Approval and QA',status:'checked',
+    headers:['Source','Evidence to retain','Approval / hold'],
+    rows:[
+      ['2808.1–2808.2 / Table 2800-2','Batch/product technical data and accredited laboratory performance certificates','Engineer verifies current contract specification'],
+      ['2808.3','Pre-approval and site-sample test reports plus Engineer-signed stock register','No frequency beyond source term random is inferred'],
+      ['2808.6','Authorised applicator credentials; executing agency guarantee minimum five years','Signed performance guarantee required'],
+      ['Printed discrepancy','2808.3 table reference and Table 2800-2 adhesion units','SOURCE HOLD: no automatic numerical acceptance']
+    ],
+    note:'MoRTH Fifth Revision (2013) pp.773–775; Table 2800-2 printed values not corrected or converted where ambiguous.'
+  }];
+  acrylic.calc='No application, thickness or consumption calculator or chemical handling guidance.';
+
+  const patented=list[8];
+  patented.read='MoRTH Fifth Revision (2013), source-checked Clause 2809, printed pp.775–776; Engineer approval, relevant product-performance records and guarantee. No application instructions.';
+  patented.quick=[
+    '2809: Patented coating systems require Engineer approval based on an assessment of product performance.',
+    '2809: Retain relevant certificates from users and acceptance-test reports to published standards for carbonation, vapour diffusion, crack bridging, UV resistance and related criteria.',
+    '2809: The executing agency must provide a minimum five-year performance guarantee.',
+    'HOLD: No automatic proprietary-product selection or structural certification.'
+  ];
+  patented.tables=[{
+    name:'2809 · Proprietary Protective Coating Approval',status:'checked',
+    headers:['Stage','Evidence','Engineer action'],
+    rows:[
+      ['Product assessment','Technical proposal, user certificates and relevant published-standard test reports','Approve or reject the proposed system'],
+      ['Performance guarantee','Executing agency guarantee for at least five years','Retain signed guarantee before acceptance']
+    ],
+    note:'MoRTH Fifth Revision (2013), Clause 2809, pp.775–776. No specific product is endorsed.'
+  }];
+  patented.calc='No material quantity, application method or product acceptance calculator.';
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2800"]')) {
@@ -231,7 +297,7 @@
   const note=document.querySelector('.note.warn');
   if(note && note.innerHTML.includes('Wearing Coat/Appurtenances 2701–2709 content is source-checked')) {
     note.innerHTML=note.innerHTML.replace('Wearing Coat/Appurtenances 2701–2709 content is source-checked',
-      'Wearing Coat/Appurtenances 2701–2709, Repair of Structures 2801–2802 and selected Clauses 2803–2806 QA controls are source-checked');
+      'Wearing Coat/Appurtenances 2701–2709, Repair of Structures 2801–2802 and selected Clauses 2803–2809 QA controls are source-checked');
   }
   const requested=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===requested)) selected=RECORDS.findIndex(r=>r.section==='2800' && r.clause===requested);
