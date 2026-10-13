@@ -1,7 +1,7 @@
 /* MoRTH Section 2800 — Repair of Structures.
    Source: Fifth Revision (2013), printed pp.759 onward.
-   Clauses 2801–2802 verified; Clause 2803 has a LIMITED QA/governance review.
-   2803 is not an epoxy-injection procedure; 2804–2815 are index-only. */
+   Clauses 2801–2802 verified; 2803–2804 have PARTIAL QA reviews.
+   No specialist repair procedures; 2805–2815 remain index-only. */
 (() => {
   if (typeof RECORDS === 'undefined' || typeof renderTree !== 'function') return;
   if (RECORDS.some(r => r.section === '2800')) return;
@@ -25,8 +25,8 @@
   const list = idx.map(([clause, title, page], i) => ({
     id:2400+i, section:'2800', clause, title,
     page:'Printed p.'+page+' · PDF viewer page mapping QA pending',
-    status:i<3?'partial':'index',
-    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
+    status:i<4?'partial':'index',
+    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':i===3?'Selected material testing, safety and QC documentation verified; detailed repair operations withheld.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
     quick:[], tables:[],
     calc:'No automated repair-design or acceptance calculator. Use approved repair plans, project specifications, specialist supervision and Engineer approval.'
   }));
@@ -103,6 +103,42 @@
     note:'Source: MoRTH Fifth Revision (2013), printed pp.759–765, Clause 2803.1–2803.3 and 2803.9.1–2803.9.3. Numerical specimen counts above are source-derived; not general-purpose QC sampling frequencies. Confirm contract amendments and approved specialist documentation.'
   }];
   cracks.calc='No dosage, injection pressure, mixing ratio, repair procedure or automatic pass/fail calculation. Structural safety, core testing, material approval and method selection require competent supervision.';
+
+  // Clause 2804: documentary source/QC review only; not a repair procedure.
+  const spalled=list[3];
+  spalled.read='Source-checked selected MoRTH Fifth Revision 2013 requirements, printed pp.766–769: 2804.1.1, 2804.1.7–2804.1.8, 2804.2.1 and 2804.2.6. PARTIAL only: detailed chemical/product application requirements have not been transcribed.';
+  spalled.quick=[
+    '2804.1 / 2804.2 — Epoxy mortar and polymer-modified cementitious mortar are different systems; material choice requires the approved repair design and Engineer direction.',
+    '2804.1.1 — Contractor material-submission and sample-test evidence must be assessed against the specified epoxy mortar properties; confirm manufacturer identity.',
+    '2804.1.7 — Epoxy mortar test acceptance refers to Clause 2803.9. Check authorised lab/contractor evidence and Engineer decision.',
+    '2804.1.8 — Confirm product hazard information, protective measures, safe-working arrangements, environmental controls and disposal records through the specialist contractor.',
+    '2804.2.1 / 2804.2.6 — Verify polymer mortar supplier identity and manufacturer test evidence for the published properties; do not treat epoxy and PMC as interchangeable.',
+    'SOURCE-CONTROL: Polymer mortar compressive strength is printed "18.20 N/mm²" in 2804.2.1, an ambiguous notation. Preserve it and seek authoritative clarification, not a guessed range.',
+    'HOLD: No mixing, acid/solvent handling, surface preparation, construction sequence, coating technique or chemical waste-treatment instructions are provided.'
+  ];
+  spalled.tables=[
+    {name:'2804 · Engineer/JE Material Documentation Matrix',status:'checked',
+     headers:['Reference','Document to verify','Authority / hold'],
+     rows:[
+      ['2804.1.1 · Epoxy mortar','Approved source/manufacturer, sample test certificates and traceable product identity','Engineer and structural repair specification control material approval'],
+      ['2804.1.7 · Epoxy tests','Material conformity evidence with 2803.9 cross-reference','No app-driven laboratory procedure or sampling inference'],
+      ['2804.1.8 · Personnel / environment','Specialist hazard documentation, protective controls, safe site plan, ventilation/exposure and disposal records','Contractor specialist and site safety officer govern'],
+      ['2804.2.1 · Polymer mortar','Supplier/manufacturer and material-property test reports','Compressive-strength print "18.20" held for clarification'],
+      ['2804.2.6 · Polymer tests','Manufacturer-supported tests satisfying the specified 2804.2.1 requirements','No independent test frequency supplied']
+     ],
+     note:'MoRTH Fifth Revision 2013 printed pp.766–769. The approved repair scheme, current contract, manufacturer and Engineer govern. Not a material approval certificate.'},
+    {name:'2804 · Selected Published Properties — Source-Controlled',status:'checked',
+     headers:['Reference','Published entry','Interpretation policy'],
+     rows:[
+      ['2804.1.1','Epoxy mortar pot life 60 min at 30°C; bond strength 12 MPa; tensile strength 16 MPa','Test report reference only; no automatic approval'],
+      ['2804.2.1','Polymer mortar pot life 60 min at 30°C; flexural strength after 28 days 3.0–5.0 N/mm²','Verify report, amendment and source'],
+      ['2804.2.1','Compressive strength after 28 days printed "18.20 N/mm²"','SOURCE HOLD: do not infer 18–20 or a single threshold'],
+      ['2804.2.1','Unusual printed slant-shear label "Addition to concrete": 3.0–5.0 N/mm²','SOURCE HOLD: clarify intended criterion before acceptance'],
+      ['2804.1.7 / 2804.2.6','Epoxy tests cross-reference 2803.9; polymer must meet manufacturer and 2804.2.1','No invented frequency or testing method']
+     ],
+     note:'Only select documented QC figures. Chemical work instructions and field acceptance decisions are deliberately excluded.'}
+  ];
+  spalled.calc='No structural repair selection, chemical handling, quantity/coverage estimate or automatic pass/fail. Engineer review is mandatory.';
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2800"]')) {
@@ -113,7 +149,7 @@
   const note=document.querySelector('.note.warn');
   if(note && note.innerHTML.includes('Wearing Coat/Appurtenances 2701–2709 content is source-checked')) {
     note.innerHTML=note.innerHTML.replace('Wearing Coat/Appurtenances 2701–2709 content is source-checked',
-      'Wearing Coat/Appurtenances 2701–2709 and Repair of Structures 2801–2802 plus selected Clause 2803 QA controls are source-checked');
+      'Wearing Coat/Appurtenances 2701–2709, Repair of Structures 2801–2802 and selected Clauses 2803–2804 QA controls are source-checked');
   }
   const requested=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===requested)) selected=RECORDS.findIndex(r=>r.section==='2800' && r.clause===requested);
