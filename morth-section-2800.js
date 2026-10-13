@@ -1,7 +1,7 @@
 /* MoRTH Section 2800 — Repair of Structures.
    Source: Fifth Revision (2013), printed pp.759 onward.
-   Clauses 2801–2802 verified; 2803–2805 have PARTIAL QA reviews.
-   No specialist repair procedures; 2806–2815 remain index-only. */
+   Clauses 2801–2802 verified; 2803–2806 have PARTIAL QA reviews.
+   No specialist repair procedures; 2807–2815 remain index-only. */
 (() => {
   if (typeof RECORDS === 'undefined' || typeof renderTree !== 'function') return;
   if (RECORDS.some(r => r.section === '2800')) return;
@@ -25,8 +25,8 @@
   const list = idx.map(([clause, title, page], i) => ({
     id:2400+i, section:'2800', clause, title,
     page:'Printed p.'+page+' · PDF viewer page mapping QA pending',
-    status:i<5?'partial':'index',
-    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':i===3?'Selected material testing, safety and QC documentation verified; detailed repair operations withheld.':i===4?'Selected bonding material and test-report controls verified; no specialist application instructions.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
+    status:i<6?'partial':'index',
+    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':i===3?'Selected material testing, safety and QC documentation verified; detailed repair operations withheld.':i===4?'Selected bonding material and test-report controls verified; no specialist application instructions.':i===5?'Selected cement-grouting material approvals and testing records verified; specialist execution is outside this reader.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
     quick:[], tables:[],
     calc:'No automated repair-design or acceptance calculator. Use approved repair plans, project specifications, specialist supervision and Engineer approval.'
   }));
@@ -178,6 +178,49 @@
     }
   ];
   newOldBond.calc='No epoxy application calculation, product dosing, site methodology, structural capacity estimation or automatic acceptance. Consult qualified specialists, approved repair scheme and Engineer.';
+
+  // Clause 2806: source-backed documentary review only, not a pressure
+  // grouting, drilling, mixing, pumping or chemical-admixture operating guide.
+  const cementGrouting=list[5];
+  cementGrouting.read='MoRTH Fifth Revision (2013), printed pp.769–771. Source-checked selected material governance under 2806.1 and testing/contractor-record requirements under 2806.6. Clauses 2806.2–2806.5 were inspected but field-operating instructions are not provided. PARTIAL scope; approved scheme and specialist supervision govern.';
+  cementGrouting.quick=[
+    '2806.1 — Verify the approved grout material submission and documented suitability for the intended repair; the source describes Portland-cement-based grout as normal practice.',
+    '2806.1 — Any proposed additive or admixture requires Engineer approval; manufacturer or contractor preference alone is not an authorisation.',
+    '2806.1 — Confirm the contractor has a project-specific material/workability assessment endorsed under the approved repair scheme. Do not infer an automatic site mix from historical example values.',
+    '2806.2–2806.5 — The source contains specialist preparation, equipment and application requirements. Record approval of the specialist method statement, safety arrangements, supervising personnel and inspection hold points; no operational instructions are supplied here.',
+    '2806.6 — Review the final percolation test report. The printed acceptance statement requires a result below 2 "lugions" (historical spelling); record the tested value and Engineer decision without auto-accepting.',
+    '2806.6 — For specialised polymer-modified cementitious grout, confirm the applicable manufacturer literature/specification is part of the approved submission.',
+    'SOURCE-CONTROL HOLD — Printed Clause 2806.4 has potentially confusing stopping-language. Keep original source and Engineer-approved method authoritative; do not extrapolate a stop rule, pressure range or pump setting from this app.'
+  ];
+  cementGrouting.tables=[
+    {
+      name:'2806 · Cement Grouting — PWD JE Documentary Inspection',
+      status:'checked',
+      headers:['Clause','Evidence / site record','Engineer / specialist hold'],
+      rows:[
+        ['2806.1 · Materials','Product identification, cement source, approved grout submission, site-specific compatibility and material records','Approval and material suitability require Engineer decision'],
+        ['2806.1 · Admixtures','Proposal and written approval for any additive/admixture, with traceable material identity','No default admixture is authorised'],
+        ['2806.2–2806.5 · Work method','Approved specialist work plan, supervision, condition survey, protective measures and inspection record','These are documentation controls only; no drilling or pumping guidance'],
+        ['2806.6 · Final test','Percolation test report after completion with location, result, tester and Engineer review','Printed acceptance statement is below 2 "lugions"; no automated clearance'],
+        ['2806.6 · Specialised grout','Manufacturer literature, project specification and approval for polymer-modified systems','Do not substitute a generic cement-grout checklist for a specialist system']
+      ],
+      note:'Source: MoRTH Fifth Revision (2013), Section 2800, pp.769–771. Method-statement and inspection-record prompts are practical site-governance notes, not new prescriptive MoRTH test frequencies or construction methods.'
+    },
+    {
+      name:'2806 · Source-Critical Distinctions',
+      status:'checked',
+      headers:['Subject','Verified source reference','App treatment'],
+      rows:[
+        ['Material selection · 2806.1','Portland cement grout and Engineer approval for additives','Source summary only; no material quantity or water-ratio calculator'],
+        ['Site implementation · 2806.2–2806.5','Preparation, equipment and application in the original source','HOLD: qualified specialist plan and site safety approval; no execution or equipment settings'],
+        ['End-of-work quality · 2806.6','Percolation requirement printed below 2 "lugions"','Record laboratory/field test evidence; no algorithmic pass/fail'],
+        ['Specialised grout · 2806.6','Follow approved manufacturer specifications for polymer-modified cementitious systems','Specialist supplier information cannot override contract and Engineer authority'],
+        ['Historical ambiguity · 2806.4','Ambiguous printed work-continuation wording','SOURCE HOLD: consult the controlling original document / contract clarification']
+      ],
+      note:'The spelling "lugions" is retained as printed; the accepted test name/unit and laboratory method should be verified against approved project documentation. No other acceptance number or test frequency is inferred.'
+    }
+  ];
+  cementGrouting.calc='No grouting pressure, drilling geometry, mixing sequence, dose, pump-operation or quantity calculator. Review approved material and test records with the competent Engineer.';
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2800"]')) {
@@ -188,7 +231,7 @@
   const note=document.querySelector('.note.warn');
   if(note && note.innerHTML.includes('Wearing Coat/Appurtenances 2701–2709 content is source-checked')) {
     note.innerHTML=note.innerHTML.replace('Wearing Coat/Appurtenances 2701–2709 content is source-checked',
-      'Wearing Coat/Appurtenances 2701–2709, Repair of Structures 2801–2802 and selected Clauses 2803–2805 QA controls are source-checked');
+      'Wearing Coat/Appurtenances 2701–2709, Repair of Structures 2801–2802 and selected Clauses 2803–2806 QA controls are source-checked');
   }
   const requested=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===requested)) selected=RECORDS.findIndex(r=>r.section==='2800' && r.clause===requested);
