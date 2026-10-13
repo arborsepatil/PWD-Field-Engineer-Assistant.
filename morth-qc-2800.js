@@ -1,4 +1,4 @@
-/* MoRTH Fifth Revision 2013, Clauses 2801–2802; selected Clauses 2803–2806 structural-repair QA and material documentation.
+/* MoRTH Fifth Revision 2013, Clauses 2801–2802; selected Clauses 2803–2809 structural-repair QA and material documentation.
    High-level structural-repair field controls only.
    NO epoxy/chemical handling or dismantling operating procedure. */
 (() => {
@@ -11,7 +11,7 @@
   card.className='qc-card';
   card.style.marginTop='10px';
   const h=document.createElement('h3');
-  h.textContent='MoRTH 2801–2806 — Structural Repair · Pre-Work & QA';
+  h.textContent='MoRTH 2801–2809 — Structural Repair · Pre-Work & QA';
   card.appendChild(h);
   const checks=[
     '2801: Confirm competent assessment, approved repair plan and Engineer instructions before proceeding; repair selection is not a standalone JE checklist decision.',
@@ -38,7 +38,12 @@
     '2806.6: Review final percolation test evidence and documented Engineer decision; the historical source prints a result below 2 "lugions". Do not treat this card as a standalone acceptance certificate.',
     '2806.6: Check manufacturer and contract specifications for any specialised polymer-modified grout before Engineer approval.',
     'SOURCE HOLD: Printed 2806.4 stopping-language is potentially ambiguous; do not infer a pressure setting, stopping rule or safe operating method from the app.',
-    'LIMIT: 2803–2806 remain partial documentary checks and 2807–2815 are index-only. No grouting-operation, structural assessment or field work authorisation is supplied.'
+    '2807: Check source-traceable cement/aggregate certificates and authorised test-panel and 28-day laboratory reports, with signed engineering review.',
+    '2807: Confirm approved member assessment, repair plan, contractor rejected-material QC, weather and curing records without treating this as a work method.',
+    '2808: Verify laboratory product tests, site-sample reports and Engineer-signed stock register, with approved applicator and minimum five-year guarantee.',
+    '2808 SOURCE HOLD: Table numbering and adhesion-unit printing need clarification before numerical material acceptance.',
+    '2809: Verify performance certificates, published-standard testing, Engineer approval and executing-agency five-year guarantee for proprietary coating systems.',
+    'LIMIT: 2803–2809 are partial documentary source-checks; 2810–2815 remain index-only. No specialist application, equipment or structural safety authorisation is supplied.'
   ];
   const ul=document.createElement('ul');
   checks.forEach(t=>{const li=document.createElement('li');li.textContent=t;ul.appendChild(li);});
