@@ -1,7 +1,7 @@
 /* MoRTH Section 2800 — Repair of Structures.
    Source: Fifth Revision (2013), printed pp.759 onward.
-   Only Clauses 2801–2802 source-checked in this increment.
-   Clauses 2803–2815 are contents-index entries, not repair instructions. */
+   Clauses 2801–2802 verified; Clause 2803 has a LIMITED QA/governance review.
+   2803 is not an epoxy-injection procedure; 2804–2815 are index-only. */
 (() => {
   if (typeof RECORDS === 'undefined' || typeof renderTree !== 'function') return;
   if (RECORDS.some(r => r.section === '2800')) return;
@@ -25,8 +25,8 @@
   const list = idx.map(([clause, title, page], i) => ({
     id:2400+i, section:'2800', clause, title,
     page:'Printed p.'+page+' · PDF viewer page mapping QA pending',
-    status:i<2?'partial':'index',
-    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
+    status:i<3?'partial':'index',
+    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
     quick:[], tables:[],
     calc:'No automated repair-design or acceptance calculator. Use approved repair plans, project specifications, specialist supervision and Engineer approval.'
   }));
@@ -78,6 +78,31 @@
   }];
   general.calc='No demolition method, temporary support design, safe access design or numerical acceptance rule is inferred from Clause 2802.';
 
+  const cracks=list[2];
+  cracks.read='Source-checked selected requirements of 2803.1–2803.3 and quality evidence in 2803.9.1–2803.9.3, printed pp.759–765. Clause remains PARTIAL: material specifications, application procedures, detailed test procedures and specialist execution are not reproduced.';
+  cracks.quick=[
+    '2803.1 — Structural bonding using epoxy adhesive is governed by the MoRTH repair specifications and the approved structural repair scheme.',
+    '2803.2 — Before work, obtain the contractor method statement covering method, material sources, equipment, personnel and supervision.',
+    '2803.3 — Injection work requires qualified, experienced contractor personnel; this JE reader does not authorise injection by untrained staff.',
+    '2803.9.1 — Prior to material approval, contractor test evidence is required for each resin/hardener batch and combination; subsequent tests are subject to Engineer direction.',
+    '2803.9.2 — Core acceptance is Engineer-directed, including locations chosen to avoid critical or highly stressed portions of the member; failed acceptance requires remedial review before continuation.',
+    '2803.9.3 — Contractor maintains complete pressure-test and proportion-test records for injection equipment, available to the Engineer throughout the work.',
+    'HOLD — Detailed 2803.4–2803.8 material, equipment and injection steps are intentionally excluded here. Refer to the full source, approved repair plan and specialist method statement.'
+  ];
+  cracks.tables=[{
+    name:'2803 · Structural Crack Repair — Documentary QC (limited source check)',
+    status:'checked',
+    headers:['MoRTH reference','Evidence to check','Authority / limitation'],
+    rows:[
+      ['2803.1–2803.3','Approved repair scheme; contractor method statement; material source and equipment list; specialist personnel qualifications','Engineer/specialist acceptance before work'],
+      ['2803.9.1 · pre-approval material tests','Batch-wise viscosity, pot life and bond results (three specimens each); shear results (six specimens: three after 24 h and three after 72 h)','Contractor test records from site or authorised laboratory; further testing per Engineer'],
+      ['2803.9.2 · core acceptance','Engineer direction, approved non-critical sampling location, initial sampling evidence and acceptance reports','Further sampling frequency directed/agreed by Engineer; do not initiate destructive coring from a generic checklist'],
+      ['2803.9.3 · equipment verification','Complete, accurate specialist pressure and proportion test reports available to Engineer','Equipment test methods/pressures are not instructions in this app'],
+      ['Source boundary','2803.4–2803.8 plus detailed 2803.9 procedures not included in this reader','No automatic material acceptance, crack-sealing method selection or structural safety certification']
+    ],
+    note:'Source: MoRTH Fifth Revision (2013), printed pp.759–765, Clause 2803.1–2803.3 and 2803.9.1–2803.9.3. Numerical specimen counts above are source-derived; not general-purpose QC sampling frequencies. Confirm contract amendments and approved specialist documentation.'
+  }];
+  cracks.calc='No dosage, injection pressure, mixing ratio, repair procedure or automatic pass/fail calculation. Structural safety, core testing, material approval and method selection require competent supervision.';
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2800"]')) {
@@ -88,7 +113,7 @@
   const note=document.querySelector('.note.warn');
   if(note && note.innerHTML.includes('Wearing Coat/Appurtenances 2701–2709 content is source-checked')) {
     note.innerHTML=note.innerHTML.replace('Wearing Coat/Appurtenances 2701–2709 content is source-checked',
-      'Wearing Coat/Appurtenances 2701–2709 and Repair of Structures 2801–2802 content is source-checked');
+      'Wearing Coat/Appurtenances 2701–2709 and Repair of Structures 2801–2802 plus selected Clause 2803 QA controls are source-checked');
   }
   const requested=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===requested)) selected=RECORDS.findIndex(r=>r.section==='2800' && r.clause===requested);
