@@ -1,7 +1,7 @@
 /* MoRTH Section 2800 — Repair of Structures.
    Source: Fifth Revision (2013), printed pp.759 onward.
-   Clauses 2801–2802 verified; 2803–2804 have PARTIAL QA reviews.
-   No specialist repair procedures; 2805–2815 remain index-only. */
+   Clauses 2801–2802 verified; 2803–2805 have PARTIAL QA reviews.
+   No specialist repair procedures; 2806–2815 remain index-only. */
 (() => {
   if (typeof RECORDS === 'undefined' || typeof renderTree !== 'function') return;
   if (RECORDS.some(r => r.section === '2800')) return;
@@ -25,8 +25,8 @@
   const list = idx.map(([clause, title, page], i) => ({
     id:2400+i, section:'2800', clause, title,
     page:'Printed p.'+page+' · PDF viewer page mapping QA pending',
-    status:i<4?'partial':'index',
-    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':i===3?'Selected material testing, safety and QC documentation verified; detailed repair operations withheld.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
+    status:i<5?'partial':'index',
+    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':i===3?'Selected material testing, safety and QC documentation verified; detailed repair operations withheld.':i===4?'Selected bonding material and test-report controls verified; no specialist application instructions.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
     quick:[], tables:[],
     calc:'No automated repair-design or acceptance calculator. Use approved repair plans, project specifications, specialist supervision and Engineer approval.'
   }));
@@ -139,6 +139,45 @@
      note:'Only select documented QC figures. Chemical work instructions and field acceptance decisions are deliberately excluded.'}
   ];
   spalled.calc='No structural repair selection, chemical handling, quantity/coverage estimate or automatic pass/fail. Engineer review is mandatory.';
+
+  // Clause 2805 — material traceability and Engineer-controlled acceptance evidence.
+  // No epoxy application sequence, chemical preparation or repair design is supplied.
+  const newOldBond=list[4];
+  newOldBond.read='MoRTH Fifth Revision (2013), printed p.769. Selected requirements source-checked: 2805.1, 2805.2 (inspection/Engineer hold points only) and 2805.3.1–2805.3.2 (authorised test evidence). PARTIAL reader: no repair execution procedure or chemical-handling guidance.';
+  newOldBond.quick=[
+    '2805.1 — Verify bonding resin manufacturer and documented minimum pot-life performance: at least 60 minutes at the normal temperature stated in the specification.',
+    '2805.2 — Verify the existing concrete interface and defects are assessed and repair decisions recorded by the Engineer under the approved plan before new-to-old concrete work.',
+    '2805.2 — Obtain contractor inspection evidence for substrate readiness and the approved product-system compatibility; do not treat a photographic checklist as structural approval.',
+    '2805.3.1 — Collect resin test evidence conforming to referenced Clause 2803.9; supplier declarations alone are not independent approval.',
+    '2805.3.2 — Obtain the authorised interface-bond test report for the approved design-mix system and verify that the reported 28-day result does not show failure at the bonded joint.',
+    '2805 — HOLD: Bonding-system selection, substrate treatment, chemical handling, application quantity, construction sequence and in-situ structural adequacy remain specialist/Engineer responsibilities.',
+    'SOURCE-CONTROL — The connected Fifth Revision is historical; approved design, contract amendments, project safety plan and authorised test records govern actual site use.'
+  ];
+  newOldBond.tables=[
+    {name:'2805 · New-to-Old Concrete Bond — JE Documentary Holds',status:'checked',
+     headers:['Clause','Evidence / inspection review','Responsibility / hold'],
+     rows:[
+      ['2805.1 · Manufacturer','Product identity, supplier traceability, normal-temperature pot-life report (at least 60 min)','Engineer evaluates approved product/system'],
+      ['2805.2 · Existing concrete','Recorded condition of interface and repair-necessity assessment, approved work/inspection plan','Engineer chooses treatment for any cracks or spalling; not an app decision'],
+      ['2805.2 · Readiness','Contractor sign-off on interface readiness and manufacturer/system compatibility','Qualified supervisor and Engineer control site hold points'],
+      ['2805.3.1 · Resin QC','Test records checked against Clause 2803.9','Verify source, batch traceability and Engineer acceptance record'],
+      ['2805.3.2 · Bond test','Authorised report identifies approved concrete design mix, test-age evidence and failure location','Source criterion: no bond-joint failure in specified test; do not run auto-pass/fail'],
+      ['Safety / scope','Approved repair scheme and qualified repair contractor supervision','No mixing, dosing, application or hazardous-material operating instructions']
+     ],
+     note:'Source-verified selected requirements: MoRTH Fifth Revision 2013, Clause 2805, printed p.769. Records are documentary checks; original test arrangement and full safety controls require the source, approved documents and competent supervision.'
+    },
+    {name:'2805 · Testing and Approval Traceability',status:'checked',
+     headers:['Source / checkpoint','Record to retain','Important distinction'],
+     rows:[
+      ['2805.1','Manufacturer and normal-temperature pot-life compliance evidence','Published minimum is a material characteristic, not permission to execute'],
+      ['2805.3.1','2803.9 test-reference compliance and batch/system identity','Test applicability must be assessed by the Engineer'],
+      ['2805.3.2','Approved design mix, authorised test assembly and 28-day test report','Acceptance hinges on the specified interface-joint behaviour; no automatic structural certificate'],
+      ['Approval','Signed material review, inspection hold-point release and test acceptance','No independent designer replacement or implied contractor authorisation']
+     ],
+     note:'Do not infer extra frequencies, substitute a generic cube strength test for the specified bonded-joint test, or treat this partial summary as a full execution specification.'
+    }
+  ];
+  newOldBond.calc='No epoxy application calculation, product dosing, site methodology, structural capacity estimation or automatic acceptance. Consult qualified specialists, approved repair scheme and Engineer.';
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2800"]')) {
@@ -149,7 +188,7 @@
   const note=document.querySelector('.note.warn');
   if(note && note.innerHTML.includes('Wearing Coat/Appurtenances 2701–2709 content is source-checked')) {
     note.innerHTML=note.innerHTML.replace('Wearing Coat/Appurtenances 2701–2709 content is source-checked',
-      'Wearing Coat/Appurtenances 2701–2709, Repair of Structures 2801–2802 and selected Clauses 2803–2804 QA controls are source-checked');
+      'Wearing Coat/Appurtenances 2701–2709, Repair of Structures 2801–2802 and selected Clauses 2803–2805 QA controls are source-checked');
   }
   const requested=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===requested)) selected=RECORDS.findIndex(r=>r.section==='2800' && r.clause===requested);
