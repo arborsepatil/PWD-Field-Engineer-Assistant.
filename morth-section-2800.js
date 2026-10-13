@@ -1,7 +1,7 @@
 /* MoRTH Section 2800 — Repair of Structures.
    Source: Fifth Revision (2013), printed pp.759 onward.
-   Clauses 2801–2802 verified; 2803–2809 have PARTIAL QA reviews.
-   No specialist operating procedures; 2810–2815 remain index-only. */
+   Clauses 2801–2802 verified; 2803–2815 have PARTIAL QA reviews.
+   No specialist repair procedures, structural certification or auto approval. */
 (() => {
   if (typeof RECORDS === 'undefined' || typeof renderTree !== 'function') return;
   if (RECORDS.some(r => r.section === '2800')) return;
@@ -25,8 +25,8 @@
   const list = idx.map(([clause, title, page], i) => ({
     id:2400+i, section:'2800', clause, title,
     page:'Printed p.'+page+' · PDF viewer page mapping QA pending',
-    status:i<9?'partial':'index',
-    read:i<2?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':i===2?'Selected approval/QA subclauses verified; not a full injection procedure.':i===3?'Selected material testing, safety and QC documentation verified; detailed repair operations withheld.':i===4?'Selected bonding material and test-report controls verified; no specialist application instructions.':i===5?'Selected cement-grouting material approvals and testing records verified; specialist execution is outside this reader.':i===6?'Selected shotcrete material and test-panel records source-checked.':i===7?'Selected acrylic coating QA, stock and guarantee records source-checked.':i===8?'Patented coating approval, performance and guarantee records source-checked.':'Contents-index entry only. Detailed technical guidance not verified; do not treat this entry as approved engineering instructions.',
+    status:'partial',
+    read:i<2?'Source-checked against MoRTH Fifth Revision (2013).':i<9?'Selected source-backed QC/approval requirements checked; specialist procedures excluded.':'Selected source-backed documentation, acceptance, measurement and rate-inclusion checks verified; no independent engineering or billing approval.',
     quick:[], tables:[],
     calc:'No automated repair-design or acceptance calculator. Use approved repair plans, project specifications, specialist supervision and Engineer approval.'
   }));
@@ -287,6 +287,135 @@
     note:'MoRTH Fifth Revision (2013), Clause 2809, pp.775–776. No specific product is endorsed.'
   }];
   patented.calc='No material quantity, application method or product acceptance calculator.';
+
+  // Clauses 2810–2815 are SOURCE-CONTROLLED documentary / payment references.
+  // Never treat these summaries as authorisation of lifting, dismantling or stressing.
+  const remaining = [
+    {
+      read:'2810 · MoRTH Fifth Revision 2013, printed p.776. Approval, bearing-fit and specialist lift-plan oversight only. PARTIAL.',
+      quick:[
+        '2810.1 — Bearing replacement requires approved repair plans or Engineer direction.',
+        '2810.2 — Obtain designer-approved temporary-works and lift documentation; qualified supervision and recorded monitoring are required.',
+        '2810.3 — Retain bearing identity, documented fit/space verification and worksite communication/safety plan.',
+        'HOLD — No jacking controls, lifting method, capacity appraisal or automatic work clearance.'
+      ],
+      tables:[{name:'2810 · Bearing Replacement Document Check',status:'checked',
+        headers:['Source','JE record','Hold / authority'],
+        rows:[
+          ['2810.1','Bearing defect inventory, approved repair drawings and Engineer instructions','Structural designer/Engineer'],
+          ['2810.2','Approved specialist method, temporary support assessment and lift-monitoring records','No in-app lifting procedure'],
+          ['2810.3','Bearing compatibility, communication plan and post-work inspection','Engineer sign-off']
+        ],
+        note:'MoRTH Fifth Revision, p.776; review only, not a lifting/temporary-works procedure.'
+      }],
+      calc:'No jack sizing, lifting-force or bearing-design calculator.'
+    },
+    {
+      read:'2811 · MoRTH Fifth Revision 2013, printed pp.776–777. Wearing-coat repair, overlay certification and work-safety records. PARTIAL.',
+      quick:[
+        '2811.1 — Wearing-coat repair refers to MoRTH Section 3000.',
+        '2811.2 — Do not approve an added bridge-deck overlay without Engineer certification of structural adequacy for additional load.',
+        '2811.2 — Record existing coat condition, Engineer-approved deck/expansion-joint scope and Section 2700 replacement reference.',
+        '2811.3 — Verify public/workforce safety and approved weather/traffic restrictions.',
+        'HOLD — No dismantling, work-at-height, traffic closure or demolition method is authorised.'
+      ],
+      tables:[{name:'2811 · Wearing Coat Approval Register',status:'checked',
+        headers:['Source','Evidence','Approval control'],
+        rows:[
+          ['2811.1','Repair item and Section 3000 specification link','Contract'],
+          ['2811.2','Bridge loading assessment and overlay certification where applicable','Engineer/designer'],
+          ['2811.2','Existing condition, joint/deck protection and new Section 2700 work approval','Engineer'],
+          ['2811.3','Traffic and worker safety risk record','Approved site plan']
+        ],
+        note:'MoRTH Fifth Revision pp.776–777; high-level documentary controls only.'
+      }],
+      calc:'No bridge overlay adequacy assessment or dismantling calculations.'
+    },
+    {
+      read:'2812 · MoRTH Fifth Revision 2013, printed pp.777–778. Material traceability and design-led structural monitoring only. PARTIAL.',
+      quick:[
+        '2812.1 — Check strand/wire, sheathing, anchorage-system traceability and referenced Section 1000 and IS:4984 source documents.',
+        '2812.2 — Retain Engineer-approved stressing design and Section 1800 conformity records; specialist execution is outside this reader.',
+        '2812.3 — Keep girder-deflection monitoring and distress/exception reports under structural designer review.',
+        'HOLD — No cable design, stressing-force, jacking, anchorage-installation or grouting operating instructions.'
+      ],
+      tables:[{name:'2812 · External Prestressing Documentation',status:'checked',
+        headers:['Source','QC record','Authority'],
+        rows:[
+          ['2812.1','Material/anchorage certificates and approved cable-system documents','Specialist and Engineer'],
+          ['2812.2','Approved drawings, method, Section 1800 conformity and inspection plan','Structural designer'],
+          ['2812.3','Girder-response and deflection-monitoring reports','Engineer reviews anomalies']
+        ],
+        note:'MoRTH Fifth Revision pp.777–778; not a prestressing method or structural certificate.'
+      }],
+      calc:'No prestress, elongation, cable profile or structural-capacity calculator.'
+    },
+    {
+      read:'2813 · MoRTH Fifth Revision 2013, printed p.778. General materials and work acceptance governance checked.',
+      quick:[
+        '2813 — Materials are tested against the applicable MoRTH specifications and relevant prescribed criteria.',
+        '2813 — Completed repairs must meet applicable specified workmanship and acceptance provisions.',
+        'Retain authorised test results and Engineer disposition; this general clause does not supply universal test frequency or extra thresholds.'
+      ],
+      tables:[{name:'2813 · Acceptance Evidence Chain',status:'checked',
+        headers:['Stage','Evidence','Sign-off'],
+        rows:[
+          ['Material','Lot/product identity and specification-linked tests','Engineer'],
+          ['Work','Approved workmanship/QC reports','Engineer'],
+          ['Nonconformity','Failure evidence and corrective-action disposition','Written decision']
+        ],
+        note:'MoRTH Fifth Revision p.778; no newly invented acceptance numbers or frequencies.'
+      }],
+      calc:'No automated acceptance or material-pass/fail calculation.'
+    },
+    {
+      read:'2814 · MoRTH Fifth Revision 2013, printed p.779. Section 2800 measurement units checked for payment documentation.',
+      quick:[
+        '2814 — Epoxy and cement grout are measured by consumed mass in kg; separately payable nipples by number.',
+        '2814 — Mortar/coating, old-new interface bonding and shotcreting are measured by treatment area in m².',
+        '2814 — Bearing replacement/rectification is measured by assembly count and removed wearing coat by m².',
+        '2814 — External prestressing is measured using H.T. strand/wire mass between anchorages. The printed word is "tones"; confirm the contract unit before billing.',
+        'HOLD — No SSR values or payment certification. Contract BOQ and measurement book govern.'
+      ],
+      tables:[{name:'2814 · Source Measurement Units',status:'checked',
+        headers:['Repair work','Unit','Document evidence'],
+        rows:[
+          ['Epoxy / cement grouting','kg','Approved consumption'],
+          ['Grouting nipples where separately payable','number','Count'],
+          ['Epoxy mortar or protective coating','m²','Treated area'],
+          ['Bonding new concrete to old','m²','Interface area'],
+          ['Guniting / shotcreting','m²','Applied area'],
+          ['Bearing replacement or rectification','number','Bearing assemblies'],
+          ['Dismantling wearing coat','m²','Removed surface'],
+          ['External prestressing','Printed "tones" · unit verification HOLD','Strand/wire between anchorages']
+        ],
+        note:'MoRTH Fifth Revision p.779; verify ambiguous mass-unit spelling against contract before booking quantities.'
+      }],
+      calc:'No SSR pricing, payment approval or automatic MB certification.'
+    },
+    {
+      read:'2815 · MoRTH Fifth Revision 2013, printed pp.779–780. Rate-inclusion principles source-checked; no monetary prices.',
+      quick:[
+        '2815 — Contract rates account for applicable materials, labour, equipment, placing, testing and incidental contractual work.',
+        '2815 — Preparation, curing, traffic/safety arrangements, specialist temporary works and monitoring may be included as stated for the relevant repair category.',
+        'Rate-inclusion checks must follow the sanctioned BOQ; avoid automatically adding costs that are already included.',
+        'HOLD — No current Maharashtra SSR rupee rate, GST, lead, royalty or escalation is supplied in this clause.'
+      ],
+      tables:[{name:'2815 · Unit-Rate Inclusion Review',status:'checked',
+        headers:['Work family','Review included obligations','Commercial check'],
+        rows:[
+          ['Grouting / mortar / coating','Material, labour, plant, test and specified preparation','BOQ item governs'],
+          ['Shotcreting','Preparation, testing and curing','Avoid duplication'],
+          ['Bearing work','Connection and specialist associated obligations','Approved estimate/contract'],
+          ['Wearing coat dismantling','Traffic safety and specified joint removal','Engineer-defined scope'],
+          ['External prestressing','Temporary works, testing and girder monitoring','Approved rates only']
+        ],
+        note:'MoRTH Fifth Revision pp.779–780. A specification scope rule is not an SSR rate schedule.'
+      }],
+      calc:'No rupee rate, contract amount or automatic payment authorisation.'
+    }
+  ];
+  remaining.forEach((data,i) => Object.assign(list[9+i], data));
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2800"]')) {
@@ -297,7 +426,7 @@
   const note=document.querySelector('.note.warn');
   if(note && note.innerHTML.includes('Wearing Coat/Appurtenances 2701–2709 content is source-checked')) {
     note.innerHTML=note.innerHTML.replace('Wearing Coat/Appurtenances 2701–2709 content is source-checked',
-      'Wearing Coat/Appurtenances 2701–2709, Repair of Structures 2801–2802 and selected Clauses 2803–2809 QA controls are source-checked');
+      'Wearing Coat/Appurtenances 2701–2709, Repair of Structures 2801–2802 and selected Clauses 2803–2815 have source-checked documentary/QC/payment references');
   }
   const requested=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===requested)) selected=RECORDS.findIndex(r=>r.section==='2800' && r.clause===requested);
