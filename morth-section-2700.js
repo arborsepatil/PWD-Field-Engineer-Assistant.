@@ -1,6 +1,6 @@
 /* MoRTH Section 2700 — Wearing Coat and Appurtenances.
    Private controlling source: Fifth Revision (2013), printed pp.751–756.
-   Clause 2701–2703 facts verified; 2704–2709 are index-only, not approved guidance. */
+   Clauses 2701–2709 are source-checked; PDF viewer mapping QA pending. */
 (() => {
   if (typeof RECORDS === 'undefined' || typeof renderTree !== 'function') return;
   if (RECORDS.some(r => r.section === '2700' || r.clause === '2701')) return;
@@ -18,8 +18,8 @@
   const list = index.map(([clause,title,page],i) => ({
     id:2300+i, section:'2700', clause, title,
     page:'Printed p.'+page+' · PDF mapping QA pending',
-    status:i<3?'partial':'index',
-    read:i<3?'Source-checked against the MoRTH Fifth Revision (2013) PDF.':'Contents index checked only; clause-specific content and decisions are pending source verification.',
+    status:'partial',
+    read:'Source-checked against the MoRTH Fifth Revision (2013) PDF.',
     quick:[], tables:[], calc:'No approved calculation for an unchecked clause.'
   }));
 
@@ -138,6 +138,129 @@
   ];
   barrier.calc='No barrier structural-design calculator authorized by Clause 2703; IRC, approved barrier type and structural design control.';
 
+
+  const approach=list[3];
+  approach.read='Clause 2704 source-checked on printed p.754. Approved drawings/Engineer direction and Sections 1600/1700 govern detail and execution.';
+  approach.quick=[
+    '2704 — Approach slab covers full roadway width; minimum length 3.5 m; minimum thickness 300 mm.',
+    '2704 — M30 concrete with 12 mm dia bars at 150 mm c/c each way in BOTH top and bottom layers.',
+    '2704 — Base normally 150 mm thick M15 concrete, or as shown on drawings or directed by Engineer.',
+    '2704 — Concrete follows Section 1700; reinforcement follows Section 1600.'
+  ];
+  approach.tables=[{name:'2704 · Approach Slab',status:'checked',headers:['Item','Requirement'],rows:[
+    ['Width','Entire roadway width'],['Minimum length','3.5 m'],['Minimum thickness','300 mm'],
+    ['Concrete','M30'],['Top AND bottom steel','12 mm at 150 mm c/c both directions'],
+    ['Base','150 mm M15, unless drawings/Engineer direct otherwise'],['Related sections','1600 and 1700']
+  ],note:'Project drawing and Engineer direction govern final dimensions; no structural-design approval or independent test frequency is implied.'}];
+  approach.calc='No automated approach slab design from Clause 2704 alone.';
+
+  const spouts=list[4];
+  spouts.page='Printed pp.754–755 · PDF mapping QA pending';
+  spouts.read='Clauses 2705, 2705.1–2705.3 source-checked: drainage capacity provisions, fabrication, placement and finishing.';
+  spouts.quick=[
+    '2705 — Drainage spout diameter at least 100 mm, with longitudinal spacing not over 10 m; use corrosion-resistant assembly with cleanout.',
+    '2705 — Arrange down pipes to keep discharge away from structure, reaching 500 mm above HFL; urban viaduct runoff is led to ground-level drains.',
+    '2705.1 — Assemble to drawings; seam weld for watertightness, then hot-dip galvanize; printed steel reference is IS:226.',
+    '2705.2 — Apply two bituminous-paint coats to galvanized assembly before placement; keep aligned and firmly fixed in deck shuttering.',
+    '2705.2 — Where deck bars must be cut for spout, place equivalent reinforcement at cutout corners.',
+    '2705.3 — Seal shrinkage cracks at spout after slab sets with polysulphide/bituminous sealant (printed reference IS:1834), trim before wearing coat.',
+    '2705.3 — After laying wearing coat, apply sealant extending at least 50 mm around assembly on the wearing-coat surface.',
+    'SOURCE-CONTROL — IS:226 and IS:1834 are cited as printed in 2013. Check actual contract revisions before acceptance.'
+  ];
+  spouts.tables=[
+    {name:'2705 · Drainage Layout',status:'checked',headers:['Control','Source value'],rows:[
+      ['Minimum spout diameter','100 mm'],['Maximum longitudinal spacing','10 m'],
+      ['Discharge on bridges','Via downpipes to 500 mm above high flood level'],
+      ['Urban viaducts','Runners/downpipes to ground-level drains'],
+      ['Materials','Corrosion-resistant; cleanout provision']
+    ],note:'Spacing and diameter are not a stand-alone hydraulic adequacy certificate; drawings and approved outfalls govern.'},
+    {name:'2705.1–3 · Inspection Stages',status:'checked',headers:['Stage','Control'],rows:[
+      ['Fabricate','To drawing; seam-weld watertight; hot-dip galvanize'],
+      ['Before pour','Two bituminous-paint coats; secure alignment, lines and levels'],
+      ['Where deck bars cut','Equivalent reinforcement at cutout corners'],
+      ['After slab setting','Seal cracks near assembly; trim excess before wearing coat'],
+      ['After wearing coat','Sealant onto coat for at least 50 mm all around']
+    ],note:'Verify approved sealant and contract standards where the historical printed IS references need interpretation.'}
+  ];
+  spouts.calc='No automatic spout count, runoff sizing, or outfall design is approved solely by Clause 2705.';
+
+  const weep=list[5];
+  weep.read='Clause 2706 source-checked, printed p.755. Location is controlled by drawings or Engineer direction.';
+  weep.quick=[
+    '2706 — Weep holes relieve backfill water pressure in specified abutments, wing and return walls.',
+    '2706 — Plain/RCC or brick masonry: provide 100 mm diameter AC/PVC/HDPE pipe through full wall width.',
+    '2706 — Stone masonry: 80×150 mm rectangular opening or 150 mm diameter circular opening.',
+    '2706 — Openings pass through full width, falling approximately 1 vertical to 20 horizontal toward drainage face.',
+    '2706 — Spacing 1 m in both directions unless drawings specify; lowest 150 mm above higher of low-water level or ground level, or as directed.',
+    '2706 — Do not invent filter detailing or sampling frequency absent from this clause.'
+  ];
+  weep.tables=[{name:'2706 · Weep Holes',status:'checked',headers:['Item','Requirement'],rows:[
+    ['Concrete / brick','100 mm dia AC/PVC/HDPE'],
+    ['Stone, rectangular','80 mm wide × 150 mm high'],
+    ['Stone, round','150 mm dia'],
+    ['Wall penetration','Full wall width'],
+    ['Outward slope','About 1V:20H'],
+    ['Spacing','1 m horizontal and vertical or drawings'],
+    ['Lowest level','150 mm above higher of low water level or ground level, or Engineer direction']
+  ],note:'Free discharge and approved drawing remain essential. Filter media and retaining wall drainage design are not settled here.'}];
+  weep.calc='No standalone water-pressure or filter sizing calculation from Clause 2706.';
+
+  const tests=list[6];
+  tests.read='Clause 2707 source-checked, printed p.755. General reference to material/work compliance, with no distinct numeric test-frequency table.';
+  tests.quick=[
+    '2707 — Materials shall be tested to the requirements and criteria prescribed by the applicable specifications.',
+    '2707 — Completed works must meet acceptance standards specified for the applicable work.',
+    '2707 — No independent numerical acceptance limits or laboratory frequencies stated here; refer to governing linked sections and contract.'
+  ];
+  tests.tables=[{name:'2707 · Acceptance',status:'checked',headers:['Scope','Reference control'],rows:[
+    ['Materials','Relevant MoRTH sections and contract criteria'],
+    ['Workmanship','Prescribed standards of acceptance'],
+    ['Frequency / sampling','Not separately specified in 2707; do not invent']
+  ],note:'This is not a calculator or automatic pass/fail test.'}];
+  tests.calc='Clause 2707 provides no new numeric acceptance calculator.';
+
+  const measurement=list[7];
+  measurement.page='Printed pp.755–756 · PDF mapping QA pending';
+  measurement.read='Clause 2708 source-checked: component-specific payment units. Do not invent separate items not identified in the clause.';
+  measurement.quick=[
+    '2708(i) — Bituminous/CC wearing coat measured in m³; wearing-coat reinforcement in tonnes.',
+    '2708(ii) — Railing and metal-beam crash barrier measured in running metres.',
+    '2708(iii) — Concrete crash barrier: concrete m³ and reinforcing steel tonnes.',
+    '2708(iv) — Approach slab and its base measured separately in m³.',
+    '2708(v) — Drainage spouts measured in numbers.',
+    '2708(vi) — Concrete/brick weep holes measured in numbers; stone-masonry weep holes deemed INCLUDED in masonry work, not separately measured.',
+    'SOURCE-CONTROL — The clause does not explicitly provide an approach-slab-steel pay unit; check approved BOQ/Section 1600.'
+  ];
+  measurement.tables=[{name:'2708 · Payment Measurement',status:'checked',headers:['Component','Unit'],rows:[
+    ['Bituminous/CC wearing coat','m³'],['Steel in wearing coat','tonnes'],
+    ['Railing / metal-beam barrier','running metres'],['Concrete barrier concrete','m³'],
+    ['Concrete barrier steel','tonnes'],['Approach slab','m³, separately'],
+    ['Approach slab base','m³, separately'],['Drainage spout','number'],
+    ['Concrete / brick masonry weep hole','number'],
+    ['Stone masonry weep hole','Included in stone masonry item']
+  ],note:'Avoid double counting. Clause 2708 does not define independent bar steel payment for approach slab.'}];
+  measurement.calc='Source measurement units only; site-measured quantities require approved drawings and measurements.';
+
+  const rate=list[8];
+  rate.read='Clause 2709 source-checked, printed p.756. Defines inclusions within contract unit rates, not rupee rates.';
+  rate.quick=[
+    '2709 — Wearing coat rate includes labour, material, tools and plant and completion.',
+    '2709 — Railing/crash barrier rate includes labour, materials, formwork, tools and plant.',
+    '2709 — Approach slab rate includes labour/materials/plant; separate base rate includes surface preparation and consolidation.',
+    '2709 — Drainage spout unit rate includes fixtures, runners and down pipes to 500 mm above HFL or ground drains as applicable.',
+    '2709 — Weep-hole rate includes labour, materials and plant; stone-masonry weep holes remain part of masonry payment under 2708.',
+    '2709 — Actual SSR/contract rates are not provided; never invent monetary rates.'
+  ];
+  rate.tables=[{name:'2709 · Contract-Rate Inclusions',status:'checked',headers:['Item','Included scope'],rows:[
+    ['Wearing coat','Labour, material, tools/plant, completion'],
+    ['Railing / crash barrier','Labour, materials, formwork, tools/plant'],
+    ['Approach slab','Labour, materials, tools/plant'],
+    ['Approach slab base','Also surface preparation and consolidation'],
+    ['Drainage spout','Spout, runners, downpipes, fixtures and discharge routing'],
+    ['Weep holes','Labour, materials, tools/plant']
+  ],note:'Source inclusion reference, not SSR rate analysis. Do not charge separately for included spout fittings without BOQ authority.'}];
+  rate.calc='Clause 2709 does not state rupee rates or rate-analysis coefficients.';
+
   RECORDS.push(...list);
   const filter=document.getElementById('sectionFilter');
   if(filter && !filter.querySelector('option[value="2700"]')){
@@ -147,7 +270,7 @@
   }
   const notice=document.querySelector('.note.warn');
   if (notice && notice.innerHTML.includes('Expansion Joints 2601–2615 content is source-checked')) {
-    notice.innerHTML=notice.innerHTML.replace('Expansion Joints 2601–2615 content is source-checked','Expansion Joints 2601–2615 and Wearing Coat/Appurtenances 2701–2703 content is source-checked');
+    notice.innerHTML=notice.innerHTML.replace('Expansion Joints 2601–2615 content is source-checked','Expansion Joints 2601–2615 and Wearing Coat/Appurtenances 2701–2709 content is source-checked');
   }
   const requested=new URLSearchParams(location.search).get('clause');
   if(list.some(r=>r.clause===requested)) selected=RECORDS.findIndex(r=>r.clause===requested&&r.section==='2700');
