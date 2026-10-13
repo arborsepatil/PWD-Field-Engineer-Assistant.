@@ -1,4 +1,4 @@
-/* MoRTH Fifth Revision 2013, Clauses 2801–2802; selected Clause 2803.1–2803.3, 2803.9 documentary QA.
+/* MoRTH Fifth Revision 2013, Clauses 2801–2802; selected Clause 2803 QA and Clause 2804 material/safety documentation.
    High-level structural-repair field controls only.
    NO epoxy/chemical handling or dismantling operating procedure. */
 (() => {
@@ -11,7 +11,7 @@
   card.className='qc-card';
   card.style.marginTop='10px';
   const h=document.createElement('h3');
-  h.textContent='MoRTH 2801–2803 — Structural Repair · Pre-Work & QA';
+  h.textContent='MoRTH 2801–2804 — Structural Repair · Pre-Work & QA';
   card.appendChild(h);
   const checks=[
     '2801: Confirm competent assessment, approved repair plan and Engineer instructions before proceeding; repair selection is not a standalone JE checklist decision.',
@@ -25,7 +25,11 @@
     '2803.9.1: Review batch/combination-linked material test certificates for viscosity, pot life and bond (three specimens each), and shear (six: three after 24 h, three after 72 h) before material approval.',
     '2803.9.2: Core acceptance, if directed, requires Engineer-approved locations away from critical or stressed areas, recorded results and Engineer decision; failure means further work is held pending review.',
     '2803.9.3: Obtain complete equipment pressure and proportion test logs from the qualified specialist; Engineer may require additional checks.',
-    'SOURCE-CONTROL: Clause 2803 is only partially represented. Clauses 2803.4–2803.8, detailed test operations and 2804–2815 are not procedural guidance here.'
+    '2804.1.1 / 2804.2.1: Confirm Engineer-approved repair-system selection, traceable product/manufacturer and material-property reports; distinguish epoxy mortar from polymer mortar.',
+    '2804.1.7 / 2804.2.6: Check contractor or manufacturer test evidence, including the 2803.9 epoxy cross-reference; do not invent additional frequencies.',
+    '2804.1.8: Confirm specialist chemical-hazard documentation, approved safety controls, exposure protection and appropriate waste-management records.',
+    'SOURCE HOLD: Printed 2804.2.1 compressive-strength entry "18.20 N/mm²" and slant-shear label require authoritative clarification before numerical approval.',
+    'LIMIT: 2803–2804 are partial documentary checks; 2805–2815 remain index-only; no repair application, chemical handling or structural approval is authorised.'
   ];
   const ul=document.createElement('ul');
   checks.forEach(t=>{const li=document.createElement('li');li.textContent=t;ul.appendChild(li);});
