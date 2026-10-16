@@ -32,3 +32,19 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify published PWA entry points
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          SITE="${PAGES_URL%/}/"
+          if [[ "$SITE" != https://* ]]; then
+            echo "No HTTPS GitHub Pages URL returned"
+            exit 1
+          fi
+          for file in index.html manifest.json sw.js; do
+            curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 3 --max-time 15 \
+              "${SITE}${file}" --output "/tmp/pwd-${file}"
+          done
+          node -e 'const fs=require("node:fs"); const html=fs.readFileSync("/tmp/pwd-index.html","utf8"); const m=JSON.parse(fs.readFileSync("/tmp/pwd-manifest.json","utf8")); const sw=fs.readFileSync("/tmp/pwd-sw.js","utf8"); if(!html.includes("rel=\"manifest\"") || !html.includes("serviceWorker.register"))throw Error("App entry lacks install wiring"); if(m.display!=="standalone" || !m.start_url)throw Error("PWA manifest invalid"); if(!sw.includes("CACHE_PREFIX"))throw Error("Service worker invalid"); console.log("Published PWA entry points healthy");'
