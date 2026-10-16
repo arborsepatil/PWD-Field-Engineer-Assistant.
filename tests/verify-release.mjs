@@ -22,6 +22,49 @@ for(const item of shell){
   assert.ok(!relative.includes('..'),'No traversal paths in pre-cache');
   assert.ok(fs.existsSync(path.join(root,relative)), 'PWA missing pre-cache asset: '+item);
 }
+
+// The offline fallback may serve HTML for navigation only.
+// Static scripts, styles and JSON must reject when not cached and offline.
+const events={};
+let online=false;
+const offlineShell={kind:'offline-page'};
+const swTestContext={
+  URL,
+  Response,
+  self:{
+    location:{origin:'https://test.example'},
+    addEventListener(name,handler){events[name]=handler}
+  },
+  caches:{
+    match:async target=>target==='./index.html'?offlineShell:undefined,
+    open:async()=>({put:async()=>{}})
+  },
+  fetch:async request=>{
+    if(!online)throw new Error('network offline');
+    return {kind:'network-page',ok:true,clone(){return this}};
+  }
+};
+vm.runInNewContext(sw,swTestContext,{filename:'sw.js'});
+assert.equal(typeof events.fetch,'function','Fetch handler was not registered');
+const exercise=async (mode,filename)=>{
+  let result;
+  const request={method:'GET',mode,url:'https://test.example/app/'+filename};
+  events.fetch({request,respondWith(p){result=p}});
+  assert.ok(result instanceof Promise,'Fetch event was not handled');
+  return result;
+};
+const navFallback=await exercise('navigate','offline-page.html');
+assert.equal(navFallback.kind,'offline-page','Offline navigation must return cached HTML fallback');
+await assert.rejects(
+  exercise('same-origin','uncached-script.js'),
+  /network offline/,
+  'Offline uncached scripts must NOT receive index HTML'
+);
+online=true;
+const onlineNav=await exercise('navigate','fresh-page.html');
+assert.equal(onlineNav.kind,'network-page','Online navigation should fetch an updated page');
+process.stdout.write('Service-worker navigation/static fallback isolation passed\n');
+
 const manifest=JSON.parse(load('manifest.json'));
 assert.equal(manifest.display,'standalone');
 assert.ok(manifest.name&&manifest.short_name&&manifest.start_url,'Manifest identity missing');
