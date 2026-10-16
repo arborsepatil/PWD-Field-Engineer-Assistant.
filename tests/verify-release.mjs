@@ -65,6 +65,11 @@ const onlineNav=await exercise('navigate','fresh-page.html');
 assert.equal(onlineNav.kind,'network-page','Online navigation should fetch an updated page');
 process.stdout.write('Service-worker navigation/static fallback isolation passed\n');
 
+const home=load('index.html');
+assert.ok(home.includes('rel="manifest"'),'App manifest not linked from home');
+assert.ok(home.includes('serviceWorker.register'),'App service worker not registered');
+assert.ok(home.includes('id="installHelp"'),'Android installation instructions missing from app');
+
 const manifest=JSON.parse(load('manifest.json'));
 assert.equal(manifest.display,'standalone');
 assert.ok(manifest.name&&manifest.short_name&&manifest.start_url,'Manifest identity missing');
