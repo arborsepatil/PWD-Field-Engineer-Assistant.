@@ -32,6 +32,11 @@
               section2800.onload=()=>{
                 const pipeReader=document.createElement('script');
                 pipeReader.src='./morth-section-2900.js';
+                pipeReader.onload=()=>{
+                  const roadMaintenanceReader=document.createElement('script');
+                  roadMaintenanceReader.src='./morth-section-3000.js';
+                  document.body.appendChild(roadMaintenanceReader);
+                };
                 document.body.appendChild(pipeReader);
               };
               document.body.appendChild(section2800);
@@ -58,6 +63,11 @@
         repairQC.onload=()=>{
           const pipeQC=document.createElement('script');
           pipeQC.src='./morth-qc-2900.js';
+          pipeQC.onload=()=>{
+            const roadMaintenanceQC=document.createElement('script');
+            roadMaintenanceQC.src='./morth-qc-3000.js';
+            document.body.appendChild(roadMaintenanceQC);
+          };
           document.body.appendChild(pipeQC);
         };
         document.body.appendChild(repairQC);
