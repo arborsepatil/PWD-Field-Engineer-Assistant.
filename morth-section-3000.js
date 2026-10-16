@@ -196,28 +196,28 @@
         "rows": [
           [
             "3004.1",
-            "Work order/BOQ, chainage, distress/condition survey and traffic protection plan — Engineer decides appropriate treatment",
-            null
+            "Work order/BOQ, chainage, distress/condition survey and traffic protection plan",
+            "Engineer decides appropriate treatment"
           ],
           [
             "3004.2",
-            "Cause/extent review, material compatibility, approved mix/plant and site inspection records — Apply controlling construction-material clauses",
-            null
+            "Cause/extent review, material compatibility, approved mix/plant and site inspection records",
+            "Use controlling material and mix specifications"
           ],
           [
             "3004.3.2",
-            "Fog seal reference to 513; product/test and treatment-area evidence — Contract and Engineer; no application instruction",
-            null
+            "Clause 513 reference; product tests and approved fog-seal treatment area",
+            "Contract and Engineer; no application instruction"
           ],
           [
             "3004.3.3",
-            "Crack type and location, approved repair option and measured length/area — Engineer to confirm scope",
-            null
+            "Crack condition and location, approved treatment, measured length/area",
+            "Engineer approves repair scope"
           ],
           [
             "3004.4–3004.7",
-            "Treatment approval, material and quality evidence for dusting, slurry seal, surface dressing or special repairs — Refer respectively to applicable source clauses",
-            null
+            "Approved dusting, slurry, surface dressing or special-treatment scope and test documents",
+            "Refer to applicable source clauses and contract"
           ]
         ],
         "note": "MoRTH Fifth Revision (2013), pp.791–797. No independent frequency, unsafe operation guidance or automatic acceptance is created."
