@@ -1,5 +1,5 @@
 /* MoRTH Section 3000 — Maintenance of Road. Fifth Revision (2013), pp.789–798.
-   Selected 3001–3003 are source-checked documentary references; 3004–3005 index-only.
+   Selected 3001–3005 source-checked documentary references. Specialist road-work operations excluded.
    This module does not give excavation, roller operation, hazardous material use, or traffic permission. */
 (() => {
   if(typeof RECORDS==='undefined'||typeof renderTree!=='function')return;
@@ -172,25 +172,187 @@
     "section": "3000",
     "clause": "3004",
     "title": "Bituminous Maintenance and Repair",
-    "page": "Printed p.791 · PDF viewer page mapping QA pending",
-    "status": "index",
-    "read": "Contents-index reference only. Detailed Clause 3004 subclauses not source-checked for the reader in this increment. Consult original MoRTH Fifth Revision (2013), printed pp.791–797 and the controlling contract.",
-    "quick": [],
-    "tables": [],
-    "calc": "No source-verified calculator is available for Clause 3004."
+    "page": "Printed pp.791–797 · PDF viewer page mapping QA pending",
+    "status": "partial",
+    "read": "Source-checked selected contractual, inspection, materials, treatment cross-references and payment requirements: MoRTH Fifth Revision (2013), Clause 3004.1–3004.7, printed pp.791–797. Documentary reference only. Approved specifications and the Engineer govern treatment choice and road-user safety.",
+    "quick": [
+      "3004.1 — Identify the Engineer-approved treatment and road chainage. The source covers pothole/patch repair, crack sealing, fog seal, dusting, slurry seal, surface dressing and special repairs; traffic control refers to Section 100.",
+      "3004.2 — Check failed-area assessment and compatibility of approved replacement materials with the existing pavement; replacement materials must not be inferior to the original construction. Maintain approved material and inspection records.",
+      "3004.2.5 — Pothole/patch repair is measured by area (m²) or weight (tonnes) under the applicable contract item; do not assume both measurements are payable.",
+      "3004.3.2 — Fog seal references Clause 513, and its measurement is in m². Source discusses fine cracks narrower than 3 mm for treatment consideration, subject to Engineer direction.",
+      "3004.3.3 — Crack filling measurement is m² where later patching is required, or linear metres for isolated cracks without subsequent patching. Retain location-linked records.",
+      "3004.3.4–3004.7 — Dusting and slurry seal/surface dressing/special-treatment proposals refer to their respective source clauses and Engineer approval; retain technical justification and suitable material reports.",
+      "SOURCE HOLD — Published treatment conditions are not a diagnosis or permission to use bituminous materials. No spraying, heating, cutting, compaction, traffic management or repair-application steps are provided."
+    ],
+    "tables": [
+      {
+        "name": "3004 · Bituminous Maintenance — Pre-Approval QC",
+        "status": "checked",
+        "headers": [
+          "Source",
+          "Evidence for JE review",
+          "Approval boundary"
+        ],
+        "rows": [
+          [
+            "3004.1",
+            "Work order/BOQ, chainage, distress/condition survey and traffic protection plan — Engineer decides appropriate treatment",
+            null
+          ],
+          [
+            "3004.2",
+            "Cause/extent review, material compatibility, approved mix/plant and site inspection records — Apply controlling construction-material clauses",
+            null
+          ],
+          [
+            "3004.3.2",
+            "Fog seal reference to 513; product/test and treatment-area evidence — Contract and Engineer; no application instruction",
+            null
+          ],
+          [
+            "3004.3.3",
+            "Crack type and location, approved repair option and measured length/area — Engineer to confirm scope",
+            null
+          ],
+          [
+            "3004.4–3004.7",
+            "Treatment approval, material and quality evidence for dusting, slurry seal, surface dressing or special repairs — Refer respectively to applicable source clauses",
+            null
+          ]
+        ],
+        "note": "MoRTH Fifth Revision (2013), pp.791–797. No independent frequency, unsafe operation guidance or automatic acceptance is created."
+      },
+      {
+        "name": "3004 · Contract Measurement and Inclusion Records",
+        "status": "checked",
+        "headers": [
+          "Source / work",
+          "Source payment unit",
+          "MB / BOQ checkpoint"
+        ],
+        "rows": [
+          [
+            "3004.2.5 · pothole / patch repair",
+            "m² or tonnes",
+            "Pay only per applicable sanctioned item and approved measurements"
+          ],
+          [
+            "3004.3.2.4 · fog seal",
+            "m²",
+            "Record authorised treatment-area survey"
+          ],
+          [
+            "3004.3.3.4 · crack filling",
+            "m² if subsequent patching; otherwise linear metre for isolated cracks",
+            "Distinguish two source situations, avoid duplicated item payment"
+          ],
+          [
+            "3004.4.4 · dusting",
+            "m²",
+            "Engineer-approved area"
+          ],
+          [
+            "3004.5 / 3004.6 · slurry seal / surface dressing",
+            "Cross-references Clause 512 / 509",
+            "Use contract-specific unit and rates; not inferred here"
+          ],
+          [
+            "3004.2.6, 3004.3.2.5, 3004.3.3.5, 3004.4.5 · inclusions",
+            "Contract rate covers relevant materials, work, labour, tools, equipment and incidentals",
+            "Review exact BOQ before separate charges"
+          ]
+        ],
+        "note": "This is a payment-documentation reference, not an MB certificate, SSR rate or authorisation of new pay items."
+      }
+    ],
+    "calc": "No bitumen usage, treatment selection, material heating, equipment operation, cure time, traffic-opening or payment calculation."
   },
   {
     "id": 2604,
     "section": "3000",
     "clause": "3005",
     "title": "Maintenance of Cement Concrete Road",
-    "page": "Printed p.797 · PDF viewer page mapping QA pending",
-    "status": "index",
-    "read": "Contents-index reference only. Detailed Clause 3005 subclauses not source-checked for the reader in this increment. Consult MoRTH Fifth Revision (2013), printed pp.797–798 and the controlling contract.",
-    "quick": [],
-    "tables": [],
-    "calc": "No source-verified calculator is available for Clause 3005."
+    "page": "Printed pp.797–798 · PDF viewer page mapping QA pending",
+    "status": "partial",
+    "read": "Source-checked selected material, inspection, Engineer control and payment provisions of MoRTH Fifth Revision (2013), Clause 3005.1–3005.2, printed pp.797–798. PARTIAL: specialist repair procedures and traffic management remain outside the reader.",
+    "quick": [
+      "3005.1 — Check the approved scope and engineering assessment for spalled joint-groove repair in cement-concrete pavement, including material compatibility and traceable supplier documentation.",
+      "3005.1.4 — Printed source describes a desirable traffic diversion period of 12 hours or as recommended by the manufacturer; this is not automatic reopening permission. Preserve approved traffic-management and Engineer release records.",
+      "3005.1.5 — Spalled joint-groove repairs are measured in linear metres under the applicable BOQ.",
+      "3005.2.1–3005.2.2 — Where joint sealant is replaced, verify compatible approved product documentation against Clause 602.2.10 and the repair plan.",
+      "3005.2.4 — Joint sealant replacement is measured in linear metres; document joint identity, length and approved scope.",
+      "3005.1.6 / 3005.2.5 — Check the full contract rate inclusions before creating separate payment items for preparation or incidental works.",
+      "HOLD — No joint cutting/removal, hazardous sealant handling, heating, pouring, surface preparation, specialised tool operation or public-road reopening procedure is provided."
+    ],
+    "tables": [
+      {
+        "name": "3005 · Concrete Pavement Joint Repair QC",
+        "status": "checked",
+        "headers": [
+          "Source",
+          "Record to inspect",
+          "Authority / hold"
+        ],
+        "rows": [
+          [
+            "3005.1.1–3005.1.2",
+            "Condition survey, joint identity, repair scope and compatible epoxy system certificates",
+            "Engineer-approved materials and repair drawings"
+          ],
+          [
+            "3005.1.4",
+            "Manufacturer cure/traffic recommendations and approved diversion or traffic-protection record",
+            "Engineer controls release; no automatic clearance"
+          ],
+          [
+            "3005.2.1–3005.2.2",
+            "Sealant replacement scope, approved product and Clause 602.2.10 compliance",
+            "Specialist product choice and Engineer approval"
+          ],
+          [
+            "3005.1.5 / 3005.2.4",
+            "Repair lengths in linear metres with joint identification, chainage, signed measurements",
+            "Sanctioned BOQ/MB only"
+          ],
+          [
+            "3005.1.6 / 3005.2.5",
+            "Contract rate coverage of material, removal/preparation and incidental work",
+            "Do not double-book included work"
+          ]
+        ],
+        "note": "MoRTH Fifth Revision 2013 pp.797–798. This is a QC/document checklist, not a field repair or chemical handling instruction."
+      },
+      {
+        "name": "3005 · Measurement Distinction",
+        "status": "checked",
+        "headers": [
+          "Item",
+          "Published unit",
+          "Commercial control"
+        ],
+        "rows": [
+          [
+            "3005.1.5 · joint groove repair",
+            "Linear metre",
+            "Record approved actual repaired joint length"
+          ],
+          [
+            "3005.2.4 · joint sealant replacement",
+            "Linear metre",
+            "Record approved replaced-sealant joint length"
+          ],
+          [
+            "3005.1.6 / 3005.2.5 · rate inclusions",
+            "No monetary rates stated",
+            "Verify sanctioned SSR/BOQ and included preparation before paying"
+          ]
+        ],
+        "note": "Never infer a rupee rate or a separate payable quantity from the generic specification alone."
+      }
+    ],
+    "calc": "No sealant quantity, chemical application, joint-cutting, traffic-opening or automated acceptance calculator."
   }
+
 ];
   RECORDS.push(...incoming);
   const filter=document.getElementById('sectionFilter');
