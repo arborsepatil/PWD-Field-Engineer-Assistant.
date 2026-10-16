@@ -35,6 +35,11 @@
                 pipeReader.onload=()=>{
                   const roadMaintenanceReader=document.createElement('script');
                   roadMaintenanceReader.src='./morth-section-3000.js';
+                  roadMaintenanceReader.onload=()=>{
+                    const reinforcedSoilReader=document.createElement('script');
+                    reinforcedSoilReader.src='./morth-section-3100.js';
+                    document.body.appendChild(reinforcedSoilReader);
+                  };
                   document.body.appendChild(roadMaintenanceReader);
                 };
                 document.body.appendChild(pipeReader);
@@ -66,6 +71,11 @@
           pipeQC.onload=()=>{
             const roadMaintenanceQC=document.createElement('script');
             roadMaintenanceQC.src='./morth-qc-3000.js';
+            roadMaintenanceQC.onload=()=>{
+              const reinforcedSoilQC=document.createElement('script');
+              reinforcedSoilQC.src='./morth-qc-3100.js';
+              document.body.appendChild(reinforcedSoilQC);
+            };
             document.body.appendChild(roadMaintenanceQC);
           };
           document.body.appendChild(pipeQC);
