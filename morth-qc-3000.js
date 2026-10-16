@@ -1,5 +1,5 @@
 /* MoRTH Fifth Revision (2013), Section 3000 maintenance of roads.
-  Source-backed documentary QC only: 3001–3003; 3004–3005 index-only. */
+  Source-backed documentary QC only: 3001–3005. */
 (() => {
   if(!location.pathname.endsWith('/qc.html'))return;
   if(document.getElementById('morth-qc-3000'))return;
@@ -10,7 +10,7 @@
   card.className='qc-card';
   card.style.marginTop='10px';
   const h=document.createElement('h3');
-  h.textContent='MoRTH 3001–3003 · Road Maintenance — QC & Payment Records';
+  h.textContent='MoRTH 3001–3005 · Road Maintenance — QC & Payment Records';
   card.appendChild(h);
   const checks=[
   "3001: Keep contract/Engineer scope instruction, location, approved materials and finished alignment/level records.",
@@ -21,7 +21,14 @@
   "3003.3: Retain authorised lab MDD and field-density reports; compare reported field dry density with the source 97% minimum under Engineer review.",
   "3003.3: Verify the final shoulder crossfall, grade and level against sanctioned drawings or instructions.",
   "3003.4–3003.5: Measure shoulder maintenance in m² and check contract rate inclusions before proposing separate items.",
-  "HOLD: Clauses 3004–3005 are index-only here. No excavation, compaction equipment, bituminous/epoxy material-use or traffic operating instructions; no automatic acceptance."
+  "3004.1–3004.2: Verify approved bituminous-maintenance treatment, condition/location and compatible replacement-material certificates; traffic control refers to Section 100.",
+  "3004.2.5: Measure pothole/patch repair as m² or tonnes under the actual sanctioned pay item, not both by assumption.",
+  "3004.3.2–3004.3.3: Fog seal and crack-filling treatment references require Engineer approval; distinguish fog seal area (m²), patched-area crack filling (m²) and isolated linear cracks (metres).",
+  "3004.4–3004.7: Record treatment selection and link dusting, slurry, surface dressing and special repairs to appropriate specifications; no application procedures.",
+  "3005.1–3005.2: Obtain cement-concrete joint defect records, compatible epoxy/sealant technical approvals, referenced Clause 602.2.10 test evidence and authorised inspection sign-off.",
+  "3005.1.5 / 3005.2.4: Record joint-groove repair and joint-sealant replacement in linear metres with separate approved BOQ/MB identity.",
+  "3005.1.4: Retain manufacturer recommendations, traffic-protection arrangements and signed reopening decision; no automatic traffic release.",
+  "LIMIT: No hazardous product handling, roadwork tools/plant operating instructions, field repair sequence, invented sampling frequency or automatic acceptance."
 ];
   const ul=document.createElement('ul');
   checks.forEach(t=>{const li=document.createElement('li');li.textContent=t;ul.appendChild(li)});
