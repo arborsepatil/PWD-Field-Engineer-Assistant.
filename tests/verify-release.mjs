@@ -216,3 +216,26 @@ process.stdout.write('MoRTH 100–300: 37 source-limited QC entries passed\n');
  assert.ok(pick('309').tables.some(t=>t.rows.some(r=>r.join(' ').includes('Running metres'))),'Drain measurement missing');
 }
 process.stdout.write('MoRTH 301/304/305/309 extended source QC and unit checks passed\n');
+
+// General survey, site documentation, measurement and clearance-source regression checks.
+{
+ const state={RECORDS:[],selected:-1,renderTree(){},document:{getElementById(){return null}},
+   location:{search:'?clause=113'},URLSearchParams};
+ vm.runInNewContext(load('morth-section-100-300.js'),state);
+ for(const clause of ['109','112','113','118','120','121','201','202']){
+   const record=state.RECORDS.find(r=>r.clause===clause);
+   assert.ok(record?.tables.length>=2,'Missing additional documentary QC for '+clause);
+   for(const table of record.tables){
+     for(const row of table.rows){
+       assert.equal(row.length,table.headers.length,'Malformed QC row '+clause);
+       assert.ok(row.every(value=>typeof value==='string'&&value.trim()),'Empty QC cell '+clause);
+     }
+   }
+ }
+ const entry=clause=>JSON.stringify(state.RECORDS.find(r=>r.clause===clause));
+ for(const [clause,keyword] of [['109','monthly'],['113','0.01 m²'],['118','Written Engineer approval'],['120','incidental'],['121','monthly'],['201','hectares'],['202','item-specific']]){
+   assert.ok(entry(clause).includes(keyword),'Missing source detail '+clause+' / '+keyword);
+ }
+}
+process.stdout.write('MoRTH 100–200 detailed field record regression checks passed\n');
+
