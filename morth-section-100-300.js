@@ -156,6 +156,126 @@
    ]
   }
  };
+
+ // Section 300 documentary and payment checks. Source: original MoRTH Fifth Revision (2013).
+ // Review the signed project specification, BOQ and Engineer decisions before acting.
+ Object.assign(sourceQC,{
+  '306':{
+   quick:[
+    '306.2–306.3 — Check Engineer approval of erosion/sedimentation control materials, schedules and method documents before the relevant work starts.',
+    '306.4 — Measure each approved erosion-control item in the unit stated in the BOQ, not an assumed universal area or length unit.'
+   ],
+   tables:[{name:'306 · Erosion-control Approval and MB Register',status:'checked',
+    headers:['Source','JE documentary evidence','Contract boundary'],
+    rows:[
+     ['306.2–306.3','Approved erosion/sedimentation drawings, materials and pre-work schedule','Engineer approval before relevant work'],
+     ['306.3','Service-road, borrow-area and waste-disposal control documents; inspection reports','Approved site/environmental plan'],
+     ['306.4–306.5','Item-specific BOQ unit, measured quantities and rate-inclusion record','No invented unit, quantity or separate payment']
+    ],
+    note:'MoRTH Fifth Revision (2013), printed pp.77–79; no erosion-control construction procedures or environmental approvals are issued by this app.'}]
+  },
+  '307':{
+   quick:[
+    '307.1–307.2 — Link sod source and material inspection to the approved slope/shoulder location and appropriate seasonal establishment records.',
+    '307.4 — Turfing with sods is measured as finished work in square metres. The applicable BOQ and Engineer measurement still govern.'
+   ],
+   tables:[{name:'307 · Turfing Acceptance Evidence',status:'checked',
+    headers:['Source','JE record','Measurement / approval'],
+    rows:[
+     ['307.1–307.2','Location/chainage, approved sod-source identity and grass quality inspection','Approved drawings and Engineer'],
+     ['307.3','Finished slope/area and establishment inspection evidence','Record defects and directions; do not auto-certify vegetation'],
+     ['307.4–307.5','Finished treated area with MB references','Square metres; check topsoil payment separately under Clause 301.9.5']
+    ],
+    note:'MoRTH Fifth Revision (2013), printed pp.79–82. This is inspection/documentation, not a sodding execution method.'}]
+  },
+  '308':{
+   quick:[
+    '308.2 — Keep Engineer-approved seed type/purity and germination evidence, mulch/netting identity and relevant topsoil test documents.',
+    '308.2.2 — Original source specifies 2%–12% organic matter for topsoil; confirm relevant contract amendments and approved test results.',
+    '308.6 — Seeding and mulching is measured as finished area in square metres.'
+   ],
+   tables:[{name:'308 · Seeding and Mulching QC Evidence',status:'checked',
+    headers:['Source','JE evidence','Contract / laboratory control'],
+    rows:[
+     ['308.1–308.2','Approved location, seed source/type, purity/germination report and fertilizer/mulch/netting identity','Engineer acceptance under project requirements'],
+     ['308.2.2','Topsoil provenance and laboratory organic-matter report','Published 2%–12% source interval; no automatic pass/fail'],
+     ['308.6–308.7','Finished-area survey, photographs and MB reference','Square metres; check rate inclusions']
+    ],
+    note:'MoRTH Fifth Revision (2013), printed pp.82–85. No chemical application, planting method or fixed sampling frequency is supplied.'}]
+  },
+  '310':{
+   quick:[
+    '310 — Retain inspection that specified sub-grade drainage is complete and formation meets approved line, level and surface-quality requirements before subsequent pavement work.',
+    '310 — The source treats formation surface preparation as incidental to the associated sub-base/base course.'
+   ],
+   tables:[{name:'310 · Formation Readiness Hold',status:'checked',
+    headers:['Source','Evidence to review','Decision / payment'],
+    rows:[
+     ['310 / 305.3.9','Survey/levels, soft-area rectification evidence and approved formation QC results','Engineer and controlling pavement specification'],
+     ['310','Specified sub-grade drainage completion and pre-layer inspection record','Document the approved release to next course'],
+     ['310','BOQ rate-inclusion and MB references','Incidental to sub-base/base in printed source; no duplicate line item']
+    ],
+    note:'MoRTH Fifth Revision (2013), printed pp.89–90. No compaction-equipment operating instructions or auto-clearance.'}]
+  },
+  '311':{
+   quick:[
+    '311.1–311.2 — Keep water-accumulation inspection, approved temporary-drainage plan and outfall/affected-work records.',
+    '311.2 — Keeping the works free of water is incidental to the respective work item under this source, with no separate payment.'
+   ],
+   tables:[{name:'311 · Water-control and Payment Record',status:'checked',
+    headers:['Source','JE evidence','Commercial / engineering hold'],
+    rows:[
+     ['311.1','Date/location of water incidence, survey and quality-risk notification','Engineer-led assessment of affected work'],
+     ['311.2','Contractor drainage-plan approval, inspections and restoration evidence','Environmental/outfall permission where relevant'],
+     ['311.2','Associated BOQ item and rate-inclusion note','Incidental in printed source; no separate payment']
+    ],
+    note:'MoRTH Fifth Revision (2013), printed p.90. No pumping or dewatering operating method.'}]
+  },
+  '312':{
+   quick:[
+    '312.1–312.2 — Confirm culvert watercourse works and permanent protection from approved drawings; document restoration of temporary diversion under Engineer direction.',
+    '312.3 — Watercourse work follows BOQ item units; temporary diversion, closure and restoration are incidental to culvert construction in the printed source.'
+   ],
+   tables:[{name:'312 · Culvert Watercourse Measurement Record',status:'checked',
+    headers:['Source','JE evidence','Approval / payment'],
+    rows:[
+     ['312.1–312.2','Approved culvert outfall/watercourse geometry, protection material approval and finished-level inspection','Engineer-approved drawings and site conditions'],
+     ['312.2','Temporary diversion closure, restored flow and final site-condition photograph','Engineer direction and environmental permissions'],
+     ['312.3–312.4','Measured item quantities by BOQ unit and culvert rate-inclusion record','Diversion/closure/restoration incidental; no extra payment under source']
+    ],
+    note:'MoRTH Fifth Revision (2013), printed pp.90–91. No water diversion or excavating instructions.'}]
+  },
+  '313':{
+   quick:[
+    '313.1–313.2 — Review approved rockfill source and field-trial dossier, unsuitable-rock exclusion, and overlying earthen-cushion drawing.',
+    '313.4 — Rockfill volume is measured in cubic metres from before/after cross-sections by average end areas.'
+   ],
+   tables:[{name:'313 · Rockfill Material and MB Controls',status:'checked',
+    headers:['Source','JE dossier','Engineer / BOQ control'],
+    rows:[
+     ['313.1–313.2','Approved cross-sections, rock-source and quality evidence, approved earthen cushion detail','Project geotechnical assessment and drawings'],
+     ['313.2–313.3','Approved trial evidence, layer inspection sign-offs and rockfill/blinding identity','Qualified site supervision; no equipment settings supplied'],
+     ['313.4–313.5','Before/after cross-sections and average-end-area MB calculation','Cubic metres; rate inclusion per Clause 305.8']
+    ],
+    note:'MoRTH Fifth Revision (2013), printed pp.91–92. No layer construction/roller operating instructions or density certification.'}]
+  },
+  '314':{
+   quick:[
+    '314.1 — Weak-ground treatment must match site geotechnical investigation and Engineer-approved selection/design, whether PVD or a stone-column system.',
+    '314.2–314.4 — Retain specialist material certification, approved instrumentation/monitoring and test/inspection reports against the signed design; the app cannot assess consolidation or stability.'
+   ],
+   tables:[{name:'314 · Specialist Ground-improvement Hold Register',status:'checked',
+    headers:['Source','JE dossier','Specialist / Engineer decision'],
+    rows:[
+     ['314.1','Geotechnical baseline report, design approvals and selected treatment alternative','Qualified designer and Engineer approval'],
+     ['314.2','PVD geosynthetic source/identity, approved monitoring register and staged signed report','Geotechnical specialist assessment against design'],
+     ['314.3–314.4','Stone-column material/certification and approved field-testing evidence, where applicable','Design-specific performance review; no automatic acceptance'],
+     ['314 / BOQ','Approved measurement/payment basis and as-built quantities','Use executed BOQ, specialist certification and Engineer records']
+    ],
+    note:'MoRTH Fifth Revision (2013), printed pp.92 onward. No ground-improvement design, installation, vibration, surcharge or load-test operating instructions.'}]
+  }
+ });
+
  for(const [clause,extra] of Object.entries(sourceQC)){
    const record=items.find(r=>r.clause===clause);
    if(!record)throw Error('Missing basic MoRTH clause '+clause);

@@ -239,3 +239,30 @@ process.stdout.write('MoRTH 301/304/305/309 extended source QC and unit checks p
 }
 process.stdout.write('MoRTH 100–200 detailed field record regression checks passed\n');
 
+
+
+// Reviewable Section 300 documentary extensions: no unexpected units or blank cells.
+{
+ const state={RECORDS:[],selected:-1,renderTree(){},document:{getElementById(){return null}},
+   location:{search:'?clause=314'},URLSearchParams};
+ vm.runInNewContext(load('morth-section-100-300.js'),state);
+ const targets=['306','307','308','310','311','312','313','314'];
+ assert.equal(state.RECORDS.length,37,'Section 100–300 count regressed');
+ for(const clause of targets){
+   const record=state.RECORDS.find(r=>r.clause===clause);
+   assert.ok(record?.tables.length>=2,'Missing Section 300 documentary records '+clause);
+   for(const table of record.tables)for(const row of table.rows){
+     assert.equal(row.length,table.headers.length,'Malformed row in '+clause);
+     assert.ok(row.every(v=>typeof v==='string'&&v.trim()),'Blank QC detail '+clause);
+   }
+ }
+ const entry=clause=>JSON.stringify(state.RECORDS.find(r=>r.clause===clause));
+ for(const [clause,phrase] of [
+   ['306','BOQ'],['307','Square metres'],['308','2%–12%'],
+   ['310','incidental'],['311','Incidental'],['312','no extra payment'],
+   ['313','average-end-area'],['314','Geotechnical']
+ ]){
+   assert.ok(entry(clause).toLowerCase().includes(phrase.toLowerCase()),'Missing published source control '+clause);
+ }
+}
+process.stdout.write('MoRTH 306–314 documentary, measurement and specialist review checks passed\n');
