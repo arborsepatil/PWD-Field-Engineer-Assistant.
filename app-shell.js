@@ -54,7 +54,20 @@
       };
       document.body.appendChild(nextReaderSection);
     };
-    document.body.appendChild(sourceReaderExtension);
+    const generalReader=document.createElement('script');
+    generalReader.src='./morth-section-100.js';
+    generalReader.onload=()=>{
+      const clearanceReader=document.createElement('script');
+      clearanceReader.src='./morth-section-200.js';
+      clearanceReader.onload=()=>{
+        const earthReader=document.createElement('script');
+        earthReader.src='./morth-section-300.js';
+        earthReader.onload=()=>document.body.appendChild(sourceReaderExtension);
+        document.body.appendChild(earthReader);
+      };
+      document.body.appendChild(clearanceReader);
+    };
+    document.body.appendChild(generalReader);
   }
   if(location.pathname.endsWith('/qc.html')) {
     const qc=document.createElement('script');
@@ -74,6 +87,11 @@
             roadMaintenanceQC.onload=()=>{
               const reinforcedSoilQC=document.createElement('script');
               reinforcedSoilQC.src='./morth-qc-3100.js';
+              reinforcedSoilQC.onload=()=>{
+                const earlyQC=document.createElement('script');
+                earlyQC.src='./morth-qc-100-300.js';
+                document.body.appendChild(earlyQC);
+              };
               document.body.appendChild(reinforcedSoilQC);
             };
             document.body.appendChild(roadMaintenanceQC);
