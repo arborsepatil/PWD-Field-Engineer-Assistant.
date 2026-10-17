@@ -191,3 +191,28 @@ for(const [sec,clause,expectedCount] of [['100','121',21],['200','202',2],['300'
 }
 assert.ok(shell.includes('./morth-section-100-300.js')&&shell.includes('./morth-qc-100-300.js'),'Missing offline MoRTH 100–300 assets');
 process.stdout.write('MoRTH 100–300: 37 source-limited QC entries passed\n');
+
+
+// Published earthwork QC differentiation: lab eligibility is not field compaction.
+{
+ const s={RECORDS:[],selected:-1,document:{getElementById(){return null}},renderTree(){},location:{search:'?clause=305'},URLSearchParams};
+ vm.runInNewContext(load('morth-section-100-300.js'),s);
+ const pick=x=>s.RECORDS.find(r=>r.clause===x);
+ for(const [id,n] of [['301',2],['304',2],['305',4],['309',2]]){
+   const r=pick(id);
+   assert.equal(r?.status,'partial','Source status mismatch '+id);
+   assert.ok(r.tables.length>=n,'Missing published QC references '+id);
+   for(const t of r.tables)for(const row of t.rows){
+     assert.equal(row.length,t.headers.length,'Bad QC columns '+id);
+     assert.ok(row.every(x=>typeof x==='string'&&x.length),'Empty QC cell '+id);
+   }
+ }
+ const lab=pick('305').tables.find(t=>t.name.includes('300-1'));
+ const field=pick('305').tables.find(t=>t.name.includes('300-2'));
+ assert.ok(lab&&field,'Separate laboratory and field acceptance tables required');
+ for(const n of ['15.2','16.0','17.5'])assert.ok(lab.rows.some(r=>r.join(' ').includes(n)),'Missing lab criterion '+n);
+ for(const n of ['97%','95%'])assert.ok(field.rows.some(r=>r.join(' ').includes(n)),'Missing field criterion '+n);
+ assert.ok(pick('304').tables.some(t=>t.rows.some(r=>r.join(' ').includes('m²'))),'Rock foundation area missing');
+ assert.ok(pick('309').tables.some(t=>t.rows.some(r=>r.join(' ').includes('Running metres'))),'Drain measurement missing');
+}
+process.stdout.write('MoRTH 301/304/305/309 extended source QC and unit checks passed\n');
