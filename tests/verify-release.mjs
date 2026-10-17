@@ -173,3 +173,21 @@ assert.equal(integrated.RECORDS.length,expectedTotal,'Repeated chained loads mus
 process.stdout.write('Integrated MoRTH navigation: '+expectedTotal+' unique records across four sections\n');
 
 process.stdout.write('PWA assets: '+shell.length+' present; manifest/JS/reader/QC checks passed\n');
+
+const basics='morth-section-100-300.js';
+assert.ok(app.includes('./'+basics),'MoRTH 100–300 loader missing');
+assert.ok(app.includes('./morth-qc-100-300.js'),'MoRTH 100–300 QC loader missing');
+for(const [sec,clause,expectedCount] of [['100','121',21],['200','202',2],['300','314',14]]){
+ const state={RECORDS:[],selected:-1,location:{search:'?clause='+clause},URLSearchParams,document:{getElementById(){return null}}};
+ let count=0;state.renderTree=()=>count++;
+ vm.runInNewContext(load(basics),state,{filename:basics});
+ assert.equal(state.RECORDS.length,37,'Missing MoRTH 100–300 clauses');
+ assert.equal(state.RECORDS.filter(r=>r.section===sec).length,expectedCount,'Incorrect section '+sec);
+ assert.equal(state.RECORDS[state.selected].clause,clause,'Deep link '+clause+' failed');
+ for(const r of state.RECORDS){assert.equal(r.status,'partial');for(const t of r.tables){assert.ok(t.rows.every(row=>row.length===t.headers.length))}}
+ vm.runInNewContext(load(basics),state,{filename:basics});
+ assert.equal(state.RECORDS.length,37,'Duplicate MoRTH 100–300 load');
+ assert.equal(count,1,'Duplicate reader render');
+}
+assert.ok(shell.includes('./morth-section-100-300.js')&&shell.includes('./morth-qc-100-300.js'),'Missing offline MoRTH 100–300 assets');
+process.stdout.write('MoRTH 100–300: 37 source-limited QC entries passed\n');
