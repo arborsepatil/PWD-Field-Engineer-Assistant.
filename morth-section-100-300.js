@@ -276,6 +276,87 @@
   }
  });
 
+
+ // General clauses: source-verified administrative and QC record prompts, not operating methods.
+ Object.assign(sourceQC,{
+  '101':{quick:['101 — Retain the applicable IRC/IS code register and tender date; the printed source references IRC editions available 60 days before final tender submission, subject to project amendments.'],
+   tables:[{name:'101 · Governing Documents',status:'checked',headers:['Clause','JE evidence','Decision authority'],rows:[
+    ['101','Tender date, contract amendment register and approved drawing/specification versions','Engineer and signed contract'],
+    ['101','Applicable IRC/IS reference and source-edition log','Check the 2013 source precedence against current tender requirements']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.1–3; historic contract-language reference, not an automatic code hierarchy.'}]},
+  '102':{quick:['102 — Interpret Contract, Engineer, Employer and other defined terms through the signed General Conditions of Contract; check referenced road cross-section terminology.'],
+   tables:[{name:'102 · Contract Definitions',status:'checked',headers:['Clause','JE evidence','Control'],rows:[
+    ['102','Signed General Conditions of Contract and defined roles','Use governing tender definitions'],
+    ['102 / Figures 100.1–100.3','Approved cross-section sheet, shoulder classification and chainage drawing','Resolve drawing terminology with Engineer']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.3–5; no contractual interpretation or approval is automated.'}]},
+  '103':{quick:['103 — Maintain a material-wise source standards register using the test procedures cited under the relevant work clauses and Appendix 2.'],
+   tables:[{name:'103 · Material Testing Source Register',status:'checked',headers:['Source','JE traceability','Hold'],rows:[
+    ['103 / Appendix 2','Material, reference standard, edition and approved test method','Engineer-approved contract specification'],
+    ['Relevant material section','Sample identity, laboratory report and linked item/chainage','No universal test frequency or automatic conformity']
+   ],note:'MoRTH Fifth Revision (2013), printed p.5; appendix references remain subject to later project-specific revisions.'}]},
+  '104':{quick:['104 / Table 100-1 — Check test-sieve labels against IS:460 and the original source table; source note calls for square-opening sieves.'],
+   tables:[{name:'104 · Sieve Certificate Check',status:'checked',headers:['Source','JE test-record check','Decision'],rows:[
+    ['104 / IS:460','Sieve ID, aperture designation, units and instrument certificate','Approved test method and laboratory'],
+    ['Table 100-1','Reported aggregate gradation against correct sieve designation','No inferred aggregate acceptance limit']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.5–6. This is a sieve-label reference, not a grading limit.'}]},
+  '105':{quick:['105.1–105.2 — Link each workfront with the sanctioned scope, approved drawings, BOQ item, specification and any recorded deviation.'],
+   tables:[{name:'105 · Scope and Drawing Conformity',status:'checked',headers:['Source','JE evidence','Hold'],rows:[
+    ['105.1','Signed contract scope, sanctioned BOQ and variations','Employer/Engineer authority under contract'],
+    ['105.2','Issued-for-construction drawing revision, survey and conformity inspection','Use specified tolerances; no invented tolerance']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.6–10. Scope and QA responsibilities remain contract-governed.'}]},
+  '106':{quick:['106 — Check plant/equipment approval, qualification, calibration and trial-run evidence before accepting related contractor test/inspection records.'],
+   tables:[{name:'106 · Plant Documentary Approval',status:'checked',headers:['Source','JE evidence','Approval boundary'],rows:[
+    ['106(a), (g)','Plant trial report, deployment register and Engineer approval','Contractor/Engineer decision before work'],
+    ['106(c), (f), (k)','Equipment calibration, operator qualification and site QC instrument record','Approved safety and testing procedures']
+   ],note:'MoRTH Fifth Revision (2013), printed p.10. No machine operation or maintenance procedure.'}]},
+  '107':{quick:['107.2 — Printed schedule: Contractor working drawings at least 45 days before activity, and Engineer GFC drawings at least 28 days before; check project schedule/amendments.'],
+   tables:[{name:'107 · Drawing Submission and GFC Gate',status:'checked',headers:['Source','Record','Approval / contract check'],rows:[
+    ['107.1–107.2','Tender/reference drawing, working submission date and revision log','Tender drawings alone are not GFC approval'],
+    ['107.2','Proposed-change register and dated Engineer-issued GFC copy','Source 45-day contractor submission / 28-day GFC issue; subject to contract'],
+    ['107.3–107.4','Contractor responsibility and drawing-cost rate inclusion check','Engineer review does not waive contractual responsibilities']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.10–11; schedule is a historical source provision, not an independent programme approval.'}]},
+  '108':{quick:['108 — Keep a verified site-conditions and right-of-way register; contractor temporary-facility land arrangements are distinguished from Employer-provided work site access.'],
+   tables:[{name:'108 · Site Information Record',status:'checked',headers:['Source','JE evidence','Decision'],rows:[
+    ['108.1–108.2','Site/index drawing, verified ground-condition and discrepancy register','Site information is indicative; contract responsibilities govern'],
+    ['108.3','Right-of-way handover records and contractor temporary-land/facility permissions','Employer and local authorities as applicable']
+   ],note:'MoRTH Fifth Revision (2013), printed p.11; no independent land right is granted by the app.'}]},
+  '110':{quick:['110 — Verify utility-owner coordination, marked utility locations and written protection/relocation decisions before reviewing affected workfronts.'],
+   tables:[{name:'110 · Public Utility Clearance',status:'checked',headers:['Source','JE evidence','Approval boundary'],rows:[
+    ['110.1','Affected-service drawing verification, owner notices, site survey and joint record','Utility owner, Engineer and authorised service personnel'],
+    ['110.1–110.2','Relocation/protection programme and operational continuity confirmation','No utility isolation or relocation instructions']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.13–15; statutory/utility clearances remain external to the app.'}]},
+  '111':{quick:['111 — Retain applicable environment permits, borrow/quarry source approvals, pollution-control inspections and watercourse-protection evidence.'],
+   tables:[{name:'111 · Environment Compliance Evidence',status:'checked',headers:['Source','JE documents','Approval boundary'],rows:[
+    ['111.1–111.3','Required borrow/quarry permissions, source tests and statutory records','Competent statutory authority and Engineer'],
+    ['111.4–111.5','Erosion/sediment and plant-pollution inspection evidence','Cross-reference Clause 306 and site environmental plan']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.15–19. No quarry, plant or hazardous-material operating instructions.'}]},
+  '114':{quick:['114 — Before proposing extra payment, review the printed inclusive-rate principle and item-specific rate clauses against the executed BOQ.'],
+   tables:[{name:'114 · Rate Inclusion Review',status:'checked',headers:['Source','JE evidence','Payment boundary'],rows:[
+    ['114.1','Approved BOQ description, corresponding rate clause and contractual exceptions','Do not double-count general obligations'],
+    ['114.2','Sample/testing, temporary and preparatory work or programme provisions where applicable','Only contract-authorised separate measurement/payment']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.24–26; no SSR rate, escalation or payable amount is computed.'}]},
+  '115':{quick:['115.1 — The printed source requires a detailed method statement within 28 days of agreement unless the contract otherwise stipulates; verify dated submissions and Engineer approvals.'],
+   tables:[{name:'115 · Method Statement Submission Gate',status:'checked',headers:['Source','JE document register','Hold'],rows:[
+    ['115.1–115.2','Agreement date, submitted general method statement and overall QA/environment/traffic documents','Source 28-day provision; contract may vary'],
+    ['115.3','Work-item-specific statement, changes, supporting samples and Engineer response','Qualified contractor and Engineer retain technical responsibility']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.26–27. No execution method, dangerous plant setup or safety authorisation is provided.'}]},
+  '116':{quick:['116 — Check the approved source/crushing-plant declaration and fractured-face test reports with the material specification; no automatic aggregate acceptance.'],
+   tables:[{name:'116 · Crushed Aggregate Traceability',status:'checked',headers:['Source','JE evidence','Control'],rows:[
+    ['116','Approved plant, material source and product/stockpile identity','Contract source descriptions and Engineer approval'],
+    ['116','Fractured-face test evidence for retained-on-4.75-mm aggregate as relevant','Printed two-face requirement; verify approved testing and any amendment']
+   ],note:'MoRTH Fifth Revision (2013), printed p.27; source check only, not a crusher operation or automated pass/fail.'}]},
+  '117':{quick:['117 — Link raw and processed quarry samples to the approved quarry source and laboratory/test-report chain of custody.'],
+   tables:[{name:'117 · Quarry Sample Traceability',status:'checked',headers:['Source','JE evidence','Commercial hold'],rows:[
+    ['117','Approved quarry, sample IDs, raw/processed identification and collection report','Contractor submission and Engineer review'],
+    ['117','Laboratory reports and source change log','Source places raw/processed sample supply at contractor cost']
+   ],note:'MoRTH Fifth Revision (2013), printed p.28. Testing frequency comes from relevant material specification.'}]},
+  '119':{quick:['119 — Keep Engineer authorisation and pavement protection/contamination inspection evidence for any permitted construction traffic; the app does not authorise road opening.'],
+   tables:[{name:'119 · Traffic on Incomplete Pavement',status:'checked',headers:['Source','JE evidence','Safety / Engineer hold'],rows:[
+    ['119.1','Approved construction-traffic permission, affected layer and condition record','No default permission; Engineer decides'],
+    ['119.2–119.4','Pavement/track cleanliness, surface contamination and repair/acceptance inspections','Approved traffic-control plan; no operational directions']
+   ],note:'MoRTH Fifth Revision (2013), printed pp.28–29; no live traffic release, load operation or vehicle movement directions.'}]}
+ });
+
  for(const [clause,extra] of Object.entries(sourceQC)){
    const record=items.find(r=>r.clause===clause);
    if(!record)throw Error('Missing basic MoRTH clause '+clause);
