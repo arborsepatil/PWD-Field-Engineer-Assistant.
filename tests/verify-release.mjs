@@ -152,7 +152,7 @@ process.stdout.write('Offline link audit: '+checkedHtml+' pages, '+checkedLinks+
 // module must not overwrite an earlier section, break a deep link, or duplicate
 // records if its script is loaded again.
 const integrated={
-  RECORDS:[],selected:-1,renderTree(){this.renderCount=(this.renderCount||0)+1},
+  RECORDS:[],selected:-1,renderTree(){},
   document:{getElementById(){return null},querySelector(){return null}},
   location:{search:'?clause=3110'},URLSearchParams
 };
