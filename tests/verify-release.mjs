@@ -84,6 +84,65 @@ for(const sec of ['2500','2600','2611-2612','2613-2615','2700','2800','2900','30
 for(const sec of ['2610','2700','2800','2900','3000','3100']){
   assert.ok(app.includes('./morth-qc-'+sec+'.js'),'QC loader missing '+sec);
 }
+
+// MoRTH app-shell extension loader: failure of one source script cannot hide later clauses.
+{
+ const start=app.indexOf('  // Resilient MoRTH extensions:');
+ const end=app.indexOf("  document.getElementById('pwdCalcFab')",start);
+ assert.ok(start>=0&&end>start,'MoRTH extension loader not found');
+ const loader=app.slice(start,end);
+ const execute=(pathname,failedFilename)=>{
+   const attempted=[],notices=[];
+   const body={
+     appendChild(script){
+       attempted.push(script.src);
+       if(script.src===failedFilename)script.onerror();
+       else script.onload();
+     },
+     prepend(node){notices.push(node)}
+   };
+   const document={
+     body,
+     createElement(name){return {nodeName:name,src:'',textContent:'',setAttribute(k,v){this[k]=v}}},
+     querySelector(name){return name==='main'?{prepend(node){notices.push(node)}}:null}
+   };
+   vm.runInNewContext(loader,{location:{pathname},document});
+   return {attempted,notices};
+ };
+ const readerFiles=['2500','2600','2611-2612','2613-2615','2700','2800','2900','3000','3100','100-300']
+   .map(section=>'./morth-section-'+section+'.js');
+ const qcFiles=['2610','2700','2800','2900','3000','3100','100-300']
+   .map(section=>'./morth-qc-'+section+'.js');
+ for(const [pathname,files,bad] of [
+   ['/morth_reader.html',readerFiles,'./morth-section-2600.js'],
+   ['/qc.html',qcFiles,'./morth-qc-3100.js']
+ ]){
+   const ok=execute(pathname,null);
+   assert.deepEqual(ok.attempted,files,'Unexpected '+pathname+' load order');
+   assert.equal(ok.notices.length,0,'False loading warning '+pathname);
+   const degraded=execute(pathname,bad);
+   assert.deepEqual(degraded.attempted,files,'A failed '+bad+' blocked later modules');
+   assert.equal(degraded.notices.length,1,'Load failure must display a notice');
+   assert.ok(degraded.notices[0].textContent.includes(bad.slice(2)),'Warning lacks failed asset name');
+ }
+ const unrelated=execute('/index.html',null);
+ assert.equal(unrelated.attempted.length,0,'MoRTH scripts loaded on non-MoRTH page');
+}
+// The 100–300 QC digest must remain visible even if the prior QC module fails.
+{
+ const script=load('morth-qc-100-300.js');
+ const added=[];
+ const matGrid={insertAdjacentElement(position,node){added.push({position,node})}};
+ const document={
+   getElementById(id){return id==='matGrid'?matGrid:null},
+   createElement(tag){return {tag,id:'',style:{},children:[],appendChild(x){this.children.push(x)}}}
+ };
+ vm.runInNewContext(script,{location:{pathname:'/qc.html'},document});
+ assert.equal(added.length,1,'General QC digest not mounted after preceding-module loss');
+ assert.equal(added[0].node.id,'morth-qc-100-300');
+}
+process.stdout.write('MoRTH graceful extension loading and QC fallback passed\n');
+
 for(const f of fs.readdirSync(root).filter(x=>x.endsWith('.js'))){
   new vm.Script(load(f),{filename:f});
 }
