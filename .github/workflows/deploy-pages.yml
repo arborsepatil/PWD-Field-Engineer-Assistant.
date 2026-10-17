@@ -23,6 +23,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run offline release regression checks
+        run: node tests/verify-release.mjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload static website
@@ -48,3 +54,7 @@ jobs:
               "${SITE}${file}" --output "/tmp/pwd-${file}"
           done
           node -e 'const fs=require("node:fs"); const html=fs.readFileSync("/tmp/pwd-index.html","utf8"); const m=JSON.parse(fs.readFileSync("/tmp/pwd-manifest.json","utf8")); const sw=fs.readFileSync("/tmp/pwd-sw.js","utf8"); if(!html.includes("rel=\"manifest\"") || !html.includes("serviceWorker.register"))throw Error("App entry lacks install wiring"); if(m.display!=="standalone" || !m.start_url)throw Error("PWA manifest invalid"); if(!sw.includes("CACHE_PREFIX"))throw Error("Service worker invalid"); console.log("Published PWA entry points healthy");'
+      - name: Verify every published offline asset
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: node tests/verify-live-pages.mjs "$PAGES_URL"
