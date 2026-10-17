@@ -266,3 +266,31 @@ process.stdout.write('MoRTH 100–200 detailed field record regression checks pa
  }
 }
 process.stdout.write('MoRTH 306–314 documentary, measurement and specialist review checks passed\n');
+
+
+// General 101–119 source traceability; no fabricated acceptance or payment rule.
+{
+ const s={RECORDS:[],selected:-1,renderTree(){},document:{getElementById(){return null}},
+   location:{search:'?clause=107'},URLSearchParams};
+ vm.runInNewContext(load('morth-section-100-300.js'),s);
+ const clauses=['101','102','103','104','105','106','107','108','110','111','114','115','116','117','119'];
+ assert.equal(s.RECORDS.length,37,'Original Section 100–300 clause count must remain fixed');
+ assert.equal(new Set(s.RECORDS.map(x=>x.clause)).size,37,'Duplicate clause during general QC integration');
+ for(const clause of clauses){
+   const item=s.RECORDS.find(x=>x.clause===clause);
+   assert.ok(item?.tables.length>=2,'General documentary source table missing '+clause);
+   for(const table of item.tables){
+     assert.ok(table.headers.length>=2,'Missing General QC headings '+clause);
+     for(const row of table.rows){
+       assert.equal(row.length,table.headers.length,'Malformed General QC row '+clause);
+       assert.ok(row.every(v=>typeof v==='string'&&v.trim()),'Blank General QC value '+clause);
+     }
+   }
+ }
+ const content=clause=>JSON.stringify(s.RECORDS.find(x=>x.clause===clause));
+ for(const [clause,value] of [['101','60 days'],['104','IS:460'],['107','45-day'],
+   ['115','28-day'],['116','4.75'],['119','Engineer']]){
+   assert.ok(content(clause).includes(value),'Missing source-controlled record '+clause);
+ }
+}
+process.stdout.write('MoRTH General 101–119: source-linked QC extension passed\n');
