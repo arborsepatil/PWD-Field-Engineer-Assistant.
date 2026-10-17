@@ -119,4 +119,57 @@ for(const [section,test] of Object.entries(expected)){
   assert.equal(renders,1,file+': unnecessary second render');
   process.stdout.write(section+': '+records.length+' records verified\n');
 }
+
+// Verify every literal same-directory resource link in the public HTML pages.
+// This catches links that look fine online but silently fail after PWA install.
+const offlineSet=new Set(shell.map(entry=>entry.replace(/^\.\/?/,'')).filter(Boolean));
+let checkedHtml=0, checkedLinks=0;
+for(const htmlFile of fs.readdirSync(root).filter(name=>name.endsWith('.html'))){
+  const htmlText=load(htmlFile);
+  checkedHtml++;
+  const attr=/\b(?:href|src)\s*=\s*(["'])(.*?)\1/gi;
+  for(const match of htmlText.matchAll(attr)){
+    const raw=match[2].trim();
+    if(!raw||/^(?:#|https?:|data:|blob:|mailto:|tel:|javascript:|\/\/)/i.test(raw))continue;
+    // Generated HTML inside JS templates is checked by the module tests below.
+    if(/['\x60$<>{}]/.test(raw))continue;
+    const local=raw.split(/[?#]/)[0].replace(/^\.\//,'');
+    if(!/\.(?:html|js|css|png|jpg|jpeg|webp|svg|json)$/i.test(local))continue;
+    assert.ok(!local.startsWith('/')&&!local.includes('..'),'Unexpected nonlocal HTML link: '+htmlFile+' -> '+raw);
+    assert.ok(fs.existsSync(path.join(root,local)),'Broken HTML resource: '+htmlFile+' -> '+raw);
+    assert.ok(offlineSet.has(local),'Linked HTML resource not pre-cached for offline use: '+htmlFile+' -> '+raw);
+    checkedLinks++;
+  }
+}
+for(const shortcut of [manifest.start_url,...(manifest.shortcuts||[]).map(item=>item.url)]){
+  const local=shortcut.split(/[?#]/)[0].replace(/^\.\//,'');
+  assert.ok(fs.existsSync(path.join(root,local)),'PWA shortcut target missing: '+shortcut);
+  assert.ok(offlineSet.has(local),'PWA shortcut target not available offline: '+shortcut);
+}
+process.stdout.write('Offline link audit: '+checkedHtml+' pages, '+checkedLinks+' local references and manifest shortcuts verified\n');
+
+// Integration: successive MoRTH extensions share one reader state. A future
+// module must not overwrite an earlier section, break a deep link, or duplicate
+// records if its script is loaded again.
+const integrated={
+  RECORDS:[],selected:-1,renderTree(){this.renderCount=(this.renderCount||0)+1},
+  document:{getElementById(){return null},querySelector(){return null}},
+  location:{search:'?clause=3110'},URLSearchParams
+};
+const checkedSections=['2800','2900','3000','3100'];
+for(const section of checkedSections){
+  const file='morth-section-'+section+'.js';
+  vm.runInNewContext(load(file),integrated,{filename:file});
+}
+const expectedTotal=checkedSections.reduce((sum,section)=>sum+expected[section].count,0);
+assert.equal(integrated.RECORDS.length,expectedTotal,'Combined reader record count changed');
+assert.equal(new Set(integrated.RECORDS.map(r=>r.clause)).size,expectedTotal,'Combined reader has duplicate clause IDs');
+assert.equal(integrated.RECORDS[integrated.selected]?.clause,'3110','Deep link to last loaded section failed');
+for(const section of checkedSections){
+  const file='morth-section-'+section+'.js';
+  vm.runInNewContext(load(file),integrated,{filename:file});
+}
+assert.equal(integrated.RECORDS.length,expectedTotal,'Repeated chained loads must not append duplicates');
+process.stdout.write('Integrated MoRTH navigation: '+expectedTotal+' unique records across four sections\n');
+
 process.stdout.write('PWA assets: '+shell.length+' present; manifest/JS/reader/QC checks passed\n');
