@@ -4,8 +4,8 @@ window.PWDBridge2002SourceAudit={
  "originalPdfPages": 91,
  "originalPdfHasTextLayer": false,
  "publishedIndexPage": 3,
- "coveredOriginalIndexNumbers": 38,
- "scope": "Original scanned PDF title-block drawing numbers and printed titles were visually compared for indexed drawings 001–038. Other 2002 index entries beyond 038 are not digitized or checked here. Original DWGs are not attached and technical dimensions/reinforcement are not approved.",
+ "coveredOriginalIndexNumbers": 70,
+ "scope": "2002 Blue Book scanned index p.3 lists drawings 001–070. All 70 index numbers are mapped to visually inspected drawing-title-block PDF pages, excluding section-divider pages 41, 49, 70, 75 and 80. Cover pages/unnumbered handwritten pages 85–91 are not included as authoritative drawings. Sheet-title variations are reported separately. DWGs, graphical reinforcement/dimensional validation and engineering design approval are NOT supplied.",
  "bySerial": {
   "001": {
    "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
@@ -325,6 +325,335 @@ window.PWDBridge2002SourceAudit={
     "B/B"
    ],
    "sourceNote": "Original scanned three-or-more-cell RCC box drawing consists of sheets A/B and B/B, each bearing this drawing number."
+  },
+  "039": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    50
+   ],
+   "sheetNumber": "BR-NGP/2002-039",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.50) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "040": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    51
+   ],
+   "sheetNumber": "BR-NGP/2002-040",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.51) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "041": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    52
+   ],
+   "sheetNumber": "BR-NGP/2002-041",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.52) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "042": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    53
+   ],
+   "sheetNumber": "BR-NGP/2002-042",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.53) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "043": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    54
+   ],
+   "sheetNumber": "BR-NGP/2002-043",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.54) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "044": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    55
+   ],
+   "sheetNumber": "BR-NGP/2002-044",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.55) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "045": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    56
+   ],
+   "sheetNumber": "BR-NGP/2002-045",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.56) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "046": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    57
+   ],
+   "sheetNumber": "BR-NGP/2002-046",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.57) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "047": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    58
+   ],
+   "sheetNumber": "BR-NGP/2002-047",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of P.C.C. piers resting on soil — spans 3, 4 and 5 m",
+   "scannedSheetTitle": "Details of P.C.C. piers — spans 3.0, 4.0 and 5.0 m",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.58) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "048": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    59
+   ],
+   "sheetNumber": "BR-NGP/2002-048",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of P.C.C. piers resting on soil — spans 6, 7 and 8 m",
+   "scannedSheetTitle": "Details of P.C.C. piers — spans 6.0, 7.0 and 8.0 m",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.59) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "049": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    60
+   ],
+   "sheetNumber": "BR-NGP/2002-049",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of P.C.C. piers resting on soil — spans 9 and 10 m",
+   "scannedSheetTitle": "Details of P.C.C. piers — spans 9.0 and 10.0 m",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.60) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "050": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    61
+   ],
+   "sheetNumber": "BR-NGP/2002-050",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of P.C.C. piers for single-lane bridges — spans 3 to 10 m",
+   "scannedSheetTitle": "Details of P.C.C. piers for single lane bridges",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.61) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "051": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    62
+   ],
+   "sheetNumber": "BR-NGP/2002-051",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of P.C.C. piers resting on soil for single-lane bridges — spans 3, 4, 5 and 6 m",
+   "scannedSheetTitle": "Details of P.C.C. piers (single lane) — spans 3, 4, 5 and 6 m",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.62) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "052": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    63
+   ],
+   "sheetNumber": "BR-NGP/2002-052",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of P.C.C. piers resting on soil for single-lane bridges — spans 7, 8, 9 and 10 m",
+   "scannedSheetTitle": "Details of P.C.C. piers (single lane) — spans 7, 8, 9 and 10 m",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.63) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "053": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    64
+   ],
+   "sheetNumber": "BR-NGP/2002-53",
+   "indexSheetNumber": "BR-NGP/2002-053",
+   "formatNote": "Scanned title block omits the leading zero in its serial; index gives the canonical three-digit drawing number. These have the same numerical serial, but exact typography differs.",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of pier caps",
+   "scannedSheetTitle": "Details of R.C.C. pier cap with RCC stopper",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.64) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "054": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    65
+   ],
+   "sheetNumber": "BR-NGP/2002-054",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of abutment for open foundation — spans 3 to 10 m",
+   "scannedSheetTitle": "Details of P.C.C. abutments (open foundation)",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.65) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "055": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    66
+   ],
+   "sheetNumber": "BR-NGP/2002-055",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of abutment for raft foundation — spans 3 to 10 m",
+   "scannedSheetTitle": "Details of P.C.C. abutments (resting on raft foundation)",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.66) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "056": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    67
+   ],
+   "sheetNumber": "BR-NGP/2002-056",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of P.C.C. abutment resting on soil — spans 3 to 10 m",
+   "scannedSheetTitle": "Details of P.C.C. abutments resting on soil — spans 3 to 10 m",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.67) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "057": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    68
+   ],
+   "sheetNumber": "BR-NGP/2002-57",
+   "indexSheetNumber": "BR-NGP/2002-057",
+   "formatNote": "Scanned title block omits the leading zero in its serial; index gives the canonical three-digit drawing number. These have the same numerical serial, but exact typography differs.",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of abutment caps and dirt walls",
+   "scannedSheetTitle": "Details of R.C.C. abutment cap and dirt wall (span 3 to 10 m)",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.68) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "058": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    69
+   ],
+   "sheetNumber": "BR-NGP/2002-58",
+   "indexSheetNumber": "BR-NGP/2002-058",
+   "formatNote": "Scanned title block omits the leading zero in its serial; index gives the canonical three-digit drawing number. These have the same numerical serial, but exact typography differs.",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Details of returns",
+   "scannedSheetTitle": "Details of solid returns — spans 3 to 10 m",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.69) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "059": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    71
+   ],
+   "sheetNumber": "BR-NGP/2002-59",
+   "indexSheetNumber": "BR-NGP/2002-059",
+   "formatNote": "Scanned title block omits the leading zero in its serial; index gives the canonical three-digit drawing number. These have the same numerical serial, but exact typography differs.",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "General arrangement and details of raft foundation",
+   "scannedSheetTitle": "General arrangement drawing for raft foundation",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.71) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "060": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    72
+   ],
+   "sheetNumber": "BR-NGP/2002-60",
+   "indexSheetNumber": "BR-NGP/2002-060",
+   "formatNote": "Scanned title block omits the leading zero in its serial; index gives the canonical three-digit drawing number. These have the same numerical serial, but exact typography differs.",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Notes and schedule of reinforcement for single-span bridge",
+   "scannedSheetTitle": "Details of reinforcement in raft for two-lane single-span bridge",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.72) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "061": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    73
+   ],
+   "sheetNumber": "BR-NGP/2002-61",
+   "indexSheetNumber": "BR-NGP/2002-061",
+   "formatNote": "Scanned title block omits the leading zero in its serial; index gives the canonical three-digit drawing number. These have the same numerical serial, but exact typography differs.",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Notes and schedule for two-span bridge",
+   "scannedSheetTitle": "Details of reinforcement in raft for two-lane two-span bridge",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.73) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "062": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    74
+   ],
+   "sheetNumber": "BR-NGP/2002-62",
+   "indexSheetNumber": "BR-NGP/2002-062",
+   "formatNote": "Scanned title block omits the leading zero in its serial; index gives the canonical three-digit drawing number. These have the same numerical serial, but exact typography differs.",
+   "titleCheck": "INDEX_SHEET_TITLE_WORDING_VARIANT",
+   "indexTitle": "Notes and schedule for multi-span bridges",
+   "scannedSheetTitle": "Details of reinforcement in raft for two-lane multi-span bridge (more than two)",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.74) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "063": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    76
+   ],
+   "sheetNumber": "BR-II/2002-063",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.76) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "064": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    77
+   ],
+   "sheetNumber": "BR-II/2002-064",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.77) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "065": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    78
+   ],
+   "sheetNumber": "BR-II/2002-065",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.78) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "066": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    79
+   ],
+   "sheetNumber": "BR-II/2002-066",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.79) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "067": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    81
+   ],
+   "sheetNumber": "BR-II/2002-067",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.81) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "068": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    82
+   ],
+   "sheetNumber": "BR-II/2002-068",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.82) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "069": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    83
+   ],
+   "sheetNumber": "BR-II/2002-069",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.83) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
+  },
+  "070": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    84
+   ],
+   "sheetNumber": "BR-II/2002-070",
+   "sourceNote": "Original 2002 scanned index (PDF p.3) and scanned drawing title block (PDF p.84) visually compared. Graphical reinforcement/dimensional design and DWG files have not been verified."
   }
- }
+ },
+ "additionalIndexedRecords": 32,
+ "visualTitleBlockNumberRecords": 70,
+ "unindexedHandwrittenPagesExcluded": [
+  85,
+  86,
+  87,
+  88,
+  89,
+  90,
+  91
+ ]
 };
