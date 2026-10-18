@@ -131,7 +131,7 @@ function enableBridgeFingerGestures(onPageSwipe,onGestureIdle){
 
 const p=new URLSearchParams(location.search),key=p.get('doc')||'';
 const driveFileId=p.get('file')||'';
-const catalogRecord=(window.PWDDrivePDFCatalog||[]).find(x=>x.id===driveFileId);
+const catalogRecord=(typeof window==='undefined'?[]:(window.PWDDrivePDFCatalog||[])).find(x=>x.id===driveFileId);
 const d=DOCS[key]||(catalogRecord?{id:catalogRecord.id,title:catalogRecord.name,meta:catalogRecord.sub+' · original Drive PDF'}:null);
 const isBridge=key==='bridge2002'||key==='bridge2023',year=isBridge?key.slice(-4):null;
 const maxPage=key==='bridge2002'?91:key==='bridge2023'?221:null;
