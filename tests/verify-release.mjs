@@ -495,3 +495,71 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
 
 }
 process.stdout.write('Bridge available books only, removed Hydro, touch gesture viewer checks passed\\n');
+
+
+// Complete 100–300 integration regression: order, direct links, current
+// selection, and all 37 records, not just the final clause in each section.
+{
+ const sectionModule=load('morth-section-100-300.js');
+ const expectedSections=new Map([['100',21],['200',2],['300',14]]);
+ const clausesExpected=[
+  ...Array.from({length:21},(_,i)=>String(101+i)),
+  '201','202',
+  ...Array.from({length:14},(_,i)=>String(301+i))
+ ];
+ function boot(query, priorClause){
+   const options=['all','400','500'].map(value=>({value}));
+   const filter={
+     querySelector(selector){
+       const matched=/option\[value="([^"]+)"\]/.exec(selector);
+       return matched?options.find(opt=>opt.value===matched[1])||null:null;
+     },
+     insertBefore(option,target){
+       const ix=options.indexOf(target);
+       assert.notEqual(ix,-1,'Filter anchor missing');
+       options.splice(ix,0,option);
+     },
+     appendChild(option){options.push(option)}
+   };
+   const RECORDS=priorClause?[{section:'3100',clause:priorClause,quick:[],tables:[],status:'partial'}]:[];
+   let count=0;
+   const document={getElementById(id){return id==='sectionFilter'?filter:null},createElement(tag){return {tag}}};
+   const state={RECORDS,selected:priorClause?0:-1,document,URLSearchParams,location:{search:query},renderTree(){count++}};
+   vm.runInNewContext(sectionModule,state,{filename:'morth-section-100-300.js'});
+   assert.equal(count,1,'Reader should refresh exactly once');
+   assert.deepEqual(options.map(o=>o.value),['all','100','200','300','400','500'],'Section filters must be in book order');
+   assert.deepEqual(RECORDS.slice(0,37).map(r=>r.clause),clausesExpected,'Opening sections must be in source order');
+   const group=new Map();
+   for(const record of RECORDS.slice(0,37)){
+     group.set(record.section,(group.get(record.section)||0)+1);
+     assert.equal(record.status,'partial','No clause may claim full technical approval: '+record.clause);
+     assert.ok(record.read.includes(record.clause),'Missing clause source reference: '+record.clause);
+     assert.ok(record.quick.length>=4,'Missing JE quick checks for '+record.clause);
+     assert.ok(record.tables.length>=1,'Missing documentary QC for '+record.clause);
+     for(const table of record.tables){
+       assert.ok(table.headers.length>=3,'Insufficient QC columns: '+record.clause);
+       for(const row of table.rows){
+         assert.equal(row.length,table.headers.length,'Column mismatch '+record.clause);
+         assert.ok(row.every(value=>typeof value==='string'&&value.trim()),'Blank QC evidence '+record.clause);
+       }
+     }
+   }
+   assert.deepEqual(Array.from(group),Array.from(expectedSections),'Counts for 100/200/300 changed');
+   vm.runInNewContext(sectionModule,state,{filename:'morth-section-100-300.js'});
+   assert.equal(count,1,'Repeated module must not rerender');
+   assert.equal(RECORDS.length,priorClause?38:37,'Repeated module must not duplicate clauses');
+   return {RECORDS,state,options};
+ }
+ // The engineer can link to any one of the 37 clauses and retain that selection.
+ for(const clause of clausesExpected){
+   const {RECORDS,state}=boot('?clause='+clause);
+   assert.equal(RECORDS[state.selected]?.clause,clause,'Deep-link broken: '+clause);
+ }
+ const retained=boot('?clause=3110','3110');
+ assert.equal(retained.RECORDS[retained.state.selected]?.clause,'3110','Late loading must not change existing selection');
+ const override=boot('?clause=201','3110');
+ assert.equal(override.RECORDS[override.state.selected]?.clause,'201','100–300 deep link must win when requested');
+ const first=boot('');
+ assert.equal(first.RECORDS[first.state.selected]?.clause,'101','Initial reader should select first source clause');
+ process.stdout.write('Sections 100–300: all 37 deep links, sorted filters, QC tables and stable selection passed\n');
+}
