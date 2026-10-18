@@ -32,8 +32,8 @@
 <body class="app-page"><main class="lib-wrap">
 <header class="lib-head"><a class="icon-btn" href="./index.html" aria-label="Back to home">‹</a><div><div class="brand-title" style="font-size:25px">Library</div><div class="brand-sub">Original PDF references from your Google Drive</div></div></header>
 <section class="lib-hero"><div class="eyebrow">PWD Engineering Reference Library</div><h1>Books in the right section</h1>
-<p>Codes, specifications, SSR, bridge plans, guidelines and rules are grouped by publication. Open the original PDF using your Google Drive account; private source files are not published by this app.</p>
-<div class="lib-note"><b>Drive catalog snapshot · 18 October 2026.</b> Only PDFs found during the connected Drive scan are listed. These are links, not automatic Drive synchronization. Older editions may be superseded; always verify the applicable revision, amendments and project specification before engineering use.</div></section>
+<p>Codes, specifications, SSR, bridge plans, guidelines and rules are grouped by publication. View your Drive PDF inside this app when embedded preview is permitted. Open in Drive is always available if sign-in or preview is blocked. PDFs are not published or downloaded during installation.</p>
+<div class="lib-note"><b>Drive catalog snapshot · 18 October 2026.</b> Only PDFs found during the connected Drive scan are listed. These are curated links, not automatic Drive synchronization. Older editions may be superseded; always verify the applicable revision, amendments and project specification before engineering use.</div></section>
 <div class="library-search"><span aria-hidden="true">🔎</span><input id="libSearch" type="search" autocomplete="off" placeholder="Search IS 456, IRC 78, SSR, Code, bridge…" aria-label="Search Drive PDF titles"></div>
 <nav class="categories" id="libraryTabs" aria-label="Library sections"></nav>
 <nav class="subgroups" id="librarySubgroups" aria-label="Code category filters" hidden></nav>
@@ -83,8 +83,9 @@
   const isBridge=record.section==='bridge';
   const drive='https://drive.google.com/file/d/'+encodeURIComponent(record.id)+'/view?usp=drivesdk';
   const primary=record.reader?'<a class="primary" href="'+esc(record.reader)+'">Open digital reader</a>':'';
-  const native=record.viewer?'<a href="'+esc(record.viewer)+'">View original PDF</a>':
-    '<a href="'+esc(drive)+'" target="_blank" rel="noopener noreferrer">Open PDF in Drive ↗</a>';
+  const viewer=record.viewer||'./pdf_viewer.html?drive='+encodeURIComponent(record.id);
+  const native='<a href="'+esc(viewer)+'">View PDF in app</a>'+
+    '<a href="'+esc(drive)+'" target="_blank" rel="noopener noreferrer">Open in Drive ↗</a>';
   const info=isBridge?'Drawing index is separate from the original private PDF. Detailed drawing QA and DWG checks are pending.':
    record.section==='code'?'Original published edition as named in Drive · check applicability and amendments.':
    record.section==='ssr'?'Historical SSR reference · confirm the applicable schedule and year.':
