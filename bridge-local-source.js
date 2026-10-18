@@ -50,7 +50,7 @@ window.PWDBridgeLocalSource={
     if(localURL)URL.revokeObjectURL(localURL);
     localURL=URL.createObjectURL(blob);sourceName=name;
     clear.hidden=false;
-    onSource(localURL);
+    onSource(localURL,blob);
     setStatus(persisted?'Private PDF saved on this device':'Private PDF open for this session',
               name+' · source identity not independently verified · no upload');
    }
@@ -86,7 +86,7 @@ window.PWDBridgeLocalSource={
      const version=++generation;
      if(localURL)URL.revokeObjectURL(localURL);
      localURL=null;sourceName=null;clear.hidden=true;
-     onSource(null);
+     onSource(null,null);
      try{
        await storage('readwrite',store=>store.delete(key));
        if(version===generation&&!disposed)setStatus('Private PDF cleared','Drive preview active; the copy for this book is removed from this browser');
