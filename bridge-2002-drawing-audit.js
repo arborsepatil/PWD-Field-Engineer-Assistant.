@@ -1,11 +1,11 @@
-/* Public original 2002 bridge book source-page and visual title-block verification metadata. No original scanned sheet is copied here. */
+/* Public verification metadata only. Original 2002 source remains private; no scans or third-party drawings embedded. */
 window.PWDBridge2002SourceAudit={
  "publication": "2002 Standard Plans / Blue Book",
  "originalPdfPages": 91,
  "originalPdfHasTextLayer": false,
  "publishedIndexPage": 3,
- "coveredOriginalIndexNumbers": 38,
- "scope": "Original scanned PDF title-block drawing numbers and printed titles were visually compared for indexed drawings 001–038. Other 2002 index entries beyond 038 are not digitized or checked here. Original DWGs are not attached and technical dimensions/reinforcement are not approved.",
+ "coveredOriginalIndexNumbers": 70,
+ "scope": "Original 91-page scan: numbered source index drawings 001–070 linked to source PDF pages; drawn title blocks visually compared, with six printed leading-zero number differences flagged. Non-indexed supplemental scan pages 85–91 remain outside the numbered drawing register. Original DWG files not provided. No detailed drawing dimensions, reinforcement, structural suitability or engineering approvals certified.",
  "bySerial": {
   "001": {
    "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
@@ -325,6 +325,279 @@ window.PWDBridge2002SourceAudit={
     "B/B"
    ],
    "sourceNote": "Original scanned three-or-more-cell RCC box drawing consists of sheets A/B and B/B, each bearing this drawing number."
+  },
+  "039": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    50
+   ],
+   "sheetNumber": "BR-NGP/2002-039",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 50. Detailed dimensions and DWG comparison remain pending."
+  },
+  "040": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    51
+   ],
+   "sheetNumber": "BR-NGP/2002-040",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 51. Detailed dimensions and DWG comparison remain pending."
+  },
+  "041": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    52
+   ],
+   "sheetNumber": "BR-NGP/2002-041",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 52. Detailed dimensions and DWG comparison remain pending."
+  },
+  "042": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    53
+   ],
+   "sheetNumber": "BR-NGP/2002-042",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 53. Detailed dimensions and DWG comparison remain pending."
+  },
+  "043": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    54
+   ],
+   "sheetNumber": "BR-NGP/2002-043",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 54. Detailed dimensions and DWG comparison remain pending."
+  },
+  "044": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    55
+   ],
+   "sheetNumber": "BR-NGP/2002-044",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 55. Detailed dimensions and DWG comparison remain pending."
+  },
+  "045": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    56
+   ],
+   "sheetNumber": "BR-NGP/2002-045",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 56. Detailed dimensions and DWG comparison remain pending."
+  },
+  "046": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    57
+   ],
+   "sheetNumber": "BR-NGP/2002-046",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 57. Detailed dimensions and DWG comparison remain pending."
+  },
+  "047": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    58
+   ],
+   "sheetNumber": "BR-NGP/2002-047",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 58. Detailed dimensions and DWG comparison remain pending."
+  },
+  "048": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    59
+   ],
+   "sheetNumber": "BR-NGP/2002-048",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 59. Detailed dimensions and DWG comparison remain pending."
+  },
+  "049": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    60
+   ],
+   "sheetNumber": "BR-NGP/2002-049",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 60. Detailed dimensions and DWG comparison remain pending."
+  },
+  "050": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    61
+   ],
+   "sheetNumber": "BR-NGP/2002-050",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 61. Detailed dimensions and DWG comparison remain pending."
+  },
+  "051": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    62
+   ],
+   "sheetNumber": "BR-NGP/2002-051",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 62. Detailed dimensions and DWG comparison remain pending."
+  },
+  "052": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    63
+   ],
+   "sheetNumber": "BR-NGP/2002-052",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 63. Detailed dimensions and DWG comparison remain pending."
+  },
+  "053": {
+   "status": "INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    64
+   ],
+   "sheetNumber": "BR-NGP/2002-53",
+   "issue": "The source index prints BR-NGP/2002-053, while the scanned sheet title block displays BR-NGP/2002-53 (leading-zero formatting difference). Do not silently change the source number.",
+   "sourceNote": "Drawing title block visually inspected at PDF page 64. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+  },
+  "054": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    65
+   ],
+   "sheetNumber": "BR-NGP/2002-054",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 65. Detailed dimensions and DWG comparison remain pending."
+  },
+  "055": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    66
+   ],
+   "sheetNumber": "BR-NGP/2002-055",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 66. Detailed dimensions and DWG comparison remain pending."
+  },
+  "056": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    67
+   ],
+   "sheetNumber": "BR-NGP/2002-056",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 67. Detailed dimensions and DWG comparison remain pending."
+  },
+  "057": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    68
+   ],
+   "sheetNumber": "BR-NGP/2002-057",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 68. Detailed dimensions and DWG comparison remain pending."
+  },
+  "058": {
+   "status": "INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    69
+   ],
+   "sheetNumber": "BR-NGP/2002-58",
+   "issue": "The source index prints BR-NGP/2002-058, while the scanned sheet title block displays BR-NGP/2002-58 (leading-zero formatting difference). Do not silently change the source number.",
+   "sourceNote": "Drawing title block visually inspected at PDF page 69. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+  },
+  "059": {
+   "status": "INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    71
+   ],
+   "sheetNumber": "BR-NGP/2002-59",
+   "issue": "The source index prints BR-NGP/2002-059, while the scanned sheet title block displays BR-NGP/2002-59 (leading-zero formatting difference). Do not silently change the source number.",
+   "sourceNote": "Drawing title block visually inspected at PDF page 71. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+  },
+  "060": {
+   "status": "INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    72
+   ],
+   "sheetNumber": "BR-NGP/2002-60",
+   "issue": "The source index prints BR-NGP/2002-060, while the scanned sheet title block displays BR-NGP/2002-60 (leading-zero formatting difference). Do not silently change the source number.",
+   "sourceNote": "Drawing title block visually inspected at PDF page 72. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+  },
+  "061": {
+   "status": "INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    73
+   ],
+   "sheetNumber": "BR-NGP/2002-61",
+   "issue": "The source index prints BR-NGP/2002-061, while the scanned sheet title block displays BR-NGP/2002-61 (leading-zero formatting difference). Do not silently change the source number.",
+   "sourceNote": "Drawing title block visually inspected at PDF page 73. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+  },
+  "062": {
+   "status": "INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT",
+   "pdfPages": [
+    74
+   ],
+   "sheetNumber": "BR-NGP/2002-62",
+   "issue": "The source index prints BR-NGP/2002-062, while the scanned sheet title block displays BR-NGP/2002-62 (leading-zero formatting difference). Do not silently change the source number.",
+   "sourceNote": "Drawing title block visually inspected at PDF page 74. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+  },
+  "063": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    76
+   ],
+   "sheetNumber": "BR-II/2002-063",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 76. Detailed dimensions and DWG comparison remain pending."
+  },
+  "064": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    77
+   ],
+   "sheetNumber": "BR-II/2002-064",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 77. Detailed dimensions and DWG comparison remain pending."
+  },
+  "065": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    78
+   ],
+   "sheetNumber": "BR-II/2002-065",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 78. Detailed dimensions and DWG comparison remain pending."
+  },
+  "066": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    79
+   ],
+   "sheetNumber": "BR-II/2002-066",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 79. Detailed dimensions and DWG comparison remain pending."
+  },
+  "067": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    81
+   ],
+   "sheetNumber": "BR-II/2002-067",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 81. Detailed dimensions and DWG comparison remain pending."
+  },
+  "068": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    82
+   ],
+   "sheetNumber": "BR-II/2002-068",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 82. Detailed dimensions and DWG comparison remain pending."
+  },
+  "069": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    83
+   ],
+   "sheetNumber": "BR-II/2002-069",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 83. Detailed dimensions and DWG comparison remain pending."
+  },
+  "070": {
+   "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
+   "pdfPages": [
+    84
+   ],
+   "sheetNumber": "BR-II/2002-070",
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 84. Detailed dimensions and DWG comparison remain pending."
   }
- }
+ },
+ "totalNumberedIndexRecords": 70,
+ "additionalNonIndexedScanPages": [
+  85,
+  86,
+  87,
+  88,
+  89,
+  90,
+  91
+ ],
+ "verificationMethod": "Human visual reading of original scanned title-block images; no OCR and no inferred drawing dimensions."
 };

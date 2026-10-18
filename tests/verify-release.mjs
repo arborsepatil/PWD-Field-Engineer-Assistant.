@@ -407,7 +407,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  const oldAudit=oldAuditCtx.window.PWDBridge2002SourceAudit;
  assert.equal(oldAudit.originalPdfPages,91,'2002 original PDF length mismatch');
  assert.equal(oldAudit.originalPdfHasTextLayer,false,'2002 is scanned; do not imply searchable original');
- assert.equal(Object.keys(oldAudit.bySerial).length,38,'2002 initial scanned audit count mismatch');
+ assert.equal(Object.keys(oldAudit.bySerial).length,70,'2002 scanned numbered drawing index must include 001–070');
  for(let n=1;n<=34;n++){
    const serial=String(n).padStart(3,'0');
    const r=oldAudit.bySerial[serial];
@@ -421,6 +421,43 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  }
  for(const serial of ['036','037','038'])
    assert.equal(oldAudit.bySerial[serial].sheetParts.length,2,'Both 2002 box cell sheets required '+serial);
+ // Source scan page mapping after visually inspecting title blocks for substructure, raft, misc and arches.
+ for(let n=39;n<=70;n++){
+   const serial=String(n).padStart(3,'0');
+   const a=oldAudit.bySerial[serial];
+   assert.ok(a,'2002 numbered drawing missing '+serial);
+   const expectedPage=n<=58?n+11:n<=62?n+12:n<=66?n+13:n+14;
+   assert.equal(a.pdfPages.length,1,'Unexpected extra drawing sheets '+serial);
+   assert.equal(a.pdfPages[0],expectedPage,'2002 scanned title block page mismatch '+serial);
+   assert.ok(a.sheetNumber.includes('2002-'),'2002 actual drawing title number missing '+serial);
+ }
+ const sixVariants=['053','058','059','060','061','062'];
+ const variants=Object.entries(oldAudit.bySerial).filter(([_,x])=>x.status==='INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT');
+ assert.equal(variants.length,6,'Six visually identified title-block leading-zero differences required');
+ for(const serial of sixVariants){
+   const a=oldAudit.bySerial[serial];
+   assert.equal(a.status,'INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT','Unflagged source-format difference '+serial);
+   assert.ok(a.issue?.includes('leading-zero'),'Missing exact scanned-number difference '+serial);
+ }
+ assert.deepEqual(Array.from(oldAudit.additionalNonIndexedScanPages),[85,86,87,88,89,90,91],
+    'Supplemental unindexed scan sheets must not be assigned fabricated drawing serials');
+ const oldBookBody=load('bridge_book_2002.html');
+ const recordsSource=oldBookBody.slice(oldBookBody.indexOf('const $=id=>document.getElementById'),oldBookBody.indexOf('const sourceAudit=window.PWDBridge2002SourceAudit'));
+ const recordCtx={document:{getElementById(){return null}}};
+ const all2002=vm.runInNewContext(recordsSource+String.fromCharCode(10)+'RECORDS',recordCtx);
+ assert.equal(all2002.length,70,'2002 app index must have exactly 70 original numbered drawings');
+ assert.equal(new Set(all2002.map(x=>x.sr)).size,70,'2002 duplicate serial in app index');
+ for(let n=39;n<=70;n++){
+   const serial=String(n).padStart(3,'0'),r=all2002.find(x=>x.sr===serial);
+   assert.ok(r&&r.pub==='2002','2002 source-only entry missing '+serial);
+   assert.equal(r.no,(n<=62?'BR-NGP':'BR-II')+'/2002-'+serial,'2002 source index code mismatch '+serial);
+   assert.equal(r.indexPdfPage,3,'Original 2002 index source-page mismatch '+serial);
+ }
+ for(const [section,count] of [['A',34],['E',4],['B',20],['F',4],['G',4],['H',4]]){
+   assert.equal(all2002.filter(x=>x.section===section).length,count,'2002 book category count wrong: '+section);
+ }
+ assert.ok(oldBookBody.includes('INDEX / SHEET NUMBER FORMATTING DIFFERS'),'Scanned titleblock/index differences not shown');
+ 
  const oldBook=load('bridge_book_2002.html');
  assert.ok(oldBook.includes('bridge-2002-drawing-audit.js'),'2002 source metadata script not linked');
  assert.ok(oldBook.includes('sourceAudit[r.sr]'),'2002 per-record source mapping unused');
