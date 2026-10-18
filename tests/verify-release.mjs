@@ -377,6 +377,82 @@ const driveCatalog=(()=>{
  return context.window.PWDDrivePDFCatalog;
 })();
 
+// Final mobile release: in-app Drive previews without publishing original PDFs.
+{
+ const home=load('index.html'),library=load('library.html'),settings=load('settings.html'),profile=load('profile.html');
+ const viewer=load('pdf_viewer.html'),guideCode=load('app-shell.js');
+ for(const file of [home,library,settings,profile]){
+   assert.ok(!/GPS Cam|Bridge Hydro|id="guideCard"|id="qc"/.test(file),'Removed field module resurfaced in release UI');
+ }
+ assert.ok(!home.includes('SSR Master'),'Unbuilt SSR engine must not take home space');
+ assert.ok(home.includes('href="#bridgeplans"'),'Bridge Plans should be a home main module');
+ assert.ok(home.includes('href="./library.html"'),'Library should open directly from home tab');
+ assert.ok(settings.includes('id="calcToggle"')&&!settings.includes('id="guideToggle"'),
+           'Settings must offer real calculator switch, never retired guide');
+ for(const oldId of ['offlineToggle','wifiToggle','guideToggle']){
+   assert.ok(!settings.includes(oldId),'Nonfunctional settings toggle still published: '+oldId);
+ }
+ assert.ok(!settings.includes('GPS / Location')&&!settings.includes('Used by GPS Cam'),
+           'Removed camera and GPS permissions still advertised in settings');
+ assert.ok(guideCode.includes('function syncCalculatorVisibility()'),
+           'Quick calculator settings must affect visible app control');
+ assert.ok(!profile.includes('Foundation for quick access to starred tools')&&
+           !profile.includes('Downloaded books/drawings will appear'),
+           'Profile still markets unavailable favorites or downloads');
+ assert.ok(library.includes('View PDF in app')&&!library.includes("'<a href=\"'+esc(drive)+'\" target"),
+           'Every Drive PDF should have an in-app preview route');
+ assert.ok(library.includes('Open in Drive'),'Drive fallback link must remain available');
+ assert.ok(viewer.includes('./library-drive-catalog.js'),'App PDF viewer must use curated catalog');
+ assert.ok(viewer.includes('catalogEntry=libraryId?originalCatalog.find(x=>x.id===libraryId):null'),
+           'Only cataloged Drive IDs may render inside viewer');
+ assert.ok(!shell.some(x=>/\\.pdf$/i.test(x)),'Never distribute private PDF in PWA cache');
+ assert.ok(driveCatalog.length===73,'Verified document count changed');
+
+ const runViewer=(query)=>{
+   const elements={};
+   const el=id=>{
+     if(!elements[id])elements[id]={
+       style:{},classList:{added:[],add(v){this.added.push(v)},remove(){}},
+       textContent:'',src:'',href:'',addEventListener(){}
+     };
+     return elements[id];
+   };
+   const back={href:'./library.html'};
+   const document={title:'PDF Viewer',getElementById:el,querySelector(sel){return sel==='.top a'?back:null}};
+   const ctx={
+     window:{PWDDrivePDFCatalog:driveCatalog},URLSearchParams,document,
+     location:{search:query,pathname:'/pdf_viewer.html'},
+     setTimeout(){}
+   };
+   const match=viewer.match(/<script>([\\s\\S]*?)<\\/script>/);
+   assert.ok(match,'PDF viewer script missing');
+   vm.runInNewContext(match[1],ctx,{filename:'catalog-pdf-viewer-check'});
+   return {document,elements,back,el};
+ };
+ const example=driveCatalog.find(x=>x.sub==='IS');
+ assert.ok(example,'Drive IS code example missing');
+ const allowed=runViewer('?drive='+encodeURIComponent(example.id));
+ assert.equal(allowed.el('docTitle').textContent,example.name,'Viewer title must match Drive catalog source');
+ assert.ok(allowed.el('frame').src.includes('/file/d/'+example.id+'/preview'),
+           'Library PDF must open in-app Google Drive preview');
+ assert.ok(allowed.el('driveBtn').href.includes('/file/d/'+example.id+'/view'),
+           'Original Drive fallback must match the same catalog item');
+ assert.equal(allowed.back.href,'./library.html?section=code','Library back link must return to right category');
+ const bad=runViewer('?drive=not-a-real-catalog-id');
+ assert.ok(bad.el('fallback').classList.added.includes('show'),'Unknown Drive IDs must be rejected');
+ assert.equal(bad.el('driveBtn').style.display,'none','Unlisted PDF must not get an Open in Drive shortcut');
+ // The original independent bridge book still uses its known document type.
+ const known=runViewer('?doc=rulebook');
+ assert.ok(known.el('frame').src.includes('/file/d/1g1bLZJtVyYDB5RLTjqoDxZUyEpvdkGaZ/preview'),
+           'Legacy Rule Book PDF links must keep working');
+ for(const filename of ['index.html','settings.html','profile.html']){
+   const body=load(filename);
+   const scripts=[...body.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];
+   for(const m of scripts)new vm.Script(m[1],{filename:filename+' inline JS'});
+ }
+ process.stdout.write('In-app Drive PDF viewing, removed placeholders, settings and profile polish verified\\n');
+}
+
 // Only source-available bridge books are published, and the retired hydraulic tool stays removed.
 {
  const gateway=load('pwd_bridge_plans.html');
