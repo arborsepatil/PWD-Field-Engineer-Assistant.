@@ -354,38 +354,82 @@ process.stdout.write('MoRTH 306–314 documentary, measurement and specialist re
 }
 process.stdout.write('MoRTH General 101–119: source-linked QC extension passed\n');
 
-// Bridge standard plan books: preserve publication isolation and truthful verification.
+// Only source-available bridge books are published, and the retired hydraulic tool stays removed.
 {
  const gateway=load('pwd_bridge_plans.html');
  const library=load('library.html');
- const swAssets=['2002','2018','2023'];
- for(const year of swAssets){
+ const home=load('index.html');
+ const guide=load('app-shell.js');
+ for(const year of ['2002','2023']){
    const page='bridge_book_'+year+'.html';
-   assert.ok(shell.includes('./'+page),'Book missing offline asset '+page);
-   assert.ok(gateway.includes('./'+page),'Bridge gateway misses '+page);
-   assert.ok(library.includes('./'+page),'Library misses '+page);
+   assert.ok(shell.includes('./'+page),'Book missing from offline cache '+page);
+   assert.ok(gateway.includes('./'+page),'Gateway missing '+page);
+   assert.ok(library.includes('./'+page),'Library missing '+page);
    const content=load(page);
-   assert.ok(content.includes(year+' Bridge'),'Book identification missing '+page);
-   assert.ok(content.includes('</html>'),'Incomplete bridge book page '+page);
+   assert.ok(content.includes(year+' Bridge'),'Wrong book identity '+page);
+   assert.ok(content.includes('</html>'),'Malformed bridge page '+page);
+   assert.ok(content.includes('DRAWING QA PENDING'),'Actual drawing incorrectly marked verified');
+   assert.ok(content.includes('Actual drawing PDF page'),'Unverified actual page must be disclosed');
+   assert.ok(content.includes('not digitized'),'Drawing details falsely digitized');
+   assert.ok(content.includes("r.pub!=='"+year+"'"),'Book must reject cross-edition entries');
+   assert.ok(content.includes('./pdf_viewer.html?doc=bridge'+year),'Original private PDF link missing');
+   new vm.Script(content.match(/<script>([\s\S]*?)<\/script>/)[1],{filename:page});
  }
  const y2002=load('bridge_book_2002.html');
  const y2023=load('bridge_book_2023.html');
- const y2018=load('bridge_book_2018.html');
- assert.ok(y2002.includes('bridge2002')&&!y2002.includes('bridge2023'),'2002 source contamination');
- assert.ok(y2023.includes('bridge2023')&&!y2023.includes('bridge2002'),'2023 source contamination');
- assert.ok(!y2018.includes('bridge2002')&&!y2018.includes('bridge2023'),'2018 source substitution');
- assert.ok(!y2002.includes('pubFilter')&&!y2023.includes('pubFilter'),'Mixed-publication filter remains');
- assert.ok(y2002.includes("r.pub!=='2002'"),'2002 record gate missing');
- assert.ok(y2023.includes("r.pub!=='2023'"),'2023 record gate missing');
- assert.ok(!y2002.includes("add({pub:'2023'")&&!y2023.includes("add({pub:'2002'"),'Index data mixed');
- assert.ok(y2018.includes('Original source required'),'2018 must remain blocked until source available');
- for(const text of [y2002,y2023]){
-   assert.ok(text.includes('DRAWING QA PENDING'),'Drawing QA not visible');
-   assert.ok(text.includes('Actual drawing PDF page'),'Unverified actual page must be disclosed');
-   assert.ok(text.includes('not digitized'),'Do not imply drawing detail digitization');
-   assert.ok(!text.includes('MATCHED</span>'),'Must not claim unverified drawings match');
+ assert.ok(!y2002.includes('bridge2023')&&!y2023.includes('bridge2002'),'Cross-edition PDF link');
+ assert.ok(!y2002.includes("add({pub:'2023'")&&!y2023.includes("add({pub:'2002'"),'Cross-edition source data');
+ assert.ok(!fs.existsSync(path.join(root,'bridge_book_2018.html')),'Missing-source book must not be deployed');
+ assert.ok(!gateway.includes('2018')&&!library.includes('2018')&&!home.includes('2018'),'Missing-source 2018 book is still visible');
+ for(const old of ['bridge_book_2018.html','bridge_hydraulic_calculator.html','bridge-hydro-ui.css']){
+   assert.ok(!shell.includes('./'+old),'Removed module still in cache: '+old);
+   assert.ok(!fs.existsSync(path.join(root,old)),'Removed module still published: '+old);
  }
- new vm.Script(y2002.match(/<script>([\s\S]*?)<\/script>/)[1],{filename:'bridge_book_2002.inline.js'});
- new vm.Script(y2023.match(/<script>([\s\S]*?)<\/script>/)[1],{filename:'bridge_book_2023.inline.js'});
+ for(const body of [gateway,library,home,guide,y2023,load('README.md')]){
+   assert.ok(!body.includes('Bridge Hydro')&&!body.includes('bridge_hydraulic_calculator.html'),'Bridge Hydro still discoverable');
+ }
+ assert.ok(home.includes("t.id!=='bridgehydro'"),'Recent tools can revive removed hydraulic module');
+ const pdf=load('pdf_viewer.html');
+ assert.ok(pdf.includes('enableBridgeFingerGestures()'),'Finger gestures missing in PDF viewer');
+ assert.ok(pdf.includes("key==='bridge2002'||key==='bridge2023'"),'Gestures not limited to bridge books');
+ assert.ok(pdf.includes("touch-action:none"),'Touch zoom/pan surface not configured');
+ assert.ok(pdf.includes("pointerdown")&&pdf.includes("pointermove")&&pdf.includes("pointerup"),'Pointer gesture handlers missing');
+ assert.ok(pdf.includes('session.scale*distance('),'Two-finger scale not implemented');
+ assert.ok(pdf.includes('state.x=c.x-session.anchorX*state.scale'),'Pinch centre stability missing');
+ assert.ok(pdf.includes('drag to move'),'Drag guidance missing');
+ assert.ok(!pdf.includes('id="zoomIn"')&&!pdf.includes('id="zoomOut"'),'Zoom buttons must not appear');
+ new vm.Script(pdf.match(/<script>([\s\S]*?)<\/script>/)[1],{filename:'pdf_viewer.html'});
+
+ // Exercise finger gestures against a mocked 300×500 viewport; no browser gesture buttons.
+ const surfaceListeners={};
+ const surface={
+   addEventListener(name,listener){surfaceListeners[name]=listener},
+   setPointerCapture(){},
+   getBoundingClientRect(){return {left:0,top:0,width:300,height:500}}
+ };
+ const target={style:{},addEventListener(){},src:''};
+ const viewer={classList:{modes:[],add(name){this.modes.push(name)}}};
+ const back={href:'./library.html'};
+ const els={viewer,gestureSurface:surface,frame:target,fallback:{classList:{add(){}}}};
+ const ctx={
+   URLSearchParams,location:{search:'?doc=bridge2023&page=17'},setTimeout(){},
+   document:{getElementById(id){return els[id]||null},querySelector(sel){return sel==='.top a'?back:null}},
+   docTitle:{textContent:''},docMeta:{textContent:''},driveBtn:{href:''},fallbackBtn:{href:''},frame:target
+ };
+ const scriptStart=pdf.indexOf('<script>');const pdfScript=pdf.slice(scriptStart+8,pdf.indexOf('</script>',scriptStart));
+ vm.runInNewContext(pdfScript,ctx,{filename:'bridge-gesture-behavior'});
+ assert.ok(viewer.classList.modes.includes('gesture-mode'),'Bridge viewer gestures not activated');
+ assert.equal(back.href,'./bridge_book_2023.html','Bridge source must return to its own book');
+ const p=(pointerId,clientX,clientY)=>({pointerId,clientX,clientY,pointerType:'touch',preventDefault(){}});
+ surfaceListeners.pointerdown(p(1,100,100));
+ surfaceListeners.pointerdown(p(2,200,100));
+ surfaceListeners.pointermove(p(2,260,100));
+ const transformAfterPinch=target.style.transform;
+ const scaled=Number(transformAfterPinch.split('scale(')[1].split(')')[0]);
+ assert.ok(scaled>1.5&&scaled<1.7,'Pinch must zoom source preview');
+ surfaceListeners.pointerup(p(2,260,100));
+ surfaceListeners.pointermove(p(1,60,60));
+ assert.notEqual(target.style.transform,transformAfterPinch,'Finger drag must pan zoomed source preview');
+
 }
-process.stdout.write('Bridge 2002, 2018 and 2023 independent source guards passed\\n');
+process.stdout.write('Bridge available books only, removed Hydro, touch gesture viewer checks passed\\n');
