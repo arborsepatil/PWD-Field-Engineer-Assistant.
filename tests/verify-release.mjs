@@ -795,3 +795,127 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.equal(first.RECORDS[first.state.selected]?.clause,'101','Initial reader should select first source clause');
  process.stdout.write('Sections 100–300: all 37 deep links, sorted filters, QC tables and stable selection passed\n');
 }
+
+
+// Unified on-device PDF Library checks: Drive originals are linked, not published.
+{
+ const lib=load('library.html'), viewer=load('pdf_viewer.html');
+ const local=load('library-private-pdf.js');
+ new vm.Script(local,{filename:'library-private-pdf.js'});
+ assert.ok(shell.includes('./library-private-pdf.js'),'Offline private-PDF controller is missing');
+ assert.ok(viewer.includes('./library-drive-catalog.js')&&viewer.includes('./library-private-pdf.js'),
+   'Unified viewer must load curated Drive IDs and private attachment handler');
+ assert.ok(lib.includes("'./pdf_viewer.html?file='+encodeURIComponent(record.id)"),
+   'Library PDFs still leave the app instead of opening the in-app reader');
+ assert.ok(lib.includes('Google Drive ↗'),'Explicit external Drive fallback must be retained');
+ assert.ok(!shell.some(path=>/\.pdf$/i.test(path)),'Public app must not precache copyrighted original PDFs');
+ assert.ok(!home.includes('Game-changer module deliberately held')&&!home.includes('SSR Master'),
+   'Do not show an inactive SSR placeholder in final home');
+ assert.ok(home.includes('library.html?section=ssr'),'The live SSR PDF section must be reachable from home');
+ assert.equal((home.match(/class="module-card"/g)||[]).length,4,
+   'Home should have only four practical navigation cards');
+ assert.ok(manifest.shortcuts.some(x=>x.name==='Library'),'Android shortcut missing the Library');
+
+ // Simulate opening a standard that was not hardcoded in the old PDF viewer.
+ const entry=driveCatalog.find(r=>r.sub==='IS'&&r.name.includes('456'));
+ assert.ok(entry,'IS 456 expected in curated Drive library');
+ const surfaceEvents={};
+ const surface={
+   addEventListener(name,fn){surfaceEvents[name]=fn},
+   setPointerCapture(){},
+   getBoundingClientRect(){return {left:0,top:0,width:320,height:550}}
+ };
+ const viewerModes=new Set();
+ const fakeViewer={classList:{
+   add(x){viewerModes.add(x)},remove(x){viewerModes.delete(x)},
+   toggle(x,enabled){if(enabled)viewerModes.add(x);else viewerModes.delete(x)}
+ }};
+ const pdfFrame={style:{},src:'',addEventListener(){}};
+ const layer={style:{},hidden:true};
+ const fallback={classList:{add(){},remove(){}}};
+ const back={href:'./library.html'};
+ const elements={
+   viewer:fakeViewer,gestureSurface:surface,frame:pdfFrame,
+   canvasLayer:layer,drawingCanvas:{style:{}},
+   privateBar:{classList:{add(){}}},
+   gestureHint:{textContent:''},
+   pdfPageIndicator:{textContent:'',classList:{add(){}}},
+   fallback,
+   docTitle:{textContent:''},docMeta:{textContent:''},
+   driveBtn:{href:''},fallbackBtn:{href:''}
+ };
+ let privateConfig=null,rendered=0,changedUrl='';
+ const mock={
+   window:{PWDDrivePDFCatalog:driveCatalog},
+   URLSearchParams,location:{search:'?file='+entry.id,pathname:'/pdf_viewer.html'},
+   history:{replaceState(_s,_t,url){changedUrl=url}},setTimeout(){},
+   document:{
+     title:'',getElementById(id){return elements[id]||null},
+     querySelector(sel){return sel==='.top a'?back:null}
+   },
+   PWDBridgeCanvas:{setup(options){
+     let ready=false;
+     return {
+       get ready(){return ready},
+       get pageCount(){return 57},
+       open:async(_blob,page)=>{ready=true;rendered=page;options.onState('ready','Loaded');return true},
+       showPage(page){rendered=page},
+       close:async()=>{ready=false},
+       rerenderForZoom(){}
+     }
+   }},
+   PWDLibraryPrivatePDF:{setup(config){privateConfig=config}},
+   PWDBridgeLocalSource:{setup(){throw Error('General PDF used bridge-only source')}}
+ };
+ const begin=viewer.indexOf('<script>'),inline=viewer.slice(begin+8,viewer.indexOf('</script>',begin));
+ vm.runInNewContext(inline,mock,{filename:'standard-pdf-viewer'});
+ assert.equal(elements.docTitle.textContent,entry.name,'In-app viewer did not find the chosen Drive entry');
+ assert.ok(pdfFrame.src.includes(entry.id+'/preview'),'Original Drive PDF is not embedded');
+ assert.ok(elements.driveBtn.href.includes(entry.id+'/view'),'Original Drive fallback missing');
+ assert.equal(privateConfig?.key,'drive-'+entry.id,'Local copies must be segregated by Drive document ID');
+ assert.ok(!viewerModes.has('gesture-mode'),'Online Drive iframe must keep its own touch interactions');
+ await privateConfig.onSource('blob:https://example.invalid/standard',new Blob(['%PDF-1.7']));
+ assert.ok(viewerModes.has('gesture-mode'),'Local canvas must support finger gestures');
+ assert.equal(layer.hidden,false,'Local PDF renderer did not become visible');
+ assert.equal(rendered,1,'Default exact PDF page was not rendered');
+ const touch=(id,x,y)=>({pointerId:id,clientX:x,clientY:y,pointerType:'touch',preventDefault(){}});
+ surfaceEvents.pointerdown(touch(1,240,160));
+ surfaceEvents.pointermove(touch(1,70,160));
+ surfaceEvents.pointerup(touch(1,70,160));
+ assert.equal(rendered,2,'Unzoomed swipe did not render the next standard page');
+ assert.ok(changedUrl.includes('page=2'),'Book page swipe must update the reader URL');
+ await privateConfig.onSource(null,null);
+ assert.ok(!viewerModes.has('gesture-mode'),'Native Drive fallback should restore touch interaction');
+ assert.ok(pdfFrame.src.includes(entry.id+'/preview'),'Forgetting device PDF did not return to Drive');
+
+ // A private device attachment is never treated as source identity verification.
+ const fakeFile=new Blob(['%PDF-1.7','x'.repeat(300)],{type:'application/pdf'});
+ Object.defineProperty(fakeFile,'name',{value:'IS 456 2000.pdf'});
+ const handlers={};
+ const fileInput={files:[fakeFile],value:'x',addEventListener(k,fn){handlers[k]=fn}};
+ const clear={hidden:true,addEventListener(k,fn){handlers['clear-'+k]=fn}};
+ const status={textContent:'',appendChild(node){this.note=node.textContent}};
+ const dom={privatePdfFile:fileInput,forgetPrivatePdf:clear,privatePdfStatus:status,privateBar:{classList:{add(){}}}};
+ let opened=0,revoked=0;
+ const sandbox={
+   window:{},Blob,Uint8Array,Promise,Date,
+   URL:{createObjectURL(){opened++;return 'blob:local-'+opened},revokeObjectURL(){revoked++}},
+   document:{
+     getElementById(id){return dom[id]},
+     createElement(){return {textContent:''}}
+   }
+ };
+ vm.runInNewContext(local,sandbox,{filename:'library-private-pdf-runtime'});
+ const source=sandbox.window.PWDLibraryPrivatePDF.setup({
+   key:'drive-'+entry.id,
+   onSource:async(url)=>{assert.ok(url===null||url.startsWith('blob:local-'))}
+ });
+ await handlers.change();
+ assert.equal(clear.hidden,false,'Locally chosen PDF must be removable');
+ assert.ok(status.textContent.includes('session'),'Device storage failure must be disclosed');
+ assert.ok(!status.textContent.includes('verified'),'PDF title must not be marked verified');
+ await handlers['clear-click']();
+ assert.equal(revoked,1,'Forget PDF must revoke the object URL');
+ source.dispose();
+ process.stdout.write('Unified Drive library PDF viewer, touch paging and device-private attachment checks passed\n');
+}
