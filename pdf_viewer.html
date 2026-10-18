@@ -130,7 +130,7 @@ function enableBridgeFingerGestures(onPageSwipe,onGestureIdle){
 }
 
 const p=new URLSearchParams(location.search),key=p.get('doc')||'',libraryId=p.get('drive')||'';
-const originalCatalog=Array.isArray(window.PWDDrivePDFCatalog)?window.PWDDrivePDFCatalog:[];
+const originalCatalog=typeof window!=='undefined'&&Array.isArray(window.PWDDrivePDFCatalog)?window.PWDDrivePDFCatalog:[];
 const catalogEntry=libraryId?originalCatalog.find(x=>x.id===libraryId):null;
 const d=DOCS[key]||(!key&&catalogEntry?{
   title:catalogEntry.name,id:catalogEntry.id,meta:catalogEntry.sub+' · Google Drive source'
