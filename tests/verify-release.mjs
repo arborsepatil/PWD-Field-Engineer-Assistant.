@@ -444,7 +444,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  const oldBookBody=load('bridge_book_2002.html');
  const recordsSource=oldBookBody.slice(oldBookBody.indexOf('const $=id=>document.getElementById'),oldBookBody.indexOf('const sourceAudit=window.PWDBridge2002SourceAudit'));
  const recordCtx={document:{getElementById(){return null}}};
- const all2002=vm.runInNewContext(recordsSource+'\\nRECORDS',recordCtx);
+ const all2002=vm.runInNewContext(recordsSource+String.fromCharCode(10)+'RECORDS',recordCtx);
  assert.equal(all2002.length,70,'2002 app index must have exactly 70 original numbered drawings');
  assert.equal(new Set(all2002.map(x=>x.sr)).size,70,'2002 duplicate serial in app index');
  for(let n=39;n<=70;n++){
