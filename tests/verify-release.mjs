@@ -519,22 +519,24 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
    getBoundingClientRect(){return {left:0,top:0,width:300,height:500}}
  };
  const target={style:{},addEventListener(){},src:''};
+ const canvasLayer={hidden:true,style:{},getBoundingClientRect(){return {width:300,height:500}}};
  const viewer={classList:{modes:[],add(name){this.modes.push(name)}}};
  const back={href:'./library.html'};
  const status={textContent:''},indicator={textContent:'',classList:{added:[],add(v){this.added.push(v)}}};
  const hint={textContent:''};
  const els={
-   viewer,gestureSurface:surface,frame:target,
+   viewer,gestureSurface:surface,frame:target,canvasLayer,drawingCanvas:{style:{}},
    fallback:{classList:{add(){},remove(){}}},
    privateBar:{classList:{add(){}}},pdfPageIndicator:indicator,gestureHint:hint,
    docTitle:{textContent:''},docMeta:{textContent:''},driveBtn:{href:''},fallbackBtn:{href:''},
    privatePdfStatus:status
  };
- let localControls=null,replacedPath='';
+ let localControls=null,replacedPath='',renderedPage=null,canvasReady=false,canvasCallback=null;
  const ctx={
    URLSearchParams,location:{search:'?doc=bridge2023&page=17',pathname:'/pdf_viewer.html'},setTimeout(){},
    history:{replaceState(_state,_title,url){replacedPath=url}},
    PWDBridgeLocalSource:{setup(args){localControls=args;return {}}},
+   PWDBridgeCanvas:{setup(args){canvasCallback=args.onState;return {get ready(){return canvasReady},showPage(pg){renderedPage=pg},rerenderForZoom(){},open(blob,pg){canvasReady=true;renderedPage=pg;args.onState('ready','Rendered from local source');return Promise.resolve(true)},close(){canvasReady=false}}}},
 
    document:{getElementById(id){return els[id]||null},querySelector(sel){return sel==='.top a'?back:null}},
    frame:target
@@ -575,12 +577,75 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.notEqual(target.src,beforeSwipe,'Unzoomed single-finger swipe must advance the PDF page');
  assert.ok(target.src.includes('#page=18'),'Page swipe should request next 2023 original PDF page');
  assert.ok(replacedPath.includes('page=18'),'Page navigation should update shareable deep link');
- localControls.onSource('blob:https://example.org/private-bridge-pdf');
- assert.ok(target.src.includes('blob:https://example.org/private-bridge-pdf#page=18'),
-           'On-device original PDF must open at requested drawing page');
+ localControls.onSource('blob:https://example.org/private-bridge-pdf',{size:500,arrayBuffer:async()=>new ArrayBuffer(500)});
+ assert.equal(renderedPage,18,'Local renderer must open real PDF page 18 (not rely on #page fragment)');
+ assert.equal(canvasLayer.hidden,false,'Canvas renderer must be shown after original source loads');
+ assert.equal(target.style.display,'none','Native iframe should not overlay real canvas drawing');
+ assert.ok(els.pdfPageIndicator.textContent.includes('rendered locally'),'Canvas state must be disclosed in page status');
  localControls.onSource(null);
  assert.ok(target.src.includes('drive.google.com/file/d/'),
            'Forgetting local original must restore private Google Drive fallback');
+ assert.ok(canvasLayer.hidden,'Forget PDF should hide local canvas');
+ assert.ok(pdf.includes('bridge-pdf-canvas.js'),'Local page renderer not loaded');
+ assert.ok(shell.includes('./bridge-pdf-canvas.js'),'Offline PWA must cache page renderer controller');
+ const source=load('bridge-pdf-canvas.js');
+ new vm.Script(source,{filename:'bridge-pdf-canvas.js'});
+ const fakeCanvas={width:0,height:0,style:{},getContext(){return {}}};
+ const fakeLayer={hidden:true,getBoundingClientRect(){return {width:300,height:500}}};
+ let pageRequested=[],viewportWidth=[],states=[];
+ const pdfProxy={
+   numPages:221,
+   async getPage(n){
+     pageRequested.push(n);
+     return {
+       getViewport({scale}){return {width:840*scale,height:600*scale}},
+       render({viewport}){
+         viewportWidth.push(viewport.width);
+         return {promise:Promise.resolve(),cancel(){}};
+       }
+     };
+   }
+ };
+ const pdfJsSandbox={
+  window:{
+   devicePixelRatio:2,
+   pdfjsLib:{
+     getDocument({data,isEvalSupported}){
+        assert.ok(data instanceof Uint8Array,'Renderer should load device PDF bytes, not remote URL');
+        assert.equal(isEvalSupported,false,'PDF dynamic eval must remain disabled');
+        return {promise:Promise.resolve(pdfProxy),destroy:async()=>{}};
+     }
+   }
+  },
+  Blob,Uint8Array,Math,Promise,Number,Error
+ };
+ vm.runInNewContext(source,pdfJsSandbox,{filename:'bridge-canvas-behavior.js'});
+ const renderer=pdfJsSandbox.window.PWDBridgeCanvas.setup({
+    layer:fakeLayer,canvas:fakeCanvas,expectedPages:221,
+    onState:(state,message)=>states.push([state,message])
+ });
+ const fakeBlob={arrayBuffer:async()=>new Uint8Array([37,80,68,70,45]).buffer};
+ assert.equal(await renderer.open(fakeBlob,39),true,'Device PDF canvas load must succeed');
+ assert.equal(renderer.pageCount,221,'Document page total not read');
+ assert.equal(pageRequested.at(-1),39,'Local page renderer ignored direct PDF page link');
+ assert.equal(fakeLayer.hidden,false,'Local PDF page not painted');
+ assert.ok(fakeCanvas.width>100&&fakeCanvas.width<5000,'Canvas bitmap size malformed');
+ assert.ok(fakeCanvas.style.width.endsWith('px'),'PDF page fit-to-screen CSS sizing missing');
+ assert.equal(await renderer.showPage(40),true,'Next page must render locally');
+ assert.equal(pageRequested.at(-1),40,'Next drawing page not rendered');
+ assert.equal(await renderer.rerenderForZoom(3),true,'High-resolution zoom rerender failed');
+ assert.ok(viewportWidth.at(-1)>=viewportWidth.at(-2),'Zoom rerender should sharpen the raster');
+ assert.ok(fakeCanvas.width*fakeCanvas.height<=12010000,'Android bitmap memory cap exceeded');
+ await renderer.close();
+ assert.equal(renderer.ready,false,'Clearing private PDF must release document');
+ const wrongPdf={...pdfJsSandbox.window.pdfjsLib,
+   getDocument(){return {promise:Promise.resolve({...pdfProxy,numPages:90}),destroy:async()=>{}}}};
+ pdfJsSandbox.window.pdfjsLib=wrongPdf;
+ assert.equal(await renderer.open(fakeBlob,39),false,'Wrong edition PDF must not pass page-count check');
+ assert.ok(states.some(x=>x[0]==='error'&&x[1].includes('Page-count mismatch')),
+           'Wrong original PDF edition should receive a visible warning');
+ assert.equal(renderer.ready,false,'Wrong edition must not remain selected');
+ 
 
 }
 process.stdout.write('Bridge available books only, removed Hydro, touch gesture viewer checks passed\\n');
