@@ -1,33 +1,44 @@
-# PWD Field Engineer Assistant V2
+# PWD Field Engineer Assistant — Installable Web App
 
-Mobile-first Maharashtra PWD field engineering **public tools release**. Source code is versioned in GitHub, published for free with GitHub Pages, and installable as an Android PWA when Pages is enabled.
+**Live PWA:** https://arborsepatil.github.io/PWD-Field-Engineer-Assistant./
 
-## Existing V2 field modules
-- Calculators and converters
-- Retaining wall section quantity
-- Route distance and chainage
-- GPS engineering camera
-- Concrete mix and batch assistant
-- Concrete mix design
+This is the simplified Maharashtra PWD JE field companion. Published from GitHub Pages and installable using Chrome on Android. It is a **Progressive Web App (PWA)**, **not a signed .apk file**.
 
-The existing modules above were brought forward from the V2 project, not regenerated as a different app. The new home, manifest, PNG/SVG icons and service worker form the public installation shell. Actual browser/phone testing is still required.
+## Kept modules
+- Home, recent tools, and optional local JE profile
+- Units, civil calculations and retaining-wall section quantities
+- Concrete batch assistant and concrete mix design
+- Bridge Plans: **2002 and 2023 Part 2 are independent source books**
+- Library: **73 indexed Google Drive PDFs** (PWD Code, IS, IRC, MoRTH, Red Book, SSR, rules, design guidelines and bridge publications)
+- Technical GR reader
+- Appearance, quick-calculator preference and offline-cache management
 
-## Published PWA and Android installation
+GPS Cam, Route, Structure, Bridge Hydro, QC and Guide were removed on user request. The unused SSR Master placeholder is not shown; actual historical SSR PDFs remain available under Library.
 
-Verified GitHub Pages deployment URL (from the successful GitHub Actions deployment log):
+## PDF access and privacy
+Tap **View PDF in app** in the Library to open `pdf_viewer.html?drive=<catalogued-file-id>`. The page embeds Google's PDF **preview** for an ID checked against the current catalog. If Google Drive does not permit an embedded preview or the user must sign in, choose **Open in Drive** to view the same source in Drive. No login credentials or Drive tokens are stored in this PWA.
 
-https://arborsepatil.github.io/PWD-Field-Engineer-Assistant./
+**No standards PDF is bundled with, hosted by, or uploaded to the public GitHub app.** Installing the app caches the app shell, public scripts and calculators, but **does not download all Drive PDFs**. The curated 73-file catalog is a point-in-time snapshot, not a Google Drive synchronization or version-control service. Changing or adding a file on Drive will not automatically change the GitHub Pages catalog. That would require an authenticated Drive API/OAuth integration with proper security design.
 
-On Android, open this address in Chrome, use the browser menu (⋮) and select **Install app** or **Add to Home screen**. If Chrome offers an install prompt, the homepage also shows an **Install PWD Tools** button. This is an installable Progressive Web App (PWA), **not** a signed Android APK.
+For bridge books only, the engineer may explicitly select a PDF stored on the phone. It is checked for expected page count (2002 = 91 pages; 2023 = 221 pages); an accepted PDF may be saved in on-device IndexedDB to view from the same browser later. This is not proof of official drawing identity, revision, or suitability for construction. PDF.js first-load canvas rendering uses a version-pinned CDN dependency, so a fresh offline installation may fall back to the browser viewer.
 
-The `.github/workflows/deploy-pages.yml` workflow publishes automatically from `main`. The Pages configuration is already activated and recent GitHub Pages deployments have succeeded. The `.github/workflows/qa-smoke.yml` workflow checks static assets, manifest, JavaScript syntax and MoRTH reader/QC references before release. The publishing workflow includes a live HTTP smoke check for the homepage, manifest and service worker.
+Drive share settings and copyright restrictions remain untouched. Public app users can see a file title/ID and attempt to open its link but must have their own authorized Drive access. Do not treat the mere presence of a Drive link as public permission to read/download its PDF.
 
-**Testing still required:** actual Android installation, permissions for camera/GPS features, offline behavior after installation, and a field engineering acceptance review. Network-backed/private source documents may require a connected account and are not included in the public offline cache.
+## Install on Samsung/Android
+1. Open the live URL in **Google Chrome** (not the in-app ChatGPT browser).
+2. Open Chrome menu **⋮ → Install app** or **Add to Home screen**, if offered.
+3. Launch the installed **PWD Tools** icon. Connect once while online to populate the public offline app cache.
+4. Confirm calculator navigation, Library Code → IS/IRC, Bridge Plans, PDF in-app preview or Drive fallback, and airplane-mode access to cached public tools.
 
-## Public/private boundary
-This is a public repository. Original PWD Rule Book scans, standards, SSR source files, drawings and licensed reference documents are **not published** here. They remain in the project owner's private Google Drive reference library and existing offline release archive. Source-gated modules are not presented as part of this public subset.
+**Manual Samsung phone testing is still required.** GitHub Actions tests static assets, source-link catalog validation, page renderer logic, removed-module coverage and offline-resource integrity; CI cannot prove the embedded Drive preview or Android pinch gestures work on your device. No signed APK was generated.
 
-Do not use preliminary engineering calculations as final approval, testing results, or a substitute for project specifications, applicable codes, and approved drawings.
+## Engineering-use boundary
+This app is a reference and calculation aid. Applicable published editions, amendments, project specifications, approved drawings, site verification and departmental procedures are controlling. Historical IS/IRC and SSR PDFs in the Library are not automatically the current versions.
 
-## Project checkpoint
-Rule Book source digitization remains paused at Appendix 2, original PDF page 251. Resume at PDF page 252 after the app-test milestone. First-pass transcription is not independently verified source text.
+## Development and checkpoint
+- Branch merge and CI: `.github/workflows/qa-smoke.yml`
+- GitHub Pages deployment: `.github/workflows/deploy-pages.yml`
+- Local release check: `node tests/verify-release.mjs`
+- PWD Rule Book source digitization remained at Appendix 2, source PDF p.251; unverified transcription is not official code text.
+
+Original documents and copyright-controlled standards must not be committed to this public repository.
