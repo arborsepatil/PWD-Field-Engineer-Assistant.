@@ -7,7 +7,14 @@
 .viewer.gesture-mode iframe{pointer-events:none;transform-origin:0 0;will-change:transform}
 .gesture-hint{display:none;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);pointer-events:none;text-align:center;white-space:nowrap;max-width:calc(100% - 20px);padding:8px 12px;background:#07111fce;color:#fff;border:1px solid #47607b;border-radius:12px;font-size:12px;font-weight:750}
 .viewer.gesture-mode .gesture-hint{display:block}
-</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" target="_blank" rel="noopener">Open in Drive</a></header><main class="viewer" id="viewer"><div class="gesture-surface" id="gestureSurface"><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This source remains private in Google Drive. On some mobile browsers, Drive blocks embedded sign-in or third-party cookies.</p><a id="fallbackBtn" class="primary" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open PDF in Drive</a></div></div></main><script>
+
+.private-pdf-bar{display:none;position:absolute;z-index:6;left:10px;right:10px;top:10px;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;background:#07111ff0;border:1px solid #345477;border-radius:14px;box-shadow:0 4px 20px #0008}
+.private-pdf-bar.visible{display:flex}.private-pdf-bar .import-label,.private-pdf-bar button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:6px 10px;border-radius:10px;border:1px solid #476484;background:#17365d;color:#fff;font:inherit;font-weight:750;cursor:pointer}
+.private-pdf-bar .import-label:focus-within{outline:2px solid #92caff;outline-offset:2px}.private-pdf-bar input[type=file]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.private-status{flex:1;min-width:150px;color:#d7e6fa;font-size:12px}.private-status small{display:block;color:#aebbd0}
+.sheet-count{position:absolute;z-index:4;bottom:56px;left:50%;transform:translateX(-50%);background:#07111fe6;border:1px solid #345477;border-radius:10px;padding:6px 9px;font:700 12px system-ui;pointer-events:none;color:#fff;display:none;white-space:nowrap}.sheet-count.visible{display:block}
+@media(max-width:560px){.private-pdf-bar{top:6px;left:6px;right:6px;padding:6px 8px}.private-pdf-bar .import-label,.private-pdf-bar button{min-height:35px;padding:6px 8px;font-size:12px}.private-status{font-size:11px}}
+</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" target="_blank" rel="noopener">Open in Drive</a></header><main class="viewer" id="viewer"><div id="privateBar" class="private-pdf-bar" aria-label="Private source PDF"><label class="import-label" for="privatePdfFile">Use PDF on this device<input id="privatePdfFile" type="file" accept=".pdf,application/pdf" aria-label="Select matching original bridge PDF"></label><button id="forgetPrivatePdf" type="button" hidden>Forget PDF</button><span class="private-status" id="privatePdfStatus" role="status" aria-live="polite">This source stays on your device.</span></div><div id="pdfPageIndicator" class="sheet-count" role="status" aria-live="polite"></div><div class="gesture-surface" id="gestureSurface"><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This source remains private in Google Drive. On some mobile browsers, Drive blocks embedded sign-in or third-party cookies.</p><a id="fallbackBtn" class="primary" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open PDF in Drive</a></div></div></main><script src="./bridge-local-source.js"></script><script>
 const DOCS={
 morth:{title:'MoRTH Specifications · 5th Revision 2013',id:'1pVTcUdNoUcmSpfhVhnM2Ld-3gXiJPpFe',meta:'Road & Bridge Works'},
 rulebook:{title:'PWD Rule Book · Marathi 6th Edition 1984',id:'1g1bLZJtVyYDB5RLTjqoDxZUyEpvdkGaZ',meta:'Maharashtra Public Works Rule Book'},
@@ -21,12 +28,12 @@ officemanual:{title:'PWD Office Manual · Establishment & Administration',id:'12
 qcfreq:{title:'QC Frequency Chart',id:'1S8nxt3u82tW4gxyIuzDIHc9Tc609OkME',meta:'Quality-control reference'}
 };
 
-function enableBridgeFingerGestures(){
+function enableBridgeFingerGestures(onPageSwipe){
   const viewport=document.getElementById('viewer'),surface=document.getElementById('gestureSurface'),target=document.getElementById('frame');
   viewport.classList.add('gesture-mode');
   const points=new Map();
   const state={scale:1,x:0,y:0};
-  let session=null,lastTapTime=0,lastTapPoint=null,down=null;
+  let session=null,lastTapTime=0,lastTapPoint=null,down=null,didPinch=false;
   const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
   const local=p=>{const r=surface.getBoundingClientRect();return{x:p.x-r.left,y:p.y-r.top}};
   const midpoint=(a,b)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2});
@@ -55,7 +62,7 @@ function enableBridgeFingerGestures(){
     e.preventDefault();
     if(surface.setPointerCapture)surface.setPointerCapture(e.pointerId);
     points.set(e.pointerId,{x:e.clientX,y:e.clientY});
-    if(points.size===1)down={x:e.clientX,y:e.clientY};
+    if(points.size===1){down={x:e.clientX,y:e.clientY};didPinch=false}else{didPinch=true}
     newSession();
   });
   surface.addEventListener('pointermove',e=>{
@@ -78,14 +85,21 @@ function enableBridgeFingerGestures(){
   function finish(e){
     if(!points.has(e.pointerId))return;
     const one=points.size===1,move=down?distance({x:e.clientX,y:e.clientY},down):Infinity;
+    const shift=down?{x:e.clientX-down.x,y:e.clientY-down.y}:null;
+    const swipe=one&&!didPinch&&e.pointerType==='touch'&&state.scale<=1.01&&move>80&&shift&&
+      (Math.abs(shift.x)>Math.abs(shift.y)*1.4||Math.abs(shift.y)>Math.abs(shift.x)*1.4);
     points.delete(e.pointerId);
-    if(one&&move<12&&e.pointerType==='touch'){
+    if(swipe&&typeof onPageSwipe==='function'){
+       const dir=Math.abs(shift.x)>Math.abs(shift.y)?shift.x:shift.y;
+       onPageSwipe(dir<0?1:-1);lastTapTime=0;lastTapPoint=null;
+    }
+    if(!swipe&&one&&move<12&&e.pointerType==='touch'){
       const now=Date.now(),at={x:e.clientX,y:e.clientY};
       if(now-lastTapTime<330&&lastTapPoint&&distance(at,lastTapPoint)<35){
         reset();lastTapTime=0;lastTapPoint=null;
       }else{lastTapTime=now;lastTapPoint=at}
     }else if(!one){lastTapTime=0}
-    if(!points.size)down=null;
+    if(!points.size){down=null;didPinch=false}
     newSession();
   }
   surface.addEventListener('pointerup',finish);
@@ -102,6 +116,67 @@ function enableBridgeFingerGestures(){
     paint();
   },{passive:false});
   paint();
+  return {reset,getScale:()=>state.scale};
 }
-const p=new URLSearchParams(location.search),key=p.get('doc')||'',page=p.get('page'),d=DOCS[key];if(!d){document.getElementById('fallback').classList.add('show');document.getElementById('docTitle').textContent='Source not configured';document.getElementById('driveBtn').style.display='none'}else{if(key==='bridge2002'||key==='bridge2023'){enableBridgeFingerGestures();document.querySelector('.top a').href='./bridge_book_'+key.slice(-4)+'.html'}const preview='https://drive.google.com/file/d/'+d.id+'/preview'+(page?'#page='+encodeURIComponent(page):''),view='https://drive.google.com/file/d/'+d.id+'/view?usp=drivesdk';document.title=d.title+' · PWD Tools';docTitle.textContent=d.title;docMeta.textContent=d.meta+(page?' · target page '+page:'')+' · private Drive source';driveBtn.href=view;fallbackBtn.href=view;frame.src=preview;let loaded=false;frame.addEventListener('load',()=>loaded=true);setTimeout(()=>{if(!loaded)fallback.classList.add('show')},12000)}
+
+const p=new URLSearchParams(location.search),key=p.get('doc')||'',d=DOCS[key];
+const isBridge=key==='bridge2002'||key==='bridge2023',year=isBridge?key.slice(-4):null;
+const maxPage=key==='bridge2002'?91:key==='bridge2023'?221:null;
+const requested=Number(p.get('page'));
+let page=Number.isInteger(requested)&&requested>=1&&(!maxPage||requested<=maxPage)?requested:1;
+let localURL=null,bridgeGestures=null;
+const element=id=>document.getElementById(id);
+const drivePreview=()=> 'https://drive.google.com/file/d/'+d.id+'/preview#page='+page;
+const driveView=()=> 'https://drive.google.com/file/d/'+d.id+'/view?usp=drivesdk';
+function setPageStatus(){
+ if(!isBridge)return;
+ const b=element('pdfPageIndicator');
+ b.classList.add('visible');
+ b.textContent='PDF page '+page+' / '+maxPage+' · swipe at 1× to change page';
+ element('docMeta').textContent=d.meta+' · requested page '+page+' · '+(localURL?'private device copy':'Drive preview · jump may be unsupported');
+}
+function display(){
+ if(!d)return;
+ bridgeGestures?.reset();
+ element('frame').src=localURL?localURL+'#page='+page:drivePreview();
+ element('fallback').classList.remove('show');
+ element('driveBtn').href=driveView();
+ element('fallbackBtn').href=driveView();
+ setPageStatus();
+}
+function pageSwipe(direction){
+ if(!isBridge)return;
+ const next=Math.max(1,Math.min(maxPage,page+direction));
+ if(next===page)return;
+ page=next;
+ if(typeof history!=='undefined'&&history.replaceState){
+    const qp=new URLSearchParams(location.search);
+    qp.set('page',String(page));
+    history.replaceState(null,'',location.pathname+'?'+qp.toString());
+ }
+ display();
+}
+if(!d){
+ element('fallback').classList.add('show');
+ element('docTitle').textContent='Source not configured';
+ element('driveBtn').style.display='none';
+}else{
+ document.title=d.title+' · PWD Tools';
+ element('docTitle').textContent=d.title;
+ element('docMeta').textContent=d.meta+' · private Drive source';
+ element('driveBtn').href=driveView();
+ element('fallbackBtn').href=driveView();
+ if(isBridge){
+   document.querySelector('.top a').href='./bridge_book_'+year+'.html';
+   element('gestureHint').textContent='Pinch to zoom · drag to move · swipe to change page · double-tap to reset';
+   bridgeGestures=enableBridgeFingerGestures(pageSwipe);
+   display();
+   PWDBridgeLocalSource.setup({key,year,onSource:url=>{localURL=url;display()}});
+ }else{
+   element('frame').src='https://drive.google.com/file/d/'+d.id+'/preview'+(p.get('page')?'#page='+encodeURIComponent(p.get('page')):'');
+ }
+ let loaded=false;
+ element('frame').addEventListener('load',()=>{loaded=true;element('fallback').classList.remove('show')});
+ setTimeout(()=>{if(!loaded&&!localURL)element('fallback').classList.add('show')},12000);
+}
 </script><script src="./app-shell.js"></script></body></html>
