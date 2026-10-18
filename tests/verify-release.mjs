@@ -660,7 +660,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  function localSourceScenario(verification){
    const listeners={};const clearListeners={};let created=0,revoked=[],calls=[],stored=0;
    let documentStatus={textContent:'',appendChild(node){this.detail=node.textContent}};
-   const file=new Blob(['%PDF-1.7','Fake PDF bytes to check local source acceptance test','.repeat(250)'],{type:'application/pdf'});
+   const file=new Blob(['%PDF-1.7','Fake PDF bytes to check local source acceptance test','X'.repeat(350)'],{type:'application/pdf'});
    file.name='Bridge_2023.pdf';
    const input={files:[file],value:'2023',addEventListener(ev,fn){listeners[ev]=fn}};
    const clear={hidden:true,addEventListener(ev,fn){clearListeners[ev]=fn}};
