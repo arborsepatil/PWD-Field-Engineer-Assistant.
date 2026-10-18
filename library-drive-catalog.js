@@ -1,4 +1,8 @@
-/* Curated by locating PDFs in the connected user's Google Drive on 2026-10-18.\n * Links to original Drive files only; no source PDF bytes or public permissions.\n * A listed historical edition is not necessarily current or applicable.\n */\nwindow.PWDDrivePDFCatalog=[
+/* Curated by locating PDFs in the connected user's Google Drive on 2026-10-18.
+ * Links to original Drive files only; no source PDF bytes or public permissions.
+ * A listed historical edition is not necessarily current or applicable.
+ */
+window.PWDDrivePDFCatalog=[
   {
     "section": "code",
     "sub": "PWD",
@@ -444,4 +448,4 @@
     "reader": "./bridge_book_2023.html",
     "viewer": "./pdf_viewer.html?doc=bridge2023"
   }
-];\n
+];
