@@ -1,7 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07111f"><title>PWD Tools PDF Viewer</title><link rel="stylesheet" href="./app-global.css"><style>
 :root{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff;--muted:#aebbd0;--blue:#0b6cff}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;height:100vh;overflow:hidden}.top{height:62px;display:flex;align-items:center;gap:8px;padding:8px 10px;background:#07111ff2;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.top a,.top button{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:11px;padding:9px 11px;text-decoration:none;font-weight:850}.top .primary{background:var(--blue);color:#fff;border-color:var(--blue)}.title{flex:1;min-width:0}.title b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.title small{display:block;color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.viewer{height:calc(100vh - 62px);position:relative}.viewer iframe{width:100%;height:100%;border:0;background:#fff}.fallback{position:absolute;inset:0;display:none;place-items:center;padding:24px;text-align:center;background:var(--bg)}.fallback.show{display:grid}.fallback .box{max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}.fallback p{color:var(--muted)}@media(max-width:560px){.top{height:58px}.viewer{height:calc(100vh - 58px)}.top a,.top button{padding:8px 9px;font-size:12px}.title small{display:none}}
-</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" target="_blank" rel="noopener">Open in Drive</a></header><main class="viewer"><iframe id="frame" allow="autoplay" referrerpolicy="no-referrer"></iframe><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This source remains private in Google Drive. On some mobile browsers, Drive blocks embedded sign-in or third-party cookies.</p><a id="fallbackBtn" class="primary" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open PDF in Drive</a></div></div></main><script>
+.gesture-surface{height:100%;width:100%}
+.viewer.gesture-mode .gesture-surface{position:absolute;inset:0;overflow:hidden;touch-action:none;overscroll-behavior:contain;cursor:grab}
+.viewer.gesture-mode .gesture-surface:active{cursor:grabbing}
+.viewer.gesture-mode iframe{pointer-events:none;transform-origin:0 0;will-change:transform}
+.gesture-hint{display:none;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);pointer-events:none;text-align:center;white-space:nowrap;max-width:calc(100% - 20px);padding:8px 12px;background:#07111fce;color:#fff;border:1px solid #47607b;border-radius:12px;font-size:12px;font-weight:750}
+.viewer.gesture-mode .gesture-hint{display:block}
+</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" target="_blank" rel="noopener">Open in Drive</a></header><main class="viewer" id="viewer"><div class="gesture-surface" id="gestureSurface"><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This source remains private in Google Drive. On some mobile browsers, Drive blocks embedded sign-in or third-party cookies.</p><a id="fallbackBtn" class="primary" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open PDF in Drive</a></div></div></main><script>
 const DOCS={
 morth:{title:'MoRTH Specifications · 5th Revision 2013',id:'1pVTcUdNoUcmSpfhVhnM2Ld-3gXiJPpFe',meta:'Road & Bridge Works'},
 rulebook:{title:'PWD Rule Book · Marathi 6th Edition 1984',id:'1g1bLZJtVyYDB5RLTjqoDxZUyEpvdkGaZ',meta:'Maharashtra Public Works Rule Book'},
@@ -14,5 +20,88 @@ pwdcode:{title:'Maharashtra Public Works Code',id:'16KG360bPSFyE8CfCVfss7WeV9wQh
 officemanual:{title:'PWD Office Manual · Establishment & Administration',id:'12NwFXjot_8mwapevhz875unyvlLTDqcf',meta:'Administrative reference'},
 qcfreq:{title:'QC Frequency Chart',id:'1S8nxt3u82tW4gxyIuzDIHc9Tc609OkME',meta:'Quality-control reference'}
 };
-const p=new URLSearchParams(location.search),key=p.get('doc')||'',page=p.get('page'),d=DOCS[key];if(!d){document.getElementById('fallback').classList.add('show');document.getElementById('docTitle').textContent='Source not configured';document.getElementById('driveBtn').style.display='none'}else{const preview='https://drive.google.com/file/d/'+d.id+'/preview'+(page?'#page='+encodeURIComponent(page):''),view='https://drive.google.com/file/d/'+d.id+'/view?usp=drivesdk';document.title=d.title+' · PWD Tools';docTitle.textContent=d.title;docMeta.textContent=d.meta+(page?' · target page '+page:'')+' · private Drive source';driveBtn.href=view;fallbackBtn.href=view;frame.src=preview;let loaded=false;frame.addEventListener('load',()=>loaded=true);setTimeout(()=>{if(!loaded)fallback.classList.add('show')},12000)}
+
+function enableBridgeFingerGestures(){
+  const viewport=document.getElementById('viewer'),surface=document.getElementById('gestureSurface'),target=document.getElementById('frame');
+  viewport.classList.add('gesture-mode');
+  const points=new Map();
+  const state={scale:1,x:0,y:0};
+  let session=null,lastTapTime=0,lastTapPoint=null,down=null;
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const local=p=>{const r=surface.getBoundingClientRect();return{x:p.x-r.left,y:p.y-r.top}};
+  const midpoint=(a,b)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2});
+  const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+  function paint(){
+    const r=surface.getBoundingClientRect();
+    state.scale=clamp(state.scale,1,6);
+    state.x=clamp(state.x,-(state.scale-1)*r.width,0);
+    state.y=clamp(state.y,-(state.scale-1)*r.height,0);
+    target.style.transform='translate3d('+state.x.toFixed(1)+'px,'+state.y.toFixed(1)+'px,0) scale('+state.scale.toFixed(4)+')';
+  }
+  function reset(){state.scale=1;state.x=0;state.y=0;paint()}
+  function newSession(){
+    const a=Array.from(points.values());
+    if(a.length===1){session={kind:'drag',at:a[0],x:state.x,y:state.y};return}
+    if(a.length>=2){
+      const c=local(midpoint(a[0],a[1]));
+      session={kind:'pinch',distance:Math.max(1,distance(a[0],a[1])),scale:state.scale,
+        anchorX:(c.x-state.x)/state.scale,anchorY:(c.y-state.y)/state.scale};
+      return;
+    }
+    session=null;
+  }
+  surface.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    e.preventDefault();
+    if(surface.setPointerCapture)surface.setPointerCapture(e.pointerId);
+    points.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(points.size===1)down={x:e.clientX,y:e.clientY};
+    newSession();
+  });
+  surface.addEventListener('pointermove',e=>{
+    if(!points.has(e.pointerId))return;
+    e.preventDefault();
+    points.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    const a=Array.from(points.values());
+    if(!session)return;
+    if(a.length===1&&session.kind==='drag'){
+      state.x=session.x+a[0].x-session.at.x;
+      state.y=session.y+a[0].y-session.at.y;
+    }else if(a.length>=2&&session.kind==='pinch'){
+      const c=local(midpoint(a[0],a[1]));
+      state.scale=clamp(session.scale*distance(a[0],a[1])/session.distance,1,6);
+      state.x=c.x-session.anchorX*state.scale;
+      state.y=c.y-session.anchorY*state.scale;
+    }
+    paint();
+  });
+  function finish(e){
+    if(!points.has(e.pointerId))return;
+    const one=points.size===1,move=down?distance({x:e.clientX,y:e.clientY},down):Infinity;
+    points.delete(e.pointerId);
+    if(one&&move<12&&e.pointerType==='touch'){
+      const now=Date.now(),at={x:e.clientX,y:e.clientY};
+      if(now-lastTapTime<330&&lastTapPoint&&distance(at,lastTapPoint)<35){
+        reset();lastTapTime=0;lastTapPoint=null;
+      }else{lastTapTime=now;lastTapPoint=at}
+    }else if(!one){lastTapTime=0}
+    if(!points.size)down=null;
+    newSession();
+  }
+  surface.addEventListener('pointerup',finish);
+  surface.addEventListener('pointercancel',finish);
+  surface.addEventListener('lostpointercapture',finish);
+  surface.addEventListener('dblclick',e=>{e.preventDefault();reset()});
+  surface.addEventListener('wheel',e=>{
+    if(!e.ctrlKey)return;
+    e.preventDefault();
+    const c=local({x:e.clientX,y:e.clientY});
+    const ax=(c.x-state.x)/state.scale,ay=(c.y-state.y)/state.scale;
+    state.scale=clamp(state.scale*(e.deltaY<0?1.1:1/1.1),1,6);
+    state.x=c.x-ax*state.scale;state.y=c.y-ay*state.scale;
+    paint();
+  },{passive:false});
+  paint();
+}
+const p=new URLSearchParams(location.search),key=p.get('doc')||'',page=p.get('page'),d=DOCS[key];if(!d){document.getElementById('fallback').classList.add('show');document.getElementById('docTitle').textContent='Source not configured';document.getElementById('driveBtn').style.display='none'}else{if(key==='bridge2002'||key==='bridge2023'){enableBridgeFingerGestures();document.querySelector('.top a').href='./bridge_book_'+key.slice(-4)+'.html'}const preview='https://drive.google.com/file/d/'+d.id+'/preview'+(page?'#page='+encodeURIComponent(page):''),view='https://drive.google.com/file/d/'+d.id+'/view?usp=drivesdk';document.title=d.title+' · PWD Tools';docTitle.textContent=d.title;docMeta.textContent=d.meta+(page?' · target page '+page:'')+' · private Drive source';driveBtn.href=view;fallbackBtn.href=view;frame.src=preview;let loaded=false;frame.addEventListener('load',()=>loaded=true);setTimeout(()=>{if(!loaded)fallback.classList.add('show')},12000)}
 </script><script src="./app-shell.js"></script></body></html>
