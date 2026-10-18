@@ -390,7 +390,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  }
  assert.ok(home.includes("t.id!=='bridgehydro'"),'Recent tools can revive removed hydraulic module');
  const pdf=load('pdf_viewer.html');
- assert.ok(pdf.includes('enableBridgeFingerGestures()'),'Finger gestures missing in PDF viewer');
+ assert.ok(pdf.includes('enableBridgeFingerGestures(onPageSwipe)'),'Finger gestures missing in PDF viewer');
  assert.ok(pdf.includes("key==='bridge2002'||key==='bridge2023'"),'Gestures not limited to bridge books');
  assert.ok(pdf.includes("touch-action:none"),'Touch zoom/pan surface not configured');
  assert.ok(pdf.includes("pointerdown")&&pdf.includes("pointermove")&&pdf.includes("pointerup"),'Pointer gesture handlers missing');
@@ -521,16 +521,41 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  const target={style:{},addEventListener(){},src:''};
  const viewer={classList:{modes:[],add(name){this.modes.push(name)}}};
  const back={href:'./library.html'};
- const els={viewer,gestureSurface:surface,frame:target,fallback:{classList:{add(){}}}};
+ const status={textContent:''},indicator={textContent:'',classList:{added:[],add(v){this.added.push(v)}}};
+ const hint={textContent:''};
+ const els={
+   viewer,gestureSurface:surface,frame:target,
+   fallback:{classList:{add(){},remove(){}}},
+   privateBar:{classList:{add(){}}},pdfPageIndicator:indicator,gestureHint:hint,
+   docTitle:{textContent:''},docMeta:{textContent:''},driveBtn:{href:''},fallbackBtn:{href:''},
+   privatePdfStatus:status
+ };
+ let localControls=null,replacedPath='';
  const ctx={
-   URLSearchParams,location:{search:'?doc=bridge2023&page=17'},setTimeout(){},
+   URLSearchParams,location:{search:'?doc=bridge2023&page=17',pathname:'/pdf_viewer.html'},setTimeout(){},
+   history:{replaceState(_state,_title,url){replacedPath=url}},
+   PWDBridgeLocalSource:{setup(args){localControls=args;return {}}},
+
    document:{getElementById(id){return els[id]||null},querySelector(sel){return sel==='.top a'?back:null}},
-   docTitle:{textContent:''},docMeta:{textContent:''},driveBtn:{href:''},fallbackBtn:{href:''},frame:target
+   frame:target
  };
  const scriptStart=pdf.indexOf('<script>');const pdfScript=pdf.slice(scriptStart+8,pdf.indexOf('</script>',scriptStart));
  vm.runInNewContext(pdfScript,ctx,{filename:'bridge-gesture-behavior'});
  assert.ok(viewer.classList.modes.includes('gesture-mode'),'Bridge viewer gestures not activated');
  assert.equal(back.href,'./bridge_book_2023.html','Bridge source must return to its own book');
+ assert.ok(localControls&&localControls.key==='bridge2023','2023 local-source storage not enabled');
+ assert.ok(pdf.includes('bridge-local-source.js'),'Private PDF source handler not included');
+ assert.ok(els.pdfPageIndicator.textContent.includes('17 / 221'),'Bridge PDF source page indication incorrect');
+ assert.ok(els.docMeta.textContent.includes('requested page 17'),'Bridge deep link page status missing');
+ assert.ok(shell.includes('./bridge-local-source.js'),'Private PDF helper must work offline');
+ const localJS=load('bridge-local-source.js');
+ new vm.Script(localJS,{filename:'bridge-local-source.js'});
+ for(const required of ['indexedDB.open','source identity not independently verified','file.slice(0,1024)','store.delete(key)','URL.revokeObjectURL']){
+    assert.ok(localJS.includes(required),'Private device source validation or removal missing: '+required);
+ }
+ assert.ok(!shell.includes('PWD_Standard_Plans_Road_Bridges_2002.pdf'),'Do not publish 2002 private scanned original in SW');
+ assert.ok(!shell.includes('PWD_Standard_Plans_Road_Bridges_2023_Part2.pdf'),'Do not publish 2023 private original in SW');
+
  const p=(pointerId,clientX,clientY)=>({pointerId,clientX,clientY,pointerType:'touch',preventDefault(){}});
  surfaceListeners.pointerdown(p(1,100,100));
  surfaceListeners.pointerdown(p(2,200,100));
@@ -541,6 +566,21 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  surfaceListeners.pointerup(p(2,260,100));
  surfaceListeners.pointermove(p(1,60,60));
  assert.notEqual(target.style.transform,transformAfterPinch,'Finger drag must pan zoomed source preview');
+ surfaceListeners.pointerup(p(1,60,60));
+ surfaceListeners.dblclick({preventDefault(){}});
+ const beforeSwipe=target.src;
+ surfaceListeners.pointerdown(p(9,220,200));
+ surfaceListeners.pointermove(p(9,70,200));
+ surfaceListeners.pointerup(p(9,70,200));
+ assert.notEqual(target.src,beforeSwipe,'Unzoomed single-finger swipe must advance the PDF page');
+ assert.ok(target.src.includes('#page=18'),'Page swipe should request next 2023 original PDF page');
+ assert.ok(replacedPath.includes('page=18'),'Page navigation should update shareable deep link');
+ localControls.onSource('blob:https://example.org/private-bridge-pdf');
+ assert.ok(target.src.includes('blob:https://example.org/private-bridge-pdf#page=18'),
+           'On-device original PDF must open at requested drawing page');
+ localControls.onSource(null);
+ assert.ok(target.src.includes('drive.google.com/file/d/'),
+           'Forgetting local original must restore private Google Drive fallback');
 
 }
 process.stdout.write('Bridge available books only, removed Hydro, touch gesture viewer checks passed\\n');
