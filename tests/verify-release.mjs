@@ -397,6 +397,39 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.ok(pdf.includes('session.scale*distance('),'Two-finger scale not implemented');
  assert.ok(pdf.includes('state.x=c.x-session.anchorX*state.scale'),'Pinch centre stability missing');
  assert.ok(pdf.includes('drag to move'),'Drag guidance missing');
+
+ const auditSrc=load('bridge-2023-drawing-audit.js');
+ assert.ok(shell.includes('./bridge-2023-drawing-audit.js'),'Original PDF page map not available offline');
+ const auditCtx={window:{}};
+ vm.runInNewContext(auditSrc,auditCtx,{filename:'bridge-2023-drawing-audit.js'});
+ const audit=auditCtx.window.PWDBridge2023SourceAudit;
+ assert.equal(audit.publication,'2023 Part 2');
+ assert.equal(audit.totalPdfPages,221);
+ assert.equal(audit.indexedRecords,175);
+ assert.equal(audit.additionalUnnumberedIndexEntries,1);
+ assert.equal(Object.keys(audit.bySerial).length,176);
+ assert.equal(Object.values(audit.bySerial).filter(x=>x.status==='NUMBER_FOUND_IN_PDF_TEXT').length,170);
+ assert.equal(Object.values(audit.bySerial).filter(x=>x.status!=='NUMBER_FOUND_IN_PDF_TEXT').length,6);
+ for(const [serial,pdfPage,printed] of [['001',21,3],['002',23,5],['062',85,67],['111',137,119],['121',151,133],['174',218,200],['175',219,201]]){
+   const a=audit.bySerial[serial];
+   assert.ok(a,'Missing audited drawing '+serial);
+   assert.equal(a.pdfPage,pdfPage,'Incorrect actual PDF page '+serial);
+   assert.equal(a.printed,printed,'Incorrect printed sheet footer '+serial);
+   assert.equal(a.pdfPage-a.printed,18,'2023 preliminary page offset wrong');
+ }
+ for(const serial of ['017','018','111','121','174','UNNUMBERED-RAFT-147']){
+   assert.ok(audit.bySerial[serial].status!=='NUMBER_FOUND_IN_PDF_TEXT','Source discrepancy hidden for '+serial);
+   assert.ok(audit.bySerial[serial].issue,'Missing discrepancy explanation '+serial);
+ }
+ const bookJs=load('bridge_book_2023.html');
+ assert.ok(bookJs.includes('bridge-2023-drawing-audit.js'),'2023 mapping not loaded');
+ assert.ok(bookJs.includes("String(sr).padStart(2,'0')"),'Published 02–09 drawing codes need leading zeros');
+ assert.ok(bookJs.includes('UNNUMBERED-RAFT-147'),'Missing unnumbered raft index entry');
+ assert.ok(bookJs.includes('sourceAudit[r.sr]'),'Per-drawing page mapping not connected');
+ assert.ok(bookJs.includes('DRAWING NUMBER DISCREPANCY'),'Actual sheet-number differences must be visible');
+ assert.ok(bookJs.includes('View original drawing · PDF p.'),'Verified page deeplink missing');
+ assert.ok(bookJs.includes('Original DWG comparison'),'DWG presence may not be implied');
+
  assert.ok(!pdf.includes('id="zoomIn"')&&!pdf.includes('id="zoomOut"'),'Zoom buttons must not appear');
  new vm.Script(pdf.match(/<script>([\s\S]*?)<\/script>/)[1],{filename:'pdf_viewer.html'});
 
