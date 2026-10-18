@@ -394,10 +394,41 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.ok(pdf.includes("key==='bridge2002'||key==='bridge2023'"),'Gestures not limited to bridge books');
  assert.ok(pdf.includes("touch-action:none"),'Touch zoom/pan surface not configured');
  assert.ok(pdf.includes("pointerdown")&&pdf.includes("pointermove")&&pdf.includes("pointerup"),'Pointer gesture handlers missing');
- assert.ok(pdf.includes('state.scale*distance('),'Two-finger scale not implemented');
+ assert.ok(pdf.includes('session.scale*distance('),'Two-finger scale not implemented');
  assert.ok(pdf.includes('state.x=c.x-session.anchorX*state.scale'),'Pinch centre stability missing');
  assert.ok(pdf.includes('drag to move'),'Drag guidance missing');
  assert.ok(!pdf.includes('id="zoomIn"')&&!pdf.includes('id="zoomOut"'),'Zoom buttons must not appear');
  new vm.Script(pdf.match(/<script>([\s\S]*?)<\/script>/)[1],{filename:'pdf_viewer.html'});
+
+ // Exercise finger gestures against a mocked 300×500 viewport; no browser gesture buttons.
+ const surfaceListeners={};
+ const surface={
+   addEventListener(name,listener){surfaceListeners[name]=listener},
+   setPointerCapture(){},
+   getBoundingClientRect(){return {left:0,top:0,width:300,height:500}}
+ };
+ const target={style:{},addEventListener(){},src:''};
+ const viewer={classList:{modes:[],add(name){this.modes.push(name)}}};
+ const back={href:'./library.html'};
+ const els={viewer,gestureSurface:surface,frame:target,fallback:{classList:{add(){}}}};
+ const ctx={
+   URLSearchParams,location:{search:'?doc=bridge2023&page=17'},setTimeout(){},
+   document:{getElementById(id){return els[id]||null},querySelector(sel){return sel==='.top a'?back:null}},
+   docTitle:{textContent:''},docMeta:{textContent:''},driveBtn:{href:''},fallbackBtn:{href:''},frame:target
+ };
+ vm.runInNewContext(pdf.match(/<script>([\\s\\S]*?)<\\/script>/)[1],ctx,{filename:'bridge-gesture-behavior'});
+ assert.ok(viewer.classList.modes.includes('gesture-mode'),'Bridge viewer gestures not activated');
+ assert.equal(back.href,'./bridge_book_2023.html','Bridge source must return to its own book');
+ const p=(pointerId,clientX,clientY)=>({pointerId,clientX,clientY,pointerType:'touch',preventDefault(){}});
+ surfaceListeners.pointerdown(p(1,100,100));
+ surfaceListeners.pointerdown(p(2,200,100));
+ surfaceListeners.pointermove(p(2,260,100));
+ const transformAfterPinch=target.style.transform;
+ const scaled=Number(transformAfterPinch.match(/scale\\(([^)]+)\\)/)[1]);
+ assert.ok(scaled>1.5&&scaled<1.7,'Pinch must zoom source preview');
+ surfaceListeners.pointerup(p(2,260,100));
+ surfaceListeners.pointermove(p(1,60,60));
+ assert.notEqual(target.style.transform,transformAfterPinch,'Finger drag must pan zoomed source preview');
+
 }
 process.stdout.write('Bridge available books only, removed Hydro, touch gesture viewer checks passed\\n');
