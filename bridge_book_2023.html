@@ -73,7 +73,7 @@ function show(){
  ['Index drawing number',r.no],['PDF title-block number',audit?actual:'Not checked'],
  ['Description',r.title],['Category',r.cat],['Span',r.span?r.span+' m':'Not stated'],
  ['Source index PDF page',r.indexPdfPage||'—'],
- ['Original PDF drawing page',pdfPage??'Not mapped'],
+ ['Actual drawing PDF page',pdfPage??'Not mapped'],
  ['Printed sheet page',printed?printed+' of 201':'Not mapped'],
  ['Original DWG file','Not attached · comparison pending']
  ];
@@ -81,7 +81,7 @@ function show(){
  let pageLink=pdfPage?'<a class="source-link" href="./pdf_viewer.html?doc=bridge2023&page='+pdfPage+'">View original drawing · PDF p.'+pdfPage+' ↗</a>':'';
  let warningHtml=warning?'<div class="source-alert" style="border-color:#e4a04c"><b>Mismatch / source review required</b><small>'+htmlSafe(audit.issue||'The source index and drawing number are not identical.')+'</small><small>Index: '+htmlSafe(r.no)+'</small><small>Sheet: '+htmlSafe(actual)+'</small></div>':'';
  $('drawing').innerHTML='<div style="width:100%"><p class="eyebrow">Digital drawing record</p><h3>'+htmlSafe(r.title)+'</h3><p>'+htmlSafe(r.no)+'</p>'+
- '<span class="badge '+(matched?'available':'legacy')+'">'+htmlSafe(status)+'</span>'+
+ '<span class="badge '+(matched?'available':'legacy')+'">'+htmlSafe(status)+'</span> <span class="badge legacy">DRAWING QA PENDING</span>'+
  '<div class="source-alert" style="margin-top:12px"><b>Source sheet · 2023 only</b>'+
  '<small>'+ (pdfPage?'Original PDF page '+pdfPage+' · printed drawing sheet '+printed+' of 201':'Individual source page not established')+'</small>'+
  '<small>Drawing number text has been cross-checked where available. Full graphical/content QA and comparison with DWG are NOT complete.</small>'+
@@ -90,7 +90,7 @@ function show(){
  warningHtml+
  '<div class="source-alert"><b>Verification status</b>'+
  '<div class="qa-item">🟡 Printed drawing number: <strong>'+htmlSafe(matched?'located in PDF text':warning?'source discrepancy':'not verified')+'</strong></div>'+
- '<div class="qa-item">⬜ Sheet dimensions and reinforcement: <strong>visual/technical QA pending</strong></div>'+
+ '<div class="qa-item">⬜ Sheet dimensions and reinforcement: <strong>not digitized · visual/technical QA pending</strong></div>'+
  '<div class="qa-item">⬜ Original DWG comparison: <strong>file not attached</strong></div>'+
  '<div class="qa-item">⬜ Quantity/calculator link: <strong>not enabled</strong></div></div></div>';
 }
