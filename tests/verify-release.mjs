@@ -353,3 +353,39 @@ process.stdout.write('MoRTH 306–314 documentary, measurement and specialist re
  }
 }
 process.stdout.write('MoRTH General 101–119: source-linked QC extension passed\n');
+
+// Bridge standard plan books: preserve publication isolation and truthful verification.
+{
+ const gateway=load('pwd_bridge_plans.html');
+ const library=load('library.html');
+ const swAssets=['2002','2018','2023'];
+ for(const year of swAssets){
+   const page='bridge_book_'+year+'.html';
+   assert.ok(shell.includes('./'+page),'Book missing offline asset '+page);
+   assert.ok(gateway.includes('./'+page),'Bridge gateway misses '+page);
+   assert.ok(library.includes('./'+page),'Library misses '+page);
+   const content=load(page);
+   assert.ok(content.includes(year+' Bridge'),'Book identification missing '+page);
+   assert.ok(content.includes('</html>'),'Incomplete bridge book page '+page);
+ }
+ const y2002=load('bridge_book_2002.html');
+ const y2023=load('bridge_book_2023.html');
+ const y2018=load('bridge_book_2018.html');
+ assert.ok(y2002.includes('bridge2002')&&!y2002.includes('bridge2023'),'2002 source contamination');
+ assert.ok(y2023.includes('bridge2023')&&!y2023.includes('bridge2002'),'2023 source contamination');
+ assert.ok(!y2018.includes('bridge2002')&&!y2018.includes('bridge2023'),'2018 source substitution');
+ assert.ok(!y2002.includes('pubFilter')&&!y2023.includes('pubFilter'),'Mixed-publication filter remains');
+ assert.ok(y2002.includes("r.pub!=='2002'"),'2002 record gate missing');
+ assert.ok(y2023.includes("r.pub!=='2023'"),'2023 record gate missing');
+ assert.ok(!y2002.includes("add({pub:'2023'")&&!y2023.includes("add({pub:'2002'"),'Index data mixed');
+ assert.ok(y2018.includes('Original source required'),'2018 must remain blocked until source available');
+ for(const text of [y2002,y2023]){
+   assert.ok(text.includes('DRAWING QA PENDING'),'Drawing QA not visible');
+   assert.ok(text.includes('Actual drawing PDF page'),'Unverified actual page must be disclosed');
+   assert.ok(text.includes('not digitized'),'Do not imply drawing detail digitization');
+   assert.ok(!text.includes('MATCHED</span>'),'Must not claim unverified drawings match');
+ }
+ new vm.Script(y2002.match(/<script>([\s\S]*?)<\/script>/)[1],{filename:'bridge_book_2002.inline.js'});
+ new vm.Script(y2023.match(/<script>([\s\S]*?)<\/script>/)[1],{filename:'bridge_book_2023.inline.js'});
+}
+process.stdout.write('Bridge 2002, 2018 and 2023 independent source guards passed\\n');
