@@ -16,7 +16,7 @@
 @media(max-width:560px){.private-pdf-bar{top:6px;left:6px;right:6px;padding:6px 8px}.private-pdf-bar .import-label,.private-pdf-bar button{min-height:35px;padding:6px 8px;font-size:12px}.private-status{font-size:11px}}
 .canvas-layer{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;pointer-events:none;background:#101720}
 .canvas-layer[hidden]{display:none}.canvas-layer canvas{display:block;max-width:none;max-height:none;image-rendering:auto}
-</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" target="_blank" rel="noopener">Open in Drive</a></header><main class="viewer" id="viewer"><div id="privateBar" class="private-pdf-bar" aria-label="Private source PDF"><label class="import-label" for="privatePdfFile">Use PDF on this device<input id="privatePdfFile" type="file" accept=".pdf,application/pdf" aria-label="Select matching original bridge PDF"></label><button id="forgetPrivatePdf" type="button" hidden>Forget PDF</button><span class="private-status" id="privatePdfStatus" role="status" aria-live="polite">This source stays on your device.</span></div><div id="pdfPageIndicator" class="sheet-count" role="status" aria-live="polite"></div><div class="gesture-surface" id="gestureSurface"><div class="canvas-layer" id="canvasLayer" hidden><canvas id="drawingCanvas" aria-label="Rendered original PDF drawing"></canvas></div><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This source remains private in Google Drive. On some mobile browsers, Drive blocks embedded sign-in or third-party cookies.</p><a id="fallbackBtn" class="primary" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open PDF in Drive</a></div></div></main><script src="./bridge-local-source.js"></script><script src="./bridge-pdf-canvas.js"></script><script>
+</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" target="_blank" rel="noopener">Open in Drive</a></header><main class="viewer" id="viewer"><div id="privateBar" class="private-pdf-bar" aria-label="Private source PDF"><label class="import-label" for="privatePdfFile">Use PDF on this device<input id="privatePdfFile" type="file" accept=".pdf,application/pdf" aria-label="Select matching original bridge PDF"></label><button id="forgetPrivatePdf" type="button" hidden>Forget PDF</button><span class="private-status" id="privatePdfStatus" role="status" aria-live="polite">This source stays on your device.</span></div><div id="pdfPageIndicator" class="sheet-count" role="status" aria-live="polite"></div><div class="gesture-surface" id="gestureSurface"><div class="canvas-layer" id="canvasLayer" hidden><canvas id="drawingCanvas" aria-label="Rendered original PDF drawing"></canvas></div><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This source remains private in Google Drive. On some mobile browsers, Drive blocks embedded sign-in or third-party cookies.</p><a id="fallbackBtn" class="primary" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open PDF in Drive</a></div></div></main><script src="./library-drive-catalog.js"></script><script src="./bridge-local-source.js"></script><script src="./bridge-pdf-canvas.js"></script><script>
 const DOCS={
 morth:{title:'MoRTH Specifications · 5th Revision 2013',id:'1pVTcUdNoUcmSpfhVhnM2Ld-3gXiJPpFe',meta:'Road & Bridge Works'},
 rulebook:{title:'PWD Rule Book · Marathi 6th Edition 1984',id:'1g1bLZJtVyYDB5RLTjqoDxZUyEpvdkGaZ',meta:'Maharashtra Public Works Rule Book'},
@@ -129,15 +129,20 @@ function enableBridgeFingerGestures(onPageSwipe,onGestureIdle){
   };
 }
 
-const p=new URLSearchParams(location.search),key=p.get('doc')||'',d=DOCS[key];
+const p=new URLSearchParams(location.search),key=p.get('doc')||'',libraryId=p.get('drive')||'';
+const originalCatalog=Array.isArray(window.PWDDrivePDFCatalog)?window.PWDDrivePDFCatalog:[];
+const catalogEntry=libraryId?originalCatalog.find(x=>x.id===libraryId):null;
+const d=DOCS[key]||(!key&&catalogEntry?{
+  title:catalogEntry.name,id:catalogEntry.id,meta:catalogEntry.sub+' · Google Drive source'
+}:null);
 const isBridge=key==='bridge2002'||key==='bridge2023',year=isBridge?key.slice(-4):null;
 const maxPage=key==='bridge2002'?91:key==='bridge2023'?221:null;
 const requested=Number(p.get('page'));
 let page=Number.isInteger(requested)&&requested>=1&&(!maxPage||requested<=maxPage)?requested:1;
 let localURL=null,bridgeGestures=null,canvasController=null,canvasActive=false;
 const element=id=>document.getElementById(id);
-const drivePreview=()=> 'https://drive.google.com/file/d/'+d.id+'/preview#page='+page;
-const driveView=()=> 'https://drive.google.com/file/d/'+d.id+'/view?usp=drivesdk';
+const drivePreview=()=> 'https://drive.google.com/file/d/'+encodeURIComponent(d.id)+'/preview#page='+page;
+const driveView=()=> 'https://drive.google.com/file/d/'+encodeURIComponent(d.id)+'/view?usp=drivesdk';
 function setPageStatus(){
  if(!isBridge)return;
  const b=element('pdfPageIndicator');
@@ -190,7 +195,10 @@ if(!d){
 }else{
  document.title=d.title+' · PWD Tools';
  element('docTitle').textContent=d.title;
- element('docMeta').textContent=d.meta+' · private Drive source';
+ element('docMeta').textContent=d.meta+' · online preview · Drive sign-in may be required';
+ if(catalogEntry&&!key){
+   document.querySelector('.top a').href='./library.html?section='+encodeURIComponent(catalogEntry.section);
+ }
  element('driveBtn').href=driveView();
  element('fallbackBtn').href=driveView();
  if(isBridge){
@@ -236,7 +244,7 @@ if(!d){
      }
    });
  }else{
-   element('frame').src='https://drive.google.com/file/d/'+d.id+'/preview'+(p.get('page')?'#page='+encodeURIComponent(p.get('page')):'');
+   element('frame').src=drivePreview();
  }
  let loaded=false;
  element('frame').addEventListener('load',()=>{loaded=true;element('fallback').classList.remove('show')});
