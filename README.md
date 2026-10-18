@@ -9,7 +9,7 @@ A focused, installable Maharashtra PWD field engineering web app: practical calc
 - **Library** — curated links for Maharashtra Public Works Code, 17 IS and 41 IRC PDFs, MoRTH and building specifications, historical SSR, PWD Rule Book, guidelines, original bridge books, office manual and the technical GR index
 - **Settings** — device theme and accessibility preferences; **Profile** and recent tools for navigation
 
-**Removed from the public app:** GPS Cam, Route, Structure, Bridge Hydro, QC module and Guide. The unfinished SSR Master placeholder is removed; use **Library > SSR** for the existing source PDFs.
+**Removed from the public app:** GPS Cam, Route, Structure, the retired bridge hydraulic calculator, QC module and Guide. The unfinished SSR Master placeholder is removed; use **Library > SSR** for the existing source PDFs.
 
 ## Where the PDFs live
 - The 73-document catalogue contains **Drive file IDs and titles**, not PDF contents. The originals remain in the user's Google Drive under their current permissions.
