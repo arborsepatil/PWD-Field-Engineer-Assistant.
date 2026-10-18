@@ -416,7 +416,8 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
    document:{getElementById(id){return els[id]||null},querySelector(sel){return sel==='.top a'?back:null}},
    docTitle:{textContent:''},docMeta:{textContent:''},driveBtn:{href:''},fallbackBtn:{href:''},frame:target
  };
- vm.runInNewContext(pdf.match(/<script>([\\s\\S]*?)<\\/script>/)[1],ctx,{filename:'bridge-gesture-behavior'});
+ const scriptStart=pdf.indexOf('<script>');const pdfScript=pdf.slice(scriptStart+8,pdf.indexOf('</script>',scriptStart));
+ vm.runInNewContext(pdfScript,ctx,{filename:'bridge-gesture-behavior'});
  assert.ok(viewer.classList.modes.includes('gesture-mode'),'Bridge viewer gestures not activated');
  assert.equal(back.href,'./bridge_book_2023.html','Bridge source must return to its own book');
  const p=(pointerId,clientX,clientY)=>({pointerId,clientX,clientY,pointerType:'touch',preventDefault(){}});
@@ -424,7 +425,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  surfaceListeners.pointerdown(p(2,200,100));
  surfaceListeners.pointermove(p(2,260,100));
  const transformAfterPinch=target.style.transform;
- const scaled=Number(transformAfterPinch.match(/scale\\(([^)]+)\\)/)[1]);
+ const scaled=Number(transformAfterPinch.split('scale(')[1].split(')')[0]);
  assert.ok(scaled>1.5&&scaled<1.7,'Pinch must zoom source preview');
  surfaceListeners.pointerup(p(2,260,100));
  surfaceListeners.pointermove(p(1,60,60));
