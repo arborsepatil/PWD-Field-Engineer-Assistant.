@@ -390,7 +390,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  }
  assert.ok(home.includes("t.id!=='bridgehydro'"),'Recent tools can revive removed hydraulic module');
  const pdf=load('pdf_viewer.html');
- assert.ok(pdf.includes('enableBridgeFingerGestures(onPageSwipe)'),'Finger gestures missing in PDF viewer');
+ assert.ok(pdf.includes('enableBridgeFingerGestures(onPageSwipe,onGestureIdle)'),'Finger gestures missing in PDF viewer');
  assert.ok(pdf.includes("key==='bridge2002'||key==='bridge2023'"),'Gestures not limited to bridge books');
  assert.ok(pdf.includes("touch-action:none"),'Touch zoom/pan surface not configured');
  assert.ok(pdf.includes("pointerdown")&&pdf.includes("pointermove")&&pdf.includes("pointerup"),'Pointer gesture handlers missing');
