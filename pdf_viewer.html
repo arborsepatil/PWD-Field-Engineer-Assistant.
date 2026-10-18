@@ -147,7 +147,10 @@ function setPageStatus(){
 }
 
 function changeMode(useCanvas){
-  canvasActive=Boolean(useCanvas);
+  const updated=Boolean(useCanvas);
+  // When a zoomed page is repainted, do not reset the user's finger pan and scale.
+  if(canvasActive===updated)return;
+  canvasActive=updated;
   element('canvasLayer').hidden=!canvasActive;
   element('frame').style.display=canvasActive?'none':'block';
   bridgeGestures?.setTarget(canvasActive?element('canvasLayer'):element('frame'));
@@ -215,17 +218,21 @@ if(!d){
    display();
    PWDBridgeLocalSource.setup({
      key,year,
-     onSource:(url,blob)=>{
+     onSource:async(url,blob)=>{
        localURL=url;
        if(!blob){
-         canvasController.close();
+         await canvasController.close();
          changeMode(false);
          display();
-         return;
+         return {verification:'none'};
        }
        changeMode(false);
        display();
-       canvasController.open(blob,page);
+       const painted=await canvasController.open(blob,page);
+       return painted
+         ?{verification:'matched'}
+         :{verification:canvasController.lastErrorKind==='edition-mismatch'?'mismatch':'unverified',
+            reason:canvasController.lastErrorMessage||'Page count was not verified'};
      }
    });
  }else{
