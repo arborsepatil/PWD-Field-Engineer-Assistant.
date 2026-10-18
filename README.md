@@ -6,7 +6,6 @@ Mobile-first Maharashtra PWD field engineering **public tools release**. Source 
 - Calculators and converters
 - Retaining wall section quantity
 - Route distance and chainage
-- Bridge hydraulic calculator
 - GPS engineering camera
 - Concrete mix and batch assistant
 - Concrete mix design
