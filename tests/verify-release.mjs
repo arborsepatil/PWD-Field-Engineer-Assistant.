@@ -81,10 +81,6 @@ new vm.Script(app,{filename:'app-shell.js'});
 for(const sec of ['2500','2600','2611-2612','2613-2615','2700','2800','2900','3000','3100']){
   assert.ok(app.includes('./morth-section-'+sec+'.js'),'MoRTH reader loader missing '+sec);
 }
-for(const sec of ['2610','2700','2800','2900','3000','3100']){
-  assert.ok(app.includes('./morth-qc-'+sec+'.js'),'QC loader missing '+sec);
-}
-
 // MoRTH app-shell extension loader: failure of one source script cannot hide later clauses.
 {
  const start=app.indexOf('  // Resilient MoRTH extensions:');
@@ -111,11 +107,8 @@ for(const sec of ['2610','2700','2800','2900','3000','3100']){
  };
  const readerFiles=['2500','2600','2611-2612','2613-2615','2700','2800','2900','3000','3100','100-300']
    .map(section=>'./morth-section-'+section+'.js');
- const qcFiles=['2610','2700','2800','2900','3000','3100','100-300']
-   .map(section=>'./morth-qc-'+section+'.js');
  for(const [pathname,files,bad] of [
-   ['/morth_reader.html',readerFiles,'./morth-section-2600.js'],
-   ['/qc.html',qcFiles,'./morth-qc-3100.js']
+   ['/morth_reader.html',readerFiles,'./morth-section-2600.js']
  ]){
    const ok=execute(pathname,null);
    assert.deepEqual(ok.attempted,files,'Unexpected '+pathname+' load order');
@@ -128,20 +121,7 @@ for(const sec of ['2610','2700','2800','2900','3000','3100']){
  const unrelated=execute('/index.html',null);
  assert.equal(unrelated.attempted.length,0,'MoRTH scripts loaded on non-MoRTH page');
 }
-// The 100–300 QC digest must remain visible even if the prior QC module fails.
-{
- const script=load('morth-qc-100-300.js');
- const added=[];
- const matGrid={insertAdjacentElement(position,node){added.push({position,node})}};
- const document={
-   getElementById(id){return id==='matGrid'?matGrid:null},
-   createElement(tag){return {tag,id:'',style:{},children:[],appendChild(x){this.children.push(x)}}}
- };
- vm.runInNewContext(script,{location:{pathname:'/qc.html'},document});
- assert.equal(added.length,1,'General QC digest not mounted after preceding-module loss');
- assert.equal(added[0].node.id,'morth-qc-100-300');
-}
-process.stdout.write('MoRTH graceful extension loading and QC fallback passed\n');
+process.stdout.write('MoRTH reader graceful extension loading passed\n');
 
 for(const f of fs.readdirSync(root).filter(x=>x.endsWith('.js'))){
   new vm.Script(load(f),{filename:f});
@@ -231,11 +211,11 @@ for(const section of checkedSections){
 assert.equal(integrated.RECORDS.length,expectedTotal,'Repeated chained loads must not append duplicates');
 process.stdout.write('Integrated MoRTH navigation: '+expectedTotal+' unique records across four sections\n');
 
-process.stdout.write('PWA assets: '+shell.length+' present; manifest/JS/reader/QC checks passed\n');
+process.stdout.write('PWA assets: '+shell.length+' present; manifest/JS/reader/Library checks passed\n');
 
 const basics='morth-section-100-300.js';
 assert.ok(app.includes('./'+basics),'MoRTH 100–300 loader missing');
-assert.ok(app.includes('./morth-qc-100-300.js'),'MoRTH 100–300 QC loader missing');
+assert.ok(!app.includes("'/qc.html'")&&!app.includes('pwdGuideFab'),'Retired QC and Guide modules must not load');
 for(const [sec,clause,expectedCount] of [['100','121',21],['200','202',2],['300','314',14]]){
  const state={RECORDS:[],selected:-1,location:{search:'?clause='+clause},URLSearchParams,document:{getElementById(){return null}}};
  let count=0;state.renderTree=()=>count++;
@@ -248,7 +228,7 @@ for(const [sec,clause,expectedCount] of [['100','121',21],['200','202',2],['300'
  assert.equal(state.RECORDS.length,37,'Duplicate MoRTH 100–300 load');
  assert.equal(count,1,'Duplicate reader render');
 }
-assert.ok(shell.includes('./morth-section-100-300.js')&&shell.includes('./morth-qc-100-300.js'),'Missing offline MoRTH 100–300 assets');
+assert.ok(shell.includes('./morth-section-100-300.js'),'Missing offline MoRTH 100–300 reader');
 process.stdout.write('MoRTH 100–300: 37 source-limited QC entries passed\n');
 
 
@@ -354,6 +334,49 @@ process.stdout.write('MoRTH 306–314 documentary, measurement and specialist re
 }
 process.stdout.write('MoRTH General 101–119: source-linked QC extension passed\n');
 
+// Retired modules stay removed from home, install shortcuts and offline assets.
+{
+ const removed=['pwd_gps_engineering_camera.html','pwd_route_distance_chainage.html','qc.html',
+   'bridge_hydraulic_calculator.html','pwd_structure.html','pwd_guide.html'];
+ for(const filename of removed){
+   assert.ok(!fs.existsSync(path.join(root,filename)),'Removed module remains deployed: '+filename);
+   assert.ok(!shell.includes('./'+filename),'Removed module still cached: '+filename);
+   assert.ok(!home.includes('href="./'+filename+'"'),'Home links to removed module: '+filename);
+ }
+ for(const item of manifest.shortcuts||[]){
+   assert.ok(!/(gps|route|qc|structure|hydro|guide)/i.test(item.name+' '+item.url),'Removed shortcut still in manifest');
+ }
+ assert.ok(!app.includes('openGuide')&&!app.includes('pwdGuideFab'),'Shared Guide still active');
+ assert.ok(!app.includes("'/qc.html'"),'Shared QC module still loads');
+ for(const id of ['gpscam','route','qc']){
+   assert.ok(!home.includes('data-tool-id="'+id+'"'),'Removed tool displayed: '+id);
+ }
+ assert.ok(!home.includes('id="guideCard"'),'Guide card still displayed');
+ assert.ok(!shell.some(x=>x.startsWith('./morth-qc-')),'QC module cache still shipped');
+ const source=load('library-drive-catalog.js'),context={window:{}};
+ vm.runInNewContext(source,context,{filename:'library-drive-catalog.js'});
+ const catalog=context.window.PWDDrivePDFCatalog;
+ assert.equal(catalog.length,73,'Curated original PDF Library count changed');
+ const expected={code:59,spec:4,ssr:4,bridge:2,design:2,rules:2};
+ for(const [k,n] of Object.entries(expected))assert.equal(catalog.filter(x=>x.section===k).length,n,'Missing PDF section '+k);
+ assert.equal(catalog.filter(x=>x.sub==='IS').length,17,'Missing IS codes');
+ assert.equal(catalog.filter(x=>x.sub==='IRC').length,41,'Missing IRC codes');
+ assert.equal(new Set(catalog.map(x=>x.id)).size,catalog.length,'Duplicate Drive source ID');
+ assert.ok(catalog.every(x=>/^[A-Za-z0-9_-]{15,}$/.test(x.id)&&x.name&&x.section),'Malformed Drive PDF reference');
+ assert.ok(!catalog.some(x=>/bridge.*2018|2018.*bridge/i.test(x.name)),'Unavailable Bridge Book included');
+ const lib=load('library.html');
+ assert.ok(lib.includes('./library-drive-catalog.js')&&lib.includes('get("libSearch")')===false,'Drive PDF catalog wiring missing');
+ assert.ok(lib.includes('gr_library.html'),'GR reader must remain available');
+ assert.ok(shell.includes('./library-drive-catalog.js'),'Drive PDF catalogue missing from offline cache');
+ assert.ok(!shell.some(x=>/\.pdf$/i.test(x)),'Private PDF cached by public app');
+ process.stdout.write('Removed modules and 73 authenticated Drive PDF references verified\n');
+}
+const driveCatalog=(()=>{
+ const context={window:{}};
+ vm.runInNewContext(load('library-drive-catalog.js'),context,{filename:'library-drive-catalog.js'});
+ return context.window.PWDDrivePDFCatalog;
+})();
+
 // Only source-available bridge books are published, and the retired hydraulic tool stays removed.
 {
  const gateway=load('pwd_bridge_plans.html');
@@ -364,7 +387,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
    const page='bridge_book_'+year+'.html';
    assert.ok(shell.includes('./'+page),'Book missing from offline cache '+page);
    assert.ok(gateway.includes('./'+page),'Gateway missing '+page);
-   assert.ok(library.includes('./'+page),'Library missing '+page);
+   assert.ok(driveCatalog.some(x=>x.reader==='./'+page),'Drive Library missing '+page);
    const content=load(page);
    assert.ok(content.includes(year+' Bridge'),'Wrong book identity '+page);
    assert.ok(content.includes('</html>'),'Malformed bridge page '+page);
@@ -388,7 +411,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  for(const body of [gateway,library,home,guide,y2023,load('README.md')]){
    assert.ok(!body.includes('Bridge Hydro')&&!body.includes('bridge_hydraulic_calculator.html'),'Bridge Hydro still discoverable');
  }
- assert.ok(home.includes("t.id!=='bridgehydro'"),'Recent tools can revive removed hydraulic module');
+ assert.ok(home.includes('removedToolIds')&&home.includes('bridgehydro'),'Recent tools can revive retired modules');
  const pdf=load('pdf_viewer.html');
  assert.ok(pdf.includes('enableBridgeFingerGestures(onPageSwipe,onGestureIdle)'),'Finger gestures missing in PDF viewer');
  assert.ok(pdf.includes("key==='bridge2002'||key==='bridge2023'"),'Gestures not limited to bridge books');
