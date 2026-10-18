@@ -407,7 +407,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  const oldAudit=oldAuditCtx.window.PWDBridge2002SourceAudit;
  assert.equal(oldAudit.originalPdfPages,91,'2002 original PDF length mismatch');
  assert.equal(oldAudit.originalPdfHasTextLayer,false,'2002 is scanned; do not imply searchable original');
- assert.equal(Object.keys(oldAudit.bySerial).length,38,'2002 initial scanned audit count mismatch');
+ assert.equal(Object.keys(oldAudit.bySerial).length,70,'2002 scanned index must have all 70 source records');
  for(let n=1;n<=34;n++){
    const serial=String(n).padStart(3,'0');
    const r=oldAudit.bySerial[serial];
@@ -421,11 +421,43 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  }
  for(const serial of ['036','037','038'])
    assert.equal(oldAudit.bySerial[serial].sheetParts.length,2,'Both 2002 box cell sheets required '+serial);
+
+ assert.equal(oldAudit.coveredOriginalIndexNumbers,70,'Full 2002 scan index count missing');
+ assert.equal(oldAudit.additionalIndexedRecords,32,'Post-038 legacy records missing');
+ for(let n=39;n<=70;n++){
+   const id=String(n).padStart(3,'0'),m=oldAudit.bySerial[id];
+   assert.ok(m,'2002 drawing '+id+' missing');
+   const expected=n<=58?n+11:n<=62?n+12:n<=66?n+13:n+14;
+   assert.equal(m.pdfPages.length,1,'Unexpected 2002 PDF sheet count '+id);
+   assert.equal(m.pdfPages[0],expected,'Source scanned PDF page mismatch '+id);
+   assert.ok(m.status.startsWith('VISUAL_TITLE_BLOCK_NUMBER'),'Unverified 2002 sheet '+id);
+   assert.ok(m.sheetNumber.includes('2002-'),'Source printed number incomplete '+id);
+ }
+ assert.deepEqual(Array.from(oldAudit.unindexedHandwrittenPagesExcluded),[85,86,87,88,89,90,91],'Handwritten appendix pages must stay excluded');
+ for(const n of [41,49,70,75,80]){
+   assert.ok(!Object.values(oldAudit.bySerial).some(m=>m.pdfPages.includes(n)),'2002 section-divider page falsely indexed '+n);
+ }
+ for(const id of ['053','057','058','059','060','061','062']){
+   assert.equal(oldAudit.bySerial[id].status,'VISUAL_TITLE_BLOCK_NUMBER_FORMAT_VARIANT','Loss of source numbering variation '+id);
+   assert.ok(oldAudit.bySerial[id].formatNote,'Must explain typography difference '+id);
+ }
+ for(const id of ['047','048','049','050','051','052','053','054','055','056','057','058','059','060','061','062']){
+   assert.equal(oldAudit.bySerial[id].titleCheck,'INDEX_SHEET_TITLE_WORDING_VARIANT','Original scanned title difference not flagged '+id);
+ }
+ assert.ok(Object.values(oldAudit.bySerial).every(m=>m.pdfPages.every(n=>n>=7&&n<=84)),'2002 mapped beyond authoritative scanned drawings');
+
  const oldBook=load('bridge_book_2002.html');
  assert.ok(oldBook.includes('bridge-2002-drawing-audit.js'),'2002 source metadata script not linked');
  assert.ok(oldBook.includes('sourceAudit[r.sr]'),'2002 per-record source mapping unused');
  assert.ok(oldBook.includes('View original '),'2002 original page links missing');
  assert.ok(oldBook.includes('not digitized'),'2002 graphical detail must remain undigitized');
+ for(const section of ['B','C','F','M','R'])assert.ok(oldBook.includes('value="'+section+'"'),'New 2002 section missing '+section);
+ assert.ok(oldBook.includes("BR-NGP/2002-")&&oldBook.includes('BR-II/2002-'),'2002 drawing number series missing');
+ assert.ok(oldBook.includes('Index/title-block number comparison'),'Scanned document number comparison not displayed');
+ assert.ok(oldBook.includes('Index/title-block title wording'),'Title-book actual sheet comparison not displayed');
+ assert.ok(oldBook.includes('NUMBER FORMAT VARIANT'),'Scan number format differences must remain visible');
+ assert.ok(oldBook.includes('70-drawing index'),'Complete 2002 coverage not disclosed');
+
 
  const auditSrc=load('bridge-2023-drawing-audit.js');
  assert.ok(shell.includes('./bridge-2023-drawing-audit.js'),'Original PDF page map not available offline');
