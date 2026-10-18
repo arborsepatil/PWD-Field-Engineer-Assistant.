@@ -552,7 +552,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.ok(shell.includes('./bridge-local-source.js'),'Private PDF helper must work offline');
  const localJS=load('bridge-local-source.js');
  new vm.Script(localJS,{filename:'bridge-local-source.js'});
- for(const required of ['indexedDB.open','source identity not independently verified','file.slice(0,1024)','store.delete(key)','URL.revokeObjectURL']){
+ for(const required of ['indexedDB.open','page-count match is not proof of drawing identity','file.slice(0,1024)','store.delete(key)','URL.revokeObjectURL']){
     assert.ok(localJS.includes(required),'Private device source validation or removal missing: '+required);
  }
  assert.ok(!shell.includes('PWD_Standard_Plans_Road_Bridges_2002.pdf'),'Do not publish 2002 private scanned original in SW');
@@ -577,12 +577,12 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.notEqual(target.src,beforeSwipe,'Unzoomed single-finger swipe must advance the PDF page');
  assert.ok(target.src.includes('#page=18'),'Page swipe should request next 2023 original PDF page');
  assert.ok(replacedPath.includes('page=18'),'Page navigation should update shareable deep link');
- localControls.onSource('blob:https://example.org/private-bridge-pdf',{size:500,arrayBuffer:async()=>new ArrayBuffer(500)});
+ await localControls.onSource('blob:https://example.org/private-bridge-pdf',{size:500,arrayBuffer:async()=>new ArrayBuffer(500)});
  assert.equal(renderedPage,18,'Local renderer must open real PDF page 18 (not rely on #page fragment)');
  assert.equal(canvasLayer.hidden,false,'Canvas renderer must be shown after original source loads');
  assert.equal(target.style.display,'none','Native iframe should not overlay real canvas drawing');
  assert.ok(els.pdfPageIndicator.textContent.includes('rendered locally'),'Canvas state must be disclosed in page status');
- localControls.onSource(null);
+ await localControls.onSource(null);
  assert.ok(target.src.includes('drive.google.com/file/d/'),
            'Forgetting local original must restore private Google Drive fallback');
  assert.ok(canvasLayer.hidden,'Forget PDF should hide local canvas');
@@ -645,6 +645,61 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.ok(states.some(x=>x[0]==='error'&&x[1].includes('Page-count mismatch')),
            'Wrong original PDF edition should receive a visible warning');
  assert.equal(renderer.ready,false,'Wrong edition must not remain selected');
+
+ assert.equal(renderer.lastErrorKind,'edition-mismatch','Wrong PDF page count must be a distinct rejection');
+ assert.equal(renderer.lastErrorMessage.includes('91')||renderer.lastErrorMessage.includes('221'),true,
+              'Wrong-edition warning should state expected original PDF pages');
+ assert.ok(source.includes('const painted=await render(currentPage,1)'),
+           'Renderer must wait for actual pixels before confirming book page');
+ const viewerText=load('pdf_viewer.html');
+ assert.ok(viewerText.includes("verification:canvasController.lastErrorKind==='edition-mismatch'?'mismatch':'unverified'"),
+           'Wrong-edition PDF must be rejected by on-device storage');
+ assert.ok(viewerText.includes('if(canvasActive===updated)return'),
+           'Zoomed canvas redraw should not discard active pan and scale');
+ // Test local-storage controller independent of PDF.js: wrong edition must never be saved.
+ function localSourceScenario(verification){
+   const listeners={};const clearListeners={};let created=0,revoked=[],calls=[],stored=0;
+   let documentStatus={textContent:'',appendChild(node){this.detail=node.textContent}};
+   const file=new Blob(['%PDF-1.7','Fake PDF bytes to check local source acceptance test','X'.repeat(350)],{type:'application/pdf'});
+   file.name='Bridge_2023.pdf';
+   const input={files:[file],value:'2023',addEventListener(ev,fn){listeners[ev]=fn}};
+   const clear={hidden:true,addEventListener(ev,fn){clearListeners[ev]=fn}};
+   const docs={privatePdfFile:input,forgetPrivatePdf:clear,privateBar:{classList:{add(){}}},
+               privatePdfStatus:documentStatus};
+   const sandbox={
+    window:{},Blob,Uint8Array,Promise,Date,
+    document:{getElementById(id){return docs[id]},createElement(){return {textContent:''}}},
+    URL:{createObjectURL(){return 'blob:unit-'+(++created)},revokeObjectURL(id){revoked.push(id)}},
+    indexedDB:undefined
+   };
+   vm.runInNewContext(localJS,sandbox,{filename:'private-source-storage-check'});
+   sandbox.window.PWDBridgeLocalSource.setup({
+     key:'bridge2023',year:'2023',
+     onSource:(url,blob)=>{calls.push([url,!!blob]);return Promise.resolve({
+        verification,reason:verification==='mismatch'?'Expected 221 PDF pages; received 91':undefined
+     })}
+   });
+   return {fire:()=>listeners.change(),clear:()=>clearListeners.click(),input,clearButton:clear,
+           get status(){return documentStatus.textContent},get calls(){return calls},
+           get revoked(){return revoked},get saved(){return stored}};
+ }
+ const wrongScenario=localSourceScenario('mismatch');
+ await wrongScenario.fire();
+ assert.equal(wrongScenario.clearButton.hidden,true,'Wrong-edition PDF must never remain selectable');
+ assert.ok(wrongScenario.status.includes('Wrong original PDF'),'Wrong book selection must show rejection');
+ assert.ok(wrongScenario.calls.length>=2&&wrongScenario.calls.at(-1)[0]===null,
+           'Wrong selected PDF must restore Drive fallback');
+ assert.equal(wrongScenario.revoked.length,1,'Rejected local PDF URL must be revoked');
+ const offlineScenario=localSourceScenario('unverified');
+ await offlineScenario.fire();
+ assert.ok(offlineScenario.status.includes('page count unconfirmed'),'Offline fallback must not imply source verification');
+ assert.equal(offlineScenario.clearButton.hidden,false,'Unverified PDF should be usable for this session');
+ const matchScenario=localSourceScenario('matched');
+ await matchScenario.fire();
+ assert.ok(matchScenario.status.includes('Private PDF open for this session'),
+           'Storage failure must not imply the matched local PDF was saved');
+ assert.equal(matchScenario.clearButton.hidden,false,'Accepted private PDF must be removable');
+
  
 
 }

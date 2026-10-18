@@ -27,7 +27,7 @@ function pdfJs(){
 window.PWDBridgeCanvas={
  setup({layer,canvas,expectedPages,onState}){
   if(!layer||!canvas)throw new Error('Missing private drawing canvas');
-  let loading=null,pdf=null,currentPage=1,epoch=0,renderEpoch=0,renderTask=null,zoom=1,disposed=false;
+  let loading=null,pdf=null,currentPage=1,epoch=0,renderEpoch=0,renderTask=null,zoom=1,disposed=false,lastErrorKind=null,lastErrorMessage='';
   const status=(state,message)=>{if(!disposed)onState?.(state,message)};
   async function close(){
     epoch++;renderEpoch++;
@@ -40,6 +40,7 @@ window.PWDBridgeCanvas={
   async function open(blob,pageNumber){
     await close();
     if(!blob||disposed)return false;
+    lastErrorKind=null;lastErrorMessage='';
     const job=epoch;
     currentPage=pageNumber||1;
     status('loading','Opening original PDF locally…');
@@ -53,6 +54,7 @@ window.PWDBridgeCanvas={
       const loaded=await task.promise;
       if(job!==epoch||disposed){await task.destroy();return false}
       if(expectedPages&&loaded.numPages!==expectedPages){
+        lastErrorKind='edition-mismatch';
         await task.destroy();loading=null;
         throw new Error('Page-count mismatch: this edition requires '+expectedPages+
                         ' PDF pages, but the selected file contains '+loaded.numPages+
@@ -60,13 +62,16 @@ window.PWDBridgeCanvas={
       }
       pdf=loaded;
       zoom=1;
-      status('ready','Rendering original page '+currentPage+' of '+pdf.numPages);
-      await render(currentPage,1);
-      return job===epoch&&!!pdf;
+      status('loading','Rendering original page '+currentPage+' of '+pdf.numPages);
+      const painted=await render(currentPage,1);
+      if(!painted&&job===epoch)lastErrorKind=lastErrorKind||'render-failed';
+      return painted&&job===epoch&&!!pdf;
     }catch(e){
       if(job===epoch&&!disposed){
         layer.hidden=true;
-        status('error',e.message||'Cannot render private PDF; opening browser preview.');
+        lastErrorKind=lastErrorKind||'renderer-unavailable';
+        lastErrorMessage=e.message||'Cannot render private PDF; opening browser preview.';
+        status('error',lastErrorMessage);
       }
       return false;
     }
@@ -108,7 +113,9 @@ window.PWDBridgeCanvas={
       return true;
     }catch(e){
       if(e?.name==='RenderingCancelledException'||token!==renderEpoch)return false;
-      status('error','Could not render PDF page '+currentPage+': '+(e.message||String(e)));
+      lastErrorKind='render-failed';
+      lastErrorMessage='Could not render PDF page '+currentPage+': '+(e.message||String(e));
+      status('error',lastErrorMessage);
       return false;
     }
   }
@@ -118,6 +125,8 @@ window.PWDBridgeCanvas={
     rerenderForZoom(nextZoom){return render(currentPage,nextZoom)},
     get ready(){return !!pdf},
     get pageCount(){return pdf?.numPages||0},
+    get lastErrorKind(){return lastErrorKind},
+    get lastErrorMessage(){return lastErrorMessage},
     dispose(){disposed=true;close()}
   };
  }
