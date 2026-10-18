@@ -363,14 +363,23 @@
    record.quick.push(...extra.quick);
    record.tables.push(...extra.tables);
  }
- RECORDS.push(...items);
+ // These are the opening MoRTH sections, even though their extension is
+ // intentionally loaded last. Preserve the engineer's current clause selection.
+ const currentRecord=RECORDS[selected]||null;
+ RECORDS.unshift(...items);
  const f=document.getElementById('sectionFilter');
  if(f)for(const sec of ['100','200','300']){
    if(!f.querySelector('option[value="'+sec+'"]')){
-     const o=document.createElement('option');o.value=sec;o.textContent='Section '+sec;f.appendChild(o);
+     const o=document.createElement('option');o.value=sec;o.textContent='Section '+sec;
+     const firstLater=f.querySelector('option[value="400"]');
+     if(firstLater)f.insertBefore(o,firstLater);
+     else f.appendChild(o);
    }
  }
  const wanted=new URLSearchParams(location.search).get('clause');
- if(items.some(x=>x.clause===wanted))selected=RECORDS.findIndex(x=>x.clause===wanted);
+ const requested=items.find(x=>x.clause===wanted);
+ if(requested)selected=RECORDS.indexOf(requested);
+ else if(currentRecord)selected=RECORDS.indexOf(currentRecord);
+ else selected=0;
  renderTree();
 })();
