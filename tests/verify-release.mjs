@@ -552,7 +552,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.ok(shell.includes('./bridge-local-source.js'),'Private PDF helper must work offline');
  const localJS=load('bridge-local-source.js');
  new vm.Script(localJS,{filename:'bridge-local-source.js'});
- for(const required of ['indexedDB.open','source identity not independently verified','file.slice(0,1024)','store.delete(key)','URL.revokeObjectURL']){
+ for(const required of ['indexedDB.open','page-count match is not proof of drawing identity','file.slice(0,1024)','store.delete(key)','URL.revokeObjectURL']){
     assert.ok(localJS.includes(required),'Private device source validation or removal missing: '+required);
  }
  assert.ok(!shell.includes('PWD_Standard_Plans_Road_Bridges_2002.pdf'),'Do not publish 2002 private scanned original in SW');
