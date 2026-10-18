@@ -919,3 +919,46 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  source.dispose();
  process.stdout.write('Unified Drive library PDF viewer, touch paging and device-private attachment checks passed\n');
 }
+
+// Cache a pinned, publicly distributable PDF.js renderer after successful first use.
+// This does not cache any original Drive PDFs or weaken permission requirements.
+{
+ const pinned='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+ const worker='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ const allowed=new Set([pinned,worker]),events={};
+ const cached=new Map(),fetches=[];
+ let connected=true;
+ const cache={match:async req=>cached.get(req.url),
+              put:async(req,response)=>{cached.set(req.url,response)}};
+ const testEnv={
+  URL,
+  self:{location:{origin:'https://example.test'},addEventListener(k,fn){events[k]=fn}},
+  caches:{open:async()=>cache},
+  fetch:async req=>{
+    fetches.push(req.url);
+    if(!connected)throw Error('Network offline');
+    return {ok:true,asset:req.url,clone(){return this}};
+  }
+ };
+ vm.runInNewContext(sw,testEnv,{filename:'pdfjs-cache-offline-test'});
+ async function asset(url){
+   let response;
+   const request={method:'GET',url,mode:'cors'};
+   events.fetch({request,respondWith(p){response=p}});
+   return response?await response:null;
+ }
+ for(const url of allowed){
+   assert.equal((await asset(url)).asset,url,'First online use did not serve pinned PDF.js resource');
+   assert.ok(cached.has(url),'PDF.js resource not saved for later offline reading');
+ }
+ connected=false;
+ for(const url of allowed){
+   assert.equal((await asset(url)).asset,url,'Saved renderer unavailable when offline');
+ }
+ assert.equal(fetches.length,2,'Offline PDF.js should not refetch the CDN after caching');
+ assert.equal(await asset('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/other.js'),null,
+   'Only allowlisted public assets can be intercepted');
+ assert.equal(await asset('https://drive.google.com/file/d/private-identifier/preview'),null,
+   'Never intercept original Drive PDF requests in public service worker');
+ process.stdout.write('PDF.js public CDN runtime cache and private Drive exclusion passed\n');
+}
