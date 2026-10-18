@@ -398,6 +398,35 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.ok(pdf.includes('state.x=c.x-session.anchorX*state.scale'),'Pinch centre stability missing');
  assert.ok(pdf.includes('drag to move'),'Drag guidance missing');
 
+
+ // 2002 book is a scan: independently inspected title blocks, no OCR-derived source claims.
+ assert.ok(shell.includes('./bridge-2002-drawing-audit.js'),'2002 verified sheet metadata must be offline');
+ const oldAuditSrc=load('bridge-2002-drawing-audit.js');
+ const oldAuditCtx={window:{}};
+ vm.runInNewContext(oldAuditSrc,oldAuditCtx,{filename:'bridge-2002-drawing-audit.js'});
+ const oldAudit=oldAuditCtx.window.PWDBridge2002SourceAudit;
+ assert.equal(oldAudit.originalPdfPages,91,'2002 original PDF length mismatch');
+ assert.equal(oldAudit.originalPdfHasTextLayer,false,'2002 is scanned; do not imply searchable original');
+ assert.equal(Object.keys(oldAudit.bySerial).length,38,'2002 initial scanned audit count mismatch');
+ for(let n=1;n<=34;n++){
+   const serial=String(n).padStart(3,'0');
+   const r=oldAudit.bySerial[serial];
+   assert.ok(r,'2002 serial missing '+serial);
+   assert.equal(r.pdfPages.length,1,'Unexpected multi-sheet drawing '+serial);
+   assert.equal(r.pdfPages[0],n+6,'2002 scanned drawing PDF page mismatch '+serial);
+ }
+ for(const [serial,pages] of [['035',[42]],['036',[43,44]],['037',[45,46]],['038',[47,48]]]){
+   const rec=oldAudit.bySerial[serial];
+   assert.ok(rec&&JSON.stringify(rec.pdfPages)===JSON.stringify(pages),'2002 scanned box sheet mapping mismatch '+serial);
+ }
+ for(const serial of ['036','037','038'])
+   assert.equal(oldAudit.bySerial[serial].sheetParts.length,2,'Both 2002 box cell sheets required '+serial);
+ const oldBook=load('bridge_book_2002.html');
+ assert.ok(oldBook.includes('bridge-2002-drawing-audit.js'),'2002 source metadata script not linked');
+ assert.ok(oldBook.includes('sourceAudit[r.sr]'),'2002 per-record source mapping unused');
+ assert.ok(oldBook.includes('View original '),'2002 original page links missing');
+ assert.ok(oldBook.includes('not digitized'),'2002 graphical detail must remain undigitized');
+
  const auditSrc=load('bridge-2023-drawing-audit.js');
  assert.ok(shell.includes('./bridge-2023-drawing-audit.js'),'Original PDF page map not available offline');
  const auditCtx={window:{}};
