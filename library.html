@@ -32,15 +32,15 @@
 <body class="app-page"><main class="lib-wrap">
 <header class="lib-head"><a class="icon-btn" href="./index.html" aria-label="Back to home">‹</a><div><div class="brand-title" style="font-size:25px">Library</div><div class="brand-sub">Original PDF references from your Google Drive</div></div></header>
 <section class="lib-hero"><div class="eyebrow">PWD Engineering Reference Library</div><h1>Books in the right section</h1>
-<p>Codes, specifications, SSR, bridge plans, guidelines and rules are grouped by publication. Open the original PDF using your Google Drive account; private source files are not published by this app.</p>
-<div class="lib-note"><b>Drive catalog snapshot · 18 October 2026.</b> Only PDFs found during the connected Drive scan are listed. These are links, not automatic Drive synchronization. Older editions may be superseded; always verify the applicable revision, amendments and project specification before engineering use.</div></section>
+<p>Codes, specifications, SSR, bridge plans, guidelines and rules are grouped by publication. Open the original PDF inside the app when Drive preview allows it, or open Drive directly. For offline viewing, select a private on-device copy. No book PDFs are published with the app.</p>
+<div class="lib-note"><b>Drive catalog snapshot · 18 October 2026.</b> Only PDFs found during the connected Drive scan are listed. This list is a snapshot, not automatic Drive synchronization. Older editions may be superseded; always verify the applicable revision, amendments and project specification before engineering use.</div></section>
 <div class="library-search"><span aria-hidden="true">🔎</span><input id="libSearch" type="search" autocomplete="off" placeholder="Search IS 456, IRC 78, SSR, Code, bridge…" aria-label="Search Drive PDF titles"></div>
 <nav class="categories" id="libraryTabs" aria-label="Library sections"></nav>
 <nav class="subgroups" id="librarySubgroups" aria-label="Code category filters" hidden></nav>
 <div class="section-title"><h2 id="sectionTitle">All PDFs</h2><span class="count" id="matchCount"></span></div>
 <div class="lib-grid" id="bookGrid" aria-live="polite"></div>
 <div class="empty" id="emptyResults">No matching PDF found in this Library section. Check the spelling or choose All PDFs.</div>
-<div class="lib-note" style="margin-top:16px"><b>Source handling:</b> Google Drive permissions stay unchanged. The app displays filenames and authenticated links only; no copyrighted PDF bytes, structural drawings or code text are published here. Digital readers remain distinct from their original PDF.</div>
+<div class="lib-note" style="margin-top:16px"><b>Source handling:</b> Google Drive permissions stay unchanged. The app displays filenames and private Drive links. PDFs you select for offline reading stay in this browser's private device storage, not GitHub. This storage can be cleared or evicted by your device. Digital readers remain distinct from their original PDF.</div>
 </main>
 <script src="./library-drive-catalog.js"></script>
 <script>
@@ -83,13 +83,14 @@
   const isBridge=record.section==='bridge';
   const drive='https://drive.google.com/file/d/'+encodeURIComponent(record.id)+'/view?usp=drivesdk';
   const primary=record.reader?'<a class="primary" href="'+esc(record.reader)+'">Open digital reader</a>':'';
-  const native=record.viewer?'<a href="'+esc(record.viewer)+'">View original PDF</a>':
-    '<a href="'+esc(drive)+'" target="_blank" rel="noopener noreferrer">Open PDF in Drive ↗</a>';
+  const local=record.viewer||'./pdf_viewer.html?file='+encodeURIComponent(record.id);
+  const native='<a href="'+esc(local)+'">Read PDF in app</a>';
+  const external='<a href="'+esc(drive)+'" target="_blank" rel="noopener noreferrer">Google Drive ↗</a>';
   const info=isBridge?'Drawing index is separate from the original private PDF. Detailed drawing QA and DWG checks are pending.':
    record.section==='code'?'Original published edition as named in Drive · check applicability and amendments.':
    record.section==='ssr'?'Historical SSR reference · confirm the applicable schedule and year.':
    'Original Drive publication · check the applicable edition.';
-  return '<article class="book"><span class="tag">'+esc(record.sub)+'</span><h3>'+esc(record.name)+'</h3><p>'+esc(info)+'</p><div class="actions">'+primary+native+'</div></article>';
+  return '<article class="book"><span class="tag">'+esc(record.sub)+'</span><h3>'+esc(record.name)+'</h3><p>'+esc(info)+'</p><div class="actions">'+primary+native+external+'</div></article>';
  }
  function render(){
   [...buttons.children].forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.section===section)));
