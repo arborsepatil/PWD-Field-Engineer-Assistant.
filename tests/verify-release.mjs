@@ -441,6 +441,16 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  }
  assert.deepEqual(Array.from(oldAudit.additionalNonIndexedScanPages),[85,86,87,88,89,90,91],
     'Supplemental unindexed scan sheets must not be assigned fabricated drawing serials');
+ // Visual comparison: the 2002 index and the scanned title block sometimes use different words.
+ const titleVariants=['047','048','049','053','060','061','062'];
+ assert.equal(oldAudit.indexVsSheetTitleDifferences.length,7,'Seven source title discrepancies must remain');
+ for(const id of titleVariants){
+   const r=oldAudit.bySerial[id],compare=r.titleComparison;
+   assert.ok(compare&&compare.status==='INDEX_SHEET_TITLE_WORDING_DIFFERS','Missing title mismatch '+id);
+   assert.ok(compare.indexTitle&&compare.scannedSheetTitle&&compare.explanation,'Missing source title evidence '+id);
+   assert.equal(compare.pdfPage,r.pdfPages[0],'Incorrect source PDF page for title mismatch '+id);
+ }
+ assert.ok(!oldAudit.bySerial['057'].titleComparison,'No fabricated title mismatch on 057');
  const oldBookBody=load('bridge_book_2002.html');
  const recordsSource=oldBookBody.slice(oldBookBody.indexOf('const $=id=>document.getElementById'),oldBookBody.indexOf('const sourceAudit=window.PWDBridge2002SourceAudit'));
  const recordCtx={document:{getElementById(){return null}}};
@@ -457,6 +467,8 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
    assert.equal(all2002.filter(x=>x.section===section).length,count,'2002 book category count wrong: '+section);
  }
  assert.ok(oldBookBody.includes('INDEX / SHEET NUMBER FORMATTING DIFFERS'),'Scanned titleblock/index differences not shown');
+ assert.ok(oldBookBody.includes('Index title versus original scanned sheet title'),'Title difference panel missing');
+ assert.ok(oldBookBody.includes('titleComparison.scannedSheetTitle'),'Actual scanned sheet title not displayed');
  
  const oldBook=load('bridge_book_2002.html');
  assert.ok(oldBook.includes('bridge-2002-drawing-audit.js'),'2002 source metadata script not linked');

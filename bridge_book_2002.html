@@ -51,7 +51,7 @@ let selected=RECORDS.findIndex(r=>r.sr==='002');
 if(selected<0)selected=0;
 function render(){
   const q=$('search').value.toLowerCase().trim(),section=$('sectionFilter').value;
-  const arr=RECORDS.map((r,i)=>({...r,i})).filter(r=>(section==='all'||r.section===section)&&(!q||(r.no+' '+r.title+' '+r.cat+' '+(r.span||'')+' '+r.sr).toLowerCase().includes(q)));
+  const arr=RECORDS.map((r,i)=>({...r,i})).filter(r=>(section==='all'||r.section===section)&&(!q||(r.no+' '+r.title+' '+r.cat+' '+(r.span||'')+' '+r.sr+' '+(sourceAudit[r.sr]?.titleComparison?.scannedSheetTitle||'')).toLowerCase().includes(q)));
   $('count').textContent='· '+arr.length+' records';
   $('indexList').innerHTML=arr.map(r=>'<button class="index-item '+(r.i===selected?'active':'')+'" onclick="selectRec('+r.i+')"><b>'+r.sr+' · '+r.no+'</b><small>'+r.title+' · '+r.cat+'</small></button>').join('')||'<div style="padding:14px;color:var(--muted)">No matching drawings in this book.</div>';
   if(arr.length&&!arr.some(r=>r.i===selected))selected=arr[0].i;
@@ -69,6 +69,7 @@ function show(){
  ['Publication','2002 · Blue Book'],
  ['Index serial',r.sr],['Index drawing number',r.no],
  ['Scanned title-block drawing number',sheetNo],
+ ['Index versus scanned sheet title',audit?.titleComparison?'Wording differs · review source':'No recorded difference · full QA pending'],
  ['Drawing description',r.title],['Category',r.cat],
  ['Span',r.span?r.span+' m':'Not stated'],
  ['Source index PDF page',r.indexPdfPage||'—'],
@@ -84,6 +85,11 @@ function show(){
  '<span class="badge '+(audit?'available':'legacy')+'">'+htmlSafe(status)+'</span> <span class="badge legacy">DRAWING QA PENDING</span>'+
  '<div class="source-alert"><b>Original 2002 PDF pages</b>'+
  '<small>'+htmlSafe(audit?.sourceNote||'Exact physical page is not yet verified.')+'</small>'+
+ (audit?.titleComparison?'<div class="source-alert" style="border-color:#d89b48"><b>Index title versus original scanned sheet title</b>'
++'<small>Index: '+htmlSafe(audit.titleComparison.indexTitle)+'</small>'
++'<small>Actual scan: '+htmlSafe(audit.titleComparison.scannedSheetTitle)+'</small>'
++'<small>'+htmlSafe(audit.titleComparison.explanation)+'</small>'
++'<small>Title wording differs. Original DWG, reinforcement, dimensions and design approval not checked.</small></div>':'')+
  '<small>2002 source is scanned: these numbers were checked visually, not inferred by OCR. Dimensions, reinforcement and technical applicability remain unverified.</small>'+
  (audit?.issue?'<div class="source-alert" style="border-color:#d89b48"><b>Original index vs scanned title block</b><small>'+htmlSafe(audit.issue)+'</small></div>':'')+''+
  links+
