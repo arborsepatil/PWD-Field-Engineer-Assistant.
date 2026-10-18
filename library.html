@@ -1,29 +1,109 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f8fc"><title>PWD Tools Library</title><link rel="stylesheet" href="./app-shell.css"><style>
-.lib-wrap{max-width:1100px;margin:auto;padding:14px 14px 100px}.lib-head{display:flex;align-items:center;gap:10px}.lib-head a{text-decoration:none}.lib-hero{margin:14px 0;padding:22px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 10%,var(--card)),var(--card));box-shadow:var(--shadow)}.lib-hero h1{margin:0 0 7px;font-size:30px}.lib-hero p{margin:0;color:var(--muted);font-size:13px;max-width:760px}.lib-tabs{display:flex;gap:7px;overflow:auto;position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.lib-tab{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:850}.lib-tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}.lib-panel{display:none}.lib-panel.on{display:block}.lib-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.book{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:15px;box-shadow:0 6px 22px rgba(24,53,91,.05);position:relative}.book h3{margin:5px 0 6px;font-size:18px}.book p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.tag{font-size:10px;font-weight:850;padding:5px 8px;border-radius:999px;border:1px solid var(--line);background:var(--soft)}.tag.ok{color:var(--ok)}.tag.hold{color:var(--warn)}.tag.bad{color:var(--danger)}.book .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.book .actions a,.book .actions button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:11px;padding:8px 10px;font-size:11px;font-weight:850;text-decoration:none}.book .actions .primary{background:var(--accent);color:#fff;border-color:var(--accent)}.book .actions .disabled{opacity:.55;pointer-events:none}.searchbox{margin:10px 0}.roadmap{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.roadmap div{border:1px solid var(--line);background:var(--card);border-radius:15px;padding:12px;text-align:center;font-size:11px;font-weight:850}.roadmap span{display:block;font-size:19px;margin-bottom:5px}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--accent);padding:10px 11px;border-radius:12px;margin-top:10px}.footer-note{text-align:center;color:var(--muted);font-size:10px;margin-top:18px}
-@media(max-width:760px){.lib-grid{grid-template-columns:1fr}.roadmap{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.lib-hero h1{font-size:25px}}
-</style></head><body class="app-page"><main class="lib-wrap"><header class="lib-head"><a class="icon-btn" href="./index.html">‹</a><div><div class="brand-title" style="font-size:26px">Library</div><div class="brand-sub">Books · Rules · Drawings · GRs</div></div><div class="top-actions"><a class="icon-btn" href="./settings.html">⚙</a></div></header><section class="lib-hero"><div class="eyebrow">PWD Tools · Source Library</div><h1>Digital reference, original source preserved</h1><p>Every technical book follows the same source discipline: searchable digital layer, exact source traceability, original publication preserved, and calculators kept separate from source text.</p><div class="note"><b>Trial PDF mode:</b> original PDFs remain private in Google Drive, but this mobile trial can open them directly inside the app when your Drive account has permission. No source PDF is copied into the public repository.</div></section><div class="roadmap"><div><span>📄</span>Original PDF</div><div><span>🔎</span>Searchable digital</div><div><span>📍</span>Exact page link</div><div><span>🧮</span>Linked calculators</div><div><span>✅</span>Verification status</div></div><div class="searchbox"><span>🔎</span><input id="libSearch" placeholder="Search MoRTH, Rule Book, bridge, Red Book, GR…"></div><nav class="lib-tabs"><button class="lib-tab on" data-p="books">BOOKS</button><button class="lib-tab" data-p="bridge">BRIDGE PLANS</button><button class="lib-tab" data-p="rules">RULES / GR</button></nav>
-
-<section id="books" class="lib-panel on"><div class="lib-grid" id="bookGrid"></div></section>
-<section id="bridge" class="lib-panel"><div class="lib-grid">
-<article class="book" data-search="bridge 2002 blue book standard plans legacy"><div class="eyebrow">Bridge Plans · 2002</div><h3>Standard Plans / Blue Book</h3><p>Original 91-page scanned 2002 Blue Book: all 70 numbered drawings (001–070) indexed, with visually checked PDF title-block page links. Six original sheets omit an index leading zero; flagged for review. Technical dimensions, original DWGs and non-indexed supplement pages are not digitized.</p><div class="meta"><span class="tag ok">SOURCE AVAILABLE</span><span class="tag hold">MAPPING QA</span></div><div class="actions"><a class="primary" href="./bridge_book_2002.html">Open 2002 Book</a><a href="./pdf_viewer.html?doc=bridge2002">View PDF</a></div></article>
-
-<article class="book" data-search="bridge 2023 part 2 standard plans tp 2023"><div class="eyebrow">Bridge Plans · 2023 Part 2</div><h3>TP-2023 Standard Plans</h3><p>Source available. Digital drawing index and original-PDF page map added. The 2023 source check located 170 numbers and flagged six entries for discrepancy or review; full graphical sheet QA remains pending.</p><div class="meta"><span class="tag ok">SOURCE AVAILABLE</span><span class="tag hold">SHEET QA IN PROGRESS</span></div><div class="actions"><a class="primary" href="./bridge_book_2023.html">Open 2023 Book</a><a href="./pdf_viewer.html?doc=bridge2023">View PDF</a></div></article>
-</div><div class="note"><b>Bridge-book QA rule:</b> index heading, printed drawing number/title, opened drawing image, data table and calculator association must all resolve to the same canonical record. Any mismatch stays UNVERIFIED.</div></section>
-
-<section id="rules" class="lib-panel"><div class="lib-grid">
-<article class="book" data-search="pwd rule book marathi english translation"><div class="eyebrow">Rules</div><h3>PWD Rule Book</h3><p>643-page complete scan is the current source base. Digital layer uses Marathi original, faithful English translation, optional JE explanation, source page and verification status.</p><div class="meta"><span class="tag ok">SOURCE AVAILABLE</span><span class="tag hold">TRANSCRIPTION REVIEW</span></div><div class="actions"><a class="primary" href="./pwd_rule_book.html">Open Digital Reader</a><a href="./pdf_viewer.html?doc=rulebook">View PDF</a></div></article>
-<article class="book" data-search="public works code maharashtra"><div class="eyebrow">Rules</div><h3>Maharashtra Public Works Code</h3><p>Source is available in the private project library. Digital extraction can continue after field testing.</p><div class="meta"><span class="tag ok">SOURCE AVAILABLE</span><span class="tag hold">DIGITIZATION PENDING</span></div><div class="actions"><a href="./pdf_viewer.html?doc=pwdcode">View PDF</a></div></article>
-<article class="book" data-search="office manual establishment administration"><div class="eyebrow">Manual</div><h3>PWD Office Manual — Establishment & Administration</h3><p>Source available. Administrative content stays separate from engineering calculations.</p><div class="meta"><span class="tag ok">SOURCE AVAILABLE</span><span class="tag hold">DIGITIZATION PENDING</span></div><div class="actions"><a href="./pdf_viewer.html?doc=officemanual">View PDF</a></div></article>
-<article class="book" data-search="gr government resolutions technical circulars codes current rules civil interface"><div class="eyebrow">Current Rules</div><h3>GR / Circular / Code Library</h3><p>Technical GR master is now connected. Current identified rules and civil-work interfaces are searchable while transfer/posting and individual-order material remains excluded.</p><div class="meta"><span class="tag ok">MASTER CONNECTED</span><span class="tag hold">GAP WATCH CONTINUES</span></div><div class="actions"><a class="primary" href="./gr_library.html">Open GR Library</a></div></article>
-</div></section><div class="footer-note">PWD Tools Library V3 · architecture shell · original sources remain controlling</div></main><script>
-const books=[
-{icon:'🛣️',name:'MoRTH Specifications',sub:'5th Revision · 2013',desc:'Digital reader + direct original PDF for the mobile trial. Verified clauses/tables continue to expand separately.',tags:[['SOURCE AVAILABLE','ok'],['PARTIAL DIGITIZATION','hold']],search:'morth specifications road clauses tables qc',href:'./morth_reader.html',pdf:'morth'},
-{icon:'📕',name:'Red Book Part II',sub:'Revised Standard Specifications',desc:'Digital index/Quick View plus direct original PDF for this trial release.',tags:[['SOURCE AVAILABLE','ok'],['PARTIAL DIGITIZATION','hold']],search:'red book part ii specifications',href:'./red_book_reader.html',pdf:'redbook2'},
-
-{icon:'🌉',name:'Bridge Design Guidelines',sub:'2007 · Second Edition',desc:'Direct original 2007 bridge design guideline source PDF.',tags:[['SOURCE AVAILABLE','ok']],search:'bridge design guidelines 2007',pdf:'bridgeguidelines'},
-{icon:'🏢',name:'Building Design Guidelines',sub:'2010',desc:'Direct original PDF is available now; digital extraction can continue later.',tags:[['SOURCE AVAILABLE','ok'],['DIGITIZATION PENDING','hold']],search:'building design guidelines 2010',pdf:'buildingguidelines'}
-];
-bookGrid.innerHTML=books.map(b=>`<article class="book" data-search="${(b.search+' '+b.name+' '+b.sub).toLowerCase()}"><div style="font-size:28px">${b.icon}</div><div class="eyebrow">${b.sub}</div><h3>${b.name}</h3><p>${b.desc}</p><div class="meta">${b.tags.map(t=>'<span class="tag '+t[1]+'">'+t[0]+'</span>').join('')}</div>${(b.href||b.pdf)?'<div class="actions">'+(b.href?'<a class="primary" href="'+b.href+'">Open Reader</a>':'')+(b.pdf?'<a href="./pdf_viewer.html?doc='+b.pdf+'">View PDF</a>':'')+'</div>':''}</article>`).join('');
-libSearch.oninput=()=>{let q=libSearch.value.toLowerCase().trim();document.querySelectorAll('.book').forEach(x=>x.style.display=!q||x.dataset.search.includes(q)||x.textContent.toLowerCase().includes(q)?'block':'none')};
-document.querySelectorAll('.lib-tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.lib-tab').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.lib-panel').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p))});
-</script><script src="./app-shell.js"></script></body></html>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f8fc"><title>PWD Tools · Drive PDF Library</title>
+<link rel="stylesheet" href="./app-shell.css">
+<style>
+.lib-wrap{max-width:1120px;margin:auto;padding:15px 14px 105px}
+.lib-head{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.lib-head a{text-decoration:none}
+.lib-hero{padding:20px;border:1px solid var(--line);border-radius:22px;background:var(--card);box-shadow:var(--shadow)}
+.lib-hero h1{margin:5px 0;font-size:27px;line-height:1.15}.lib-hero p{font-size:13px;line-height:1.6;color:var(--muted);margin:6px 0 0}
+.lib-note{padding:10px 12px;border-left:3px solid var(--accent);background:var(--soft);border-radius:9px;margin-top:12px;font-size:12px;line-height:1.5}
+.library-search{display:flex;gap:8px;align-items:center;margin:16px 0}
+.library-search input{flex:1;width:100%;font:inherit;font-size:15px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px;min-width:0}
+.categories,.subgroups{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.categories button,.subgroups button{border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);padding:9px 12px;font-size:12px;font-weight:750;cursor:pointer}
+.categories button[aria-pressed="true"],.subgroups button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:white}
+.categories button:focus-visible,.subgroups button:focus-visible,.library-search input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:20px 0 10px}
+.section-title h2{font-size:20px;margin:0}.count{font-size:12px;color:var(--muted)}
+.lib-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.book{border:1px solid var(--line);background:var(--card);border-radius:17px;padding:15px;min-width:0}
+.book h3{font-size:16px;margin:7px 0;line-height:1.4;overflow-wrap:anywhere}
+.book p{color:var(--muted);font-size:12px;margin:3px 0 0;line-height:1.55}
+.tag{display:inline-flex;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:999px;font-size:10px;font-weight:750;padding:4px 8px;color:var(--muted)}
+.book .actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:13px}
+.book .actions a{font-size:12px;border-radius:10px;padding:9px 11px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:750;min-height:38px}
+.book .actions a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.empty{display:none;text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:15px;padding:20px;color:var(--muted)}
+@media(max-width:680px){.lib-grid{grid-template-columns:1fr}.lib-hero h1{font-size:23px}.categories button{padding:8px 10px;font-size:11px}}
+</style></head>
+<body class="app-page"><main class="lib-wrap">
+<header class="lib-head"><a class="icon-btn" href="./index.html" aria-label="Back to home">‹</a><div><div class="brand-title" style="font-size:25px">Library</div><div class="brand-sub">Original PDF references from your Google Drive</div></div></header>
+<section class="lib-hero"><div class="eyebrow">PWD Engineering Reference Library</div><h1>Books in the right section</h1>
+<p>Codes, specifications, SSR, bridge plans, guidelines and rules are grouped by publication. Open the original PDF using your Google Drive account; private source files are not published by this app.</p>
+<div class="lib-note"><b>Drive catalog snapshot · 18 October 2026.</b> Only PDFs found during the connected Drive scan are listed. These are links, not automatic Drive synchronization. Older editions may be superseded; always verify the applicable revision, amendments and project specification before engineering use.</div></section>
+<div class="library-search"><span aria-hidden="true">🔎</span><input id="libSearch" type="search" autocomplete="off" placeholder="Search IS 456, IRC 78, SSR, Code, bridge…" aria-label="Search Drive PDF titles"></div>
+<nav class="categories" id="libraryTabs" aria-label="Library sections"></nav>
+<nav class="subgroups" id="librarySubgroups" aria-label="Code category filters" hidden></nav>
+<div class="section-title"><h2 id="sectionTitle">All PDFs</h2><span class="count" id="matchCount"></span></div>
+<div class="lib-grid" id="bookGrid" aria-live="polite"></div>
+<div class="empty" id="emptyResults">No matching PDF found in this Library section. Check the spelling or choose All PDFs.</div>
+<div class="lib-note" style="margin-top:16px"><b>Source handling:</b> Google Drive permissions stay unchanged. The app displays filenames and authenticated links only; no copyrighted PDF bytes, structural drawings or code text are published here. Digital readers remain distinct from their original PDF.</div>
+</main>
+<script src="./library-drive-catalog.js"></script>
+<script>
+(function(){
+ 'use strict';
+ const data=Array.isArray(window.PWDDrivePDFCatalog)?window.PWDDrivePDFCatalog:[];
+ const groups=[
+  ['all','All PDFs'],['code','Code'],['spec','Specifications'],['ssr','SSR'],
+  ['bridge','Bridge Plans'],['design','Design Guidelines'],['rules','Rules / GR']
+ ];
+ const labels={all:'All PDFs',code:'Code · PWD / IS / IRC',spec:'Specifications',ssr:'Schedule of Rates · SSR',bridge:'Bridge Plans',design:'Design Guidelines',rules:'Rules / GR'};
+ const get=id=>document.getElementById(id);
+ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const params=new URLSearchParams(location.search);
+ const start=params.get('section');
+ let section=groups.some(x=>x[0]===start)?start:'all',sub='all',query='';
+ const buttons=get('libraryTabs'),subgroups=get('librarySubgroups');
+ function select(next){
+  section=next;sub='all';
+  const url=new URL(location.href);url.searchParams.set('section',section);
+  history.replaceState(null,'',url.pathname+url.search);
+  render();
+ }
+ groups.forEach(([id,label])=>{
+  const btn=document.createElement('button');btn.type='button';btn.textContent=label+' ('+(id==='all'?data.length:id==='rules'?data.filter(r=>r.section===id).length+1:data.filter(r=>r.section===id).length)+')';
+  btn.dataset.section=id;btn.onclick=()=>select(id);buttons.appendChild(btn);
+ });
+ function codeFilters(){
+  subgroups.hidden=section!=='code';
+  subgroups.replaceChildren();
+  if(section!=='code')return;
+  for(const type of ['all','PWD','IS','IRC']){
+    const btn=document.createElement('button');btn.type='button';btn.textContent=type==='all'?'All Codes':type;
+    btn.setAttribute('aria-pressed',String(sub===type));
+    btn.onclick=()=>{sub=type;render()};
+    subgroups.appendChild(btn);
+  }
+ }
+ function bookCard(record){
+  const isBridge=record.section==='bridge';
+  const drive='https://drive.google.com/file/d/'+encodeURIComponent(record.id)+'/view?usp=drivesdk';
+  const primary=record.reader?'<a class="primary" href="'+esc(record.reader)+'">Open digital reader</a>':'';
+  const native=record.viewer?'<a href="'+esc(record.viewer)+'">View original PDF</a>':
+    '<a href="'+esc(drive)+'" target="_blank" rel="noopener noreferrer">Open PDF in Drive ↗</a>';
+  const info=isBridge?'Drawing index is separate from the original private PDF. Detailed drawing QA and DWG checks are pending.':
+   record.section==='code'?'Original published edition as named in Drive · check applicability and amendments.':
+   record.section==='ssr'?'Historical SSR reference · confirm the applicable schedule and year.':
+   'Original Drive publication · check the applicable edition.';
+  return '<article class="book"><span class="tag">'+esc(record.sub)+'</span><h3>'+esc(record.name)+'</h3><p>'+esc(info)+'</p><div class="actions">'+primary+native+'</div></article>';
+ }
+ function render(){
+  [...buttons.children].forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.section===section)));
+  codeFilters();
+  const records=data.filter(r=>(section==='all'||r.section===section)&&(section!=='code'||sub==='all'||r.sub===sub)
+    &&(!query||(r.name+' '+r.sub+' '+labels[r.section]).toLowerCase().includes(query)));
+  get('sectionTitle').textContent=labels[section];
+  const showGR=(section==='rules'||section==='all')&&(!query||'gr government resolutions circulars technical rules'.includes(query));
+  get('matchCount').textContent=(records.length+(showGR?1:0))+' document'+(records.length+(showGR?1:0)===1?'':'s');
+  get('bookGrid').innerHTML=records.map(bookCard).join('')+
+   (showGR?'<article class="book"><span class="tag">Government Resolutions</span><h3>Technical GR / Circular Register</h3><p>Digital index for technical GRs. This is a reader, not a single source PDF.</p><div class="actions"><a class="primary" href="./gr_library.html">Open GR Library</a></div></article>':'');
+  get('emptyResults').style.display=records.length||showGR?'none':'block';
+ }
+ get('libSearch').addEventListener('input',e=>{query=e.target.value.toLowerCase().trim();render()});
+ render();
+})();
+</script>
+<script src="./app-shell.js"></script></body></html>
