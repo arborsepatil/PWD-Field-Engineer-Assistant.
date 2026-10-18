@@ -396,7 +396,15 @@ window.PWDBridge2002SourceAudit={
     58
    ],
    "sheetNumber": "BR-NGP/2002-047",
-   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 58. Detailed dimensions and DWG comparison remain pending."
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 58. Detailed dimensions and DWG comparison remain pending.",
+   "titleComparison": {
+    "status": "INDEX_SHEET_TITLE_WORDING_DIFFERS",
+    "indexTitle": "Details of P.C.C. piers resting on soil — spans 3, 4 & 5 m",
+    "scannedSheetTitle": "Details of P.C.C. piers — spans 3, 4 and 5 m c/c",
+    "explanation": "Index says 'resting on soil'; the scanned title-block heading does not include that qualifier.",
+    "pdfPage": 58,
+    "verification": "Documentary comparison of 2002 original scanned index page 3 and actual scanned drawing title block, not a DWG or dimensional approval."
+   }
   },
   "048": {
    "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
@@ -404,7 +412,15 @@ window.PWDBridge2002SourceAudit={
     59
    ],
    "sheetNumber": "BR-NGP/2002-048",
-   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 59. Detailed dimensions and DWG comparison remain pending."
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 59. Detailed dimensions and DWG comparison remain pending.",
+   "titleComparison": {
+    "status": "INDEX_SHEET_TITLE_WORDING_DIFFERS",
+    "indexTitle": "Details of P.C.C. piers resting on soil — spans 6, 7 & 8 m",
+    "scannedSheetTitle": "Details of P.C.C. piers — spans 6, 7 and 8 m c/c",
+    "explanation": "Index says 'resting on soil'; the scanned title-block heading does not include that qualifier.",
+    "pdfPage": 59,
+    "verification": "Documentary comparison of 2002 original scanned index page 3 and actual scanned drawing title block, not a DWG or dimensional approval."
+   }
   },
   "049": {
    "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
@@ -412,7 +428,15 @@ window.PWDBridge2002SourceAudit={
     60
    ],
    "sheetNumber": "BR-NGP/2002-049",
-   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 60. Detailed dimensions and DWG comparison remain pending."
+   "sourceNote": "Original 2002 drawing number and descriptive title visually checked on scanned PDF page 60. Detailed dimensions and DWG comparison remain pending.",
+   "titleComparison": {
+    "status": "INDEX_SHEET_TITLE_WORDING_DIFFERS",
+    "indexTitle": "Details of P.C.C. piers resting on soil — spans 9 & 10 m",
+    "scannedSheetTitle": "Details of P.C.C. piers — spans 9 and 10 m c/c",
+    "explanation": "Index says 'resting on soil'; the scanned title-block heading does not include that qualifier.",
+    "pdfPage": 60,
+    "verification": "Documentary comparison of 2002 original scanned index page 3 and actual scanned drawing title block, not a DWG or dimensional approval."
+   }
   },
   "050": {
    "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
@@ -445,7 +469,15 @@ window.PWDBridge2002SourceAudit={
    ],
    "sheetNumber": "BR-NGP/2002-53",
    "issue": "The source index prints BR-NGP/2002-053, while the scanned sheet title block displays BR-NGP/2002-53 (leading-zero formatting difference). Do not silently change the source number.",
-   "sourceNote": "Drawing title block visually inspected at PDF page 64. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+   "sourceNote": "Drawing title block visually inspected at PDF page 64. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified.",
+   "titleComparison": {
+    "status": "INDEX_SHEET_TITLE_WORDING_DIFFERS",
+    "indexTitle": "Details of R.C.C. pier cap with RCC stopper",
+    "scannedSheetTitle": "Details of R.C.C. pier cap with RCC stopper",
+    "explanation": "Index states 'Details of pier caps', but scanned title identifies a specific RCC stopper.",
+    "pdfPage": 64,
+    "verification": "Documentary comparison of 2002 original scanned index page 3 and actual scanned drawing title block, not a DWG or dimensional approval."
+   }
   },
   "054": {
    "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
@@ -504,7 +536,15 @@ window.PWDBridge2002SourceAudit={
    ],
    "sheetNumber": "BR-NGP/2002-60",
    "issue": "The source index prints BR-NGP/2002-060, while the scanned sheet title block displays BR-NGP/2002-60 (leading-zero formatting difference). Do not silently change the source number.",
-   "sourceNote": "Drawing title block visually inspected at PDF page 72. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+   "sourceNote": "Drawing title block visually inspected at PDF page 72. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified.",
+   "titleComparison": {
+    "status": "INDEX_SHEET_TITLE_WORDING_DIFFERS",
+    "indexTitle": "Raft reinforcement — two-lane single-span bridge",
+    "scannedSheetTitle": "Details of reinforcement in raft for two-lane single-span bridge",
+    "explanation": "The index describes notes and schedule; scanned sheet title describes reinforcement details.",
+    "pdfPage": 72,
+    "verification": "Documentary comparison of 2002 original scanned index page 3 and actual scanned drawing title block, not a DWG or dimensional approval."
+   }
   },
   "061": {
    "status": "INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT",
@@ -513,7 +553,15 @@ window.PWDBridge2002SourceAudit={
    ],
    "sheetNumber": "BR-NGP/2002-61",
    "issue": "The source index prints BR-NGP/2002-061, while the scanned sheet title block displays BR-NGP/2002-61 (leading-zero formatting difference). Do not silently change the source number.",
-   "sourceNote": "Drawing title block visually inspected at PDF page 73. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+   "sourceNote": "Drawing title block visually inspected at PDF page 73. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified.",
+   "titleComparison": {
+    "status": "INDEX_SHEET_TITLE_WORDING_DIFFERS",
+    "indexTitle": "Raft reinforcement — two-lane two-span bridge",
+    "scannedSheetTitle": "Details of reinforcement in raft for two-lane two-span bridge",
+    "explanation": "The index describes notes and schedule; scanned sheet title describes reinforcement details.",
+    "pdfPage": 73,
+    "verification": "Documentary comparison of 2002 original scanned index page 3 and actual scanned drawing title block, not a DWG or dimensional approval."
+   }
   },
   "062": {
    "status": "INDEX_VS_SCAN_NUMBER_FORMAT_VARIANT",
@@ -522,7 +570,15 @@ window.PWDBridge2002SourceAudit={
    ],
    "sheetNumber": "BR-NGP/2002-62",
    "issue": "The source index prints BR-NGP/2002-062, while the scanned sheet title block displays BR-NGP/2002-62 (leading-zero formatting difference). Do not silently change the source number.",
-   "sourceNote": "Drawing title block visually inspected at PDF page 74. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified."
+   "sourceNote": "Drawing title block visually inspected at PDF page 74. The printed number omits the zero present in the index. Technical dimensions and original DWG not verified.",
+   "titleComparison": {
+    "status": "INDEX_SHEET_TITLE_WORDING_DIFFERS",
+    "indexTitle": "Raft reinforcement — two-lane multi-span bridge",
+    "scannedSheetTitle": "Details of reinforcement in raft for two-lane multi-span bridge (more than two)",
+    "explanation": "The index describes notes and schedule; scanned sheet title describes reinforcement details.",
+    "pdfPage": 74,
+    "verification": "Documentary comparison of 2002 original scanned index page 3 and actual scanned drawing title block, not a DWG or dimensional approval."
+   }
   },
   "063": {
    "status": "VISUAL_TITLE_BLOCK_NUMBER_CHECKED",
@@ -599,5 +655,15 @@ window.PWDBridge2002SourceAudit={
   90,
   91
  ],
- "verificationMethod": "Human visual reading of original scanned title-block images; no OCR and no inferred drawing dimensions."
+ "verificationMethod": "Human visual reading of original scanned title-block images; no OCR and no inferred drawing dimensions.",
+ "indexVsSheetTitleDifferences": [
+  "047",
+  "048",
+  "049",
+  "053",
+  "060",
+  "061",
+  "062"
+ ],
+ "titleComparisonBasis": "Visually checked seven conspicuous discrepancies between original index wording and scanned drawing title blocks. Lack of a warning is not an assertion of full title equivalence; attached original DWGs remain unavailable."
 };
