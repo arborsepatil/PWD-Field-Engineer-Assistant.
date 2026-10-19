@@ -1213,7 +1213,7 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  const nearly=(a,b,name,tol=1e-9)=>
   assert.ok(Number.isFinite(a)&&Math.abs(a-b)<=tol*Math.max(1,Math.abs(b)),
    name+': '+a+' expected '+b);
- const p={H:2.5,L:10,excD:.8,filterT:.3,weepH:2,weepV:1,
+ const p={H:2.5,L:10,excD:.8,filterT:.3,
   lowTW:.6,lowBack:.3,lowFront:.3,lowPccT:.15,lowSolT:.15,lowGrade:'M15',strictSolT:.2};
  const lower=core.calculate(p);
  assert.equal(lower.strict,false,'H=2.5 m must follow the existing lower wall section');
@@ -1222,9 +1222,6 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  nearly(lower.concrete,22.8125,'Lower total wall concrete');
  nearly(lower.pccW,1.825,'Lower footing width');
  nearly(lower.exc,14.6,'Excavation quantity');
- assert.equal(lower.weepRows,3,'Grid levels follow maximum spacing convention for H=2.5');
- assert.equal(lower.weepColumns,5,'Grid columns follow maximum spacing convention for L=10');
- assert.equal(lower.weepApprox,15,'Weep count grid not consistent with spacing');
  const p4=core.calculate({...p,H:4});
  assert.equal(p4.strict,true,'H=4 m must use existing higher-wall profile');
  nearly(p4.wallArea,4.8275,'Higher-wall area independently verified by profile integration');
@@ -1269,7 +1266,7 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
   nearly(Math.abs(twice/2),d.wallArea,'Polygon area must equal quantity area H='+H);
  }
  const bad=[{H:.4}, {H:10.01},{H:''},{L:0},{L:''},{excD:-1},{filterT:-.2},
-  {weepH:0},{weepV:0},{lowTW:0.1},{lowBack:-.1},{lowFront:-.1},
+  {lowTW:0.1},{lowBack:-.1},{lowFront:-.1},
   {lowPccT:0},{lowSolT:.35},{lowGrade:'M55'},{H:4,strictSolT:.4}];
  for(const change of bad)
   assert.throws(()=>core.calculate({...p,...change}),/must|required|Choose|Check/,
@@ -1294,20 +1291,23 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(file.includes('id="dimensionSummary"'),'Printed report is missing adopted dimensions');
  assert.ok(file.includes('id="copyWallStatus"'),'Mobile copy/download feedback missing');
  const schedule=core.measurementRows(p4);
- assert.equal(schedule.length,6,'Working sheet should contain six preserved quantities');
+ assert.equal(schedule.length,5,'Working sheet must contain five relevant geometric quantity rows');
  assert.deepEqual(Array.from(schedule.map(x=>x.item)),[
    'Excavation','Rubble soling','PCC / footing',
-   'Wall concrete (M15)','Filter / rubble backing','Weep-hole count (approx.)'
+   'Wall concrete (M15)','Filter / rubble backing'
  ],'Existing quantity categories must not change');
- const totals=[p4.exc,p4.soling,p4.pcc,p4.concrete,p4.filter,p4.weepApprox];
+ const totals=[p4.exc,p4.soling,p4.pcc,p4.concrete,p4.filter];
  for(let i=0;i<schedule.length;i++){
    nearly(schedule[i].quantity,totals[i],'Working-sheet quantity '+schedule[i].item);
    if(schedule[i].unit==='m³')nearly(schedule[i].crossSection*p4.L,schedule[i].quantity,
      'Section per running metre × length: '+schedule[i].item);
  }
  nearly(schedule[3].crossSection,p4.wallArea,'Wall m² per running metre');
- assert.ok(schedule[5].unit==='nos.'&&schedule[5].crossSection===null,
-   'Weep count must never be described as m³');
+ assert.ok(schedule.every(r=>r.unit==='m³'),'Remaining quantity rows must be only geometric volumes');
+ assert.ok(!/weep/i.test(file),'Removed weep-hole concept is still exposed in the wall UI');
+ assert.ok(!/weep/i.test(coreJS),'Removed weep-hole concept is still present in the wall calculation code');
+ assert.ok(!/weep/i.test(sheet),'Removed weep-hole concept is still present in the measurement export');
+ assert.ok(!Object.keys(p4).some(k=>/weep/i.test(k)),'Retired weep-hole properties should not appear in computed result');
  const sheet=core.exportCSV(p4,'=HYPERLINK("https://invalid.test","malicious")');
  assert.ok(sheet.startsWith('\uFEFF'),'Working CSV should support Unicode in spreadsheets');
  assert.ok(sheet.includes("'\u003dHYPERLINK("),'Project text could be interpreted as an Excel formula');
@@ -1408,5 +1408,5 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
    'On-screen setting-out table and SVG must use matching height precision');
  assert.ok(!file.includes('min-width:620px'),
    'Mobile drawings should not force an oversized fixed minimum width');
- process.stdout.write('Retaining Wall QA passed: 14 cross-section heights, correct segment order, polygon area, quantities, drainage grid and input validation\n');
+ process.stdout.write('Retaining Wall QA passed: 14 cross-section heights, correct segment order, polygon area, five geometric quantities, no weep-hole feature and input validation\n');
 }
