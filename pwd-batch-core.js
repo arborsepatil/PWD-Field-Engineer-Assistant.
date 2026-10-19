@@ -18,7 +18,7 @@ function scale(source,volume,wc){
    scaled[key]=n*v;
  }
  const bags=source.c*v,cementKg=bags*BAGKG;
- return {factor:v,volumeM3:v,bags,cementKg,orderBags:Math.ceil(bags-1e-10),water:cementKg*waterCement,...scaled};
+ return {factor:v,volumeM3:v,bags,cementKg,orderBags:Math.max(1,Math.ceil(bags-1e-10)),water:cementKg*waterCement,...scaled};
 }
 function ajax(source,{basis='volume',volume=.5,bags=4,wc=.5,total=0}={}){
  const w=wcRatio(wc);
