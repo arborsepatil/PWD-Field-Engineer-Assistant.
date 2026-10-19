@@ -23,7 +23,16 @@ small,.small{font-size:.78rem;color:var(--mut);line-height:1.35}.effect{font-siz
 footer{margin-top:18px;color:var(--mut);font-size:.76rem;line-height:1.4}
 @media(max-width:700px){.tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.grid,.grid3,.resultGrid{grid-template-columns:1fr}header{border-radius:0 0 14px 14px}}
 @media print{.tabs,.noPrint,.actions{display:none!important}body{background:#fff}.wrap{max-width:none;padding:0}.card{box-shadow:none;break-inside:avoid}header{margin:0;border-radius:0}}
-</style><link rel="stylesheet" href="./app-global.css"><link rel="stylesheet" href="./concrete-ui-polish.css"></head>
+</style><link rel="stylesheet" href="./app-global.css"><link rel="stylesheet" href="./concrete-ui-polish.css"><style>
+/* Batch Assistant-specific three-tab layout overrides generic five-tool concrete styling. */
+.tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.tab{white-space:normal!important;min-height:62px!important;overflow-wrap:anywhere!important}
+.secondary-link,.nomPick{background:var(--c-card,#fff)!important;color:var(--c-ink,#17242a)!important;border-color:var(--c-line,#d7e0e3)!important}
+.secondary-link{color:var(--c-accent,#0f4c5c)!important}
+.nomPick[aria-pressed="true"]{border:2px solid var(--c-accent,#0f4c5c)!important;background:var(--c-soft,#eef6fa)!important}
+.nomPick{min-height:90px}
+@media(max-width:600px){.tab{font-size:.78rem!important;padding:9px 5px!important}.tab span{font-size:.60rem!important}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style></head>
 <body><div class="module-shellbar noPrint"><a class="home" href="./index.html">‹ PWD Tools</a><span class="crumb">Concrete · Batch Assistant</span><span class="spacer"></span><a href="./settings.html" aria-label="Settings">⚙ Settings</a></div><div class="wrap">
 <header><h1>Concrete Batch Assistant</h1><div class="sub">Material calculation & order · AJAX site batching · nominal mix ratio · existing PWD source rows</div></header>
 
