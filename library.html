@@ -26,6 +26,12 @@
 .book .actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:13px}
 .book .actions a{font-size:12px;border-radius:10px;padding:9px 11px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:750;min-height:38px}
 .book .actions a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.offline-tools{border:1px solid var(--line);border-radius:17px;background:var(--card);padding:13px;margin-top:12px}
+.offline-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.offline-actions button,.book .actions button{font:inherit;font-size:12px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-height:38px;background:var(--card);color:var(--ink);cursor:pointer;font-weight:700}
+.offline-actions button:disabled,.book .actions button:disabled{opacity:.55;cursor:wait}
+.offline-notice{font-size:12px;color:var(--muted);line-height:1.6;margin:8px 0 0}
+.offline-tag{background:color-mix(in srgb,var(--ok) 11%,var(--card));color:var(--ok);border-color:var(--ok)}
+.offline-filter{font-size:12px;display:inline-flex;align-items:center;gap:5px}
 .empty{display:none;text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:15px;padding:20px;color:var(--muted)}
 @media(max-width:680px){.lib-grid{grid-template-columns:1fr}.lib-hero h1{font-size:23px}.categories button{padding:8px 10px;font-size:11px}}
 </style></head>
@@ -34,7 +40,7 @@
 <section class="lib-hero"><div class="eyebrow">PWD Engineering Reference Library</div><h1>Books in the right section</h1>
 <p>Codes, specifications, SSR, bridge plans, guidelines and rules are grouped by publication. Open the original PDF inside the app when Drive preview allows it, or open Drive directly. For offline viewing, select a private on-device copy. No book PDFs are published with the app.</p>
 <div class="lib-note"><b>Drive catalog snapshot · 18 October 2026.</b> Only PDFs found during the connected Drive scan are listed. This list is a snapshot, not automatic Drive synchronization. Older editions may be superseded; always verify the applicable revision, amendments and project specification before engineering use.</div></section>
-<div class="library-search"><span aria-hidden="true">🔎</span><input id="libSearch" type="search" autocomplete="off" placeholder="Search IS 456, IRC 78, SSR, Code, bridge…" aria-label="Search Drive PDF titles"></div>
+<div class="offline-tools" aria-label="Offline PDF Library"><div class="offline-actions"><button type="button" id="bulkImport">Save multiple PDFs</button><button type="button" id="prepareOfflineReader">Prepare offline reader</button><label class="offline-filter"><input type="checkbox" id="showOfflineOnly"> Offline books only</label></div><input type="file" id="offlineOne" accept=".pdf,application/pdf" hidden><input type="file" id="offlineMany" accept=".pdf,application/pdf" multiple hidden><p id="offlineProgress" class="offline-notice" role="status" aria-live="polite">Checking saved books on this device…</p><p class="offline-notice">Offline setup: while online, prepare the PDF reader once. Then select PDFs stored in your phone using Save PDF or Save multiple PDFs. Each book is private to this browser and phone; sign-in to Drive is not needed after saving. An original PDF is not automatically downloaded from Drive.</p></div><div class="library-search"><span aria-hidden="true">🔎</span><input id="libSearch" type="search" autocomplete="off" placeholder="Search IS 456, IRC 78, SSR, Code, bridge…" aria-label="Search Drive PDF titles"></div>
 <nav class="categories" id="libraryTabs" aria-label="Library sections"></nav>
 <nav class="subgroups" id="librarySubgroups" aria-label="Code category filters" hidden></nav>
 <div class="section-title"><h2 id="sectionTitle">All PDFs</h2><span class="count" id="matchCount"></span></div>
@@ -42,7 +48,7 @@
 <div class="empty" id="emptyResults">No matching PDF found in this Library section. Check the spelling or choose All PDFs.</div>
 <div class="lib-note" style="margin-top:16px"><b>Source handling:</b> Google Drive permissions stay unchanged. The app displays filenames and private Drive links. PDFs you select for offline reading stay in this browser's private device storage, not GitHub. This storage can be cleared or evicted by your device. Digital readers remain distinct from their original PDF.</div>
 </main>
-<script src="./library-drive-catalog.js"></script>
+<script src="./library-drive-catalog.js"></script><script src="./library-offline.js"></script>
 <script>
 (function(){
  'use strict';
@@ -56,7 +62,7 @@
  const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const params=new URLSearchParams(location.search);
  const start=params.get('section');
- let section=groups.some(x=>x[0]===start)?start:'all',sub='all',query='';
+ let section=groups.some(x=>x[0]===start)?start:'all',sub='all',query='',saved={},readerReady=false,offlineOnly=false;
  const buttons=get('libraryTabs'),subgroups=get('librarySubgroups');
  function select(next){
   section=next;sub='all';
@@ -86,16 +92,18 @@
   const local=record.viewer||'./pdf_viewer.html?file='+encodeURIComponent(record.id);
   const native='<a href="'+esc(local)+'">Read PDF in app</a>';
   const external='<a href="'+esc(drive)+'" target="_blank" rel="noopener noreferrer">Google Drive ↗</a>';
+  const isSaved=!!saved[record.id];
+  const offline='<button type="button" data-offline-save="'+esc(record.id)+'">'+(isSaved?'Replace saved PDF':'Save PDF on device')+'</button>'+(isSaved?'<button type="button" data-offline-export="'+esc(record.id)+'">Export copy</button><button type="button" data-offline-remove="'+esc(record.id)+'">Remove offline</button>':'');
   const info=isBridge?'Drawing index is separate from the original private PDF. Detailed drawing QA and DWG checks are pending.':
    record.section==='code'?'Original published edition as named in Drive · check applicability and amendments.':
    record.section==='ssr'?'Historical SSR reference · confirm the applicable schedule and year.':
    'Original Drive publication · check the applicable edition.';
-  return '<article class="book"><span class="tag">'+esc(record.sub)+'</span><h3>'+esc(record.name)+'</h3><p>'+esc(info)+'</p><div class="actions">'+primary+native+external+'</div></article>';
+  return '<article class="book"><span class="tag">'+esc(record.sub)+'</span> <span class="tag '+(isSaved?'offline-tag':'')+'">'+(isSaved?'Saved offline':'Not saved')+'</span><h3>'+esc(record.name)+'</h3><p>'+esc(info)+'</p><div class="actions">'+primary+native+external+offline+'</div></article>';
  }
  function render(){
   [...buttons.children].forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.section===section)));
   codeFilters();
-  const records=data.filter(r=>(section==='all'||r.section===section)&&(section!=='code'||sub==='all'||r.sub===sub)
+  const records=data.filter(r=>(section==='all'||r.section===section)&&(section!=='code'||sub==='all'||r.sub===sub)&&(!offlineOnly||!!saved[r.id])
     &&(!query||(r.name+' '+r.sub+' '+labels[r.section]).toLowerCase().includes(query)));
   get('sectionTitle').textContent=labels[section];
   const showGR=(section==='rules'||section==='all')&&(!query||'gr government resolutions circulars technical rules'.includes(query));
@@ -104,8 +112,107 @@
    (showGR?'<article class="book"><span class="tag">Government Resolutions</span><h3>Technical GR / Circular Register</h3><p>Digital index for technical GRs. This is a reader, not a single source PDF.</p><div class="actions"><a class="primary" href="./gr_library.html">Open GR Library</a></div></article>':'');
   get('emptyResults').style.display=records.length||showGR?'none':'block';
  }
+ const offline=window.PWDOfflineLibrary;
+ const progress=get('offlineProgress'),one=get('offlineOne'),many=get('offlineMany');
+ let chosenId=null,doing=false;
+ const notice=msg=>{progress.textContent=msg};
+ async function refreshOffline(){
+   try{
+     saved=await offline.list();
+     readerReady=await offline.rendererReady();
+     notice(Object.keys(saved).length+' of '+data.length+' PDFs saved on this phone · PDF renderer '+(readerReady?'ready offline':'not prepared')+' · private browser storage can be cleared by your device.');
+   }catch(e){saved={};notice('Private storage unavailable: '+e.message+'. Try another browser or open PDFs through Files.')}
+   render();
+ }
+ const busy=active=>{
+   doing=active;
+   get('bulkImport').disabled=active;
+   get('prepareOfflineReader').disabled=active;
+   document.querySelectorAll('[data-offline-save],[data-offline-remove],[data-offline-export]').forEach(b=>b.disabled=active);
+ };
  get('libSearch').addEventListener('input',e=>{query=e.target.value.toLowerCase().trim();render()});
+ get('showOfflineOnly').onchange=e=>{offlineOnly=e.target.checked;render()};
+ get('bulkImport').onclick=()=>{if(!doing)many.click()};
+ get('prepareOfflineReader').onclick=async()=>{
+   if(doing)return;
+   busy(true);notice('Preparing the PDF renderer for offline reading…');
+   try{
+     await offline.prepareRenderer();
+     const durable=await offline.requestDurableStorage();
+     notice('PDF renderer is saved for offline use. '+(durable?'Device granted persistent storage.':'Keep a backup in Files; your browser may remove app storage.'));
+   }catch(e){notice('Could not prepare offline reader: '+e.message)}
+   finally{busy(false);await refreshOffline()}
+ };
+ get('bookGrid').addEventListener('click',async e=>{
+   const button=e.target.closest('button[data-offline-save],button[data-offline-remove],button[data-offline-export]');
+   if(!button||doing)return;
+   const id=button.dataset.offlineSave||button.dataset.offlineRemove||button.dataset.offlineExport;
+   const record=data.find(r=>r.id===id);
+   if(!record)return;
+   if(button.hasAttribute('data-offline-save')){
+     chosenId=id;one.click();return;
+   }
+   if(button.hasAttribute('data-offline-remove')){
+     if(!confirm('Remove the offline copy of '+record.name+' from this device? The Google Drive original remains unchanged.'))return;
+     busy(true);
+     try{await offline.remove(id);await refreshOffline()}
+     catch(error){notice('Could not remove offline book: '+error.message)}
+     finally{busy(false)}
+     return;
+   }
+   if(button.hasAttribute('data-offline-export')){
+     busy(true);
+     try{
+       const file=await offline.get(id);
+       if(!file)throw Error('This PDF is no longer saved.');
+       offline.exportCopy(file,file.name);
+       notice('Sent '+file.name+' to your browser Downloads/Files. Keep this backup to move to another phone.');
+     }catch(error){notice('Could not export PDF: '+error.message)}
+     finally{busy(false)}
+   }
+ });
+ one.onchange=async()=>{
+   const file=one.files?.[0],id=chosenId;
+   one.value='';chosenId=null;
+   if(!file||!id)return;
+   const record=data.find(r=>r.id===id);
+   if(!record)return;
+   let mismatch=false;
+   if(!offline.fileMatch(file,record)){
+     mismatch=true;
+     if(!confirm('Selected filename: '+file.name+'\nExpected: '+record.name+'\n\nOnly continue if you personally checked that this is the SAME publication and edition. The app cannot verify contents. Save under this book?'))return;
+   }
+   if(saved[id]&&!confirm('Replace the previously saved offline copy of '+record.name+'?'))return;
+   busy(true);notice('Saving '+record.name+' privately on this device…');
+   try{
+     await offline.save(id,file,{allowDifferentName:mismatch,replace:!!saved[id]});
+     await offline.requestDurableStorage();
+     await refreshOffline();
+   }catch(error){notice('Could not save '+record.name+': '+error.message)}
+   finally{busy(false)}
+ };
+ many.onchange=async()=>{
+   const files=Array.from(many.files||[]);many.value='';
+   if(!files.length||doing)return;
+   busy(true);
+   let added=0,skipped=0,failed=0;
+   const lookup=new Map(data.map(r=>[offline.normalized(r.name),r]));
+   for(const file of files){
+     const record=lookup.get(offline.normalized(file.name));
+     if(!record||saved[record.id]){skipped++;continue}
+     try{
+       notice('Saving '+(added+skipped+failed+1)+' / '+files.length+': '+file.name);
+       await offline.save(record.id,file);
+       added++;
+     }catch{failed++}
+   }
+   await offline.requestDurableStorage();
+   await refreshOffline();
+   notice(added+' PDFs saved offline; '+skipped+' skipped (name not matched or already saved); '+failed+' failed. Review green Saved offline labels. Only exact filename matches are imported automatically.');
+   busy(false);
+ };
  render();
+ refreshOffline();
 })();
 </script>
 <script src="./app-shell.js"></script></body></html>
