@@ -76,11 +76,63 @@ function calculate(v){
  const controls=checkpoints.sort((a,b)=>a-b).filter((x,i,arr)=>i===0||x-arr[i-1]>EPS)
    .map(depth=>profileAt(H,TW,depth));
  return {H,L,TW,strict,wallArea:geo.wallArea,baseW,pccW,pccT,solT,grade,
-  backOff,frontOff,concrete,pcc,soling,exc,filter,filterT,weepH,weepV,
+  backOff,frontOff,concrete,pcc,soling,exc,excD,filter,filterT,weepH,weepV,
   weepColumns,weepRows,weepApprox,sections:geo.segments,stations:geo.stations,controls,
   frontBreak:geo.frontBreak,backBreak:geo.backBreak,BRASS,
   excavationReminder:excD<pccT+solT-EPS,
   profileReminder:true};
 }
-root.PWDWallCore={BRASS,input,profileAt,section,calculate};
+function measurementRows(d){
+ if(!d||!Number.isFinite(d.wallArea)||!(d.L>0))throw Error('Calculate a valid wall section before exporting.');
+ return [
+  {item:'Excavation',basis:'Rectangular trench: footing width × excavation depth × length',
+   width:d.pccW,depth:d.excD,crossSection:d.pccW*d.excD,length:d.L,unit:'m³',quantity:d.exc,
+   note:'Working-space and actual excavation profile excluded'},
+  {item:'Rubble soling',basis:'Footing width × soling thickness × length',
+   width:d.pccW,depth:d.solT,crossSection:d.pccW*d.solT,length:d.L,unit:'m³',quantity:d.soling,
+   note:'Under the footing; confirm actual dimensions'},
+  {item:'PCC / footing',basis:'Footing width × footing thickness × length',
+   width:d.pccW,depth:d.pccT,crossSection:d.pccW*d.pccT,length:d.L,unit:'m³',quantity:d.pcc,
+   note:'Footing and wall concrete measured separately'},
+  {item:'Wall concrete ('+d.grade+')',basis:'Integrated wall polygon area × length',
+   width:null,depth:null,crossSection:d.wallArea,length:d.L,unit:'m³',quantity:d.concrete,
+   note:'Existing profile only; not a stability or design check'},
+  {item:'Filter / rubble backing',basis:'Rectangular filter thickness × wall height × length',
+   width:d.filterT,depth:d.H,crossSection:d.filterT*d.H,length:d.L,unit:'m³',quantity:d.filter,
+   note:'Real backing extent and drainage need drawing confirmation'},
+  {item:'Weep-hole count (approx.)',basis:'Spacing grid: '+d.weepColumns+' columns × '+d.weepRows+' rows',
+   width:null,depth:null,crossSection:null,length:null,unit:'nos.',quantity:d.weepApprox,
+   note:'Indicative count only; no holes or pipe volume deducted'}
+ ];
+}
+function safeCell(value){
+ const s=String(value===null||value===undefined?'':value);
+ // Excel treats =,+,-,@ and leading whitespace + formula prefixes as formulas.
+ // Only untrusted text uses this protection. Numeric engineering quantities stay numbers.
+ const guarded=/^[\s]*[=+\-@\t\r]/.test(s)?"'"+s:s;
+ return '"'+guarded.replace(/"/g,'""')+'"';
+}
+function exportCSV(d,project=''){
+ const rows=[
+  ['PWD RETAINING WALL — GEOMETRIC MEASUREMENT SHEET (NOT GOVERNMENT BOQ)'],
+  ['Work / project',project],
+  ['Profile',d.strict?'Existing higher-wall piecewise profile':'Existing lower-wall profile'],
+  ['Wall height (m)',d.H],['Length (m)',d.L],
+  ['Top width (m)',d.TW],['Base width (m)',d.baseW],
+  ['Footing width (m)',d.pccW],['Back projection (m)',d.backOff],
+  ['Front projection (m)',d.frontOff],['Footing thickness (m)',d.pccT],
+  ['Soling thickness (m)',d.solT],['Excavation depth (m)',d.excD],
+  ['Filter thickness (m)',d.filterT],['Concrete grade',d.grade],
+  [],['QUANTITY SHEET'],
+  ['Item','Calculation basis','Cross-section / unit length (m²)','Length (m)','Unit','Quantity','Caution'],
+  ...measurementRows(d).map(r=>[r.item,r.basis,r.crossSection,r.length,r.unit,r.quantity,r.note]),
+  [],['FIELD WIDTH CONTROL — FIXED TOP CENTRELINE'],
+  ['Depth below top (m)','Back from centreline (m)','Front from centreline (m)','Total wall width (m)'],
+  ...d.controls.map(p=>[p.depth,p.back,p.front,p.total]),
+  [],['Source / limitation','Preliminary geometric calculation only. Verify the project-specific approved drawing, actual levels, excavation profile, drainage, stability and measurements.'],
+  ['Status','Not an official tender abstract, certified structural design or government-approved quantity.']
+ ];
+ return '\uFEFF'+rows.map(row=>row.map(safeCell).join(',')).join('\r\n')+'\r\n';
+}
+root.PWDWallCore={BRASS,input,profileAt,section,calculate,measurementRows,exportCSV};
 })(typeof window!=='undefined'?window:globalThis);
