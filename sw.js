@@ -65,7 +65,10 @@ self.addEventListener('fetch',event=>{
           return response;
         })
         .catch(async()=>{
-          const cached=await caches.match(req);
+          // Ignore query only for offline HTML navigation so PDFs selected by
+          // ?file=<ID>, ?doc=bridge2023 and Library ?section=ssr use the
+          // already installed HTML shell. Private PDF bytes remain in IndexedDB.
+          const cached=await caches.match(req,{ignoreSearch:true});
           if(cached)return cached;
           const fallback=await caches.match('./index.html');
           return fallback||Response.error();
