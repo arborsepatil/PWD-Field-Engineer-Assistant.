@@ -26,7 +26,7 @@ function profileAt(H,TW,depth){
 }
 function section(H,TW){
  const breaks=H<=2.5?[0,H]:[0,2.5,H-H/5,H].sort((a,b)=>a-b);
- const depths=breaks.filter((d,i)=>i===0||Math.abs(d-breaks[i-1])>EPS);
+ const depths=breaks.filter((d,i)=>i===0||i===breaks.length-1||d!==breaks[i-1]);
  const stations=depths.map(depth=>profileAt(H,TW,depth));
  const segments=[];
  for(let i=1;i<stations.length;i++){
