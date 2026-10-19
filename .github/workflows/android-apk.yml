@@ -1,0 +1,76 @@
+name: Android installable APK
+
+on:
+  pull_request:
+    paths:
+      - 'android/**'
+      - '*.html'
+      - '*.js'
+      - '*.css'
+      - '*.svg'
+      - '*.png'
+      - '*.json'
+      - '.github/workflows/android-apk.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - '*.html'
+      - '*.js'
+      - '*.css'
+      - '*.svg'
+      - '*.png'
+      - '*.json'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-debug-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v4
+      - name: Install compile tools
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Set up Gradle 9.6
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+      - name: Run existing engineering release tests
+        run: node tests/verify-release.mjs
+      - name: Verify Android wrapper security and release scope
+        run: node tests/verify-android.mjs
+      - name: Bundle public engineering assets inside Android APK
+        run: python3 android/scripts/prepare_assets.py
+      - name: Check APK has no PWA installation workflow or private PDFs
+        run: |
+          test -f android/app/src/main/assets/www/pwd_retaining_wall_section_quantity.html
+          test -f android/app/src/main/assets/www/pwd-wall-diagrams.js
+          test -f android/app/src/main/assets/www/pwd_mix_batch_assistant.html
+          ! grep -q 'navigator.serviceWorker.register' android/app/src/main/assets/www/index.html
+          ! find android/app/src/main/assets/www -iname '*.pdf' | grep -q .
+      - name: Build INSTALLABLE Android debug APK
+        working-directory: android
+        run: gradle --no-daemon --stacktrace :app:assembleDebug
+      - name: Check APK signature and Android package ID
+        run: |
+          test -s android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_SDK_ROOT/build-tools/36.0.0/apksigner" verify --verbose --print-certs android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_SDK_ROOT/build-tools/36.0.0/aapt" dump badging android/app/build/outputs/apk/debug/app-debug.apk | grep "package: name='in.pwdtools.fieldassistant'"
+      - name: Publish installable APK for testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: PWD-Field-Assistant-Android-TEST-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
