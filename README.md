@@ -41,6 +41,17 @@ The Library contains 73 catalogued **Drive links and titles**, not book PDFs. Or
 - Offline status means the browser retained a PDF file, **not** that its contents, edition, title block, revision or engineering applicability have been verified.
 - **Read PDF in app** may display Google Drive preview when a local PDF is absent. If Google blocks embedded preview, **Google Drive** remains the online fallback.
 
+## Retaining Wall — section/quantity polish
+
+- The tool **retains the existing project's two geometric profiles**: lower (H ≤ 2.50 m) and the fixed piecewise section (2.50 m < H ≤ 10.00 m). It does not infer new wall types, design dimensions or stability criteria.
+- The front and back faces change slope at independent depths. The geometry engine orders those breakpoint stations and integrates the trapezoidal cross-sectional segments. This also fixes the schematic breakpoint drawing immediately above 2.50 m; the original *total* mathematical area is unchanged for the existing profile.
+- Field width controls include all exact profile breakpoints, with independent back/front widths from the top centreline. Wall/PCC/soling/excavation/backing quantities are distinct, with visible units and rounded display values.
+- Quantity inputs are range-checked, invalid or missing values are rejected, and outputs update in place. The diagram fits the phone width, supports pinch-to-zoom and touch dragging without zoom buttons, and its computed quantity summary can be copied or printed.
+- Weep-hole counts are **spacing-grid estimates only** (rounded horizontal positions × vertical levels), not construction arrangements. Excavation assumes a rectangular width and user-entered depth; filter backing assumes a rectangular strip. A shallow excavation depth relative to footing + soling displays a review warning.
+- **Not implemented:** retaining-wall stability, soil pressure, bearing capacity, overturning/sliding, detailed reinforcement, approval of plans, founding levels or project-specific conditions. All dimensions and assumptions require engineer review against the actual approved drawing and applicable project specifications.
+- Two additional engineering conditions are intentionally reserved for later when the engineer supplies their exact requirements. They have **not** been invented or silently inserted.
+- Release smoke tests cover 14 heights around 2.50 m, 3.125 m and 5.00 m transitions, positive segment heights, independent polygon area, quantities, input validation and offline files. Physical mobile acceptance and project-source checking remain pending.
+
 ## Converter factor governance
 
 - International foot/yard/mile, square mile and acre relationships follow the international-foot conventions summarized by NIST: https://www.nist.gov/pml/us-surveyfoot/revised-unit-conversion-factors
