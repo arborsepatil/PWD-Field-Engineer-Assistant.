@@ -63,7 +63,44 @@ function calc(scroll=true){
   updateButtons(false);
  }
 }
-function render(d){$('casePill').textContent=d.strict?'H > 2.50 m · Strict standard':'H ≤ 2.50 m · Lower wall';$('gradePill').textContent='Concrete '+d.grade;$('projectPill').textContent=$('project').value.trim()||'Project not entered';$('stats').innerHTML=[['Top width',fmt(d.TW,2)+' m'],['Wall base width',fmt(d.baseW,3)+' m'],['PCC / footing width',fmt(d.pccW,3)+' m'],['Concrete',fmt(d.concrete,3)+' m³']].map(x=>'<div class="stat"><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');$('qtyRows').innerHTML=[['Excavation',fmt(d.exc,3)+' m³','L × footing width × excavation depth'],['Rubble soling',fmt(d.soling,3)+' m³','Same footprint as footing'],['PCC / footing',fmt(d.pcc,3)+' m³','L × footing width × thickness'],['Wall concrete ('+d.grade+')',fmt(d.concrete,3)+' m³','Piecewise trapezoidal wall section'],['Filter / rubble filling',fmt(d.filter,3)+' m³','L × '+fmt(d.filterT,2)+' × H'],['Approx. weep holes',d.weepApprox+' nos.','Working spacing '+fmt(d.weepH,1)+' m horizontal × '+fmt(d.weepV,1)+' m vertical']].map(x=>'<tr><td><b>'+x[0]+'</b></td><td class="qty"><b>'+x[1]+'</b></td><td>'+x[2]+'</td></tr>').join('');let depths=[];for(let y=0;y<d.H;y+=1)depths.push(+y.toFixed(3));if(!depths.includes(+d.H.toFixed(3)))depths.push(d.H);$('controlRows').innerHTML=depths.map(y=>{const z=dimsAt(d.H,d.TW,y);return'<tr><td>'+fmt(y,2)+' m</td><td>'+fmt(z.back,3)+' m</td><td>'+fmt(z.front,3)+' m</td><td><b>'+fmt(z.total,3)+' m</b></td></tr>'}).join('');$('siteNotes').innerHTML='<div class="note"><b>Drainage:</b> provide weep holes above GL with filter material behind the wall. The displayed count is a working spacing aid, not a substitute for the approved drawing.</div>'+(d.strict&&d.H>5?'<div class="warn"><b>Footing projection:</b> front offset 0.40 m is used for H 5.01–10.00 m. Reinforcement, where required by the standard note/design, must be separately designed and approved.</div>':'')+'<div class="note"><b>Measurement separation:</b> rubble soling below PCC and filter/rubble filling behind wall are kept as separate quantities.</div>';draw(d)}
+function render(d){
+ $('casePill').textContent=d.strict?'H > 2.50 m · Preserved piecewise template':'H ≤ 2.50 m · Lower-wall template';
+ $('gradePill').textContent='Concrete '+d.grade;
+ $('projectPill').textContent=$('project').value.trim()||'Work name not entered';
+ const tiles=[
+  ['Top width',fmt(d.TW,2)+' m'],['Wall base width',fmt(d.baseWidth,3)+' m'],
+  ['Footing width',fmt(d.pccW,3)+' m'],['Wall section area',fmt(d.wallArea,3)+' m²'],
+  ['Wall concrete',fmt(d.concrete,3)+' m³'],['Wall concrete',fmt(d.concrete/WALL.BRASS,3)+' brass']
+ ];
+ $('stats').innerHTML=tiles.map(([label,value])=>'<div class="stat"><small>'+label+'</small><b>'+value+'</b></div>').join('');
+ $('segmentNote').textContent='Integrated in '+d.sections.length+' non-overlapping trapezoidal section(s): '+
+  d.sections.map(x=>fmt(x.from,3)+'–'+fmt(x.to,3)+' m = '+fmt(x.area,4)+' m²').join('; ')+
+  '. Back transition at 2.50 m and front-toe transition at '+fmt(d.H*.8,3)+' m are sorted independently.';
+ const qtyRows=[
+  ['Excavation (gross)',d.exc,'Footing width × excavation depth × wall length; excludes work space, side slopes and irregular ground'],
+  ['Rubble soling',d.soling,'Footing footprint × soling thickness'],
+  ['PCC / footing',d.pcc,'Footing footprint × specified thickness'],
+  ['Wall concrete ('+d.grade+')',d.concrete,'Piecewise trapezoidal cross-section × wall length'],
+  ['Filter / rubble filling',d.filter,'Rectangular planning allowance: length × behind-wall thickness × H; no deductions']
+ ];
+ $('qtyRows').innerHTML=qtyRows.map(([label,value,formula])=>
+   '<tr><td><b>'+label+'</b></td><td class="qty"><b>'+fmt(value,3)+' m³</b><br>'+
+   fmt(value/WALL.BRASS,3)+' brass</td><td>'+formula+'</td></tr>').join('')+
+   '<tr><td><b>Weep-hole spacing aid</b></td><td class="qty"><b>~'+d.weepApprox+' nos.</b></td>'+
+   '<td>'+d.weepColumns+' horizontal × '+d.weepRows+' vertical positions based on entered spacing; not an approved layout or measured payable count</td></tr>';
+ $('controlRows').innerHTML=d.fieldWidths.map(v=>{
+  const important=d.breakpoints.some(x=>Math.abs(x-v.depth)<1e-7);
+  const label=fmt(v.depth,3)+' m'+(important&&v.depth!==0&&Math.abs(v.depth-d.H)>1e-8?' · transition':'');
+  return '<tr><td>'+label+'</td><td>'+fmt(v.back,3)+' m</td><td>'+
+    fmt(v.front,3)+' m</td><td><b>'+fmt(v.total,3)+' m</b></td></tr>';
+ }).join('');
+ $('siteNotes').innerHTML=
+   '<div class="note"><b>Drainage:</b> the weep-hole number is an approximate spacing aid. Confirm the position above ground, outlets, filter layers and approved drawing. Spacing alone does not determine an exact count.</div>'+
+   '<div class="warn"><b>Foundation and stability not checked:</b> sliding, overturning, foundation bearing, settlement, earth/water pressure, reinforcement, loading and site geology are outside this quantity tool. The template does not certify construction safety.</div>'+
+   (d.strict&&d.H>5?'<div class="warn"><b>Projection:</b> the existing template uses a 0.40 m front projection at this height; reinforcement, if applicable, is outside scope.</div>':'')+
+   '<div class="note"><b>Measurement separation:</b> excavation is gross; soling, footing, wall concrete and backfill remain separate. Confirm actual chainages, foundation shape, site levels and authorized item measurement method.</div>';
+ draw(d);
+}
 function draw(d){const svg=$('wallSvg'),W=760,Hsvg=560,scale=Math.min(300/d.H,360/d.pccW),baseY=385,topY=baseY-d.H*scale,clx=355;let pts=[];const topBack=-d.TW/2,topFront=d.TW/2;if(!d.strict){pts=[[topBack,0],[topFront,0],[topFront+d.H/4,d.H],[topBack,d.H]]}else{const y2=d.H-d.H/5;pts=[[topBack,0],[topFront,0],[topFront+y2/4,y2],[topFront+y2/4+d.H/5,d.H],[topBack-(d.H-2.5)/6,d.H],[topBack-(y2-2.5)/6,y2],[topBack,2.5]]}const x=xr=>clx+xr*scale,y=dep=>topY+dep*scale,bottom=dimsAt(d.H,d.TW,d.H),pccLeft=x(-bottom.back-d.backOff),pccRight=x(bottom.front+d.frontOff),pccTop=baseY,pccBottom=baseY+d.pccT*scale,solBottom=pccBottom+d.solT*scale;let s='<rect width="760" height="560" fill="#fff"/>';s+='<line x1="'+clx+'" y1="'+Math.max(20,topY-28)+'" x2="'+clx+'" y2="'+(solBottom+50)+'" stroke="#0b6cff" stroke-width="1.5" stroke-dasharray="7 6"/><text x="'+(clx+6)+'" y="'+Math.max(18,topY-10)+'" font-size="11" fill="#0b6cff">FIXED TOP C/L</text>';s+='<polygon points="'+pts.map(p=>x(p[0])+','+y(p[1])).join(' ')+'" fill="#dbeafe" stroke="#172033" stroke-width="2"/>';s+='<rect x="'+pccLeft+'" y="'+pccTop+'" width="'+(pccRight-pccLeft)+'" height="'+(d.pccT*scale)+'" fill="#eadfb8" stroke="#333"/>';s+='<rect x="'+pccLeft+'" y="'+pccBottom+'" width="'+(pccRight-pccLeft)+'" height="'+(d.solT*scale)+'" fill="#d8d0c0" stroke="#555"/>';s+='<text x="'+((pccLeft+pccRight)/2)+'" y="'+(pccTop+14)+'" text-anchor="middle" font-size="11">PCC / FOOTING</text><text x="'+((pccLeft+pccRight)/2)+'" y="'+(pccBottom+14)+'" text-anchor="middle" font-size="11">RUBBLE SOLING</text>';s+='<line x1="70" y1="'+topY+'" x2="660" y2="'+topY+'" stroke="#666" stroke-dasharray="4 3"/><text x="75" y="'+(topY-6)+'" font-size="11">TOP / GL reference</text>';s+='<text x="380" y="24" font-size="15" font-weight="700">RETAINING WALL CROSS SECTION</text><text x="380" y="42" font-size="10" fill="#555">Actual asymmetric profile from fixed top centreline · schematic</text>';let levels=[0];for(let z=1;z<d.H;z+=1)levels.push(z);if(!levels.includes(d.H))levels.push(d.H);levels.forEach(dep=>{const dm=dimsAt(d.H,d.TW,dep),yy=y(dep);s+='<line x1="'+x(-dm.back)+'" y1="'+yy+'" x2="'+x(dm.front)+'" y2="'+yy+'" stroke="#7a8797" stroke-width=".8" stroke-dasharray="3 3"/><text x="655" y="'+(yy+4)+'" font-size="9" fill="#555">'+fmt(dep,1)+'m: '+fmt(dm.total,2)+'m</text>'});s+='<text x="'+pccLeft+'" y="'+(solBottom+28)+'" font-size="10" fill="#555">Back proj. '+fmt(d.backOff,2)+' m</text><text x="'+(pccRight-115)+'" y="'+(solBottom+28)+'" font-size="10" fill="#555">Front proj. '+fmt(d.frontOff,2)+' m</text>';svg.innerHTML=s}
 $('calcBtn').onclick=calc;
 </script><script src="./app-shell.js"></script></body></html>
