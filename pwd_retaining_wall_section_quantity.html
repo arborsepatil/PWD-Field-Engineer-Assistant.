@@ -13,7 +13,7 @@ html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff
 <section class="results" id="results"><h1 class="printTitle">Retaining Wall Section & Quantity</h1><div class="card"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><span class="pill" id="casePill"></span><span class="pill strict" id="gradePill"></span><span class="pill" id="projectPill"></span></div><div class="drawing"><span class="hint noPrint">Schematic section, not a construction drawing. Use Save drawing to inspect the original-size SVG on your device.</span><svg id="wallSvg" role="img" aria-label="Retaining wall quantity profile shown from top centreline" viewBox="0 0 760 560" xmlns="http://www.w3.org/2000/svg"></svg></div><div class="actions noPrint"><button type="button" class="btn ghost" id="saveSvgBtn">Save section drawing (SVG)</button></div></div><div class="card"><h2>Key dimensions & quantities</h2><p class="sectionSummary">Gross theoretical section quantities, without excavation working space, battered trenches, irregular ground, material wastage or other deductions.</p><div class="stats" id="stats"></div><div id="segmentNote" class="note"></div><div class="tableWrap" style="margin-top:12px"><table><tbody id="qtyRows"></tbody></table></div></div><div class="card"><h2>Field width control from fixed top centreline</h2><div class="note">Centreline is fixed through the midpoint of the top width. The front/toe and back slope changes are calculated independently; both exact transition depths are always included.</div><div class="tableWrap"><table><thead><tr><th>Depth below top</th><th>Back from C/L</th><th>Front from C/L</th><th>Total wall width</th></tr></thead><tbody id="controlRows"></tbody></table></div></div><div class="card"><h2>Drainage / site control</h2><div id="siteNotes"></div><div class="sign"><div>Contractor</div><div>Junior Engineer</div><div>Deputy Engineer</div></div></div></section></main><script src="./pwd-retaining-wall-core.js"></script><script>
 const $=id=>document.getElementById(id),fmt=(x,d=3)=>Number.isFinite(x)?Number(x).toFixed(d):'—';
 const WALL=PWDRetainingWallCore;
-let lastResult=null;
+let lastResult=null,hasCalculated=false;
 function valueOf(id){return $(id).value}
 function mode(){
  const raw=valueOf('H').trim(),H=raw===''?NaN:Number(raw),strict=Number.isFinite(H)&&H>2.5;
@@ -45,6 +45,7 @@ function updateButtons(ready){
  $('saveSvgBtn').disabled=!ready;
 }
 function calc(scroll=true){
+ hasCalculated=true;
  try{
   const d=WALL.calculate(readInputs());
   lastResult=d;
@@ -174,11 +175,11 @@ $('copyBtn').onclick=copyQuantities;
 $('saveSvgBtn').onclick=saveDrawing;
 $('inputCard').addEventListener('input',()=>{
  mode();
- if(lastResult||$('results').style.display==='block')calc(false);
+ if(hasCalculated)calc(false);
 });
 $('inputCard').addEventListener('change',()=>{
  mode();
- if(lastResult||$('results').style.display==='block')calc(false);
+ if(hasCalculated)calc(false);
 });
 mode();
 updateButtons(false);
