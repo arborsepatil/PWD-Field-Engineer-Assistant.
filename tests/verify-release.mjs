@@ -1373,7 +1373,7 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
    'Right batter junction must be shown as height above PCC');
  assert.ok(p4.controls.find(r=>r.junctionSides.includes('left')).height===1.5,
    'Left batter junction must be shown as height above PCC');
- assert.ok(file.includes('fmt(z.height,3)')&&file.includes('fmt(z.left,3)')&&file.includes('fmt(z.right,3)'),
+ assert.ok(file.includes('fmt(z.height,heightDigits)')&&file.includes('fmt(z.left,3)')&&file.includes('fmt(z.right,3)'),
    'UI setting-out table must be bottom-up with separate fixed-C/L offsets');
  assert.ok(file.includes('resetWallDrawing();resetSettingDrawing();'),
    'Both drawings must reset to show the current recalculated section');
@@ -1381,5 +1381,32 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(revisedCSV.includes('Height above PCC top (m)'),'Spreadsheet must also use bottom-up datum');
  assert.ok(revisedCSV.includes('Left/back from fixed top C/L'),'Spreadsheet must list independent offsets');
  assert.ok(!revisedCSV.includes('Depth below top (m)'),'Retired top-down display must not reappear');
+ // Additional drawing-renderer QA, including actual near-coincident stations.
+ const nearThresholds=[2.5000001,2.50001,2.5004,2.6,3.125,4.0,5.00001,5.0004,10];
+ for(const H of nearThresholds){
+   const model=core.calculate({...p,H});
+   const pDigits=diagrams.stationPrecision(model.controls);
+   const labels=model.controls.map(row=>row.height.toFixed(pDigits));
+   assert.equal(new Set(labels).size,labels.length,
+     'Two distinct setting-out stations are displayed with identical rounded heights at H='+H);
+   const dimSvg=diagrams.renderDimension(model),setSvg=diagrams.renderSettingOut(model);
+   assert.ok(!/NaN|Infinity|undefined/.test(dimSvg+setSvg),
+     'Drawing has nonfinite or undefined data for wall H='+H);
+   const vertices=[...setSvg.matchAll(/\b(?:x1|x2|y1|y2|cx|cy|x|y)="([-0-9.]+)"/g)].map(m=>Number(m[1]));
+   assert.ok(vertices.every(v=>Number.isFinite(v)&&v>=-1&&v<=1041),
+     'SVG coordinates exceed valid drawing bounds at H='+H);
+   assert.ok(dimSvg.includes('Wall H '+H.toFixed(pDigits)),
+     'Dimensioned drawing must show distinguishable high-precision actual height');
+   for(const label of labels)assert.ok(setSvg.includes(label),
+     'Missing true (not prematurely rounded) construction level '+label+' for H='+H);
+ }
+ assert.ok(diagrams.stationPrecision(core.calculate({...p,H:2.50001}).controls)>3,
+   'Closely separated lower/upper profile junctions need extra label precision');
+ assert.ok(diagrams.stationPrecision(p4.controls)===3,
+   'Ordinary heights must keep short 3-decimal field dimensions');
+ assert.ok(file.includes('PWDWallDiagrams.stationPrecision(d.controls)'),
+   'On-screen setting-out table and SVG must use matching height precision');
+ assert.ok(!file.includes('min-width:620px'),
+   'Mobile drawings should not force an oversized fixed minimum width');
  process.stdout.write('Retaining Wall QA passed: 14 cross-section heights, correct segment order, polygon area, quantities, drainage grid and input validation\n');
 }
