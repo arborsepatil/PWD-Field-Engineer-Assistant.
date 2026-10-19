@@ -66,7 +66,150 @@ async function copyWall(){
  try{await navigator.clipboard.writeText(t);$('copyWallStatus').textContent='Quantity summary copied.'}
  catch{$('copyWallStatus').textContent='Clipboard unavailable. Use Print / Save PDF or select the quantity table.'}
 }
-function render(d){$('casePill').textContent=d.strict?'H > 2.50 m · Strict standard':'H ≤ 2.50 m · Lower wall';$('gradePill').textContent='Concrete '+d.grade;$('projectPill').textContent=$('project').value.trim()||'Project not entered';$('stats').innerHTML=[['Top width',fmt(d.TW,2)+' m'],['Wall base width',fmt(d.baseW,3)+' m'],['PCC / footing width',fmt(d.pccW,3)+' m'],['Concrete',fmt(d.concrete,3)+' m³']].map(x=>'<div class="stat"><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');$('qtyRows').innerHTML=[['Excavation',fmt(d.exc,3)+' m³','L × footing width × excavation depth'],['Rubble soling',fmt(d.soling,3)+' m³','Same footprint as footing'],['PCC / footing',fmt(d.pcc,3)+' m³','L × footing width × thickness'],['Wall concrete ('+d.grade+')',fmt(d.concrete,3)+' m³','Piecewise trapezoidal wall section'],['Filter / rubble filling',fmt(d.filter,3)+' m³','L × '+fmt(d.filterT,2)+' × H'],['Approx. weep holes',d.weepApprox+' nos.','Working spacing '+fmt(d.weepH,1)+' m horizontal × '+fmt(d.weepV,1)+' m vertical']].map(x=>'<tr><td><b>'+x[0]+'</b></td><td class="qty"><b>'+x[1]+'</b></td><td>'+x[2]+'</td></tr>').join('');let depths=[];for(let y=0;y<d.H;y+=1)depths.push(+y.toFixed(3));if(!depths.includes(+d.H.toFixed(3)))depths.push(d.H);$('controlRows').innerHTML=depths.map(y=>{const z=dimsAt(d.H,d.TW,y);return'<tr><td>'+fmt(y,2)+' m</td><td>'+fmt(z.back,3)+' m</td><td>'+fmt(z.front,3)+' m</td><td><b>'+fmt(z.total,3)+' m</b></td></tr>'}).join('');$('siteNotes').innerHTML='<div class="note"><b>Drainage:</b> provide weep holes above GL with filter material behind the wall. The displayed count is a working spacing aid, not a substitute for the approved drawing.</div>'+(d.strict&&d.H>5?'<div class="warn"><b>Footing projection:</b> front offset 0.40 m is used for H 5.01–10.00 m. Reinforcement, where required by the standard note/design, must be separately designed and approved.</div>':'')+'<div class="note"><b>Measurement separation:</b> rubble soling below PCC and filter/rubble filling behind wall are kept as separate quantities.</div>';draw(d)}
-function draw(d){const svg=$('wallSvg'),W=760,Hsvg=560,scale=Math.min(300/d.H,360/d.pccW),baseY=385,topY=baseY-d.H*scale,clx=355;let pts=[];const topBack=-d.TW/2,topFront=d.TW/2;if(!d.strict){pts=[[topBack,0],[topFront,0],[topFront+d.H/4,d.H],[topBack,d.H]]}else{const y2=d.H-d.H/5;pts=[[topBack,0],[topFront,0],[topFront+y2/4,y2],[topFront+y2/4+d.H/5,d.H],[topBack-(d.H-2.5)/6,d.H],[topBack-(y2-2.5)/6,y2],[topBack,2.5]]}const x=xr=>clx+xr*scale,y=dep=>topY+dep*scale,bottom=dimsAt(d.H,d.TW,d.H),pccLeft=x(-bottom.back-d.backOff),pccRight=x(bottom.front+d.frontOff),pccTop=baseY,pccBottom=baseY+d.pccT*scale,solBottom=pccBottom+d.solT*scale;let s='<rect width="760" height="560" fill="#fff"/>';s+='<line x1="'+clx+'" y1="'+Math.max(20,topY-28)+'" x2="'+clx+'" y2="'+(solBottom+50)+'" stroke="#0b6cff" stroke-width="1.5" stroke-dasharray="7 6"/><text x="'+(clx+6)+'" y="'+Math.max(18,topY-10)+'" font-size="11" fill="#0b6cff">FIXED TOP C/L</text>';s+='<polygon points="'+pts.map(p=>x(p[0])+','+y(p[1])).join(' ')+'" fill="#dbeafe" stroke="#172033" stroke-width="2"/>';s+='<rect x="'+pccLeft+'" y="'+pccTop+'" width="'+(pccRight-pccLeft)+'" height="'+(d.pccT*scale)+'" fill="#eadfb8" stroke="#333"/>';s+='<rect x="'+pccLeft+'" y="'+pccBottom+'" width="'+(pccRight-pccLeft)+'" height="'+(d.solT*scale)+'" fill="#d8d0c0" stroke="#555"/>';s+='<text x="'+((pccLeft+pccRight)/2)+'" y="'+(pccTop+14)+'" text-anchor="middle" font-size="11">PCC / FOOTING</text><text x="'+((pccLeft+pccRight)/2)+'" y="'+(pccBottom+14)+'" text-anchor="middle" font-size="11">RUBBLE SOLING</text>';s+='<line x1="70" y1="'+topY+'" x2="660" y2="'+topY+'" stroke="#666" stroke-dasharray="4 3"/><text x="75" y="'+(topY-6)+'" font-size="11">TOP / GL reference</text>';s+='<text x="380" y="24" font-size="15" font-weight="700">RETAINING WALL CROSS SECTION</text><text x="380" y="42" font-size="10" fill="#555">Actual asymmetric profile from fixed top centreline · schematic</text>';let levels=[0];for(let z=1;z<d.H;z+=1)levels.push(z);if(!levels.includes(d.H))levels.push(d.H);levels.forEach(dep=>{const dm=dimsAt(d.H,d.TW,dep),yy=y(dep);s+='<line x1="'+x(-dm.back)+'" y1="'+yy+'" x2="'+x(dm.front)+'" y2="'+yy+'" stroke="#7a8797" stroke-width=".8" stroke-dasharray="3 3"/><text x="655" y="'+(yy+4)+'" font-size="9" fill="#555">'+fmt(dep,1)+'m: '+fmt(dm.total,2)+'m</text>'});s+='<text x="'+pccLeft+'" y="'+(solBottom+28)+'" font-size="10" fill="#555">Back proj. '+fmt(d.backOff,2)+' m</text><text x="'+(pccRight-115)+'" y="'+(solBottom+28)+'" font-size="10" fill="#555">Front proj. '+fmt(d.frontOff,2)+' m</text>';svg.innerHTML=s}
-$('calcBtn').onclick=calc;
+function render(d){
+ $('casePill').textContent=d.strict?'H > 2.50 m · Existing piecewise profile':'H ≤ 2.50 m · Existing lower profile';
+ $('gradePill').textContent='Concrete '+d.grade;
+ $('projectPill').textContent=$('project').value.trim()||'Project not entered';
+ const stats=[
+  ['Top width',fmt(d.TW,3)+' m'],['Base width',fmt(d.baseW,3)+' m'],
+  ['Footing width',fmt(d.pccW,3)+' m'],['Wall area',fmt(d.wallArea,4)+' m²'],
+  ['Wall concrete',fmt(d.concrete,3)+' m³'],['Wall concrete',fmt(d.concrete/d.BRASS,3)+' brass']
+ ];
+ $('stats').innerHTML=stats.map(x=>'<div class="stat"><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+ const rows=[
+  ['Excavation',fmt(d.exc,3)+' m³','Footing width × L × entered excavation depth (rectangular assumption)'],
+  ['Rubble soling',fmt(d.soling,3)+' m³','Footing width × soling thickness × L'],
+  ['PCC / footing',fmt(d.pcc,3)+' m³','Footing width × footing thickness × L'],
+  ['Wall concrete ('+d.grade+')',fmt(d.concrete,3)+' m³','Cross-sectional polygon area × wall length'],
+  ['Filter / rubble backing',fmt(d.filter,3)+' m³','L × entered filter thickness × H (rectangular estimate only)'],
+  ['Approximate weep holes',d.weepApprox+' nos.',d.weepColumns+' horizontal positions × '+d.weepRows+' vertical levels · spacing grid only']
+ ];
+ $('qtyRows').innerHTML=rows.map(x=>'<tr><td><b>'+x[0]+'</b></td><td class="qty"><b>'+x[1]+'</b></td><td>'+x[2]+'</td></tr>').join('');
+ $('controlRows').innerHTML=d.controls.map(z=>
+   '<tr><td>'+fmt(z.depth,3)+' m</td><td>'+fmt(z.back,3)+' m</td><td>'+fmt(z.front,3)+' m</td><td><b>'+fmt(z.total,3)+' m</b></td></tr>'
+ ).join('');
+ const cautions=[
+  '<div class="note"><b>Drawing control:</b> Source/project drawing must confirm wall profile, soil side, GL/HFL, top width, footing and founding level. Geometrical calculation is not stability verification.</div>',
+  '<div class="note"><b>Drainage:</b> Weep-hole count is an idealized spacing grid, not an approved layout; locations, stagger, filter material and invert are site/drawing dependent.</div>',
+  '<div class="note"><b>Earthwork:</b> Excavation assumes a rectangular full-width trench; no side slopes, working space, local rock variation or ground profile are modeled.</div>',
+  '<div class="note"><b>Measurement separation:</b> rubble soling, concrete footing, wall concrete and backing material are kept as separate geometric quantities.</div>'
+ ];
+ if(d.excavationReminder)cautions.push('<div class="warn"><b>Depth check:</b> the entered excavation depth is smaller than PCC + soling thickness. Confirm founding level and what the entered depth actually represents before measurement.</div>');
+ if(d.strict&&d.H>5)cautions.push('<div class="warn"><b>Projection / reinforcement:</b> 0.40 m front projection is used above 5.00 m. No reinforcement sizing or approval is provided.</div>');
+ if(d.strict&&d.frontBreak<d.backBreak)cautions.push('<div class="note"><b>2.50–3.125 m profile:</b> the 1:1 front portion begins before the 1:6 back batter; the area has been integrated at both independent breakpoints.</div>');
+ $('siteNotes').innerHTML=cautions.join('');
+ draw(d);
+}
+function draw(d){
+ const svg=$('wallSvg'),baseY=392,clx=362;
+ const scale=Math.min(290/d.H,420/d.pccW,115/(d.pccT+d.solT));
+ const topY=baseY-d.H*scale,x=offset=>clx+offset*scale,y=depth=>topY+depth*scale;
+ const frontLevels=d.strict?[0,d.frontBreak,d.H]:[0,d.H];
+ const backLevels=d.strict?[d.H,d.backBreak,0]:[d.H,0];
+ const points=[
+  [-d.TW/2,0],
+  ...frontLevels.map(depth=>[dimsAt(d.H,d.TW,depth).front,depth]),
+  ...backLevels.map(depth=>[-dimsAt(d.H,d.TW,depth).back,depth])
+ ];
+ const base=dimsAt(d.H,d.TW,d.H);
+ const left=x(-base.back-d.backOff),right=x(base.front+d.frontOff);
+ const pccBottom=baseY+d.pccT*scale,solBottom=pccBottom+d.solT*scale;
+ let out='<rect width="760" height="560" fill="#fff"/>';
+ out+='<text x="375" y="24" font-size="15" text-anchor="middle" font-weight="700">RETAINING WALL SECTION</text>';
+ out+='<text x="375" y="43" font-size="11" text-anchor="middle" fill="#555">Geometry only · not an approved construction drawing</text>';
+ out+='<line x1="'+clx+'" y1="'+Math.max(55,topY-18)+'" x2="'+clx+'" y2="'+(solBottom+24)+'" stroke="#0b6cff" stroke-width="1.5" stroke-dasharray="7 6"/>';
+ out+='<polygon points="'+points.map(p=>x(p[0])+','+y(p[1])).join(' ')+'" fill="#dbeafe" stroke="#172033" stroke-width="2"/>';
+ out+='<rect x="'+left+'" y="'+baseY+'" width="'+(right-left)+'" height="'+(d.pccT*scale)+'" fill="#eadfb8" stroke="#333"/>';
+ out+='<rect x="'+left+'" y="'+pccBottom+'" width="'+(right-left)+'" height="'+(d.solT*scale)+'" fill="#d8d0c0" stroke="#555"/>';
+ out+='<text x="'+clx+'" y="'+Math.min(532,solBottom+21)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#172033">PCC + rubble soling</text>';
+ out+='<text x="70" y="'+(topY-5)+'" font-size="10" fill="#555">Wall top</text>';
+ out+='<text x="'+(clx+8)+'" y="'+Math.max(65,topY-8)+'" font-size="10" fill="#0b6cff">Fixed top C/L</text>';
+ // Show distinct station breakpoints even when the front break precedes the back break.
+ for(const z of d.stations){
+   const dpt=z.depth;
+   if(dpt<=1e-8||dpt>=d.H-1e-8)continue;
+   out+='<line x1="'+x(-z.back)+'" y1="'+y(dpt)+'" x2="'+x(z.front)+'" y2="'+y(dpt)+'" stroke="#6e849d" stroke-dasharray="3 3"/>';
+ }
+ out+='<text x="574" y="100" font-size="11" fill="#172033">H = '+fmt(d.H,2)+' m</text>';
+ out+='<text x="574" y="118" font-size="11" fill="#172033">TW = '+fmt(d.TW,2)+' m</text>';
+ out+='<text x="574" y="136" font-size="11" fill="#172033">BW = '+fmt(d.baseW,3)+' m</text>';
+ out+='<text x="574" y="154" font-size="11" fill="#172033">Footing = '+fmt(d.pccW,3)+' m</text>';
+ out+='<text x="574" y="174" font-size="10" fill="#555">Back ← C/L → Front</text>';
+ svg.innerHTML=out;
+ wallZoomReset();
+}
+let zoom=1,dx=0,dy=0,lastTap=0,dragOrigin=null,pinch=null;
+const pointers=new Map();
+function clamp(n,lo,hi){return Math.max(lo,Math.min(hi,n))}
+function wallZoomPaint(){
+ $('wallSvg').style.transform='translate('+dx+'px,'+dy+'px) scale('+zoom+')';
+}
+function wallZoomReset(){zoom=1;dx=0;dy=0;dragOrigin=null;pinch=null;pointers.clear();wallZoomPaint()}
+function localPoint(event){
+ const bounds=$('wallDrawing').getBoundingClientRect();
+ return{x:event.clientX-bounds.left,y:event.clientY-bounds.top};
+}
+function wallPointerDown(event){
+ if(event.pointerType==='mouse'&&event.button!==0)return;
+ const p=localPoint(event);
+ pointers.set(event.pointerId,p);
+ $('wallSvg').setPointerCapture?.(event.pointerId);
+ if(pointers.size===2){
+   const list=Array.from(pointers.values()),a=list[0],b=list[1];
+   const m={x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+   pinch={distance:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)),startZoom:zoom,
+     anchorX:(m.x-dx)/zoom,anchorY:(m.y-dy)/zoom};
+   dragOrigin=null;
+ }else if(pointers.size===1){
+   dragOrigin={x:p.x,y:p.y,dx,dy};pinch=null;
+ }
+}
+function wallPointerMove(event){
+ if(!pointers.has(event.pointerId))return;
+ event.preventDefault();
+ const point=localPoint(event);pointers.set(event.pointerId,point);
+ if(pointers.size===2&&pinch){
+   const list=Array.from(pointers.values()),a=list[0],b=list[1],m={x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+   zoom=clamp(pinch.startZoom*Math.hypot(a.x-b.x,a.y-b.y)/pinch.distance,1,5);
+   dx=m.x-pinch.anchorX*zoom;dy=m.y-pinch.anchorY*zoom;
+   wallZoomPaint();
+ }else if(pointers.size===1&&dragOrigin&&zoom>1){
+   dx=dragOrigin.dx+point.x-dragOrigin.x;
+   dy=dragOrigin.dy+point.y-dragOrigin.y;
+   wallZoomPaint();
+ }
+}
+function wallPointerEnd(event){
+ if(!pointers.has(event.pointerId))return;
+ pointers.delete(event.pointerId);
+ if(pointers.size===1){
+   const p=Array.from(pointers.values())[0];
+   dragOrigin={...p,dx,dy};pinch=null;
+ }else if(!pointers.size){dragOrigin=null;pinch=null}
+}
+const drawingSvg=$('wallSvg');
+drawingSvg.addEventListener('pointerdown',wallPointerDown);
+drawingSvg.addEventListener('pointermove',wallPointerMove);
+drawingSvg.addEventListener('pointerup',wallPointerEnd);
+drawingSvg.addEventListener('pointercancel',wallPointerEnd);
+drawingSvg.addEventListener('lostpointercapture',wallPointerEnd);
+drawingSvg.addEventListener('dblclick',wallZoomReset);
+drawingSvg.addEventListener('wheel',event=>{
+ if(!event.ctrlKey)return;
+ event.preventDefault();
+ const point=localPoint(event),ax=(point.x-dx)/zoom,ay=(point.y-dy)/zoom;
+ zoom=clamp(zoom*(event.deltaY<0?1.12:1/1.12),1,5);
+ dx=point.x-ax*zoom;dy=point.y-ay*zoom;wallZoomPaint();
+},{passive:false});
+$('calcBtn').onclick=()=>calc(true);
+$('printBtn').onclick=()=>{if(calc(false))window.print()};
+$('copyWall').onclick=copyWall;
+let recalculationQueued=false;
+$('inputCard').addEventListener('input',event=>{
+ if(event.target.id==='H')mode();
+ if(recalcTimer)clearTimeout(recalcTimer);
+ recalcTimer=setTimeout(()=>calc(false),130);
+});
+$('inputCard').addEventListener('change',()=>{if(recalcTimer)clearTimeout(recalcTimer);calc(false)});
+calc(false);
 </script><script src="./app-shell.js"></script></body></html>
