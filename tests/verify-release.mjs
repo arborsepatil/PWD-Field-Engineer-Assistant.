@@ -36,7 +36,11 @@ const swTestContext={
     addEventListener(name,handler){events[name]=handler}
   },
   caches:{
-    match:async target=>target==='./index.html'?offlineShell:undefined,
+    match:async (target,options)=>{
+      if(target==='./index.html')return offlineShell;
+      if(options?.ignoreSearch&&/\/(?:library|pdf_viewer)\.html\?/.test(target.url||''))return {kind:'cached-offline-reader'};
+      return undefined;
+    },
     open:async()=>({put:async()=>{}})
   },
   fetch:async request=>{
@@ -55,6 +59,11 @@ const exercise=async (mode,filename)=>{
 };
 const navFallback=await exercise('navigate','offline-page.html');
 assert.equal(navFallback.kind,'offline-page','Offline navigation must return cached HTML fallback');
+const libraryOffline=await exercise('navigate','library.html?section=ssr');
+assert.equal(libraryOffline.kind,'cached-offline-reader','SSR Library query route must open cached page offline');
+const pdfOffline=await exercise('navigate','pdf_viewer.html?file=private-catalog-id');
+assert.equal(pdfOffline.kind,'cached-offline-reader','Selected PDF viewer query route must open offline');
+
 await assert.rejects(
   exercise('same-origin','uncached-script.js'),
   /network offline/,
