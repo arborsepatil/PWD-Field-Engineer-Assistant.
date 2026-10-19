@@ -1,0 +1,31 @@
+plugins {
+    id 'com.android.application'
+}
+android {
+    namespace 'in.pwdtools.fieldassistant'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'in.pwdtools.fieldassistant'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0-test'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    sourceSets {
+        main {
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
+}
+dependencies {
+    implementation 'androidx.webkit:webkit:1.17.1'
+}
