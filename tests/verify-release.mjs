@@ -1098,3 +1098,86 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(!html.includes("const U={"),'Old hardcoded unit registry still shadows tested values');
  process.stdout.write('Unit conversion QA passed: '+factors.length+' categories, '+count+' unit labels and all-pairs reversibility; SI/Indian reference constants verified\n');
 }
+
+
+// Final Batch Assistant contract: material orders, AJAX batching, nominal mix.
+// Source rows are unchanged, while pure quantity operations are regression-tested.
+{
+ const html=load('pwd_mix_batch_assistant.html'),coreJS=load('pwd-batch-core.js');
+ new vm.Script(coreJS,{filename:'pwd-batch-core.js'});
+ const inline=html.match(/<script>\s*(const DATA=[\s\S]*?)<\/script>/);
+ assert.ok(inline,'Concrete source data and interactive controller missing');
+ new vm.Script(inline[1],{filename:'pwd_mix_batch_assistant.html'});
+ assert.ok(shell.includes('./pwd-batch-core.js'),'Batch calculations must work offline');
+ assert.ok(html.includes('<script src="./pwd-batch-core.js"></script>'),'Pure validated batch helper must load');
+ assert.equal((html.match(/data-tab="/g)||[]).length,3,'Batch Assistant must have exactly three main workflows');
+ for(const id of ['qty','ajax','nominal'])assert.ok(html.includes('data-tab="'+id+'"'),'Missing kept batch workflow: '+id);
+ assert.ok(!/\bRMC\b|calcRMC|id="rmc"|id="rCat"|data-tab="notes"/i.test(html),
+   'Retired RMC workflow or extra Notes top-level tab still exists');
+ for(const id of ['qQty','qUnit','qWork','qWC','aBasis','aVol','aBags','aTotal','aWC','nomGrade','nomMeasures','nomOut','notesReturn'])
+   assert.ok(html.includes('id="'+id+'"'),'Batch workflow lacks essential input: '+id);
+ for(const text of ['Copy material order','Share order','Print','AJAX OPERATOR BATCH SHEET','Engineering Notes & Code Checks'])
+   assert.ok(html.includes(text),'Expected site operator action is missing: '+text);
+ assert.ok(html.includes('resultMaterials(o,false)'),'Material-order screen still incorrectly relies on AJAX bulk-density assumptions');
+ assert.ok(html.includes('returnTab'),'Engineering notes must return to the correct workflow');
+ assert.ok(html.includes('grid-template-columns:repeat(3,minmax(0,1fr))!important'),
+   'Generic 5-column mobile CSS still overrides the three-tab layout');
+ const dataLine=html.match(/const DATA=(\{[^\n]+\});/);
+ assert.ok(dataLine,'Source row JSON missing after UX cleanup');
+ const source=JSON.parse(dataLine[1]);
+ assert.deepEqual(Object.keys(source),['building','bridge','pile'],'Source families have been altered or merged');
+ assert.ok(source.building.items.length>=10&&source.bridge.items.length>=15&&source.pile.items.length===1,
+   'Existing source-controlled consumption tables were dropped');
+ const pile=source.pile.items[0];
+ assert.equal(pile.a20,null,'Missing pile aggregate source quantities must stay unavailable');
+ const nominalMatch=html.match(/const NOMINAL=(\[[^\n]+\]);/);
+ assert.ok(nominalMatch,'Original nominal-mix reference is unavailable');
+ const ratioRows=JSON.parse(nominalMatch[1]);
+ assert.equal(ratioRows.length,5,'Source-backed nominal grade list changed unexpectedly');
+ const ctx={window:{}};
+ vm.runInNewContext(coreJS,ctx,{filename:'pwd-batch-core.js'});
+ const core=ctx.window.PWDBatchCore;
+ const near=(actual,expected,label,tol=1e-9)=>
+   assert.ok(Math.abs(actual-expected)<=tol*Math.max(1,Math.abs(expected)),
+     label+': '+actual+' != '+expected);
+ near(core.cubicMetres(1,'brass'),2.8316846592,'brass -> m³');
+ near(core.cubicMetres(100,'ft3'),2.8316846592,'100 ft³ -> 1 brass');
+ near(core.cubicMetres(1,'m3'),1,'m³ basis');
+ const m20=source.building.items.find(x=>x.id==='b_m20');
+ assert.ok(m20,'Reference M20 consumption row is unavailable');
+ const ordered=core.scale(m20,2,.5);
+ near(ordered.bags,14,'2 m³ cement bags for existing source');
+ near(ordered.cementKg,700,'cement kg');
+ near(ordered.water,350,'planning water before moisture adjustment');
+ near(ordered.s,.85,'sand volume scaling');
+ near(ordered.a20,1.14,'20 mm coarse aggregate source fraction');
+ assert.equal(ordered.orderBags,14,'Whole cement bags must not be over-rounded');
+ assert.equal(core.scale(m20,1/7,.5).orderBags,1,'One exact cement bag must not be rounded up');
+ assert.equal(core.scale(m20,.001,.5).orderBags,1,'Small positive work should still suggest at least one whole bag');
+ const p=core.scale(pile,2,.5);
+ assert.equal(p.a40,null,'Missing pile aggregate cannot be guessed');
+ assert.equal(p.a20,null,'Missing pile aggregate cannot be guessed');
+ const ajaxVolume=core.ajax(m20,{basis:'volume',volume:.5,wc:.5,total:2});
+ near(ajaxVolume.batch.bags,3.5,'AJAX usable-volume bag count');
+ near(ajaxVolume.batch.cementKg,175,'AJAX usable-volume cement mass');
+ near(ajaxVolume.exactBatches,4,'AJAX equivalent batch count');
+ assert.equal(ajaxVolume.wholeBatches,4,'AJAX whole-batch count');
+ const ajaxBags=core.ajax(m20,{basis:'bags',bags:7,wc:.5,total:2.1});
+ near(ajaxBags.batchM3,1,'AJAX cement-bag batch basis');
+ assert.equal(ajaxBags.wholeBatches,3,'AJAX must allow final partial batch');
+ await assert.rejects(async()=>core.ajax(m20,{basis:'volume',volume:0,wc:.5,total:2}),/greater than zero/);
+ await assert.rejects(async()=>core.ajax(m20,{basis:'volume',volume:.5,wc:.5,total:-1}),/Total concrete/);
+ await assert.rejects(async()=>core.scale(m20,2,.85),/w\/c ratio/);
+ await assert.rejects(async()=>core.cubicMetres(-2,'brass'),/greater than zero/);
+ await assert.rejects(async()=>core.scale({...m20,s:NaN},1,.5),/invalid s quantity/);
+ const m15=core.nominal('M15',1,ratioRows);
+ near(m15.cement,1,'nominal cement measures');
+ near(m15.sand,2,'M15 nominal sand measures');
+ near(m15.coarse,4,'M15 nominal coarse measures');
+ const m20nom=core.nominal('M20',3,ratioRows);
+ near(m20nom.sand,4.5,'M20 nominal sand measures');
+ near(m20nom.coarse,9,'M20 nominal aggregate measures');
+ assert.ok(html.includes('NOT a concrete yield'),'Nominal ratio must not imply calculated yield');
+ assert.ok(html.includes('bulk densities'),'AJAX weights must disclose their editable assumptions');
+ process.stdout.write('Three-workflow Batch Assistant: source rows, ordering, AJAX basis, nominal parts and safety guards passed\n');
+}
