@@ -1181,3 +1181,111 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(html.includes('bulk densities'),'AJAX weights must disclose their editable assumptions');
  process.stdout.write('Three-workflow Batch Assistant: source rows, ordering, AJAX basis, nominal parts and safety guards passed\n');
 }
+
+
+// Retaining-wall QA: no silent engineering assumption changes; robust breakpoints.
+{
+ const html=load('pwd_retaining_wall_section_quantity.html');
+ const coreJS=load('pwd-retaining-wall-core.js');
+ new vm.Script(coreJS,{filename:'pwd-retaining-wall-core.js'});
+ const embedded=html.match(/<script>\s*([\s\S]*?)<\/script>/);
+ assert.ok(embedded,'Retaining-wall controller not found');
+ new vm.Script(embedded[1],{filename:'pwd_retaining_wall_section_quantity.html'});
+ assert.ok(shell.includes('./pwd-retaining-wall-core.js'),'Retaining-wall geometry must be cached offline');
+ assert.ok(html.includes('<script src="./pwd-retaining-wall-core.js"></script>'),
+  'UI must use regression-tested geometry');
+ for(const id of ['controlStep','inputError','printBtn','copyBtn','saveSvgBtn','segmentNote','controlRows','wallSvg'])
+  assert.ok(html.includes('id="'+id+'"'),'Missing responsive retaining-wall control: '+id);
+ assert.ok(html.includes('if(hasCalculated)calc(false)'),'Changes must recalculate after the first run');
+ assert.ok(html.includes('copyQuantities')&&html.includes('saveDrawing'),
+  'Field-ready copy and drawing export are missing');
+ assert.ok(html.includes('not a structural design')||html.includes('not a stability check'),
+  'The UI must not imply structural design verification');
+ const ctx={window:{}};
+ vm.runInNewContext(coreJS,ctx,{filename:'pwd-retaining-wall-core.js'});
+ const core=ctx.window.PWDRetainingWallCore;
+ const near=(got,expected,label)=>assert.ok(Number.isFinite(got)&&Math.abs(got-expected)<1e-9*Math.max(1,Math.abs(expected)),
+  label+': got '+got+' vs expected '+expected);
+ const defaults={L:10,H:4,excD:.8,lowTW:.6,lowBack:.3,lowFront:.3,
+  lowPccT:.15,lowSolT:.15,lowGrade:'M15',strictSolT:.20,
+  filterT:.30,weepH:2,weepV:1,controlStep:1};
+ function analytical(H,TW){
+  if(H<=2.5)return TW*H+H*H/8;
+  const toe=H/5,y2=H-toe;
+  return .6*H+(H-2.5)**2/12+y2*y2/8+y2/4*toe+toe*toe/2;
+ }
+ function polygonArea(points){
+  return Math.abs(points.reduce((sum,p,i)=>{
+   const n=points[(i+1)%points.length];
+   return sum+p.x*n.d-n.x*p.d;
+  },0)/2);
+ }
+ // This was previously incorrect for 2.50 m < H < 3.125 m:
+ // the H/5 toe transition lies BEFORE the back-slope kink at 2.50 m.
+ for(const H of [.5,1,2.5,2.500001,2.6,3.0,3.125,3.5,4,5,5.00001,8,10]){
+  const input={...defaults,H},o=core.calculate(input);
+  near(o.wallArea,analytical(H,o.TW),'Analytical section integral H='+H);
+  near(o.concrete,o.wallArea*defaults.L,'Concrete volume H='+H);
+  near(o.baseWidth,o.bottom.total,'Base/profile match H='+H);
+  near(polygonArea(o.points),o.wallArea,'Rendered polygon equals quantity H='+H);
+  near(o.pccW,o.baseWidth+o.backOff+o.frontOff,'Footing width H='+H);
+  near(o.soling,o.pccW*o.solT*o.L,'Soling volume H='+H);
+  near(o.pcc,o.pccW*o.pccT*o.L,'Footing volume H='+H);
+  near(o.exc,o.pccW*o.excD*o.L,'Gross excavation H='+H);
+  near(o.filter,o.L*o.filterT*H,'Filter volume H='+H);
+  assert.ok(o.sections.every(x=>x.area>0&&x.height>0),'Negative piecewise segment at H='+H);
+  assert.ok(o.breakpoints.every((v,i,arr)=>i===0||v>arr[i-1]),
+   'Breakpoints must be unique and sorted for H='+H);
+  assert.ok(o.fieldWidths.some(v=>Math.abs(v.depth-o.H)<1e-9),
+   'Field control table omitted toe/base level H='+H);
+ }
+ const beforeBack=core.calculate({...defaults,H:2.6});
+ near(beforeBack.breakpoints[1],2.08,'Front toe occurs first for H=2.6');
+ near(beforeBack.breakpoints[2],2.5,'Back batter occurs second for H=2.6');
+ near(beforeBack.baseWidth,1.6566666666666667,'H=2.6 base width');
+ const exact=core.calculate({...defaults,H:3.125});
+ assert.equal(exact.breakpoints.length,3,'Coincident front/back break must not create zero-height section');
+ const low=core.calculate({...defaults,H:2.5});
+ near(low.wallArea,2.28125,'Lower-wall analytical section area H=2.5');
+ near(low.baseWidth,1.225,'Lower-wall bottom width');
+ near(low.pccT,.15,'Editable lower PCC thickness');
+ const standard=core.calculate(defaults);
+ near(standard.wallArea,4.8275,'H=4 reference section area');
+ near(standard.concrete,48.275,'H=4 concrete quantity L=10');
+ near(standard.baseWidth,2.45,'H=4 asymmetric wall base');
+ near(standard.pccW,3.05,'H=4 footing width');
+ near(standard.pcc,9.15,'H=4 footing volume');
+ near(standard.soling,6.1,'H=4 soling volume');
+ near(standard.exc,24.4,'H=4 gross excavation');
+ assert.equal(standard.weepApprox,20,'Weep spacing grid must be separated into rows/columns');
+ const high=core.calculate({...defaults,H:5.1});
+ near(high.frontOff,.4,'H > 5 m front projection');
+ near(core.calculate({...defaults,H:5}).frontOff,.3,'H = 5 m front projection');
+ const fine=core.calculate({...defaults,H:2.6,controlStep:.25});
+ assert.ok(fine.fieldWidths.some(v=>Math.abs(v.depth-2.08)<1e-9),
+  'Field table must include independent H/5 transition at .25 m intervals');
+ assert.ok(fine.fieldWidths.some(v=>Math.abs(v.depth-2.5)<1e-9),
+  'Field table must include back transition at .25 m intervals');
+ const badCases=[
+  [{...defaults,H:10.001},/height/i],
+  [{...defaults,H:.2},/height/i],
+  [{...defaults,H:''},/required/i],
+  [{...defaults,L:0},/Wall length/],
+  [{...defaults,excD:-1},/Excavation depth/],
+  [{...defaults,filterT:-1},/Filter/],
+  [{...defaults,weepH:0},/Weep-hole/],
+  [{...defaults,weepV:0},/Weep-hole/],
+  [{...defaults,H:2,lowTW:0},/Top width/],
+  [{...defaults,H:2,lowBack:-.1},/Back PCC/],
+  [{...defaults,H:2,lowPccT:0},/PCC thickness/],
+  [{...defaults,strictSolT:.4},/soling thickness/i],
+  [{...defaults,controlStep:0},/control interval/i]
+ ];
+ for(const [bad,reason] of badCases)assert.throws(()=>core.calculate(bad),reason);
+ assert.equal(core.TEMPLATE.fixedTopWidth,.60,'Preserve strict section top width');
+ assert.equal(core.TEMPLATE.backVerticalDepth,2.5,'Preserve strict back-batter starting depth');
+ assert.equal(core.TEMPLATE.frontToeHeightFraction,.2,'Preserve strict lower front toe height');
+ assert.ok(!html.includes('function strictGeom(')&&!html.includes('function dimsAt('),
+  'Unvalidated duplicate geometry implementation still present');
+ process.stdout.write('Retaining-wall geometry: 13 transition/edge heights, analytical area, diagram polygon, quantities, invalid inputs and mobile controls passed\n');
+}
