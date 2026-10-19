@@ -1196,12 +1196,20 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  for(const id of ['inputError','copyWall','copyWallStatus','wallDrawing','wallSvg','printBtn','controlRows','qtyRows'])
   assert.ok(file.includes('id="'+id+'"'),'Missing Retaining Wall UI control '+id);
  assert.ok(file.includes('pointerdown')&&file.includes('pointermove'),'Touch pinch/drag gesture handler is missing');
- assert.ok(file.includes('Math.min(290/d.H'),'Responsive schematic scaling missing');
+ assert.ok(file.includes('id="settingSvg"')&&file.includes('id="wallSvg"'),'Both engineering drawing canvases must exist');
+ assert.ok(file.includes('attachWallGestures'),'Both SVG views require touch pinch/drag controls');
  assert.ok(!file.includes('min-width:620px'),'Old fixed-width drawing still forces horizontal mobile scrolling');
  assert.ok(!file.includes('function strictGeom(H)'),'Old discontinuous section segment assumption still active');
+ const diagramsJS=load('pwd-wall-diagrams.js');
+ assert.ok(shell.includes('./pwd-wall-diagrams.js'),'Offline wall diagrams must be cached by service worker');
+ assert.ok(file.includes('<script src="./pwd-wall-diagrams.js"></script>'),'Wall diagram renderers must be linked');
+ new vm.Script(diagramsJS,{filename:'pwd-wall-diagrams.js'});
  const context={window:{}};
  vm.runInNewContext(coreJS,context,{filename:'wall-model'});
+ vm.runInNewContext(diagramsJS,context,{filename:'wall-diagrams'});
  const core=context.window.PWDWallCore;
+ const diagrams=context.window.PWDWallDiagrams;
+ assert.ok(diagrams&&diagrams.renderDimension&&diagrams.renderSettingOut,'Both diagram renderers must load');
  const nearly=(a,b,name,tol=1e-9)=>
   assert.ok(Number.isFinite(a)&&Math.abs(a-b)<=tol*Math.max(1,Math.abs(b)),
    name+': '+a+' expected '+b);
@@ -1309,5 +1317,69 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(sheet.includes('Excavation depth (m)'),'Adopted excavation depth not recorded');
  assert.throws(()=>core.measurementRows(null),/Calculate a valid/,'Empty calculations must not export');
  assert.ok(file.includes('noPrint')&&file.includes('@media print'),'Report print controls missing');
+
+ // Field engineer stationing is bottom-up, and a junction restarts the 1 m lift.
+ const lev=(H,junctions)=>Array.from(core.constructionLevels(H,junctions));
+ assert.deepEqual(lev(4,[1.2,2.05]),[0,1,1.2,2.05,3.05,4],
+   'Example 1: incorrect construction 1 m station reset');
+ assert.deepEqual(lev(4,[.8,2.05]),[0,.8,1.8,2.05,3.05,4],
+   'Example 2: incorrect break before first full metre');
+ assert.deepEqual(lev(4,[2.05,1.2]),[0,1,1.2,2.05,3.05,4],
+   'Junction order must be independent of input order');
+ assert.deepEqual(lev(3.125,[.625,.625]),[0,.625,1.625,2.625,3.125],
+   'Simultaneous two-face junction must create one station');
+ assert.deepEqual(lev(2.5,[]),[0,1,2,2.5],
+   'The lower wall must be set out from top of PCC');
+ assert.deepEqual(Array.from(p4.controls.map(p=>p.height)),[0,.8,1.5,2.5,3.5,4],
+   'Actual wall junctions must come from unchanged profile on respective faces');
+ for(const height of [2.50001,2.6,3.125,4,5,10]){
+  const d=core.calculate({...p,H:height});
+  nearly(d.controls[0].height,0,'PCC top is zero at H='+height);
+  nearly(d.controls[d.controls.length-1].height,height,'Top station at H='+height);
+  assert.ok(d.controls.every((r,i,a)=>i===0||r.height>a[i-1].height),
+    'Construction stations must be strictly increasing');
+  const top=d.controls[d.controls.length-1];
+  nearly(top.left,d.TW/2,'Top LEFT = top-width / 2');
+  nearly(top.right,d.TW/2,'Top RIGHT = top-width / 2');
+  for(const station of d.controls){
+   const independently=core.profileAt(d.H,d.TW,d.H-station.height);
+   nearly(station.left,independently.back,'Left/back own-batter offset');
+   nearly(station.right,independently.front,'Right/front own-batter offset');
+   nearly(station.total,station.left+station.right,'Width must be sum of independent sides');
+  }
+  const dimensionMarkup=diagrams.renderDimension(d);
+  const settingMarkup=diagrams.renderSettingOut(d);
+  assert.ok(dimensionMarkup.includes('DIMENSIONED WALL SECTION')&&dimensionMarkup.includes('PCC t'),
+    'Diagram 1 must separately label footing and wall section');
+  assert.ok(dimensionMarkup.includes('Soling t')&&dimensionMarkup.includes('TW ')&&dimensionMarkup.includes('BW '),
+    'Diagram 1 must show top/base/foundation dimensions');
+  assert.ok(settingMarkup.includes('BOTTOM-UP FIELD SETTING-OUT')&&settingMarkup.includes('0.00 = TOP OF PCC'),
+    'Diagram 2 must clearly use PCC-top datum');
+  assert.ok(settingMarkup.includes('LEFT / BACK')&&settingMarkup.includes('RIGHT / FRONT'),
+    'Diagram 2 must label both independently calculated face offsets');
+  assert.ok(settingMarkup.includes('C/L = TW ÷ 2'),'Fixed top centreline must be explicit');
+  if(d.strict){
+   assert.ok(dimensionMarkup.includes('LEFT/BACK BATTER')&&dimensionMarkup.includes('RIGHT/FRONT BATTER'),
+     'Higher wall dimension diagram needs both genuine batter junctions');
+  }
+ }
+ const bottom=p4.controls[0],top=p4.controls[p4.controls.length-1];
+ nearly(bottom.left,.55,'4m wall: independent left / back at PCC top');
+ nearly(bottom.right,1.90,'4m wall: independent right / front at PCC top');
+ assert.ok(Math.abs(bottom.left-bottom.right)>.1,'Do not bisect the local base width');
+ nearly(top.left,.3,'Top left TW/2');
+ nearly(top.right,.3,'Top right TW/2');
+ assert.ok(p4.controls.find(r=>r.junctionSides.includes('right')).height===.8,
+   'Right batter junction must be shown as height above PCC');
+ assert.ok(p4.controls.find(r=>r.junctionSides.includes('left')).height===1.5,
+   'Left batter junction must be shown as height above PCC');
+ assert.ok(file.includes('fmt(z.height,3)')&&file.includes('fmt(z.left,3)')&&file.includes('fmt(z.right,3)'),
+   'UI setting-out table must be bottom-up with separate fixed-C/L offsets');
+ assert.ok(file.includes('resetWallDrawing();resetSettingDrawing();'),
+   'Both drawings must reset to show the current recalculated section');
+ const revisedCSV=core.exportCSV(p4,'Demo');
+ assert.ok(revisedCSV.includes('Height above PCC top (m)'),'Spreadsheet must also use bottom-up datum');
+ assert.ok(revisedCSV.includes('Left/back from fixed top C/L'),'Spreadsheet must list independent offsets');
+ assert.ok(!revisedCSV.includes('Depth below top (m)'),'Retired top-down display must not reappear');
  process.stdout.write('Retaining Wall QA passed: 14 cross-section heights, correct segment order, polygon area, quantities, drainage grid and input validation\n');
 }
