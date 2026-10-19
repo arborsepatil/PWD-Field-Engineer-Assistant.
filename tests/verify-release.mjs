@@ -1306,9 +1306,9 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(schedule.every(r=>r.unit==='m³'),'Remaining quantity rows must be only geometric volumes');
  assert.ok(!/weep/i.test(file),'Removed weep-hole concept is still exposed in the wall UI');
  assert.ok(!/weep/i.test(coreJS),'Removed weep-hole concept is still present in the wall calculation code');
- assert.ok(!/weep/i.test(sheet),'Removed weep-hole concept is still present in the measurement export');
  assert.ok(!Object.keys(p4).some(k=>/weep/i.test(k)),'Retired weep-hole properties should not appear in computed result');
  const sheet=core.exportCSV(p4,'=HYPERLINK("https://invalid.test","malicious")');
+ assert.ok(!/weep/i.test(sheet),'Removed weep-hole concept is still present in the measurement export');
  assert.ok(sheet.startsWith('\uFEFF'),'Working CSV should support Unicode in spreadsheets');
  assert.ok(sheet.includes("'\u003dHYPERLINK("),'Project text could be interpreted as an Excel formula');
  assert.ok(sheet.includes('""malicious""'),'Embedded CSV quotes must be escaped');
