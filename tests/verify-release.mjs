@@ -1023,3 +1023,78 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
    'Never intercept original Drive PDF requests in public service worker');
  process.stdout.write('PDF.js public CDN runtime cache and private Drive exclusion passed\n');
 }
+
+
+// Unit converter release audit: exact international and Maharashtra land units.
+// Run factors through isolated JS context and verify every category round trips.
+{
+ const code=load('pwd-unit-data.js'),html=load('pwd_calculators_converters.html');
+ const sandbox={window:{},Intl};
+ vm.runInNewContext(code,sandbox,{filename:'pwd-unit-data.js'});
+ const api=sandbox.window.PWDUnitData;
+ assert.ok(api&&api.U&&api.convert,'Unit registry not initialized');
+ assert.ok(shell.includes('./pwd-unit-data.js'),'Updated converter must work without an Internet connection');
+ assert.ok(html.includes('<script src="./pwd-unit-data.js"></script>'),'Converter must load data from release-tested registry');
+ assert.ok(html.includes('id="uto"')&&html.includes('id="ufrom"'),'User must be able to choose From and To units');
+ assert.ok(html.includes('id="uswap"'),'Unit swap control missing');
+ assert.ok(html.includes('id="unitFilter"'),'Unit search control missing');
+ assert.ok(html.includes('id="unitNote"'),'Context-specific warnings about area and land measurement missing');
+ const U=api.U;
+ const near=(actual,expected,label,relative=1e-10)=>{
+   assert.ok(Number.isFinite(actual),'Non-finite conversion: '+label);
+   assert.ok(Math.abs(actual-expected)<=relative*Math.max(1,Math.abs(expected)),
+      label+': expected '+expected+' but got '+actual);
+ };
+ const factors=Object.entries(U);
+ assert.ok(factors.length>=30,'Coverage regressed: missing civil/Indian unit categories');
+ const count=factors.reduce((n,[_,f])=>n+Object.keys(f).length,0);
+ assert.ok(count>=175,'Coverage regressed: fewer than 175 practical engineering units ('+count+')');
+ for(const [category,entries] of factors){
+   const names=Object.keys(entries);
+   assert.ok(names.length>=2,'Single-unit category is not convertible: '+category);
+   for(const [name,factor] of Object.entries(entries)){
+     assert.ok(Number.isFinite(factor)&&factor>0,'Unit must have finite positive SI factor: '+category+' / '+name);
+     near(api.convert(category,1,name,name),1,category+': identity '+name);
+   }
+   // Exercise every ordered pair; errors cannot be concealed in inverse-only checks.
+   for(const a of names){
+     for(const b of names){
+       const translated=api.convert(category,7.25,a,b);
+       near(api.convert(category,translated,b,a),7.25,category+': '+a+' ↔ '+b);
+     }
+   }
+ }
+ const area='Area',volume='Volume',length='Length',discharge='Discharge';
+ near(api.convert(area,1,'mi² (square mile)','m²'),2589988.110336,'1 square mile -> m²');
+ near(api.convert(area,1,'mi² (square mile)','acre'),640,'1 square mile -> 640 acres');
+ near(api.convert(area,1,'mi² (square mile)','km²'),2.589988110336,'1 square mile -> km²');
+ near(api.convert(area,1,'acre','ft²'),43560,'1 acre -> 43,560 ft²');
+ near(api.convert(area,1,'acre','guntha / gunta (MH)'),40,'1 acre -> 40 guntha');
+ near(api.convert(area,1,'guntha / gunta (MH)','ft²'),1089,'1 guntha -> 1,089 ft²');
+ near(api.convert(area,1,'cent / decimal / dismil','ft²'),435.6,'1 cent -> 435.6 ft²');
+ near(api.convert(area,1,'gaj² / var (sq yd)','ft²'),9,'1 gaj/var -> 9 ft²');
+ near(api.convert(area,1,'hectare (ha)','are (R)'),100,'1 hectare -> 100 are');
+ near(api.convert(area,1,'sq chain','acre'),.1,'1 square chain -> 0.1 acre');
+ near(api.convert(length,1,'mi (mile)','m'),1609.344,'1 international mile');
+ near(api.convert(length,1,'chain (66 ft)','link (0.66 ft)'),100,'1 chain -> 100 links');
+ near(api.convert(volume,1,'brass (100 ft³)','ft³'),100,'1 brass -> 100 cubic feet');
+ near(api.convert(volume,1,'US gallon','litre (L)'),3.785411784,'US liquid gallon -> L');
+ near(api.convert(volume,1,'Imperial gallon','litre (L)'),4.54609,'Imperial gallon -> L');
+ near(api.convert(volume,1,'acre-ft','ft³'),43560,'acre foot -> cubic feet');
+ near(api.convert(discharge,1,'m³/s','MLD'),86.4,'1 cumec -> MLD');
+ near(api.convert('Pressure',1,'N/mm²','MPa'),1,'N/mm² -> MPa');
+ near(api.convert('Pressure',1,'kN/m²','kPa'),1,'kN/m² -> kPa');
+ near(api.convert('Speed / Velocity',1,'mph','km/h'),1.609344,'mph -> km/h');
+ near(api.convert('Mass',1,'quintal (100 kg)','kg'),100,'Indian quintal -> kg');
+ near(api.convert('Energy',1,'kWh','MJ'),3.6,'1 kWh -> 3.6 MJ');
+ near(api.convert('Temperature',32,'F','C'),0,'32 F -> 0 C');
+ near(api.convert('Temperature',0,'C','K'),273.15,'0 C -> 273.15 K');
+ near(api.convert('Temperature',491.67,'R','F'),32,'Rankine -> Fahrenheit');
+ assert.ok(Number.isNaN(api.convert('Temperature',-1,'K','C')),'Below absolute-zero inputs must be rejected');
+ assert.equal(api.format(1e-12).includes('e-12'),true,'Tiny valid result must not display as zero');
+ assert.ok(!Object.keys(U.Area).some(x=>/bigha|biswa|katha/i.test(x)),
+   'Region-dependent land measures cannot have an invented universal factor');
+ assert.ok(api.NOTES.Area.includes('Bigha'),'Regional land unit warning missing');
+ assert.ok(!html.includes("const U={"),'Old hardcoded unit registry still shadows tested values');
+ process.stdout.write('Unit conversion QA passed: '+factors.length+' categories, '+count+' unit labels and all-pairs reversibility; SI/Indian reference constants verified\n');
+}

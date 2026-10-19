@@ -3,7 +3,7 @@
 A focused, installable Maharashtra PWD field engineering web app: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
 ## Keep — active modules
-- **Calculators** — units, survey and civil quick calculations
+- **Calculators** — geometry, survey and source-controlled civil unit conversions. Covers international length/area/volume including **square mile (mi²)**, Indian Maharashtra units (**guntha, hectare, are, acre, gaj/var, cent/decimal/dismil, brass and quintal**), US/Imperial measures, flows, structural loads and temperature. From/To, swap and unit search are available offline; bigha/biswa/katha are deliberately not assigned universal conversion factors.
 - **Site Tools** — concrete batch assistant, retaining wall section quantities, concrete mix design
 - **Bridge Plans** — independent 2002 and 2023 drawing indexes, each linked to the respective original private PDF
 - **Library** — curated links for Maharashtra Public Works Code, 17 IS and 41 IRC PDFs, MoRTH and building specifications, historical SSR, PWD Rule Book, guidelines, original bridge books, office manual and the technical GR index
@@ -32,6 +32,15 @@ The Library contains 73 catalogued **Drive links and titles**, not book PDFs. Or
 - Offline status means the browser retained a PDF file, **not** that its contents, edition, title block, revision or engineering applicability have been verified.
 - **Read PDF in app** may display Google Drive preview when a local PDF is absent. If Google blocks embedded preview, **Google Drive** remains the online fallback.
 
+## Converter factor governance
+
+- International foot/yard/mile, square mile and acre relationships follow the international-foot conventions summarized by NIST: https://www.nist.gov/pml/us-surveyfoot/revised-unit-conversion-factors
+- Other unit factors are based on SI and explicit US/Imperial definitions; see NIST Appendix B.9: https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9
+- Maharashtra working convention: 1 acre = 40 guntha = 43,560 ft², 1 guntha = 1,089 ft². Are and hectare use exact SI area; a cent/decimal/dismil is 1/100 acre.
+- Guntha, gaj/var and brass are provided with their chosen Maharashtra conventions. **Bigha, biswa, katha and district-dependent land measures are excluded rather than inventing an all-India factor.**
+- Pressure/head conventions use standard gravity and assumed water density. Temperature below absolute zero is rejected. Numeric precision is displayed in engineering-friendly scientific notation for tiny results.
+- The release test runs all-pairs dimensional round trips, key known exact constants, temperature boundaries, factor positivity and public offline asset integrity. This is computational QA, not third-party certification of all material/land measurement conventions.
+  
 ## Install on Android
 Open https://arborsepatil.github.io/PWD-Field-Engineer-Assistant./ in **Chrome**, choose **⋮ > Install app** (or **Add to Home screen**). A supported Chrome install prompt also appears on the homepage. This is a **PWA**, not a signed APK; no Play Store listing or APK build is claimed.
 
