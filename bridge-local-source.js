@@ -2,17 +2,19 @@
    Only a file explicitly chosen on this device may be stored in this browser's IndexedDB. */
 (function(){
 'use strict';
-const DB='pwd-private-bridge-sources-v1',STORE='originals',MAX=160*1024*1024;
-function storage(mode,action){
+const DB='pwd-private-library-pdfs-v1',STORE='files',MAX=160*1024*1024;
+const LEGACY_DB='pwd-private-bridge-sources-v1',LEGACY_STORE='originals';
+const BOOK_IDS={bridge2002:'13hCYBiVR-XWToOtVpbS2ZnjvQFz5wWcr',bridge2023:'1juIQ-FJLpBsJzh2dKJlFxkixRbsrmEOv'};
+function storage(mode,action,legacy=false){
  if(typeof indexedDB==='undefined')return Promise.reject(new Error('On-device storage unavailable'));
  return new Promise((resolve,reject)=>{
-  const req=indexedDB.open(DB,1);
-  req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(STORE))req.result.createObjectStore(STORE)};
+  const req=indexedDB.open(legacy?LEGACY_DB:DB,1);
+  req.onupgradeneeded=()=>{const name=legacy?LEGACY_STORE:STORE;if(!req.result.objectStoreNames.contains(name))req.result.createObjectStore(name)};
   req.onerror=()=>reject(req.error||new Error('Cannot open device storage'));
   req.onsuccess=()=>{
    const db=req.result;let result;
    try{
-    const tx=db.transaction(STORE,mode),op=action(tx.objectStore(STORE));
+    const storeName=legacy?LEGACY_STORE:STORE;const tx=db.transaction(storeName,mode),op=action(tx.objectStore(storeName));
     op.onsuccess=()=>result=op.result;
     tx.oncomplete=()=>{db.close();resolve(result)};
     tx.onerror=()=>{db.close();reject(tx.error||new Error('Device storage failed'))};
@@ -44,7 +46,7 @@ window.PWDBridgeLocalSource={
    if(!['bridge2002','bridge2023'].includes(key))throw new Error('Unrecognized publication');
    const input=document.getElementById('privatePdfFile'),clear=document.getElementById('forgetPrivatePdf');
    document.getElementById('privateBar').classList.add('visible');
-   let localURL=null,localBlob=null,sourceName=null,generation=0,disposed=false;
+   let localURL=null,localBlob=null,sourceName=null,generation=0,disposed=false;const deviceKey='drive-'+BOOK_IDS[key];
    async function activate(blob,name,persisted,version){
      if(disposed||version!==generation)return 'cancelled';
      const candidate=URL.createObjectURL(blob);
@@ -83,12 +85,30 @@ window.PWDBridgeLocalSource={
    async function restore(){
      const version=generation;
      try{
-       const saved=await storage('readonly',store=>store.get(key));
+       let saved=await storage('readonly',store=>store.get(deviceKey));
+       let migratedFromLegacy=false;
+       if(!saved){
+         try{
+           saved=await storage('readonly',store=>store.get(key),true);
+           migratedFromLegacy=!!saved;
+         }catch{}
+       }
        if(disposed||version!==generation)return;
        if(saved?.blob instanceof Blob){
          const result=await activate(saved.blob,saved.name||'Original PDF',true,version);
          if(result==='mismatch'&&version===generation){
-           try{await storage('readwrite',store=>store.delete(key))}catch{}
+           try{await storage('readwrite',store=>store.delete(deviceKey))}catch{}
+           if(migratedFromLegacy)try{await storage('readwrite',store=>store.delete(key),true)}catch{}
+         }
+         if(result==='matched'&&migratedFromLegacy&&version===generation){
+           try{
+             await storage('readwrite',store=>store.put({
+               blob:saved.blob,name:saved.name,storedAt:Date.now(),size:saved.blob.size
+             },deviceKey));
+             await storage('readwrite',store=>store.delete(key),true);
+             setStatus('Previous private PDF upgraded for offline Library',
+               saved.name+' · page count checked, drawing identity still unverified');
+           }catch{setStatus('Previous private PDF restored', 'Could not migrate storage; keep a backup in Files')}
          }
        }else{
          setStatus('Drive preview active','Choose the correct original PDF to view it on this device');
@@ -111,8 +131,8 @@ window.PWDBridgeLocalSource={
        if(result!=='matched'||version!==generation||disposed)return;
        try{
          await storage('readwrite',store=>store.put({
-           blob:file,name:file.name,publication:year,savedAt:Date.now()
-         },key));
+           blob:file,name:file.name,publication:year,storedAt:Date.now(),size:file.size
+         },deviceKey));
          if(version===generation&&!disposed)
            setStatus('Private PDF saved on this device',
              file.name+' · correct page count, original drawing identity not certified · no upload');
@@ -130,7 +150,8 @@ window.PWDBridgeLocalSource={
      localURL=null;localBlob=null;sourceName=null;clear.hidden=true;
      try{await onSource(null,null)}catch{}
      try{
-       await storage('readwrite',store=>store.delete(key));
+       await storage('readwrite',store=>store.delete(deviceKey));
+     try{await storage('readwrite',store=>store.delete(key),true)}catch{}
        if(version===generation&&!disposed)
          setStatus('Private PDF cleared','Drive preview active; this book’s copy was removed from this browser');
      }catch{
