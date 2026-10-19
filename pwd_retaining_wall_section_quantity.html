@@ -101,6 +101,85 @@ function render(d){
    '<div class="note"><b>Measurement separation:</b> excavation is gross; soling, footing, wall concrete and backfill remain separate. Confirm actual chainages, foundation shape, site levels and authorized item measurement method.</div>';
  draw(d);
 }
-function draw(d){const svg=$('wallSvg'),W=760,Hsvg=560,scale=Math.min(300/d.H,360/d.pccW),baseY=385,topY=baseY-d.H*scale,clx=355;let pts=[];const topBack=-d.TW/2,topFront=d.TW/2;if(!d.strict){pts=[[topBack,0],[topFront,0],[topFront+d.H/4,d.H],[topBack,d.H]]}else{const y2=d.H-d.H/5;pts=[[topBack,0],[topFront,0],[topFront+y2/4,y2],[topFront+y2/4+d.H/5,d.H],[topBack-(d.H-2.5)/6,d.H],[topBack-(y2-2.5)/6,y2],[topBack,2.5]]}const x=xr=>clx+xr*scale,y=dep=>topY+dep*scale,bottom=dimsAt(d.H,d.TW,d.H),pccLeft=x(-bottom.back-d.backOff),pccRight=x(bottom.front+d.frontOff),pccTop=baseY,pccBottom=baseY+d.pccT*scale,solBottom=pccBottom+d.solT*scale;let s='<rect width="760" height="560" fill="#fff"/>';s+='<line x1="'+clx+'" y1="'+Math.max(20,topY-28)+'" x2="'+clx+'" y2="'+(solBottom+50)+'" stroke="#0b6cff" stroke-width="1.5" stroke-dasharray="7 6"/><text x="'+(clx+6)+'" y="'+Math.max(18,topY-10)+'" font-size="11" fill="#0b6cff">FIXED TOP C/L</text>';s+='<polygon points="'+pts.map(p=>x(p[0])+','+y(p[1])).join(' ')+'" fill="#dbeafe" stroke="#172033" stroke-width="2"/>';s+='<rect x="'+pccLeft+'" y="'+pccTop+'" width="'+(pccRight-pccLeft)+'" height="'+(d.pccT*scale)+'" fill="#eadfb8" stroke="#333"/>';s+='<rect x="'+pccLeft+'" y="'+pccBottom+'" width="'+(pccRight-pccLeft)+'" height="'+(d.solT*scale)+'" fill="#d8d0c0" stroke="#555"/>';s+='<text x="'+((pccLeft+pccRight)/2)+'" y="'+(pccTop+14)+'" text-anchor="middle" font-size="11">PCC / FOOTING</text><text x="'+((pccLeft+pccRight)/2)+'" y="'+(pccBottom+14)+'" text-anchor="middle" font-size="11">RUBBLE SOLING</text>';s+='<line x1="70" y1="'+topY+'" x2="660" y2="'+topY+'" stroke="#666" stroke-dasharray="4 3"/><text x="75" y="'+(topY-6)+'" font-size="11">TOP / GL reference</text>';s+='<text x="380" y="24" font-size="15" font-weight="700">RETAINING WALL CROSS SECTION</text><text x="380" y="42" font-size="10" fill="#555">Actual asymmetric profile from fixed top centreline · schematic</text>';let levels=[0];for(let z=1;z<d.H;z+=1)levels.push(z);if(!levels.includes(d.H))levels.push(d.H);levels.forEach(dep=>{const dm=dimsAt(d.H,d.TW,dep),yy=y(dep);s+='<line x1="'+x(-dm.back)+'" y1="'+yy+'" x2="'+x(dm.front)+'" y2="'+yy+'" stroke="#7a8797" stroke-width=".8" stroke-dasharray="3 3"/><text x="655" y="'+(yy+4)+'" font-size="9" fill="#555">'+fmt(dep,1)+'m: '+fmt(dm.total,2)+'m</text>'});s+='<text x="'+pccLeft+'" y="'+(solBottom+28)+'" font-size="10" fill="#555">Back proj. '+fmt(d.backOff,2)+' m</text><text x="'+(pccRight-115)+'" y="'+(solBottom+28)+'" font-size="10" fill="#555">Front proj. '+fmt(d.frontOff,2)+' m</text>';svg.innerHTML=s}
-$('calcBtn').onclick=calc;
+function draw(d){
+ const svg=$('wallSvg'),scale=Math.min(300/d.H,360/d.pccW);
+ const baseY=385,topY=baseY-d.H*scale,clx=355;
+ const x=offset=>clx+offset*scale,y=depth=>topY+depth*scale;
+ const pts=d.points.map(p=>x(p.x).toFixed(2)+','+y(p.d).toFixed(2)).join(' ');
+ const left=x(-d.bottom.back-d.backOff),right=x(d.bottom.front+d.frontOff);
+ const footBottom=baseY+d.pccT*scale,solBottom=footBottom+d.solT*scale;
+ let shapes='<rect width="760" height="560" fill="#fff"/>';
+ shapes+='<text x="380" y="23" font-size="16" font-weight="700" text-anchor="middle">RETAINING WALL — QUANTITY SECTION</text>'+
+  '<text x="380" y="42" font-size="11" text-anchor="middle" fill="#555">Schematic only · existing section template · not a structural design</text>';
+ shapes+='<line x1="'+clx+'" y1="'+Math.max(54,topY-20)+'" x2="'+clx+'" y2="'+(solBottom+42)+'" stroke="#0b6cff" stroke-width="1.5" stroke-dasharray="7 6"/>'+
+  '<text x="'+(clx+7)+'" y="'+Math.max(62,topY-9)+'" font-size="11" fill="#0b6cff">TOP C/L</text>';
+ shapes+='<polygon points="'+pts+'" fill="#dbeafe" stroke="#172033" stroke-width="2"/>';
+ shapes+='<rect x="'+left+'" y="'+baseY+'" width="'+(right-left)+'" height="'+d.pccT*scale+'" fill="#eadfb8" stroke="#333"/>';
+ shapes+='<rect x="'+left+'" y="'+footBottom+'" width="'+(right-left)+'" height="'+d.solT*scale+'" fill="#d8d0c0" stroke="#555"/>';
+ shapes+='<text x="'+((left+right)/2)+'" y="'+(baseY+13)+'" text-anchor="middle" font-size="11">FOOTING</text>'+
+  '<text x="'+((left+right)/2)+'" y="'+(footBottom+13)+'" text-anchor="middle" font-size="10">SOLING</text>';
+ shapes+='<text x="80" y="'+Math.max(69,topY-7)+'" font-size="11">TOP HEIGHT REFERENCE</text>';
+ for(const depth of d.breakpoints){
+  const dim=PWDRetainingWallCore.profile(d.H,d.TW,depth),level=y(depth);
+  shapes+='<line x1="'+x(-dim.back)+'" y1="'+level+'" x2="'+x(dim.front)+'" y2="'+level+'" stroke="#6b7f94" stroke-width=".9" stroke-dasharray="4 3"/>';
+  shapes+='<text x="656" y="'+(level+4)+'" font-size="10" fill="#334155">'+
+   fmt(depth,2)+'m : '+fmt(dim.total,3)+'m</text>';
+ }
+ shapes+='<text x="'+left+'" y="'+(solBottom+27)+'" font-size="10" fill="#555">Back projection '+fmt(d.backOff,2)+' m</text>'+
+  '<text x="'+(right-134)+'" y="'+(solBottom+27)+'" font-size="10" fill="#555">Front projection '+fmt(d.frontOff,2)+' m</text>';
+ svg.innerHTML=shapes;
+}
+function copyQuantities(){
+ if(!lastResult)return;
+ const d=lastResult,lines=[
+  'PWD Retaining Wall — Section Quantities (planning only)',
+  'Work: '+($('project').value.trim()||'Not specified'),
+  'Template: '+(d.strict?'Piecewise H > 2.50 m':'Lower wall H ≤ 2.50 m'),
+  'Length: '+fmt(d.L,3)+' m | Height: '+fmt(d.H,3)+' m',
+  'Top width: '+fmt(d.TW,3)+' m | Base width: '+fmt(d.baseWidth,3)+' m',
+  'Footing width: '+fmt(d.pccW,3)+' m',
+  'Section area: '+fmt(d.wallArea,4)+' m²',
+  'Excavation gross: '+fmt(d.exc,3)+' m³',
+  'Rubble soling: '+fmt(d.soling,3)+' m³',
+  'Footing: '+fmt(d.pcc,3)+' m³',
+  'Wall concrete ('+d.grade+'): '+fmt(d.concrete,3)+' m³',
+  'Filter/rubble filling: '+fmt(d.filter,3)+' m³',
+  'Weep holes: approximately '+d.weepApprox+' (spacing aid only)',
+  'Field profile transition depths: '+d.breakpoints.map(x=>fmt(x,3)).join(', ')+' m',
+  'NOT STRUCTURAL DESIGN · check controlling drawings, stability and final measurement.'
+ ];
+ const content=lines.join('\n');
+ if(navigator.clipboard?.writeText){
+  navigator.clipboard.writeText(content).then(
+   ()=>$('calcStatus').textContent='Quantity summary copied — verify before use.',
+   ()=>window.prompt('Copy quantity summary',content));
+ }else window.prompt('Copy quantity summary',content);
+}
+function saveDrawing(){
+ if(!lastResult)return;
+ const svg=$('wallSvg').cloneNode(true);
+ svg.setAttribute('xmlns','http://www.w3.org/2000/svg');
+ const content='<?xml version="1.0" encoding="UTF-8"?>\n'+new XMLSerializer().serializeToString(svg);
+ const file=new Blob([content],{type:'image/svg+xml;charset=utf-8'});
+ const url=URL.createObjectURL(file),anchor=document.createElement('a');
+ const name=($('project').value.trim()||'retaining-wall').replace(/[^a-zA-Z0-9_-]+/g,'-').slice(0,45);
+ anchor.download=name+'-section.svg';
+ anchor.href=url;document.body.appendChild(anchor);anchor.click();anchor.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),10000);
+ $('calcStatus').textContent='Section SVG sent to your device Downloads/Files.';
+}
+$('calcBtn').onclick=()=>calc(true);
+$('printBtn').onclick=()=>{if(lastResult)window.print()};
+$('copyBtn').onclick=copyQuantities;
+$('saveSvgBtn').onclick=saveDrawing;
+$('inputCard').addEventListener('input',()=>{
+ mode();
+ if(lastResult||$('results').style.display==='block')calc(false);
+});
+$('inputCard').addEventListener('change',()=>{
+ mode();
+ if(lastResult||$('results').style.display==='block')calc(false);
+});
+mode();
+updateButtons(false);
 </script><script src="./app-shell.js"></script></body></html>
