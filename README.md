@@ -41,6 +41,14 @@ The Library contains 73 catalogued **Drive links and titles**, not book PDFs. Or
 - Offline status means the browser retained a PDF file, **not** that its contents, edition, title block, revision or engineering applicability have been verified.
 - **Read PDF in app** may display Google Drive preview when a local PDF is absent. If Google blocks embedded preview, **Google Drive** remains the online fallback.
 
+## Retaining Wall — two engineering drawings and bottom-up setting-out
+
+- **Diagram 1, dimensioned section:** on the existing section model, mark wall height, top width, bottom width, PCC/soling common width and their individual thicknesses. For heights above 2.50 m identify the independently computed left/back and right/front batter-change junctions at their heights **above top of PCC**. Keep this diagram clear; do not overcrowd it with 1 m station offsets.
+- **Diagram 2, field setting-out:** **0.00 is at PCC top**, not excavation bottom. A single fixed vertical centreline passes through the **midpoint of the TOP width**. At every control level independently compute LEFT/back and RIGHT/front distances from this unchanged C/L; they are equal at the top only. This drawing excludes PCC/soling offsets.
+- **Construction-level algorithm:** start at 0.00 and attempt the next +1.00 m. If any batter change occurs sooner, mark that exact change instead and restart the next 1.00 m from that junction. Always include the wall top, including partial last lift. Example H=4.00, junctions 1.20/2.05 -> 0, 1.00, 1.20, 2.05, 3.05, 4.00. Example H=4.00, junctions 0.80/2.05 -> 0, 0.80, 1.80, 2.05, 3.05, 4.00.
+- **Field table and export:** station height upward from PCC top, left/right offsets, total width, batter-change marker, same sequence in working CSV. Drawing labels have independent anti-overlap rails and both diagrams support finger pinch zoom. Printable output includes both drawings.
+- The two existing section profiles, quantities, safety cautions and unapproved-drawing limitations are preserved. Batter-change heights in actual sections come from the original wall geometry; the examples illustrate the construction-level algorithm rather than inventing new batter geometry.
+
 ## Retaining Wall — section/quantity polish
 
 - The tool **retains the existing project's two geometric profiles**: lower (H ≤ 2.50 m) and the fixed piecewise section (2.50 m < H ≤ 10.00 m). It does not infer new wall types, design dimensions or stability criteria.
