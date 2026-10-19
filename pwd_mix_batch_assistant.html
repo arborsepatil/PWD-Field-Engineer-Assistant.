@@ -110,7 +110,7 @@ const BRASS=2.8316846592, BAGKG=50, MIN_C_ADJ={10:40,20:0,40:-30};
 let lastSelection={cat:'building',item:'b_m20',wc:.50};
 const $=id=>document.getElementById(id);
 const fmt=(n,d=3)=>Number.isFinite(n)?Number(n).toFixed(d):'—';
-function num(id,positive=true){let n=Number($(id).value);if(!Number.isFinite(n)||(positive?n<=0:n<0))throw Error('Check '+id+' input.');return n}
+function num(id,positive=true){const raw=$(id).value.trim(),n=raw===''?NaN:Number(raw);if(!Number.isFinite(n)||(positive?n<=0:n<0))throw Error('Enter a valid '+id+' value '+(positive?'above zero.':'of zero or above.'));return n}
 function allRows(){let a=[];Object.entries(DATA).forEach(([cat,d])=>d.items.forEach(x=>a.push({cat,label:d.label,...x})));return a}
 function setupPair(cId,iId,sId,defCat='building',defItem='b_m20'){
  const c=$(cId),i=$(iId);c.innerHTML=Object.entries(DATA).map(([k,d])=>`<option value="${k}">${d.label}</option>`).join('');c.value=defCat;
@@ -119,10 +119,48 @@ function setupPair(cId,iId,sId,defCat='building',defItem='b_m20'){
 }
 function getRow(cId,iId){const cat=$(cId).value,d=DATA[cat],x=d.items.find(v=>v.id===$(iId).value);if(!x)throw Error('Source row not found.');return {cat,d,x}}
 function showSource(cId,iId,sId){const {d,x}=getRow(cId,iId);$(sId).innerHTML=`<div class="note"><span class="badge source">PWD SOURCE</span> <b>${x.name}</b><br>${d.source}${d.jobMix?'<br><b>Important:</b> actual approved job mix governs where required by the source/project.':''}</div>`}
-function scale(x,f,wc){
- const bags=x.c*f,cementKg=bags*BAGKG,water=cementKg*wc;
- const cv=v=>v===null?null:v*f;
- return {factor:f,bags,cementKg,water,s:cv(x.s),a40:cv(x.a40),a20:cv(x.a20),a10:cv(x.a10)};
+const scale=(row,volume,wc)=>PWDBatchCore.scale(row,volume,wc);
+let lastOrderText='',lastBatchText='',returnTab='qty';
+function lineMaterial(name,v){return name+': '+(v===null?'Source not provided':fmt(v/BRASS,3)+' brass ('+fmt(v,3)+' m³)')}
+function orderText(row,volume,o){
+ const site=$('qWork').value.trim();
+ const lines=['PWD BATCH ASSISTANT — MATERIAL ORDER (planning)',
+  ...(site?['Work / site: '+site]:[]),
+  'Publication family: '+DATA[$('qCat').value].label,
+  'Source row: '+row.name,
+  'Concrete quantity: '+fmt(volume,3)+' m³ ('+fmt(volume/BRASS,3)+' brass)',
+  'Cement theoretical: '+fmt(o.bags,2)+' bags / '+fmt(o.cementKg,1)+' kg',
+  'Whole-bag procurement suggestion: '+o.orderBags+' bags (round up; verify site stock)',
+  lineMaterial('Sand',o.s),lineMaterial('40 mm aggregate',o.a40),
+  lineMaterial('20 mm aggregate',o.a20),lineMaterial('12/10 mm aggregate',o.a10),
+  'Water from adopted w/c: '+fmt(o.water,1)+' L — planning only; correct for moisture',
+  'CHECK: theoretical materials; confirm approved mix, applicable source and actual order before procurement'];
+ return lines.join('\n');
+}
+function batchText(row,basis,o,total){
+ const lines=['PWD BATCH ASSISTANT — AJAX OPERATOR SHEET (planning)',
+  'Source family: '+DATA[$('aCat').value].label,'Source row: '+row.name,
+  'Batch basis: '+basis,
+  'Cement: '+fmt(o.cementKg,1)+' kg ('+fmt(o.bags,2)+' bags)',
+  'Sand: '+kgText(withWeights(o).wSand),
+  '40 mm: '+kgText(withWeights(o).w40),
+  '20 mm: '+kgText(withWeights(o).w20),
+  '12/10 mm: '+kgText(withWeights(o).w10),
+  'Water planning: '+fmt(o.water,1)+' L before moisture correction',
+  ...(total>0?['Total concrete requested: '+fmt(total,3)+' m³']:[]),
+  'CHECK: theoretical source consumption and assumed bulk densities; approved job mix and field moisture control govern'];
+ return lines.join('\n');
+}
+async function copyText(text,statusId){
+ const output=$(statusId);
+ if(!text){output.textContent='Calculate a valid result first.';return}
+ try{if(!navigator.clipboard?.writeText)throw Error('Clipboard not supported');await navigator.clipboard.writeText(text);output.textContent='Copied. Verify the planned quantities before placing an order.'}
+ catch{output.textContent='Clipboard unavailable. Select and copy the text from the dialog.';window.prompt('Copy this planning summary:',text)}
+}
+async function shareText(text,statusId){
+ if(!text){$(statusId).textContent='Calculate a valid result first.';return}
+ if(navigator.share){try{await navigator.share({text});$(statusId).textContent='Shared planning summary.';return}catch(e){if(e.name==='AbortError')return}}
+ await copyText(text,statusId);
 }
 function densities(){
  const ids=['dSand','d10','d20','d40'], vals=ids.map(id=>Number($(id).value));
@@ -136,56 +174,70 @@ function withWeights(o){
 function volText(v){return v===null?'Source not provided':`${fmt(v,3)} m³ · ${fmt(v/BRASS,3)} brass`}
 function kgText(v){return v===null?'Source not provided':`${fmt(v,1)} kg`}
 function procurement(o,title='TOTAL MATERIAL / ORDER SUMMARY'){
- return `<div class="card"><h3>${title}</h3><div class="small">Sand and aggregate are emphasized in brass for procurement. Exact m³ is retained in smaller text. No automatic order-rounding is applied.</div>
+ return `<div class="card"><h3>${title}</h3><div class="small">Sand and aggregate are shown in brass with exact m³ below. Cement quantity is theoretical; a separate whole-bag suggestion is rounded up, not an automatically approved purchase order.</div>
  <div class="resultGrid">
- <div class="result">Cement<b>${fmt(o.bags,2)} bags</b><small>${fmt(o.cementKg,1)} kg</small></div>
+ <div class="result">Cement<b>${fmt(o.bags,2)} bags</b><small>${fmt(o.cementKg,1)} kg · suggested whole-bag order: ${o.orderBags} bags</small></div>
  <div class="result">Sand order<b>${o.s===null?'N/A':fmt(o.s/BRASS,3)+' brass'}</b><small>${o.s===null?'Source not provided':fmt(o.s,3)+' m³'}</small></div>
  <div class="result">40 mm order<b>${o.a40===null?'N/A':fmt(o.a40/BRASS,3)+' brass'}</b><small>${o.a40===null?'Source not provided':fmt(o.a40,3)+' m³'}</small></div>
  <div class="result">20 mm order<b>${o.a20===null?'N/A':fmt(o.a20/BRASS,3)+' brass'}</b><small>${o.a20===null?'Source not provided':fmt(o.a20,3)+' m³'}</small></div>
  <div class="result">12/10 mm order<b>${o.a10===null?'N/A':fmt(o.a10/BRASS,3)+' brass'}</b><small>${o.a10===null?'Source not provided':fmt(o.a10,3)+' m³'}</small></div>
  </div></div>`;
 }
-function resultMaterials(o){
- const w=withWeights(o);
+function resultMaterials(o,showWeights=true){
+ const w=showWeights?withWeights(o):null;
+ const display=(volume,weight)=>showWeights?kgText(weight):volText(volume);
  return `<div class="resultGrid">
 <div class="result">Cement<b>${fmt(o.cementKg,1)} kg</b><small>${fmt(o.bags,2)} bags</small></div>
-<div class="result">Sand<b>${kgText(w.wSand)}</b><small>${volText(o.s)}</small></div>
-<div class="result">40 mm aggregate<b>${kgText(w.w40)}</b><small>${volText(o.a40)}</small></div>
-<div class="result">20 mm aggregate<b>${kgText(w.w20)}</b><small>${volText(o.a20)}</small></div>
-<div class="result">12/10 mm aggregate<b>${kgText(w.w10)}</b><small>${volText(o.a10)}</small></div>
-<div class="result">Planning water<b>${fmt(o.water,1)} L</b><small>From entered w/c before moisture correction.</small></div>
-</div>`}
+<div class="result">Sand<b>${display(o.s,w?.wSand)}</b>${showWeights?'<small>'+volText(o.s)+'</small>':''}</div>
+<div class="result">40 mm aggregate<b>${display(o.a40,w?.w40)}</b>${showWeights?'<small>'+volText(o.a40)+'</small>':''}</div>
+<div class="result">20 mm aggregate<b>${display(o.a20,w?.w20)}</b>${showWeights?'<small>'+volText(o.a20)+'</small>':''}</div>
+<div class="result">12/10 mm aggregate<b>${display(o.a10,w?.w10)}</b>${showWeights?'<small>'+volText(o.a10)+'</small>':''}</div>
+<div class="result">Planning water<b>${fmt(o.water,1)} L</b><small>Entered w/c basis before aggregate moisture correction.</small></div>
+</div>`;
+}
 function calcQty(){
- try{const {cat,d,x}=getRow('qCat','qItem'),q=num('qQty'),wc=num('qWC');if(wc<.20||wc>.70)throw Error('Enter w/c between 0.20 and 0.70.');
- const o=scale(x,q,wc);lastSelection={cat,item:x.id,wc};$('qOut').innerHTML=`<div class="card"><h2>${x.name} — ${fmt(q,3)} m³</h2><div class="note"><b>Procurement view:</b> sand and aggregate are shown primarily in brass for ordering.</div></div>${procurement(o)}<div class="card"><h3>Engineering quantity detail</h3>${resultMaterials(o)}${d.jobMix?'<div class="warn"><b>Job-mix warning:</b> this is source-table scaling for planning/reference; approved actual job mix governs where applicable.</div>':''}<div class="actions noPrint"><button class="btn btn2" onclick="window.print()">Print</button></div></div>`;}
- catch(e){$('qOut').innerHTML=`<div class="danger">${e.message}</div>`}
+ try{
+  const {cat,d,x}=getRow('qCat','qItem');
+  const q=PWDBatchCore.cubicMetres(num('qQty'),$('qUnit').value),wc=PWDBatchCore.wcRatio(num('qWC'));
+  const o=scale(x,q,wc);
+  lastSelection={cat,item:x.id,wc};lastOrderText=orderText(x,q,o);
+  $('qOut').innerHTML=`<div class="card"><h2>${x.name} — ${fmt(q,3)} m³</h2>
+   <div class="note"><b>Planning only:</b> source quantities are scaled to concrete volume. Actual order quantities, site stock and approved mix are to be checked.</div></div>
+   ${procurement(o)}<div class="card"><h3>Source quantity breakdown</h3>${resultMaterials(o,false)}
+   ${d.jobMix?'<div class="warn"><b>Approved job mix governs</b> where required. The source table alone is not a production mix.</div>':''}
+   <div class="actions noPrint"><button type="button" class="btn" onclick="copyText(lastOrderText,'qOrderStatus')">Copy material order</button>
+   <button type="button" class="secondary-link" onclick="shareText(lastOrderText,'qOrderStatus')">Share order</button>
+   <button type="button" class="secondary-link" onclick="window.print()">Print</button></div></div>`;
+  $('qOrderStatus').textContent='';
+ }catch(e){
+  lastOrderText='';$('qOut').innerHTML='<div class="danger" role="alert">'+e.message+'</div>'; $('qOrderStatus').textContent='';
+ }
 }
 function toggleABasis(){const bags=$('aBasis').value==='bags';$('aBagField').classList.toggle('hidden',!bags);$('aVolField').classList.toggle('hidden',bags)}
 function calcAjax(){
- try{const {cat,d,x}=getRow('aCat','aItem'),wc=num('aWC');if(wc<.20||wc>.70)throw Error('Enter w/c between 0.20 and 0.70.');
- let f,basis;if($('aBasis').value==='volume'){f=num('aVol');basis=`${fmt(f,3)} m³ usable concrete/batch`;}else{const b=num('aBags');if(!(x.c>0))throw Error('No cement-bag basis in selected source row.');f=b/x.c;basis=`${fmt(b,2)} cement bags/batch`;}
- const o=scale(x,f,wc),total=Number($('aTotal').value||0);let batchNote='';
- if(total>0){const tot=scale(x,total,wc);batchNote=`<div class="note">Equivalent batches for ${fmt(total,3)} m³ ≈ <b>${fmt(total/f,2)}</b>. Plan whole/partial final batch under engineer control.</div>${procurement(tot,'TOTAL MATERIAL / PROCUREMENT')}`;}
- lastSelection={cat,item:x.id,wc};
- $('aOut').innerHTML=`<div class="card operator"><h2>OPERATOR BATCH SHEET</h2><div class="note"><b>${x.name}</b><br>Basis: ${basis}</div>${resultMaterials(o)}${batchNote}
- <div class="warn"><b>Operator instructions:</b> Do not add extra water without engineer approval. Keep source aggregate fractions separate. Maintain the same measuring basis for each batch. Surface moisture in aggregates affects actual water to add. If an approved mix uses admixture, follow only the approved job-mix/product/project instruction; no admixture dosage is calculated here.</div>
- ${d.jobMix?'<div class="danger"><b>Actual approved job mix governs this work where required.</b></div>':''}
- <div class="actions noPrint"><button class="btn" onclick="window.print()">Print Operator Sheet</button><button class="btn btn2" onclick="openNotesFrom('a')">Engineer Notes</button></div></div>`;}
- catch(e){$('aOut').innerHTML=`<div class="danger">${e.message}</div>`}
-}
-function calcRMC(){
  try{
- const {cat,d,x}=getRow('rCat','rItem'),q=num('rQty'),load=num('rLoad'),wc=num('rWC');
- if(wc<.20||wc>.70)throw Error('Enter w/c between 0.20 and 0.70.');
- const per=scale(x,load,wc),tot=scale(x,q,wc),n=q/load,full=Math.floor(n+1e-12),rem=q-full*load,dispatch=Math.ceil(n-1e-12);
- lastSelection={cat,item:x.id,wc};
- $('rOut').innerHTML=`<div class="card operator"><h2>RMC / WEIGH-BATCH INSTRUCTION</h2>
- <div class="note"><b>${x.name}</b><br>Planned batch/load: ${fmt(load,2)} m³ · Total: ${fmt(q,2)} m³</div>
- ${resultMaterials(per)}
- <div class="note">Equivalent loads = <b>${fmt(n,2)}</b> · Planned dispatches = <b>${dispatch}</b>${rem>1e-9?` · Final partial ≈ <b>${fmt(rem,2)} m³</b>`:''}</div>
- <div class="danger"><b>Actual RMC plant-approved job mix governs production.</b> These kg values are source-table volumes converted with editable working bulk-density assumptions for planning/field instruction only.</div>
- </div>${procurement(tot,'TOTAL MATERIAL / PROCUREMENT')}<div class="card"><div class="actions noPrint"><button class="btn" onclick="window.print()">Print Weight Sheet</button><button class="btn btn2" onclick="openNotesFrom('r')">Engineer Notes</button></div></div>`;
- }catch(e){$('rOut').innerHTML=`<div class="danger">${e.message}</div>`}
+  const {cat,d,x}=getRow('aCat','aItem'),wc=PWDBatchCore.wcRatio(num('aWC'));
+  const basisKey=$('aBasis').value,totalRaw=$('aTotal').value.trim();
+  const result=PWDBatchCore.ajax(x,{
+   basis:basisKey,volume:$('aVol').value,bags:$('aBags').value,wc,
+   total:totalRaw===''?0:totalRaw
+  });
+  const o=result.batch;
+  const basis=basisKey==='volume'?`${fmt(result.batchM3,3)} m³ actual usable concrete per batch`:`${fmt(o.bags,2)} cement bags per batch`;
+  const batchNote=result.procurement?
+   `<div class="note">Total concrete: ${fmt(result.totalM3,3)} m³ · equivalent batches: <b>${fmt(result.exactBatches,2)}</b> · maximum whole batch cycles: <b>${result.wholeBatches}</b>. Adjust the final partial batch under engineer supervision; do not blindly produce excess concrete.</div>${procurement(result.procurement,'TOTAL MATERIAL / PROCUREMENT')}`:'';
+  lastSelection={cat,item:x.id,wc};
+  lastBatchText=batchText(x,basis,o,result.totalM3);
+  $('aOut').innerHTML=`<div class="card operator"><h2>AJAX OPERATOR BATCH SHEET</h2>
+  <div class="note"><b>${x.name}</b><br>Basis: ${basis}</div>
+  ${resultMaterials(o,true)}${batchNote}
+  <div class="warn"><b>Weight assumptions:</b> sand and aggregate kg use the editable bulk densities shown above; these are working assumptions, not approved weigh-batch targets. Water is indicative until aggregate moisture is measured. Keep aggregate fractions separate; do not change w/c casually.</div>
+  ${d.jobMix?'<div class="danger"><b>Actual approved job mix governs where required.</b></div>':''}
+  <div class="actions noPrint"><button type="button" class="btn" onclick="copyText(lastBatchText,'aCopyStatus')">Copy operator sheet</button>
+  <button type="button" class="secondary-link" onclick="window.print()">Print</button>
+  <button type="button" class="secondary-link" onclick="openNotesFrom('a')">Engineering notes</button></div>
+  <p id="aCopyStatus" class="summary-status" role="status" aria-live="polite"></p></div>`;
+ }catch(e){lastBatchText='';$('aOut').innerHTML='<div class="danger" role="alert">'+e.message+'</div>'}
 }
 function gradeFromName(name){const m=name.match(/M-?\s*(\d+(?:\.\d+)?)/i);return m?Number(m[1]):null}
 function selectedNotesRow(){const v=$('nRow').value;if(!v)return null;return allRows().find(r=>r.cat+'|'+r.id===v)||null}
