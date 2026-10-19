@@ -1,44 +1,89 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f8fc"><title>PWD Engineering Calculators</title><style>
 :root{--bg:#f5f8fc;--card:#fff;--line:#dfe7f1;--txt:#0b1830;--muted:#66758d;--blue:#0b6cff;--soft:#edf4ff;--green:#0d9b60;--amber:#c77a00;--red:#d94343;--shadow:0 12px 34px rgba(24,53,91,.08)}
 html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff;--muted:#aebbd0;--soft:#102744;--shadow:0 16px 40px rgba(0,0,0,.24)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 12px;display:flex;align-items:center;gap:10px}.top a{color:var(--blue);text-decoration:none;font-weight:850;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.title{flex:1;font-weight:900}.sub{display:block;font-size:10px;color:var(--muted);font-weight:700}.wrap{max-width:980px;margin:auto;padding:12px 12px 100px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 11%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;overflow:hidden}.hero h1{font-size:26px;margin:0 0 6px;letter-spacing:-.8px}.hero p{margin:0;color:var(--muted);font-size:12px;max-width:720px}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;position:sticky;top:59px;z-index:15;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:14px;padding:11px 8px;font-weight:900}.tab.active{background:var(--blue);color:white;border-color:var(--blue);box-shadow:0 6px 18px color-mix(in srgb,var(--blue) 22%,transparent)}.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin:10px 0;box-shadow:0 8px 28px rgba(24,53,91,.05)}.card h2{font-size:16px;margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.field label{display:block;font-size:11px;font-weight:850;color:var(--muted);margin-bottom:5px}.field input,.field select{width:100%;min-height:46px;background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:13px;padding:10px 11px;font-size:15px;outline:none}.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 15%,transparent)}.result{background:var(--soft);border:1px solid var(--line);border-radius:15px;padding:13px;margin-top:10px;font-weight:800}.allgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.out{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:10px;cursor:pointer}.out b{display:block;font-size:14px}.out span{font-size:10px;color:var(--muted)}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--blue);padding:10px 11px;border-radius:12px;margin-top:10px}.warn{font-size:11px;color:var(--amber);background:color-mix(in srgb,var(--amber) 10%,var(--card));border:1px solid color-mix(in srgb,var(--amber) 25%,var(--line));padding:10px;border-radius:12px}.shape-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.shape-btn{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:14px;padding:12px 8px;font-weight:850;min-height:60px}.shape-btn.active{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 8%,var(--card));color:var(--blue)}.formula{font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);margin-top:7px}.seg{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.seg button{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:999px;padding:8px 11px;font-weight:850}.seg button.on{background:var(--blue);color:white;border-color:var(--blue)}.big{font-size:24px!important;color:var(--green)}.copyhint{font-size:10px;color:var(--muted);margin-top:5px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:18px}@media(max-width:680px){.grid,.grid3,.allgrid{grid-template-columns:1fr}.shape-grid{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:22px}}@media(max-width:430px){.shape-grid{grid-template-columns:1fr 1fr}.tabs{top:57px}}
-</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./index.html">‹ PWD Tools</a><div class="title">Engineering Calculators<span class="sub">Units · Geometry · Civil Quick</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>Engineering Calculators</h1><p>Fast field conversions, geometry, earthwork, survey coordinates and bearings. The separate Maharashtra Land tab has been removed; acre/hectare remain under Area units.</p></section><nav class="tabs"><button class="tab active" data-p="units">UNITS</button><button class="tab" data-p="geometry">GEOMETRY</button><button class="tab" data-p="civil">CIVIL QUICK</button></nav>
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 12px;display:flex;align-items:center;gap:10px}.top a{color:var(--blue);text-decoration:none;font-weight:850;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.title{flex:1;font-weight:900}.sub{display:block;font-size:10px;color:var(--muted);font-weight:700}.wrap{max-width:980px;margin:auto;padding:12px 12px 100px}.hero{background:linear-gradient(145deg,color-mix(in srgb,var(--blue) 11%,var(--card)),var(--card));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;overflow:hidden}.hero h1{font-size:26px;margin:0 0 6px;letter-spacing:-.8px}.hero p{margin:0;color:var(--muted);font-size:12px;max-width:720px}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;position:sticky;top:59px;z-index:15;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:8px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:14px;padding:11px 8px;font-weight:900}.tab.active{background:var(--blue);color:white;border-color:var(--blue);box-shadow:0 6px 18px color-mix(in srgb,var(--blue) 22%,transparent)}.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin:10px 0;box-shadow:0 8px 28px rgba(24,53,91,.05)}.card h2{font-size:16px;margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.field label{display:block;font-size:11px;font-weight:850;color:var(--muted);margin-bottom:5px}.field input,.field select{width:100%;min-height:46px;background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:13px;padding:10px 11px;font-size:15px;outline:none}.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 15%,transparent)}.result{background:var(--soft);border:1px solid var(--line);border-radius:15px;padding:13px;margin-top:10px;font-weight:800}.allgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.out{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:10px;cursor:pointer}.out:focus-visible{outline:2px solid var(--blue);outline-offset:2px}.unit-active{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 8%,var(--card))}.out b{display:block;font-size:14px}.out span{font-size:10px;color:var(--muted)}.note{font-size:11px;color:var(--muted);background:var(--soft);border-left:4px solid var(--blue);padding:10px 11px;border-radius:12px;margin-top:10px}.warn{font-size:11px;color:var(--amber);background:color-mix(in srgb,var(--amber) 10%,var(--card));border:1px solid color-mix(in srgb,var(--amber) 25%,var(--line));padding:10px;border-radius:12px}.shape-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.shape-btn{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:14px;padding:12px 8px;font-weight:850;min-height:60px}.shape-btn.active{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 8%,var(--card));color:var(--blue)}.formula{font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);margin-top:7px}.seg{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.seg button{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:999px;padding:8px 11px;font-weight:850}.seg button.on{background:var(--blue);color:white;border-color:var(--blue)}.big{font-size:24px!important;color:var(--green)}.copyhint{font-size:10px;color:var(--muted);margin-top:5px}.footer{text-align:center;color:var(--muted);font-size:10px;padding:18px}@media(max-width:680px){.grid,.grid3,.allgrid{grid-template-columns:1fr}.shape-grid{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:22px}}@media(max-width:430px){.shape-grid{grid-template-columns:1fr 1fr}.tabs{top:57px}}
+</style><link rel="stylesheet" href="./app-global.css"></head><body><header class="top"><a href="./index.html">‹ PWD Tools</a><div class="title">Engineering Calculators<span class="sub">Units · Geometry · Civil Quick</span></div><a href="./settings.html">⚙</a></header><main class="wrap"><section class="hero"><h1>Engineering Calculators</h1><p>Fast field conversions, geometry, earthwork, survey coordinates and bearings. Indian and international units in one converter—including square mile, guntha, hectare, surveying units and common engineering quantities. No unverified regional land factors.</p></section><nav class="tabs"><button class="tab active" data-p="units">UNITS</button><button class="tab" data-p="geometry">GEOMETRY</button><button class="tab" data-p="civil">CIVIL QUICK</button></nav>
 
-<section id="units" class="panel active"><div class="card"><h2>Universal Engineering Unit Converter</h2><div class="grid"><div class="field"><label>Category</label><select id="ucat"></select></div><div class="field"><label>Value</label><input id="uval" type="number" value="1" step="any"></div><div class="field"><label>From unit</label><select id="ufrom"></select></div></div><div id="uout" class="result"></div><div id="allout" class="allgrid"></div><div class="copyhint">Tap any result card to copy that value.</div></div></section>
+<section id="units" class="panel active"><div class="card"><h2>Universal Engineering Unit Converter</h2><div class="grid"><div class="field"><label>Category</label><select id="ucat"></select></div><div class="field"><label>Value</label><input id="uval" type="number" value="1" step="any"></div><div class="field"><label for="ufrom">From unit</label><select id="ufrom"></select></div><div class="field"><label for="uto">To unit</label><select id="uto"></select></div></div><div class="seg"><button type="button" id="uswap">⇄ Swap units</button><button type="button" id="ureset">Reset value</button></div><div id="uout" class="result" aria-live="polite"></div><div id="unitNote" class="note"></div><div class="field" style="margin-top:10px"><label for="unitFilter">Find result unit</label><input id="unitFilter" type="search" autocomplete="off" placeholder="Search km², mi², acre, ft², guntha…"></div><div id="allout" class="allgrid"></div><div class="copyhint">Tap a result card to copy. Small quantities use scientific notation instead of rounding to zero.</div></div></section>
 
 <section id="geometry" class="panel"><div class="card"><h2>Area</h2><div id="areaShapes" class="shape-grid"></div><div id="areaInputs" class="grid" style="margin-top:12px"></div><div id="areaOut" class="result">Select a shape.</div></div><div class="card"><h2>Volume</h2><div id="volumeShapes" class="shape-grid"></div><div id="volumeInputs" class="grid" style="margin-top:12px"></div><div id="volumeOut" class="result">Select a shape.</div></div><div class="card"><h2>Earthwork</h2><div class="seg"><button class="on" data-earth="aea">Average End Area</button><button data-earth="prismoid">Prismoidal</button><button data-earth="road">Road / Embankment Section</button></div><div id="earthInputs" class="grid"></div><div id="earthOut" class="result"></div></div></section>
 
-<section id="civil" class="panel"><div class="card"><h2>Slope</h2><div class="grid"><div class="field"><label>Rise / vertical</label><input id="rise" type="number" value="1" step="any"></div><div class="field"><label>Horizontal</label><input id="run" type="number" value="100" step="any"></div></div><div id="slopeout" class="result"></div></div><div class="card"><h2>Chainage</h2><div class="grid"><div class="field"><label>Start chainage</label><input id="ch1" value="2+400"></div><div class="field"><label>End chainage</label><input id="ch2" value="3+175"></div></div><div id="chout" class="result"></div></div><div class="card"><h2>Survey Converter</h2><div class="seg"><button class="on" data-survey="coord">Coordinates</button><button data-survey="bearing">WCB ↔ RB</button><button data-survey="fb">Fore ↔ Back</button><button data-survey="mag">Magnetic ↔ True</button></div><div id="surveyInputs" class="grid"></div><div id="surveyOut" class="result"></div><div class="note">Magnetic-to-true convention used here: True Bearing = Magnetic Bearing + declination, with East positive and West negative; result normalized to 0–360°.</div></div></section><div class="footer">PWD Tools · Engineering Calculators V3 · Field assistance only</div></main><script>
-const $=id=>document.getElementById(id),fmt=x=>Number.isFinite(x)?Number(x.toPrecision(12)).toLocaleString('en-IN',{maximumFractionDigits:8}):'—',BRASS=2.8316846592;
+<section id="civil" class="panel"><div class="card"><h2>Slope</h2><div class="grid"><div class="field"><label>Rise / vertical</label><input id="rise" type="number" value="1" step="any"></div><div class="field"><label>Horizontal</label><input id="run" type="number" value="100" step="any"></div></div><div id="slopeout" class="result"></div></div><div class="card"><h2>Chainage</h2><div class="grid"><div class="field"><label>Start chainage</label><input id="ch1" value="2+400"></div><div class="field"><label>End chainage</label><input id="ch2" value="3+175"></div></div><div id="chout" class="result"></div></div><div class="card"><h2>Survey Converter</h2><div class="seg"><button class="on" data-survey="coord">Coordinates</button><button data-survey="bearing">WCB ↔ RB</button><button data-survey="fb">Fore ↔ Back</button><button data-survey="mag">Magnetic ↔ True</button></div><div id="surveyInputs" class="grid"></div><div id="surveyOut" class="result"></div><div class="note">Magnetic-to-true convention used here: True Bearing = Magnetic Bearing + declination, with East positive and West negative; result normalized to 0–360°.</div></div></section><div class="footer">PWD Tools · Engineering Calculators · SI, international & Indian · Field assistance only</div></main><script src="./pwd-unit-data.js"></script><script>
+const $=id=>document.getElementById(id),fmt=x=>PWDUnitData.format(x),BRASS=2.8316846592;
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.p).classList.add('active')});
-const U={
-Length:{m:1,km:1000,cm:.01,mm:.001,ft:.3048,inch:.0254,yd:.9144},
-Area:{'m²':1,'km²':1e6,'cm²':1e-4,'mm²':1e-6,'ft²':.09290304,'yd²':.83612736,hectare:10000,are:100,acre:4046.8564224,guntha:101.17141056},
-Volume:{'m³':1,litre:.001,'mL':1e-6,'cm³':1e-6,'ft³':.028316846592,'yd³':.764554857984,brass:BRASS},
-Mass:{kg:1,g:.001,tonne:1000,quintal:100,lb:.45359237},
-Density:{'kg/m³':1,'g/cm³':1000,'t/m³':1000,'lb/ft³':16.01846337},
-'Unit Weight':{'N/m³':1,'kN/m³':1000,'kgf/m³':9.80665},
-Force:{N:1,kN:1000,MN:1e6,kgf:9.80665,lbf:4.4482216153},
-Pressure:{Pa:1,kPa:1000,MPa:1e6,'N/mm²':1e6,'kN/m²':1000,bar:1e5,'kgf/cm²':98066.5,psi:6894.757293},
-'Moment / Torque':{'N·m':1,'kN·m':1000,'N·mm':.001,'kN·mm':1,'kgf·m':9.80665},
-'Speed / Velocity':{'m/s':1,'km/h':1/3.6,'ft/s':.3048,mph:.44704},
-Acceleration:{'m/s²':1,'ft/s²':.3048,g:9.80665},
-Discharge:{'m³/s':1,'m³/min':1/60,'m³/hr':1/3600,'L/s':.001,'L/min':.001/60,'L/hr':.001/3600,cusec:.028316846592,cumec:1,MLD:1000/86400},
-'Mass Flow':{'kg/s':1,'kg/min':1/60,'kg/hr':1/3600,'t/hr':1000/3600},
-Time:{s:1,min:60,hr:3600,day:86400},
-Energy:{J:1,kJ:1000,MJ:1e6,kWh:3.6e6},
-Power:{W:1,kW:1000,MW:1e6,hp:745.699872},
-Frequency:{Hz:1,kHz:1000,rpm:1/60},
-Angle:{degree:Math.PI/180,radian:1,grad:Math.PI/200},
-'Dynamic Viscosity':{'Pa·s':1,'mPa·s':.001,cP:.001},
-'Kinematic Viscosity':{'m²/s':1,'mm²/s':1e-6,cSt:1e-6},
-'Permeability / Hydraulic Conductivity':{'m/s':1,'cm/s':.01,'mm/s':.001,'m/day':1/86400},
-'Rainfall Intensity':{'mm/hr':1,'mm/day':1/24,'cm/hr':10},
-'Linear Load':{'N/m':1,'kN/m':1000,'kgf/m':9.80665},
-'Stiffness / Force per Length':{'N/mm':1,'kN/mm':1000,'N/m':.001,'kN/m':1}
-};
-const ucat=$('ucat'),ufrom=$('ufrom'),uval=$('uval');Object.keys(U).forEach(k=>ucat.add(new Option(k,k)));ucat.add(new Option('Temperature','Temperature'));
-function setUnits(){const c=ucat.value;ufrom.innerHTML='';(c==='Temperature'?['C','F','K']:Object.keys(U[c])).forEach(k=>ufrom.add(new Option(k,k)));convert()}function temp(v,f,t){let c=f==='C'?v:f==='F'?(v-32)*5/9:v-273.15;return t==='C'?c:t==='F'?c*9/5+32:c+273.15}function convert(){const c=ucat.value,v=Number(uval.value),f=ufrom.value;let vals={};if(c==='Temperature'){['C','F','K'].forEach(k=>vals[k]=temp(v,f,k));$('uout').textContent=fmt(v)+' °'+f+' → all temperature units'}else{const base=v*U[c][f];Object.keys(U[c]).forEach(k=>vals[k]=base/U[c][k]);$('uout').textContent=fmt(v)+' '+f+' → all '+c.toLowerCase()+' units'}$('allout').innerHTML=Object.entries(vals).map(([k,val])=>`<div class="out" data-copy="${fmt(val)} ${k}"><b>${fmt(val)}</b><span>${k}</span></div>`).join('');document.querySelectorAll('#allout .out').forEach(el=>el.onclick=async()=>{try{await navigator.clipboard.writeText(el.dataset.copy);el.style.outline='2px solid var(--green)';setTimeout(()=>el.style.outline='',500)}catch{}})}ucat.oninput=setUnits;uval.oninput=ufrom.oninput=convert;setUnits();
+// Registry is isolated for independent conversion-factor regression tests.
+const {U,NOTES,temperatureUnits,convert:convertUnit}=PWDUnitData;
+const ucat=$('ucat'),ufrom=$('ufrom'),uto=$('uto'),uval=$('uval'),filter=$('unitFilter');
+Object.keys(U).forEach(category=>ucat.add(new Option(category,category)));
+ucat.add(new Option('Temperature (absolute)','Temperature'));
+function options(){
+ const category=ucat.value;
+ return category==='Temperature'?Object.keys(temperatureUnits):Object.keys(U[category]||{});
+}
+function setUnits(){
+ const names=options(),previousFrom=ufrom.value,previousTo=uto.value;
+ ufrom.replaceChildren();uto.replaceChildren();
+ for(const name of names){
+   const label=ucat.value==='Temperature'?temperatureUnits[name]:name;
+   ufrom.add(new Option(label,name));uto.add(new Option(label,name));
+ }
+ ufrom.value=names.includes(previousFrom)?previousFrom:names.includes('m²')?'m²':names[0];
+ uto.value=names.includes(previousTo)&&previousTo!==ufrom.value?previousTo:
+   names.find(x=>x!==ufrom.value)||names[0];
+ if(ucat.value==='Area'&&names.includes('mi² (square mile)')&&!names.includes(previousTo))uto.value='mi² (square mile)';
+ filter.value='';
+ convert();
+}
+function convert(){
+ const category=ucat.value,from=ufrom.value,to=uto.value;
+ const raw=uval.value.trim();
+ const entered=raw!==''?Number(raw):NaN;
+ const valid=Number.isFinite(entered);
+ const result=valid?convertUnit(category,entered,from,to):NaN;
+ const unitLabel=id=>category==='Temperature'?temperatureUnits[id]:id;
+ const status=$('uout');
+ if(!valid){
+   status.textContent='Enter a valid number to convert.';
+ }else if(!Number.isFinite(result)){
+   status.textContent=category==='Temperature'?'Invalid absolute temperature: value is below absolute zero.':'Conversion not available for this input.';
+ }else{
+   status.textContent=fmt(entered)+' '+unitLabel(from)+' = '+fmt(result)+' '+unitLabel(to);
+ }
+ const note=NOTES[category]||'Factors are relative to the SI base unit in this category. Check original project requirements and precision.';
+ $('unitNote').textContent=note;
+ const query=filter.value.toLowerCase().trim();
+ const matching=options().filter(label=>!query||unitLabel(label).toLowerCase().includes(query));
+ const output=$('allout');output.replaceChildren();
+ for(const name of matching){
+   const value=valid?convertUnit(category,entered,from,name):NaN;
+   const card=document.createElement('button');
+   card.type='button';
+   card.className='out'+(name===to?' unit-active':'');
+   const bold=document.createElement('b');
+   bold.textContent=fmt(value);
+   const secondary=document.createElement('span');
+   secondary.textContent=unitLabel(name);
+   card.append(bold,secondary);
+   card.title='Copy '+fmt(value)+' '+unitLabel(name);
+   card.onclick=async()=>{
+     const text=fmt(value)+' '+unitLabel(name);
+     try{
+       await navigator.clipboard.writeText(text);
+       card.style.outline='2px solid var(--green)';
+       setTimeout(()=>card.style.outline='',600);
+     }catch{status.textContent='Copy unavailable in this browser. '+text}
+   };
+   card.disabled=!Number.isFinite(value);
+   output.appendChild(card);
+ }
+ if(!matching.length){const empty=document.createElement('p');empty.textContent='No units match this search.';output.appendChild(empty)}
+}
+ucat.onchange=setUnits;
+ufrom.onchange=convert;uto.onchange=convert;
+uval.oninput=convert;filter.oninput=convert;
+$('uswap').onclick=()=>{const a=ufrom.value;ufrom.value=uto.value;uto.value=a;convert()};
+$('ureset').onclick=()=>{uval.value='1';filter.value='';convert()};
+setUnits();
 
 const areaDefs={Rectangle:[['Length','a',1],['Width','b',1]],Square:[['Side','a',1]],Triangle:[['Base','b',1],['Height','h',1]],'Right Triangle':[['Base','b',1],['Height','h',1]],Trapezoid:[['Parallel side a','a',1],['Parallel side b','b',1],['Height','h',1]],Parallelogram:[['Base','b',1],['Height','h',1]],Rhombus:[['Diagonal 1','d1',1],['Diagonal 2','d2',1]],Circle:[['Radius','r',1]],Semicircle:[['Radius','r',1]],'Circular Sector':[['Radius','r',1],['Angle °','ang',90]],'Circular Segment':[['Radius','r',1],['Central angle °','ang',90]],Annulus:[['Outer radius','R',2],['Inner radius','r',1]],Ellipse:[['Semi-major a','a',2],['Semi-minor b','b',1]],'Semi-ellipse':[['Semi-major a','a',2],['Semi-minor b','b',1]],'Regular Polygon':[['No. of sides','n',6],['Side length','s',1]],'Parabolic Segment':[['Base','b',1],['Height','h',1]]};
 const areaCalc=(n,v)=>({Rectangle:v.a*v.b,Square:v.a**2,Triangle:.5*v.b*v.h,'Right Triangle':.5*v.b*v.h,Trapezoid:(v.a+v.b)/2*v.h,Parallelogram:v.b*v.h,Rhombus:.5*v.d1*v.d2,Circle:Math.PI*v.r**2,Semicircle:.5*Math.PI*v.r**2,'Circular Sector':Math.PI*v.r**2*v.ang/360,'Circular Segment':.5*v.r**2*((v.ang*Math.PI/180)-Math.sin(v.ang*Math.PI/180)),Annulus:Math.PI*(v.R**2-v.r**2),Ellipse:Math.PI*v.a*v.b,'Semi-ellipse':.5*Math.PI*v.a*v.b,'Regular Polygon':v.n*v.s**2/(4*Math.tan(Math.PI/v.n)),'Parabolic Segment':2*v.b*v.h/3}[n]);
