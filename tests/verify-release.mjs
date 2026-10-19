@@ -1181,3 +1181,96 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(html.includes('bulk densities'),'AJAX weights must disclose their editable assumptions');
  process.stdout.write('Three-workflow Batch Assistant: source rows, ordering, AJAX basis, nominal parts and safety guards passed\n');
 }
+
+
+// Retaining Wall Quantity feature QA: section width, breakpoints and input guards.
+{
+ const file=load('pwd_retaining_wall_section_quantity.html');
+ const coreJS=load('pwd-retaining-wall-core.js');
+ new vm.Script(coreJS,{filename:'pwd-retaining-wall-core.js'});
+ assert.ok(shell.includes('./pwd-retaining-wall-core.js'),'Wall calculations are not precached for offline use');
+ assert.ok(file.includes('<script src="./pwd-retaining-wall-core.js"></script>'),'Wall screen does not load verified geometry model');
+ const inline=file.match(/<script>\s*(const \$=[\s\S]*?)<\/script>/);
+ assert.ok(inline,'Retaining Wall interactive script missing');
+ new vm.Script(inline[1],{filename:'pwd_retaining_wall_section_quantity.html'});
+ for(const id of ['inputError','copyWall','copyWallStatus','wallDrawing','wallSvg','printBtn','controlRows','qtyRows'])
+  assert.ok(file.includes('id="'+id+'"'),'Missing Retaining Wall UI control '+id);
+ assert.ok(file.includes('pointerdown')&&file.includes('pointermove'),'Touch pinch/drag gesture handler is missing');
+ assert.ok(file.includes('Math.min(290/d.H'),'Responsive schematic scaling missing');
+ assert.ok(!file.includes('min-width:620px'),'Old fixed-width drawing still forces horizontal mobile scrolling');
+ assert.ok(!file.includes('function strictGeom(H)'),'Old discontinuous section segment assumption still active');
+ const context={window:{}};
+ vm.runInNewContext(coreJS,context,{filename:'wall-model'});
+ const core=context.window.PWDWallCore;
+ const nearly=(a,b,name,tol=1e-9)=>
+  assert.ok(Number.isFinite(a)&&Math.abs(a-b)<=tol*Math.max(1,Math.abs(b)),
+   name+': '+a+' expected '+b);
+ const p={H:2.5,L:10,excD:.8,filterT:.3,weepH:2,weepV:1,
+  lowTW:.6,lowBack:.3,lowFront:.3,lowPccT:.15,lowSolT:.15,lowGrade:'M15',strictSolT:.2};
+ const lower=core.calculate(p);
+ assert.equal(lower.strict,false,'H=2.5 m must follow the existing lower wall section');
+ nearly(lower.baseW,1.225,'Lower wall base width at 2.5m');
+ nearly(lower.wallArea,2.28125,'Lower trapezoidal area');
+ nearly(lower.concrete,22.8125,'Lower total wall concrete');
+ nearly(lower.pccW,1.825,'Lower footing width');
+ nearly(lower.exc,14.6,'Excavation quantity');
+ assert.equal(lower.weepRows,3,'Grid levels follow maximum spacing convention for H=2.5');
+ assert.equal(lower.weepColumns,5,'Grid columns follow maximum spacing convention for L=10');
+ assert.equal(lower.weepApprox,15,'Weep count grid not consistent with spacing');
+ const p4=core.calculate({...p,H:4});
+ assert.equal(p4.strict,true,'H=4 m must use existing higher-wall profile');
+ nearly(p4.wallArea,4.8275,'Higher-wall area independently verified by profile integration');
+ nearly(p4.baseW,2.45,'H=4 base width');
+ nearly(p4.pccW,3.05,'H=4 footing width');
+ nearly(p4.concrete,48.275,'4m wall volume for 10m run');
+ assert.equal(p4.grade,'M15','Strict-mode fixed profile grade altered');
+ assert.equal(p4.pccT,.3,'Strict-mode fixed footing thickness altered');
+ assert.equal(p4.frontOff,.3,'Strict-mode front footing projection altered below 5.0m');
+ assert.equal(core.calculate({...p,H:5}).frontOff,.3,'5.00m front projection must remain 0.30m');
+ assert.equal(core.calculate({...p,H:5.001}).frontOff,.4,'Height above 5.00m must use 0.40m front projection');
+ // Just above 2.50m, front profile break occurs before back break.
+ const transition=core.calculate({...p,H:2.6});
+ nearly(transition.frontBreak,2.08,'Front transition at H=2.6m');
+ nearly(transition.backBreak,2.5,'Back transition remains at 2.5m');
+ assert.ok(transition.sections.every(s=>s.h>0),'Transition cannot contain negative-height segments');
+ assert.deepEqual(Array.from(transition.stations.map(s=>s.depth)),[0,2.08,2.5,2.6],
+    'Front and back breakpoints must be ordered separately');
+ nearly(transition.wallArea,2.5072333333333336,'H=2.6 geometrical area');
+ assert.ok(transition.controls.some(p=>Math.abs(p.depth-2.08)<1e-10),
+    'Field width control must show front profile breakpoint');
+ assert.ok(transition.controls.some(p=>Math.abs(p.depth-2.5)<1e-10),
+    'Field width control must show back profile breakpoint');
+ for(const H of [0.5,1.25,2.5,2.50001,2.6,2.8,3,3.125,3.126,4,5,5.00001,7.5,10]){
+  const d=core.calculate({...p,H});
+  assert.ok(d.sections.every(s=>s.h>0&&s.area>0),'Negative profile segment at H='+H);
+  nearly(d.sections.reduce((sum,s)=>sum+s.h,0),H,'Section heights must sum to wall height '+H);
+  for(const station of d.stations)
+    nearly(station.back+station.front,station.total,'Fixed-centreline width at H='+H);
+  // Independent polygon shoelace check against the piecewise area.
+  const front=d.strict?[0,d.frontBreak,H]:[0,H];
+  const back=d.strict?[H,d.backBreak,0]:[H,0];
+  const polygon=[
+   [-d.TW/2,0],...front.map(z=>[core.profileAt(H,d.TW,z).front,z]),
+   ...back.map(z=>[-core.profileAt(H,d.TW,z).back,z])
+  ];
+  let twice=0;
+  for(let i=0;i<polygon.length;i++){
+   const a=polygon[i],b=polygon[(i+1)%polygon.length];
+   twice+=a[0]*b[1]-b[0]*a[1];
+  }
+  nearly(Math.abs(twice/2),d.wallArea,'Polygon area must equal quantity area H='+H);
+ }
+ const bad=[{H:.4}, {H:10.01},{H:''},{L:0},{L:''},{excD:-1},{filterT:-.2},
+  {weepH:0},{weepV:0},{lowTW:0.1},{lowBack:-.1},{lowFront:-.1},
+  {lowPccT:0},{lowSolT:.35},{lowGrade:'M55'},{H:4,strictSolT:.4}];
+ for(const change of bad)
+  assert.throws(()=>core.calculate({...p,...change}),/must|required|Choose|Check/,
+    'Invalid input was accepted: '+JSON.stringify(change));
+ assert.equal(core.calculate({...p,excD:.1}).excavationReminder,true,
+  'Shallow excavation should trigger a footing-depth warning');
+ assert.equal(core.calculate({...p,excD:1}).excavationReminder,false,
+  'Valid excavation depth should not be flagged');
+ assert.ok(file.includes('stability'),'The tool must warn that wall stability is not calculated');
+ assert.ok(file.includes('schematic'),'Schematic/approval boundary missing');
+ process.stdout.write('Retaining Wall QA passed: 14 cross-section heights, correct segment order, polygon area, quantities, drainage grid and input validation\n');
+}
