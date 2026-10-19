@@ -37,8 +37,8 @@ function transaction(mode,operation){
 function key(id){return 'drive-'+id}
 function normalized(name){
  return String(name||'').toLowerCase().replace(/\\/g,'/').split('/').pop()
-   .replace(/^\\d+\\.\\s*/,'').replace(/\\.pdf$/i,'')
-   .replace(/[^a-z0-9]+/g,' ').trim().replace(/\\s+/g,' ');
+   .replace(/^\d+\.\s*/,'').replace(/\.pdf$/i,'')
+   .replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 }
 function fileMatch(file,record){
  return normalized(file?.name)===normalized(record.name);
@@ -76,13 +76,8 @@ async function remove(id){
  await transaction('readwrite',store=>store.delete(key(id)));
 }
 async function list(){
- const records=await transaction('readonly',store=>store.getAll());
  const results={};
- for(const r of records||[]){
-  if(!r||!(r.blob instanceof Blob)||!r.name)continue;
-  // Older versions did not store an ID; maintain corresponding key via unique file identity.
- }
- // A key-only cursor avoids loading PDF bytes or relying on filename uniqueness.
+ // Cursor reads metadata and Blob references; it does not convert PDF bytes to ArrayBuffers.
  return new Promise((resolve,reject)=>{
   const req=indexedDB.open(DB,1);
   req.onerror=()=>reject(req.error||Error('Storage unavailable'));
