@@ -809,12 +809,28 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
    'Library PDFs still leave the app instead of opening the in-app reader');
  assert.ok(lib.includes('Google Drive ↗'),'Explicit external Drive fallback must be retained');
  assert.ok(!shell.some(path=>/\.pdf$/i.test(path)),'Public app must not precache copyrighted original PDFs');
- assert.ok(!home.includes('Game-changer module deliberately held')&&!home.includes('SSR Master'),
-   'Do not show an inactive SSR placeholder in final home');
- assert.ok(home.includes('library.html?section=ssr'),'The live SSR PDF section must be reachable from home');
- assert.equal((home.match(/class="module-card"/g)||[]).length,4,
-   'Home should have only four practical navigation cards');
+ assert.ok(!home.includes('Game-changer module deliberately held'),'Old SSR placeholder must stay removed');
+ assert.ok(home.includes('SSR Master'),'User-retained SSR Master must be visible in app navigation');
+ assert.ok(home.includes('Rate engine pending'),'SSR Master must not claim unverified rate/analysis functionality');
+ assert.ok(home.includes('library.html?section=ssr'),'SSR source PDFs must be reachable from home');
+ assert.equal((home.match(/class="module-card"/g)||[]).length,5,
+   'Home must expose five kept navigation sections including SSR Master');
  assert.ok(manifest.shortcuts.some(x=>x.name==='Library'),'Android shortcut missing the Library');
+ // Simple-feature polish: inactive preferences removed and controls wired.
+ const settings=load('settings.html'), profile=load('profile.html');
+ for(const retired of ['guideToggle','offlineToggle','wifiToggle','GPS Cam']){
+   assert.ok(!settings.includes(retired),'Inactive or removed Setting still visible: '+retired);
+ }
+ assert.ok(settings.includes('bindCalculatorToggle()'),'Calculator setting does not initialize');
+ assert.ok(settings.includes('PWDUI.syncCalculatorVisibility'),'Settings must update calculator visibility');
+ assert.ok(app.includes('function syncCalculatorVisibility()'),'Shared calculator switch missing');
+ assert.ok(app.includes("store.getItem('pwd_calc_fab')"),'Floating calculator ignores saved setting');
+ assert.ok(!profile.includes('Foundation for quick access'),'Empty favorites placeholder still visible');
+ assert.ok(!profile.includes('Downloaded books/drawings will appear'),'Inactive download placeholder still visible');
+ assert.ok(profile.includes('SSR Master'),'Profile should acknowledge retained SSR Master');
+ assert.ok(home.includes('approvedMap'),'Recent shortcuts should be constrained to approved tools');
+ assert.ok(home.includes('toolSearchEmpty'),'Home search lacks an empty-results state');
+
 
  // Simulate opening a standard that was not hardcoded in the old PDF viewer.
  const entry=driveCatalog.find(r=>r.sub==='IS'&&r.name.includes('456'));

@@ -7,9 +7,10 @@ A focused, installable Maharashtra PWD field engineering web app: practical calc
 - **Site Tools** — concrete batch assistant, retaining wall section quantities, concrete mix design
 - **Bridge Plans** — independent 2002 and 2023 drawing indexes, each linked to the respective original private PDF
 - **Library** — curated links for Maharashtra Public Works Code, 17 IS and 41 IRC PDFs, MoRTH and building specifications, historical SSR, PWD Rule Book, guidelines, original bridge books, office manual and the technical GR index
-- **Settings** — device theme and accessibility preferences; **Profile** and recent tools for navigation
+- **SSR Master** — retained project module: SSR source navigation currently available; rate engine not yet ready
+- **Settings** — working device theme, font and floating-calculator controls; **Profile** and recent tools for navigation
 
-**Removed from the public app:** GPS Cam, Route, Structure, the retired bridge hydraulic calculator, QC module and Guide. The unfinished SSR Master placeholder is removed; use **Library > SSR** for the existing source PDFs.
+**Removed from the public app:** GPS Cam, Route, Structure, the retired bridge hydraulic calculator, QC module and Guide. **SSR Master is a kept feature.** Its source-edition selection is currently linked through **Library > SSR**; item-level extraction, rate/analysis engine and engineering validation are pending. Do not treat a historical PDF as the current approved schedule.
 
 ## Where the PDFs live
 - The 73-document catalogue contains **Drive file IDs and titles**, not PDF contents. The originals remain in the user's Google Drive under their current permissions.
