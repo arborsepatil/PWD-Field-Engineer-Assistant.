@@ -1197,6 +1197,11 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  for(const id of ['controlStep','inputError','printBtn','copyBtn','saveSvgBtn','segmentNote','controlRows','wallSvg'])
   assert.ok(html.includes('id="'+id+'"'),'Missing responsive retaining-wall control: '+id);
  assert.ok(html.includes('if(hasCalculated)calc(false)'),'Changes must recalculate after the first run');
+ assert.ok(html.includes('id="results" hidden'),'Results should be absent before first valid calculation');
+ assert.ok(html.includes('.results[hidden]{display:none!important}'),
+  'Browser Print must not reveal stale or unvalidated quantity results');
+ assert.ok(html.includes("$('results').hidden=true"),
+  'Invalid input should hide previously generated quantities');
  assert.ok(html.includes('copyQuantities')&&html.includes('saveDrawing'),
   'Field-ready copy and drawing export are missing');
  assert.ok(html.includes('not a structural design')||html.includes('not a stability check'),
