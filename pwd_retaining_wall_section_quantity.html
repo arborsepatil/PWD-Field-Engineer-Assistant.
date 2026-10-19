@@ -16,7 +16,7 @@ html[data-theme="dark"]{--bg:#07111f;--card:#0c1b2f;--line:#20344f;--txt:#f4f8ff
 <h3 style="font-size:13px;margin:15px 0 8px">Bottom-up construction control table (metres)</h3>
 <div class="tableWrap" tabindex="0" aria-label="Field setting-out from bottom PCC top upward">
 <table><thead><tr><th>Height ↑ from PCC top</th><th>Left / back from C/L</th><th>Right / front from C/L</th><th>Total width</th><th>Station</th></tr></thead><tbody id="controlRows"></tbody></table></div>
-<div class="note">At each level: <b>total width = left offset + right offset</b>. Back/left and front/right refer to the schematic orientation; confirm actual orientation and batter on the approved drawing.</div>
+<div class="note">At each level: <b>total width = left offset + right offset</b>. Back/left and front/right refer to the schematic orientation; confirm actual orientation and batter on the approved drawing. Heights normally show 0.001 m precision; closer stations automatically use additional decimal places to avoid identical labels.</div>
 </div><div class="card"><h2>Key dimensions & quantities</h2><div class="actions noPrint"><button class="btn ghost" type="button" id="copyWall">Copy summary</button><button class="btn ghost" type="button" id="exportWallCSV">Export measurement CSV</button></div><div id="copyWallStatus" class="download-status noPrint" role="status" aria-live="polite"></div>
 <div class="field-compact" id="dimensionSummary" aria-label="Adopted section inputs"></div><div class="stats" id="stats"></div>
 <p class="measurement-hint noPrint">Swipe table sideways on a small phone. The exported CSV is a working measurement sheet, not a PWD BOQ or sanctioned design.</p>
@@ -104,8 +104,9 @@ function render(d){
    '<td>'+(r.crossSection===null?'—':fmt(r.crossSection,4)+' m²')+'</td>'+
    '<td class="qty"><b>'+ (r.unit==='nos.'?String(r.quantity):fmt(r.quantity,3))+' '+r.unit+'</b></td>'+
    '<td>'+r.basis+'<br><small>'+r.note+'</small></td></tr>').join('');
+ const heightDigits=PWDWallDiagrams.stationPrecision(d.controls);
  $('controlRows').innerHTML=d.controls.map(z=>
-   '<tr><td><b>'+fmt(z.height,3)+'</b></td><td>'+fmt(z.left,3)+'</td><td>'+fmt(z.right,3)+'</td><td><b>'+fmt(z.total,3)+'</b></td><td>'+(z.junction?'<b>Batter change ('+z.junctionSides.join('+')+')</b>':'Setting-out')+'</td></tr>'
+   '<tr><td><b>'+fmt(z.height,heightDigits)+'</b></td><td>'+fmt(z.left,3)+'</td><td>'+fmt(z.right,3)+'</td><td><b>'+fmt(z.total,3)+'</b></td><td>'+(z.junction?'<b>Batter change ('+z.junctionSides.join('+')+')</b>':'Setting-out')+'</td></tr>'
  ).join('');
  const cautions=[
   '<div class="note"><b>Drawing control:</b> Source/project drawing must confirm wall profile, soil side, GL/HFL, top width, footing and founding level. Geometrical calculation is not stability verification. The C/L stays at the top-width midpoint even though the left and right offsets differ lower down.</div>',
