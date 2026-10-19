@@ -1279,5 +1279,35 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(!file.includes('Strict standard profile:'),
    'Unverified section template must not be labelled an approved standard');
  assert.ok(file.includes('schematic'),'Schematic/approval boundary missing');
+ // Exported working measurement sheet must trace back to the same validated geometry.
+ assert.ok(file.includes('id="exportWallCSV"'),'Mobile measurement CSV export action missing');
+ assert.ok(file.includes('PWDWallCore.exportCSV(latestWall'),'CSV action not connected to results');
+ assert.ok(file.includes('PWDWallCore.measurementRows(d)'),'Measurement schedule must come from geometric core');
+ assert.ok(file.includes('id="dimensionSummary"'),'Printed report is missing adopted dimensions');
+ assert.ok(file.includes('id="copyWallStatus"'),'Mobile copy/download feedback missing');
+ const schedule=core.measurementRows(p4);
+ assert.equal(schedule.length,6,'Working sheet should contain six preserved quantities');
+ assert.deepEqual(Array.from(schedule.map(x=>x.item)),[
+   'Excavation','Rubble soling','PCC / footing',
+   'Wall concrete (M15)','Filter / rubble backing','Weep-hole count (approx.)'
+ ],'Existing quantity categories must not change');
+ const totals=[p4.exc,p4.soling,p4.pcc,p4.concrete,p4.filter,p4.weepApprox];
+ for(let i=0;i<schedule.length;i++){
+   nearly(schedule[i].quantity,totals[i],'Working-sheet quantity '+schedule[i].item);
+   if(schedule[i].unit==='m³')nearly(schedule[i].crossSection*p4.L,schedule[i].quantity,
+     'Section per running metre × length: '+schedule[i].item);
+ }
+ nearly(schedule[3].crossSection,p4.wallArea,'Wall m² per running metre');
+ assert.ok(schedule[5].unit==='nos.'&&schedule[5].crossSection===null,
+   'Weep count must never be described as m³');
+ const sheet=core.exportCSV(p4,'=HYPERLINK("https://invalid.test","malicious")');
+ assert.ok(sheet.startsWith('\uFEFF'),'Working CSV should support Unicode in spreadsheets');
+ assert.ok(sheet.includes("'\u003dHYPERLINK("),'Project text could be interpreted as an Excel formula');
+ assert.ok(sheet.includes('""malicious""'),'Embedded CSV quotes must be escaped');
+ assert.ok(sheet.includes('FIELD WIDTH CONTROL'),'Field widths must be included in exported measurements');
+ assert.ok(sheet.includes('NOT GOVERNMENT BOQ'),'Output must not impersonate sanctioned quantities');
+ assert.ok(sheet.includes('Excavation depth (m)'),'Adopted excavation depth not recorded');
+ assert.throws(()=>core.measurementRows(null),/Calculate a valid/,'Empty calculations must not export');
+ assert.ok(file.includes('noPrint')&&file.includes('@media print'),'Report print controls missing');
  process.stdout.write('Retaining Wall QA passed: 14 cross-section heights, correct segment order, polygon area, quantities, drainage grid and input validation\n');
 }
