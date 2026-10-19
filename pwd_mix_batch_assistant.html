@@ -2,50 +2,58 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PWD Concrete Material & Batching V2</title>
+<title>PWD Batch Assistant · Material Order, AJAX, Nominal Mix</title>
 <style>
 :root{--p:#0f4c5c;--p2:#146c7e;--bg:#f4f7f8;--card:#fff;--line:#d7e0e3;--mut:#5b6870;--ok:#176b3a;--warn:#8a5200;--bad:#9c1c1c;--info:#174f80}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#17242a;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 .wrap{max-width:980px;margin:auto;padding:12px 12px 90px}header{background:linear-gradient(135deg,var(--p),var(--p2));color:white;padding:18px;border-radius:0 0 18px 18px;margin:0 -12px 12px}
 h1{font-size:1.35rem;margin:0 0 6px}h2{font-size:1.1rem;margin:0 0 12px}h3{font-size:1rem;margin:0 0 8px}
-.sub{opacity:.9;font-size:.88rem}.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;position:sticky;top:0;z-index:5;background:var(--bg);padding:7px 0}
-.tab{border:1px solid var(--line);background:#fff;padding:9px 5px;border-radius:10px;font-weight:700;font-size:.76rem}.tab.active{background:var(--p);color:#fff;border-color:var(--p)}
+.sub{opacity:.9;font-size:.88rem}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;position:sticky;top:0;z-index:5;background:var(--bg);padding:7px 0}
+.tab{border:1px solid var(--line);background:#fff;padding:11px 7px;border-radius:12px;font-weight:800;font-size:.88rem;min-height:56px;cursor:pointer;line-height:1.25}.tab span{display:block;font-size:.66rem;margin-top:4px;font-weight:600;opacity:.85}.tab.active{background:var(--p);color:#fff;border-color:var(--p)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;box-shadow:0 1px 4px #0000000b}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .field label{display:block;font-weight:750;margin-bottom:5px;font-size:.9rem}input,select{width:100%;padding:11px;border:1px solid #bfcbd0;border-radius:9px;background:#fff;font-size:16px}
 small,.small{font-size:.78rem;color:var(--mut);line-height:1.35}.effect{font-size:.77rem;color:#42525a;margin-top:4px}
 .note,.warn,.danger,.ok{padding:10px;border-radius:10px;margin:9px 0;font-size:.86rem;line-height:1.4}.note{background:#eef6fa;border-left:4px solid var(--info)}.warn{background:#fff7e9;border-left:4px solid var(--warn)}.danger{background:#fff0f0;border-left:4px solid var(--bad)}.ok{background:#edf9f1;border-left:4px solid var(--ok)}
-.btn{border:0;border-radius:10px;background:var(--p);color:#fff;padding:12px 14px;font-weight:800;font-size:.92rem}.btn2{background:#52636b}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.hidden{display:none!important}
+.btn{border:0;border-radius:10px;background:var(--p);color:#fff;padding:12px 14px;font-weight:800;font-size:.92rem;min-height:46px;cursor:pointer}.btn:focus-visible,.tab:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #63a9c5;outline-offset:2px}.secondary-link{border:1px solid var(--line);background:#fff;color:var(--p);padding:9px 12px;border-radius:10px;min-height:40px;font-weight:800;cursor:pointer}.summary-status{font-size:.83rem;color:var(--mut);min-height:1.1em}.nomPick{width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;color:#17242a;cursor:pointer}.nomPick[aria-pressed="true"]{border:2px solid var(--p);background:#eef6fa}.nomPick .ratio{margin-bottom:3px}.result{overflow-wrap:anywhere}.btn2{background:#52636b}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.hidden{display:none!important}
 .resultGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.result{border:1px solid var(--line);padding:10px;border-radius:10px;background:#fbfcfc}.result b{display:block;font-size:1.05rem;margin-top:2px}
 .tableWrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.84rem}th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}th{background:#f0f4f5}
 .badge{display:inline-block;padding:3px 7px;border-radius:999px;font-weight:800;font-size:.72rem;background:#e8f1f3;color:#244b55}.source{background:#eaf7ef;color:#1b5d38}.code{background:#eef2fb;color:#304d86}.guide{background:#fff3df;color:#79500a}
 .operator{font-size:1rem}.operator .result b{font-size:1.2rem}.ratio{font-size:1.35rem;font-weight:900;color:var(--p);margin:4px 0}
 footer{margin-top:18px;color:var(--mut);font-size:.76rem;line-height:1.4}
-@media(max-width:700px){.tabs{grid-template-columns:repeat(3,1fr)}.grid,.grid3,.resultGrid{grid-template-columns:1fr}header{border-radius:0 0 14px 14px}}
+@media(max-width:700px){.tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.grid,.grid3,.resultGrid{grid-template-columns:1fr}header{border-radius:0 0 14px 14px}}
 @media print{.tabs,.noPrint,.actions{display:none!important}body{background:#fff}.wrap{max-width:none;padding:0}.card{box-shadow:none;break-inside:avoid}header{margin:0;border-radius:0}}
-</style><link rel="stylesheet" href="./app-global.css"><link rel="stylesheet" href="./concrete-ui-polish.css"></head>
-<body><div class="module-shellbar noPrint"><a class="home" href="./index.html">‹ PWD Tools</a><span class="crumb">Concrete · Batch</span><span class="spacer"></span><a href="./settings.html" aria-label="Settings">⚙ Settings</a></div><div class="wrap">
-<header><h1>Concrete Material Requirement & Batching V2.1</h1>
-<div class="sub">Maharashtra PWD source consumption • m³ + brass • weight-based AJAX/RMC batching • source-controlled notes</div></header>
+</style><link rel="stylesheet" href="./app-global.css"><link rel="stylesheet" href="./concrete-ui-polish.css"><style>
+/* Batch Assistant-specific three-tab layout overrides generic five-tool concrete styling. */
+.tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.tab{white-space:normal!important;min-height:62px!important;overflow-wrap:anywhere!important}
+.secondary-link,.nomPick{background:var(--c-card,#fff)!important;color:var(--c-ink,#17242a)!important;border-color:var(--c-line,#d7e0e3)!important}
+.secondary-link{color:var(--c-accent,#0f4c5c)!important}
+.nomPick[aria-pressed="true"]{border:2px solid var(--c-accent,#0f4c5c)!important;background:var(--c-soft,#eef6fa)!important}
+.nomPick{min-height:90px}
+@media(max-width:600px){.tab{font-size:.78rem!important;padding:9px 5px!important}.tab span{font-size:.60rem!important}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style></head>
+<body><div class="module-shellbar noPrint"><a class="home" href="./index.html">‹ PWD Tools</a><span class="crumb">Concrete · Batch Assistant</span><span class="spacer"></span><a href="./settings.html" aria-label="Settings">⚙ Settings</a></div><div class="wrap">
+<header><h1>Concrete Batch Assistant</h1><div class="sub">Material calculation & order · AJAX site batching · nominal mix ratio · existing PWD source rows</div></header>
 
-<div class="tabs noPrint">
-<button class="tab active" data-tab="qty">m³ Qty</button>
-<button class="tab" data-tab="ajax">AJAX</button>
-<button class="tab" data-tab="rmc">RMC</button>
-<button class="tab" data-tab="nominal">Nominal</button>
-<button class="tab" data-tab="notes">Notes</button>
-</div>
+<nav class="tabs noPrint" aria-label="Batch Assistant workflows">
+<button type="button" class="tab active" data-tab="qty" aria-selected="true">Material Order<span>Quantity → materials</span></button>
+<button type="button" class="tab" data-tab="ajax" aria-selected="false">AJAX Batch<span>Per-batch instruction</span></button>
+<button type="button" class="tab" data-tab="nominal" aria-selected="false">Nominal Mix<span>Ratio reference</span></button>
+</nav>
 
 <section id="qty" class="panel">
-<div class="card"><h2>1 · Material requirement by concrete quantity</h2>
+<div class="card"><h2>1 · Calculate materials / place order</h2><p class="small">Enter the proposed concrete quantity, select the correct source row, and copy the resulting material order. Quantities are theoretical—not purchase approvals.</p>
 <div class="grid">
 <div class="field"><label>Source family</label><select id="qCat"></select><div class="effect">Keeps Building, Bridge/C.D. and Pile consumption separate.</div></div>
 <div class="field"><label>Concrete / source row</label><select id="qItem"></select><div class="effect">Exact verified source row; no family substitution.</div></div>
-<div class="field"><label>Concrete quantity (m³)</label><input id="qQty" type="number" min="0.001" step="0.01" value="1"><div class="effect">Scales every source material by the same factor.</div></div>
+<div class="field"><label for="qQty">Concrete quantity</label><input id="qQty" type="number" min="0.001" step="any" value="1"><div class="effect">Theoretical concrete to produce.</div></div>
+<div class="field"><label for="qUnit">Quantity unit</label><select id="qUnit"><option value="m3">m³ — cubic metre</option><option value="brass">Brass (100 ft³)</option><option value="ft3">ft³ — cubic foot</option></select><div class="effect">The selected unit converts to m³ before scaling.</div></div>
+<div class="field"><label for="qWork">Work / site name (optional)</label><input id="qWork" maxlength="120" placeholder="For copying the order"></div>
 <div class="field"><label>Expected / adopted w/c ratio</label><input id="qWC" type="number" min="0.20" max="0.70" step="0.01" value="0.50"><div class="effect">Used only to estimate planning water from cement mass. Code limit is checked in Notes.</div></div>
 </div><div id="qSource"></div>
-<div class="actions"><button class="btn" onclick="calcQty()">Calculate</button><button class="btn btn2" onclick="openNotesFrom('q')">Notes & Code Checks</button></div></div>
-<div id="qOut"></div>
+<div class="actions noPrint"><button class="btn" onclick="calcQty()">Update quantities</button><button class="secondary-link" onclick="openNotesFrom('q')">Engineering checks & notes</button></div></div>
+<div id="qOut" aria-live="polite"></div><p id="qOrderStatus" class="summary-status noPrint" role="status" aria-live="polite"></p>
 </section>
 
 <section id="ajax" class="panel hidden">
@@ -68,32 +76,25 @@ footer{margin-top:18px;color:var(--mut);font-size:.76rem;line-height:1.4}
 <div class="field"><label>40 mm aggregate bulk density (kg/m³)</label><input id="d40" type="number" min="1" step="1" value="1700"></div>
 </div></div>
 <div id="aSource"></div>
-<div class="actions"><button class="btn" onclick="calcAjax()">Prepare Operator Batch</button><button class="btn btn2" onclick="openNotesFrom('a')">Notes & Code Checks</button></div></div>
-<div id="aOut"></div>
-</section>
-
-<section id="rmc" class="panel hidden">
-<div class="card"><h2>3 · RMC / weigh-batching planning</h2>
-<div class="warn"><b>Planning / field instruction only.</b> Actual RMC plant-approved job mix governs production. Source-table volume-to-weight conversion uses the editable working bulk densities from the AJAX screen.</div>
-<div class="grid">
-<div class="field"><label>Source family</label><select id="rCat"></select></div>
-<div class="field"><label>Concrete / source row</label><select id="rItem"></select></div>
-<div class="field"><label>Concrete per batch / load (m³)</label><input id="rLoad" type="number" min="0.001" step="0.1" value="6"><div class="effect">Enter actual planned concrete volume for one weigh batch/load.</div></div>
-<div class="field"><label>Total concrete required (m³)</label><input id="rQty" type="number" min="0.001" step="0.1" value="20"></div>
-<div class="field"><label>Expected / adopted w/c ratio</label><input id="rWC" type="number" min="0.20" max="0.70" step="0.01" value="0.50"><div class="effect">Planning water only; approved mix governs.</div></div>
-</div><div id="rSource"></div>
-<div class="actions"><button class="btn" onclick="calcRMC()">Prepare Weight / Load Plan</button><button class="btn btn2" onclick="openNotesFrom('r')">Notes & Code Checks</button></div></div><div id="rOut"></div>
+<div class="actions noPrint"><button class="btn" onclick="calcAjax()">Prepare AJAX batch</button><button class="secondary-link" onclick="openNotesFrom('a')">Engineering checks & notes</button></div></div>
+<div id="aOut" aria-live="polite"></div>
 </section>
 
 <section id="nominal" class="panel hidden">
-<div class="card"><h2>4 · Nominal mix ratio reference</h2>
-<div class="warn"><b>Reference only — no volumetric calculator.</b> Do not convert these ratios into SSR consumption or use them to overwrite an approved design/job mix.</div>
+<div class="card"><h2>3 · Nominal mix ratio reference & measuring guide</h2>
+<div class="warn"><b>Volume proportions only:</b> cement : fine aggregate : coarse aggregate. This is NOT a concrete yield, SSR consumption, or approved design mix. Use only where the project specification permits nominal mixing.</div>
 <div class="grid3" id="nomGrid"></div>
-<div class="note"><span class="badge code">IS 456 context</span> Nominal-mix provisions apply only within their permitted scope. For controlled/design-mix concrete, approved mix design/job mix governs.</div>
+<div class="grid">
+<div class="field"><label for="nomGrade">Choose nominal grade</label><select id="nomGrade"></select></div>
+<div class="field"><label for="nomMeasures">Cement measuring units</label><input id="nomMeasures" type="number" min="0.001" step="any" value="1"><div class="effect">For example: one bucket (same bucket for all ingredients). This is a *ratio*, not final concrete volume.</div></div>
+</div>
+<div id="nomOut" class="resultGrid" aria-live="polite"></div>
+<div class="note">Use the SAME measuring vessel for each volume part. Do not treat a nominal ratio as a design mix or infer cement bags / m³ without approved yield and field controls.</div>
+<div class="actions noPrint"><button type="button" class="secondary-link" onclick="openNotesFrom('n')">Engineering checks & notes</button></div>
 </div></section>
 
-<section id="notes" class="panel hidden">
-<div class="card"><h2>5 · Field Notes & Code Checks</h2>
+<section id="notes" class="panel hidden"><div class="actions noPrint"><button class="secondary-link" type="button" id="notesReturn">‹ Back to batching</button></div>
+<div class="card"><h2>Engineering Notes & Code Checks</h2>
 <div class="grid">
 <div class="field"><label>Concrete type</label><select id="nType"><option value="RCC">RCC</option><option value="PCC">PCC</option></select><div class="effect">Controls durability requirements.</div></div>
 <div class="field"><label>Exposure</label><select id="nExp"><option>Mild</option><option selected>Moderate</option><option>Severe</option><option>Very Severe</option><option>Extreme</option></select><div class="effect">Controls minimum cement, maximum free w/c and minimum grade.</div></div>
@@ -107,10 +108,10 @@ footer{margin-top:18px;color:var(--mut);font-size:.76rem;line-height:1.4}
 </section>
 
 <footer>
-<b>Source governance:</b> material quantities use only the recovered source-controlled PWD batching rows. Missing source quantities stay unavailable. Brass is only a mathematical unit conversion (1 brass = 100 ft³ = 2.8316846592 m³). Water from entered w/c is planning guidance before moisture correction. Admixture calculation is intentionally excluded.
+<b>Source governance:</b> material quantities use only the existing source-controlled PWD batching rows. Missing source quantities stay unavailable. Brass is only a mathematical unit conversion (1 brass = 100 ft³ = 2.8316846592 m³). Water from entered w/c is planning guidance before moisture correction. Admixture calculation is intentionally excluded.
 </footer>
 </div>
-<script>
+<script src="./pwd-batch-core.js"></script><script>
 const DATA={"building":{"label":"Building Works \u2014 PCC / RCC","source":"Maharashtra PWD supplied table: Plain Cement Concrete and Reinforced Cement Concrete","jobMix":false,"items":[{"id":"b_pcc1510","name":"Plain cement concrete 1:5:10","c":2.6,"s":0.47,"a40":0.7,"a20":0.24,"a10":0},{"id":"b_pcc148","name":"Plain cement concrete 1:4:8","c":3.4,"s":0.47,"a40":0.7,"a20":0.24,"a10":0},{"id":"b_pcc136","name":"Plain cement concrete 1:3:6","c":4.4,"s":0.47,"a40":0.7,"a20":0.24,"a10":0},{"id":"b_pcc124","name":"Plain cement concrete 1:2:4","c":6.4,"s":0.445,"a40":0.7,"a20":0.22,"a10":0.11},{"id":"b_m10","name":"M-10 grade cement concrete","c":4.4,"s":0.47,"a40":0.7,"a20":0.24,"a10":0},{"id":"b_m15pcc","name":"M-15 grade PCC","c":6.0,"s":0.44,"a40":0.56,"a20":0.22,"a10":0.11},{"id":"b_m20pcc","name":"M-20 grade PCC","c":7.0,"s":0.425,"a40":0.56,"a20":0.22,"a10":0.11},{"id":"b_m15","name":"M-15 grade cement concrete","c":6.0,"s":0.425,"a40":0,"a20":0.67,"a10":0.22},{"id":"b_m20","name":"M-20 grade cement concrete","c":7.0,"s":0.425,"a40":0,"a20":0.57,"a10":0.28},{"id":"b_m25","name":"M-25 cement concrete","c":7.5,"s":0.425,"a40":0,"a20":0.57,"a10":0.28},{"id":"b_m30","name":"M-30 grade cement concrete","c":8.0,"s":0.425,"a40":0,"a20":0.57,"a10":0.28},{"id":"b_m35","name":"M-35 grade cement concrete","c":8.25,"s":0.425,"a40":0,"a20":0.57,"a10":0.28}]},"bridge":{"label":"Bridge & C.D. Works","source":"Maharashtra PWD supplied table: Theoretical Material Requirement \u2014 Bridge and C.D. Works","jobMix":true,"items":[{"id":"br_pcc1510","name":"Plain cement concrete 1:5:10","c":2.6,"s":0.47,"a40":0.94,"a20":0,"a10":0},{"id":"br_pcc148","name":"Plain cement concrete 1:4:8","c":3.4,"s":0.47,"a40":0.94,"a20":0,"a10":0},{"id":"br_pcc136","name":"Plain cement concrete 1:3:6","c":4.4,"s":0.47,"a40":0.7,"a20":0.24,"a10":0},{"id":"br_pcc124","name":"Plain cement concrete 1:2:4","c":6.4,"s":0.445,"a40":0,"a20":0.67,"a10":0.22},{"id":"br_m10","name":"M-10 grade concrete","c":4.4,"s":0.47,"a40":0.7,"a20":0.24,"a10":0},{"id":"br_m15","name":"M-15 grade concrete","c":6.0,"s":0.445,"a40":0,"a20":0.67,"a10":0.22},{"id":"br_m20","name":"M-20 grade concrete","c":7.0,"s":0.445,"a40":0,"a20":0.67,"a10":0.22},{"id":"br_m25","name":"M-25 grade concrete","c":7.5,"s":0.445,"a40":0,"a20":0.67,"a10":0.22},{"id":"br_m30","name":"M-30 grade concrete","c":8.0,"s":0.425,"a40":0,"a20":0.57,"a10":0.28},{"id":"br_m35","name":"M-35 grade concrete","c":8.25,"s":0.47,"a40":0,"a20":0.57,"a10":0.28},{"id":"br_m40","name":"M-40 grade concrete","c":8.5,"s":0.47,"a40":0,"a20":0.57,"a10":0.28},{"id":"br_ab_m10","name":"Cast in situ abutment and piers in M-10","c":4.4,"s":0.47,"a40":0.7,"a20":0.57,"a10":0},{"id":"br_ab_m15","name":"Cast in situ abutment and piers in M-15","c":6.0,"s":0.47,"a40":0.7,"a20":0.24,"a10":0},{"id":"br_ab_m20","name":"Cast in situ abutment and piers in M-20","c":7.0,"s":0.47,"a40":0.7,"a20":0.24,"a10":0},{"id":"br_plum_m10","name":"Cast in situ abutment and piers in M-10 with 15% plum","c":3.9,"s":0.4,"a40":0.55,"a20":0.24,"a10":0.15},{"id":"br_plum_m15","name":"Cast in situ abutment and piers in M-15 with 15% plum","c":5.8,"s":0.4,"a40":0.55,"a20":0.24,"a10":0.15}]},"pile":{"label":"Pile Foundation","source":"Maharashtra PWD supplied table: Pile Foundation","jobMix":true,"items":[{"id":"pile_m20","name":"M-20 RCC cast in situ bored piles","c":8.0,"s":0.425,"a40":null,"a20":null,"a10":null}]}};
 const DUR={"RCC":{"Mild":{"minC":300,"maxWC":0.55,"minGrade":20},"Moderate":{"minC":300,"maxWC":0.5,"minGrade":25},"Severe":{"minC":320,"maxWC":0.45,"minGrade":30},"Very Severe":{"minC":340,"maxWC":0.45,"minGrade":35},"Extreme":{"minC":360,"maxWC":0.4,"minGrade":40}},"PCC":{"Mild":{"minC":220,"maxWC":0.6,"minGrade":0},"Moderate":{"minC":240,"maxWC":0.6,"minGrade":15},"Severe":{"minC":250,"maxWC":0.5,"minGrade":20},"Very Severe":{"minC":260,"maxWC":0.45,"minGrade":20},"Extreme":{"minC":280,"maxWC":0.4,"minGrade":25}}};
 const NOMINAL=[["M5","1 : 5 : 10"],["M7.5","1 : 4 : 8"],["M10","1 : 3 : 6"],["M15","1 : 2 : 4"],["M20","1 : 1.5 : 3"]];
@@ -118,7 +119,7 @@ const BRASS=2.8316846592, BAGKG=50, MIN_C_ADJ={10:40,20:0,40:-30};
 let lastSelection={cat:'building',item:'b_m20',wc:.50};
 const $=id=>document.getElementById(id);
 const fmt=(n,d=3)=>Number.isFinite(n)?Number(n).toFixed(d):'—';
-function num(id,positive=true){let n=Number($(id).value);if(!Number.isFinite(n)||(positive?n<=0:n<0))throw Error('Check '+id+' input.');return n}
+function num(id,positive=true){const raw=$(id).value.trim(),n=raw===''?NaN:Number(raw);if(!Number.isFinite(n)||(positive?n<=0:n<0))throw Error('Enter a valid '+id+' value '+(positive?'above zero.':'of zero or above.'));return n}
 function allRows(){let a=[];Object.entries(DATA).forEach(([cat,d])=>d.items.forEach(x=>a.push({cat,label:d.label,...x})));return a}
 function setupPair(cId,iId,sId,defCat='building',defItem='b_m20'){
  const c=$(cId),i=$(iId);c.innerHTML=Object.entries(DATA).map(([k,d])=>`<option value="${k}">${d.label}</option>`).join('');c.value=defCat;
@@ -127,10 +128,48 @@ function setupPair(cId,iId,sId,defCat='building',defItem='b_m20'){
 }
 function getRow(cId,iId){const cat=$(cId).value,d=DATA[cat],x=d.items.find(v=>v.id===$(iId).value);if(!x)throw Error('Source row not found.');return {cat,d,x}}
 function showSource(cId,iId,sId){const {d,x}=getRow(cId,iId);$(sId).innerHTML=`<div class="note"><span class="badge source">PWD SOURCE</span> <b>${x.name}</b><br>${d.source}${d.jobMix?'<br><b>Important:</b> actual approved job mix governs where required by the source/project.':''}</div>`}
-function scale(x,f,wc){
- const bags=x.c*f,cementKg=bags*BAGKG,water=cementKg*wc;
- const cv=v=>v===null?null:v*f;
- return {factor:f,bags,cementKg,water,s:cv(x.s),a40:cv(x.a40),a20:cv(x.a20),a10:cv(x.a10)};
+const scale=(row,volume,wc)=>PWDBatchCore.scale(row,volume,wc);
+let lastOrderText='',lastBatchText='',returnTab='qty';
+function lineMaterial(name,v){return name+': '+(v===null?'Source not provided':fmt(v/BRASS,3)+' brass ('+fmt(v,3)+' m³)')}
+function orderText(row,volume,o){
+ const site=$('qWork').value.trim();
+ const lines=['PWD BATCH ASSISTANT — MATERIAL ORDER (planning)',
+  ...(site?['Work / site: '+site]:[]),
+  'Publication family: '+DATA[$('qCat').value].label,
+  'Source row: '+row.name,
+  'Concrete quantity: '+fmt(volume,3)+' m³ ('+fmt(volume/BRASS,3)+' brass)',
+  'Cement theoretical: '+fmt(o.bags,2)+' bags / '+fmt(o.cementKg,1)+' kg',
+  'Whole-bag procurement suggestion: '+o.orderBags+' bags (round up; verify site stock)',
+  lineMaterial('Sand',o.s),lineMaterial('40 mm aggregate',o.a40),
+  lineMaterial('20 mm aggregate',o.a20),lineMaterial('12/10 mm aggregate',o.a10),
+  'Water from adopted w/c: '+fmt(o.water,1)+' L — planning only; correct for moisture',
+  'CHECK: theoretical materials; confirm approved mix, applicable source and actual order before procurement'];
+ return lines.join('\n');
+}
+function batchText(row,basis,o,total){
+ const lines=['PWD BATCH ASSISTANT — AJAX OPERATOR SHEET (planning)',
+  'Source family: '+DATA[$('aCat').value].label,'Source row: '+row.name,
+  'Batch basis: '+basis,
+  'Cement: '+fmt(o.cementKg,1)+' kg ('+fmt(o.bags,2)+' bags)',
+  'Sand: '+kgText(withWeights(o).wSand),
+  '40 mm: '+kgText(withWeights(o).w40),
+  '20 mm: '+kgText(withWeights(o).w20),
+  '12/10 mm: '+kgText(withWeights(o).w10),
+  'Water planning: '+fmt(o.water,1)+' L before moisture correction',
+  ...(total>0?['Total concrete requested: '+fmt(total,3)+' m³']:[]),
+  'CHECK: theoretical source consumption and assumed bulk densities; approved job mix and field moisture control govern'];
+ return lines.join('\n');
+}
+async function copyText(text,statusId){
+ const output=$(statusId);
+ if(!text){output.textContent='Calculate a valid result first.';return}
+ try{if(!navigator.clipboard?.writeText)throw Error('Clipboard not supported');await navigator.clipboard.writeText(text);output.textContent='Copied. Verify the planned quantities before placing an order.'}
+ catch{output.textContent='Clipboard unavailable. Select and copy the text from the dialog.';window.prompt('Copy this planning summary:',text)}
+}
+async function shareText(text,statusId){
+ if(!text){$(statusId).textContent='Calculate a valid result first.';return}
+ if(navigator.share){try{await navigator.share({text});$(statusId).textContent='Shared planning summary.';return}catch(e){if(e.name==='AbortError')return}}
+ await copyText(text,statusId);
 }
 function densities(){
  const ids=['dSand','d10','d20','d40'], vals=ids.map(id=>Number($(id).value));
@@ -144,56 +183,70 @@ function withWeights(o){
 function volText(v){return v===null?'Source not provided':`${fmt(v,3)} m³ · ${fmt(v/BRASS,3)} brass`}
 function kgText(v){return v===null?'Source not provided':`${fmt(v,1)} kg`}
 function procurement(o,title='TOTAL MATERIAL / ORDER SUMMARY'){
- return `<div class="card"><h3>${title}</h3><div class="small">Sand and aggregate are emphasized in brass for procurement. Exact m³ is retained in smaller text. No automatic order-rounding is applied.</div>
+ return `<div class="card"><h3>${title}</h3><div class="small">Sand and aggregate are shown in brass with exact m³ below. Cement quantity is theoretical; a separate whole-bag suggestion is rounded up, not an automatically approved purchase order.</div>
  <div class="resultGrid">
- <div class="result">Cement<b>${fmt(o.bags,2)} bags</b><small>${fmt(o.cementKg,1)} kg</small></div>
+ <div class="result">Cement<b>${fmt(o.bags,2)} bags</b><small>${fmt(o.cementKg,1)} kg · suggested whole-bag order: ${o.orderBags} bags</small></div>
  <div class="result">Sand order<b>${o.s===null?'N/A':fmt(o.s/BRASS,3)+' brass'}</b><small>${o.s===null?'Source not provided':fmt(o.s,3)+' m³'}</small></div>
  <div class="result">40 mm order<b>${o.a40===null?'N/A':fmt(o.a40/BRASS,3)+' brass'}</b><small>${o.a40===null?'Source not provided':fmt(o.a40,3)+' m³'}</small></div>
  <div class="result">20 mm order<b>${o.a20===null?'N/A':fmt(o.a20/BRASS,3)+' brass'}</b><small>${o.a20===null?'Source not provided':fmt(o.a20,3)+' m³'}</small></div>
  <div class="result">12/10 mm order<b>${o.a10===null?'N/A':fmt(o.a10/BRASS,3)+' brass'}</b><small>${o.a10===null?'Source not provided':fmt(o.a10,3)+' m³'}</small></div>
  </div></div>`;
 }
-function resultMaterials(o){
- const w=withWeights(o);
+function resultMaterials(o,showWeights=true){
+ const w=showWeights?withWeights(o):null;
+ const display=(volume,weight)=>showWeights?kgText(weight):volText(volume);
  return `<div class="resultGrid">
 <div class="result">Cement<b>${fmt(o.cementKg,1)} kg</b><small>${fmt(o.bags,2)} bags</small></div>
-<div class="result">Sand<b>${kgText(w.wSand)}</b><small>${volText(o.s)}</small></div>
-<div class="result">40 mm aggregate<b>${kgText(w.w40)}</b><small>${volText(o.a40)}</small></div>
-<div class="result">20 mm aggregate<b>${kgText(w.w20)}</b><small>${volText(o.a20)}</small></div>
-<div class="result">12/10 mm aggregate<b>${kgText(w.w10)}</b><small>${volText(o.a10)}</small></div>
-<div class="result">Planning water<b>${fmt(o.water,1)} L</b><small>From entered w/c before moisture correction.</small></div>
-</div>`}
+<div class="result">Sand<b>${display(o.s,w?.wSand)}</b>${showWeights?'<small>'+volText(o.s)+'</small>':''}</div>
+<div class="result">40 mm aggregate<b>${display(o.a40,w?.w40)}</b>${showWeights?'<small>'+volText(o.a40)+'</small>':''}</div>
+<div class="result">20 mm aggregate<b>${display(o.a20,w?.w20)}</b>${showWeights?'<small>'+volText(o.a20)+'</small>':''}</div>
+<div class="result">12/10 mm aggregate<b>${display(o.a10,w?.w10)}</b>${showWeights?'<small>'+volText(o.a10)+'</small>':''}</div>
+<div class="result">Planning water<b>${fmt(o.water,1)} L</b><small>Entered w/c basis before aggregate moisture correction.</small></div>
+</div>`;
+}
 function calcQty(){
- try{const {cat,d,x}=getRow('qCat','qItem'),q=num('qQty'),wc=num('qWC');if(wc<.20||wc>.70)throw Error('Enter w/c between 0.20 and 0.70.');
- const o=scale(x,q,wc);lastSelection={cat,item:x.id,wc};$('qOut').innerHTML=`<div class="card"><h2>${x.name} — ${fmt(q,3)} m³</h2><div class="note"><b>Procurement view:</b> sand and aggregate are shown primarily in brass for ordering.</div></div>${procurement(o)}<div class="card"><h3>Engineering quantity detail</h3>${resultMaterials(o)}${d.jobMix?'<div class="warn"><b>Job-mix warning:</b> this is source-table scaling for planning/reference; approved actual job mix governs where applicable.</div>':''}<div class="actions noPrint"><button class="btn btn2" onclick="window.print()">Print</button></div></div>`;}
- catch(e){$('qOut').innerHTML=`<div class="danger">${e.message}</div>`}
+ try{
+  const {cat,d,x}=getRow('qCat','qItem');
+  const q=PWDBatchCore.cubicMetres(num('qQty'),$('qUnit').value),wc=PWDBatchCore.wcRatio(num('qWC'));
+  const o=scale(x,q,wc);
+  lastSelection={cat,item:x.id,wc};lastOrderText=orderText(x,q,o);
+  $('qOut').innerHTML=`<div class="card"><h2>${x.name} — ${fmt(q,3)} m³</h2>
+   <div class="note"><b>Planning only:</b> source quantities are scaled to concrete volume. Actual order quantities, site stock and approved mix are to be checked.</div></div>
+   ${procurement(o)}<div class="card"><h3>Source quantity breakdown</h3>${resultMaterials(o,false)}
+   ${d.jobMix?'<div class="warn"><b>Approved job mix governs</b> where required. The source table alone is not a production mix.</div>':''}
+   <div class="actions noPrint"><button type="button" class="btn" onclick="copyText(lastOrderText,'qOrderStatus')">Copy material order</button>
+   <button type="button" class="secondary-link" onclick="shareText(lastOrderText,'qOrderStatus')">Share order</button>
+   <button type="button" class="secondary-link" onclick="window.print()">Print</button></div></div>`;
+  $('qOrderStatus').textContent='';
+ }catch(e){
+  lastOrderText='';$('qOut').innerHTML='<div class="danger" role="alert">'+e.message+'</div>'; $('qOrderStatus').textContent='';
+ }
 }
 function toggleABasis(){const bags=$('aBasis').value==='bags';$('aBagField').classList.toggle('hidden',!bags);$('aVolField').classList.toggle('hidden',bags)}
 function calcAjax(){
- try{const {cat,d,x}=getRow('aCat','aItem'),wc=num('aWC');if(wc<.20||wc>.70)throw Error('Enter w/c between 0.20 and 0.70.');
- let f,basis;if($('aBasis').value==='volume'){f=num('aVol');basis=`${fmt(f,3)} m³ usable concrete/batch`;}else{const b=num('aBags');if(!(x.c>0))throw Error('No cement-bag basis in selected source row.');f=b/x.c;basis=`${fmt(b,2)} cement bags/batch`;}
- const o=scale(x,f,wc),total=Number($('aTotal').value||0);let batchNote='';
- if(total>0){const tot=scale(x,total,wc);batchNote=`<div class="note">Equivalent batches for ${fmt(total,3)} m³ ≈ <b>${fmt(total/f,2)}</b>. Plan whole/partial final batch under engineer control.</div>${procurement(tot,'TOTAL MATERIAL / PROCUREMENT')}`;}
- lastSelection={cat,item:x.id,wc};
- $('aOut').innerHTML=`<div class="card operator"><h2>OPERATOR BATCH SHEET</h2><div class="note"><b>${x.name}</b><br>Basis: ${basis}</div>${resultMaterials(o)}${batchNote}
- <div class="warn"><b>Operator instructions:</b> Do not add extra water without engineer approval. Keep source aggregate fractions separate. Maintain the same measuring basis for each batch. Surface moisture in aggregates affects actual water to add. If an approved mix uses admixture, follow only the approved job-mix/product/project instruction; no admixture dosage is calculated here.</div>
- ${d.jobMix?'<div class="danger"><b>Actual approved job mix governs this work where required.</b></div>':''}
- <div class="actions noPrint"><button class="btn" onclick="window.print()">Print Operator Sheet</button><button class="btn btn2" onclick="openNotesFrom('a')">Engineer Notes</button></div></div>`;}
- catch(e){$('aOut').innerHTML=`<div class="danger">${e.message}</div>`}
-}
-function calcRMC(){
  try{
- const {cat,d,x}=getRow('rCat','rItem'),q=num('rQty'),load=num('rLoad'),wc=num('rWC');
- if(wc<.20||wc>.70)throw Error('Enter w/c between 0.20 and 0.70.');
- const per=scale(x,load,wc),tot=scale(x,q,wc),n=q/load,full=Math.floor(n+1e-12),rem=q-full*load,dispatch=Math.ceil(n-1e-12);
- lastSelection={cat,item:x.id,wc};
- $('rOut').innerHTML=`<div class="card operator"><h2>RMC / WEIGH-BATCH INSTRUCTION</h2>
- <div class="note"><b>${x.name}</b><br>Planned batch/load: ${fmt(load,2)} m³ · Total: ${fmt(q,2)} m³</div>
- ${resultMaterials(per)}
- <div class="note">Equivalent loads = <b>${fmt(n,2)}</b> · Planned dispatches = <b>${dispatch}</b>${rem>1e-9?` · Final partial ≈ <b>${fmt(rem,2)} m³</b>`:''}</div>
- <div class="danger"><b>Actual RMC plant-approved job mix governs production.</b> These kg values are source-table volumes converted with editable working bulk-density assumptions for planning/field instruction only.</div>
- </div>${procurement(tot,'TOTAL MATERIAL / PROCUREMENT')}<div class="card"><div class="actions noPrint"><button class="btn" onclick="window.print()">Print Weight Sheet</button><button class="btn btn2" onclick="openNotesFrom('r')">Engineer Notes</button></div></div>`;
- }catch(e){$('rOut').innerHTML=`<div class="danger">${e.message}</div>`}
+  const {cat,d,x}=getRow('aCat','aItem'),wc=PWDBatchCore.wcRatio(num('aWC'));
+  const basisKey=$('aBasis').value,totalRaw=$('aTotal').value.trim();
+  const result=PWDBatchCore.ajax(x,{
+   basis:basisKey,volume:$('aVol').value,bags:$('aBags').value,wc,
+   total:totalRaw===''?0:totalRaw
+  });
+  const o=result.batch;
+  const basis=basisKey==='volume'?`${fmt(result.batchM3,3)} m³ actual usable concrete per batch`:`${fmt(o.bags,2)} cement bags per batch`;
+  const batchNote=result.procurement?
+   `<div class="note">Total concrete: ${fmt(result.totalM3,3)} m³ · equivalent batches: <b>${fmt(result.exactBatches,2)}</b> · maximum whole batch cycles: <b>${result.wholeBatches}</b>. Adjust the final partial batch under engineer supervision; do not blindly produce excess concrete.</div>${procurement(result.procurement,'TOTAL MATERIAL / PROCUREMENT')}`:'';
+  lastSelection={cat,item:x.id,wc};
+  lastBatchText=batchText(x,basis,o,result.totalM3);
+  $('aOut').innerHTML=`<div class="card operator"><h2>AJAX OPERATOR BATCH SHEET</h2>
+  <div class="note"><b>${x.name}</b><br>Basis: ${basis}</div>
+  ${resultMaterials(o,true)}${batchNote}
+  <div class="warn"><b>Weight assumptions:</b> sand and aggregate kg use the editable bulk densities shown above; these are working assumptions, not approved weigh-batch targets. Water is indicative until aggregate moisture is measured. Keep aggregate fractions separate; do not change w/c casually.</div>
+  ${d.jobMix?'<div class="danger"><b>Actual approved job mix governs where required.</b></div>':''}
+  <div class="actions noPrint"><button type="button" class="btn" onclick="copyText(lastBatchText,'aCopyStatus')">Copy operator sheet</button>
+  <button type="button" class="secondary-link" onclick="window.print()">Print</button>
+  <button type="button" class="secondary-link" onclick="openNotesFrom('a')">Engineering notes</button></div>
+  <p id="aCopyStatus" class="summary-status" role="status" aria-live="polite"></p></div>`;
+ }catch(e){lastBatchText='';$('aOut').innerHTML='<div class="danger" role="alert">'+e.message+'</div>'}
 }
 function gradeFromName(name){const m=name.match(/M-?\s*(\d+(?:\.\d+)?)/i);return m?Number(m[1]):null}
 function selectedNotesRow(){const v=$('nRow').value;if(!v)return null;return allRows().find(r=>r.cat+'|'+r.id===v)||null}
@@ -222,17 +275,54 @@ function renderNotes(){
 }
 function openNotesFrom(prefix){
  let cat,item,wc;
- if(prefix==='q'){cat=$('qCat').value;item=$('qItem').value;wc=Number($('qWC').value)}
- else if(prefix==='a'){cat=$('aCat').value;item=$('aItem').value;wc=Number($('aWC').value)}
- else {cat=$('rCat').value;item=$('rItem').value;wc=Number($('rWC').value)}
- $('nRow').value=cat+'|'+item;$('nWC').value=Number.isFinite(wc)?wc:.50;showTab('notes');renderNotes();
+ if(prefix==='q'){cat=$('qCat').value;item=$('qItem').value;wc=Number($('qWC').value);returnTab='qty'}
+ else if(prefix==='a'){cat=$('aCat').value;item=$('aItem').value;wc=Number($('aWC').value);returnTab='ajax'}
+ else {cat=lastSelection.cat;item=lastSelection.item;wc=lastSelection.wc;returnTab='nominal'}
+ $('nRow').value=cat+'|'+item;
+ $('nWC').value=Number.isFinite(wc)?wc:.50;
+ showTab('notes');renderNotes();
 }
-function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));$(id).classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+function showTab(id){
+ if(!['qty','ajax','nominal','notes'].includes(id))return;
+ document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
+ document.querySelectorAll('.tab').forEach(t=>{
+  const active=t.dataset.tab===id;
+  t.classList.toggle('active',active);
+  t.setAttribute('aria-selected',String(active));
+ });
+ $(id).classList.remove('hidden');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderNominal(){
+ try{
+  const grade=$('nomGrade').value,units=num('nomMeasures');
+  const n=PWDBatchCore.nominal(grade,units,NOMINAL);
+  $('nomOut').innerHTML=`<div class="result"><span>Cement</span><b>${fmt(n.cement,2)} measure(s)</b></div>
+   <div class="result"><span>Sand</span><b>${fmt(n.sand,2)} measure(s)</b></div>
+   <div class="result"><span>Coarse aggregate</span><b>${fmt(n.coarse,2)} measure(s)</b></div>`;
+  document.querySelectorAll('[data-nom-grade]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.nomGrade===grade)));
+ }catch(e){$('nomOut').innerHTML='<div class="danger" role="alert">'+e.message+'</div>'}
+}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>showTab(t.dataset.tab));
-$('aBasis').onchange=toggleABasis;
-setupPair('qCat','qItem','qSource');setupPair('aCat','aItem','aSource');setupPair('rCat','rItem','rSource');
-['dSand','d10','d20','d40'].forEach(id=>$(id).addEventListener('input',()=>{calcQty();calcAjax();calcRMC()}));
+$('notesReturn').onclick=()=>showTab(returnTab);
+$('aBasis').onchange=()=>{toggleABasis();calcAjax()};
+setupPair('qCat','qItem','qSource');setupPair('aCat','aItem','aSource');
+['dSand','d10','d20','d40'].forEach(id=>$(id).addEventListener('input',calcAjax));
+$('qty').addEventListener('input',calcQty);
+$('qty').addEventListener('change',calcQty);
+$('ajax').addEventListener('input',calcAjax);
+$('ajax').addEventListener('change',calcAjax);
 $('nRow').innerHTML='<option value="">No source row selected</option>'+allRows().map(r=>`<option value="${r.cat}|${r.id}">${r.label} — ${r.name}</option>`).join('');
-$('nomGrid').innerHTML=NOMINAL.map(([g,r])=>`<div class="card"><b>${g}</b><div class="ratio">${r}</div><small>Cement : Fine aggregate : Coarse aggregate</small></div>`).join('');
-toggleABasis();calcQty();calcAjax();calcRMC();renderNotes();
+$('nomGrade').innerHTML=NOMINAL.map(([grade])=>`<option value="${grade}">${grade}</option>`).join('');
+$('nomGrade').value='M15';
+$('nomGrid').innerHTML=NOMINAL.map(([grade,ratio])=>`<button type="button" class="nomPick" data-nom-grade="${grade}" aria-pressed="false"><b>${grade}</b><div class="ratio">${ratio}</div><small>Cement : Fine : Coarse</small></button>`).join('');
+$('nomGrid').addEventListener('click',e=>{
+ const button=e.target.closest('[data-nom-grade]');
+ if(!button)return;
+ $('nomGrade').value=button.dataset.nomGrade;
+ renderNominal();
+});
+$('nomGrade').onchange=renderNominal;
+$('nomMeasures').oninput=renderNominal;
+toggleABasis();calcQty();calcAjax();renderNominal();renderNotes();
 </script><script src="./app-shell.js"></script></body></html>
