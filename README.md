@@ -80,15 +80,16 @@ The Library contains 73 catalogued **Drive links and titles**, not book PDFs. Or
 - Pressure/head conventions use standard gravity and assumed water density. Temperature below absolute zero is rejected. Numeric precision is displayed in engineering-friendly scientific notation for tiny results.
 - The release test runs all-pairs dimensional round trips, key known exact constants, temperature boundaries, factor positivity and public offline asset integrity. This is computational QA, not third-party certification of all material/land measurement conventions.
   
-## Install on Android
-Open https://arborsepatil.github.io/PWD-Field-Engineer-Assistant./ in **Chrome**, choose **⋮ > Install app** (or **Add to Home screen**). A supported Chrome install prompt also appears on the homepage. This is a **PWA**, not a signed APK; no Play Store listing or APK build is claimed.
+## Installable Android application (final target)
 
-The service worker caches public app pages and scripts only. Private Drive originals are **not** bundled or cached by it. The installed interface and eligible local tools can operate offline after first load; network-based Drive previews cannot.
+The new **Android APK** source and build instructions are in [android/README.md](android/README.md). After a successful GitHub Actions **Android installable APK** build, download and extract its `PWD-Field-Assistant-Android-TEST-APK` artifact to obtain an installable `app-debug.apk`. This is a *trial APK*; production signing, on-device acceptance and update distribution are pending.
+
+The old GitHub Pages site is **only a web development preview**. Installing that preview using Chrome creates a PWA, which the user has explicitly rejected as the final deliverable. Do not recommend the PWA as the final app.
 
 ## Publication and checks
 - Source repository: https://github.com/arborsepatil/PWD-Field-Engineer-Assistant.
 - GitHub Pages deploys from main, release smoke checks run via `node tests/verify-release.mjs`.
-- Physical Samsung Chrome installation, offline PDF storage, device-specific gestures, permissions and engineering field acceptance **must be tested on the device** before treating the PWA as final field-verified software.
+- Physical Android APK installation, offline PDF storage, device-specific gestures, permissions and engineering field acceptance **must be tested on the device** before treating the Android app as field-verified software.
 - Always verify adopted specifications, amendments, source editions, calculations and approved plans before engineering decisions.
 
 **Source boundary:** public code does not include copyrighted PWD source PDF bytes or original DWGs. A Drive link may be accessible only to the signed-in owner.
