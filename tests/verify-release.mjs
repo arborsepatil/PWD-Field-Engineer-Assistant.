@@ -1271,6 +1271,13 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.equal(core.calculate({...p,excD:1}).excavationReminder,false,
   'Valid excavation depth should not be flagged');
  assert.ok(file.includes('stability'),'The tool must warn that wall stability is not calculated');
+ assert.ok(file.includes('id="results" hidden'),'Uncalculated section must be hidden from print');
+ assert.ok(file.includes('.results[hidden]{display:none!important}'),
+   'Invalid wall sections must not show stale quantities when printing');
+ assert.ok(file.includes("$('results').hidden=true")&&file.includes("$('results').hidden=false"),
+   'Wall result visibility must track the last valid computation');
+ assert.ok(!file.includes('Strict standard profile:'),
+   'Unverified section template must not be labelled an approved standard');
  assert.ok(file.includes('schematic'),'Schematic/approval boundary missing');
  process.stdout.write('Retaining Wall QA passed: 14 cross-section heights, correct segment order, polygon area, quantities, drainage grid and input validation\n');
 }
