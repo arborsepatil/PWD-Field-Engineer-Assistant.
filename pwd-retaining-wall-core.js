@@ -71,8 +71,6 @@ function calculate(v){
  const L=input('Wall length L',v.L,0,Number.MAX_VALUE,true);
  const excD=input('Excavation depth',v.excD,0,Number.MAX_VALUE,true);
  const filterT=input('Filter/rubble thickness',v.filterT,0,Number.MAX_VALUE);
- const weepH=input('Weep-hole horizontal spacing',v.weepH,0,Number.MAX_VALUE,true);
- const weepV=input('Weep-hole vertical spacing',v.weepV,0,Number.MAX_VALUE,true);
  const strict=H>2.5;
  let TW,backOff,frontOff,pccT,solT,grade;
  if(strict){
@@ -90,12 +88,8 @@ function calculate(v){
  const geo=section(H,TW),baseW=geo.baseWidth,pccW=baseW+backOff+frontOff;
  const concrete=geo.wallArea*L,pcc=pccW*pccT*L,soling=pccW*solT*L,exc=pccW*excD*L,
        filter=L*filterT*H;
- // These are counts on an idealized spacing grid, never an approved arrangement.
- const weepColumns=Math.max(1,Math.ceil(L/weepH-EPS));
- const weepRows=Math.max(1,Math.ceil(H/weepV-EPS));
- const weepApprox=weepColumns*weepRows;
- const values=[geo.wallArea,baseW,pccW,concrete,pcc,soling,exc,filter,weepApprox];
- if(values.some(x=>!Number.isFinite(x))||!Number.isSafeInteger(weepApprox))
+ const values=[geo.wallArea,baseW,pccW,concrete,pcc,soling,exc,filter];
+ if(values.some(x=>!Number.isFinite(x)))
    throw Error('Calculated size is too large for a reliable quantity. Review inputs.');
  const junctions=strict?[
    {height:H/5,side:'right',description:'Right/front 1:4 ↔ 1:1'},
@@ -112,8 +106,8 @@ function calculate(v){
       intervalFromPrevious:height===0?0:height-stationHeights[stationHeights.indexOf(height)-1]};
  });
  return {H,L,TW,strict,wallArea:geo.wallArea,baseW,pccW,pccT,solT,grade,
-  backOff,frontOff,concrete,pcc,soling,exc,excD,filter,filterT,weepH,weepV,
-  weepColumns,weepRows,weepApprox,sections:geo.segments,stations:geo.stations,controls,junctions,
+  backOff,frontOff,concrete,pcc,soling,exc,excD,filter,filterT,
+  sections:geo.segments,stations:geo.stations,controls,junctions,
   frontBreak:geo.frontBreak,backBreak:geo.backBreak,BRASS,
   excavationReminder:excD<pccT+solT-EPS,
   profileReminder:true};
@@ -135,10 +129,7 @@ function measurementRows(d){
    note:'Existing profile only; not a stability or design check'},
   {item:'Filter / rubble backing',basis:'Rectangular filter thickness × wall height × length',
    width:d.filterT,depth:d.H,crossSection:d.filterT*d.H,length:d.L,unit:'m³',quantity:d.filter,
-   note:'Real backing extent and drainage need drawing confirmation'},
-  {item:'Weep-hole count (approx.)',basis:'Spacing grid: '+d.weepColumns+' columns × '+d.weepRows+' rows',
-   width:null,depth:null,crossSection:null,length:null,unit:'nos.',quantity:d.weepApprox,
-   note:'Indicative count only; no holes or pipe volume deducted'}
+   note:'Real backing extent requires drawing confirmation'}
  ];
 }
 function safeCell(value){
@@ -165,7 +156,7 @@ function exportCSV(d,project=''){
   [],['FIELD WIDTH CONTROL — FIXED TOP CENTRELINE'],
   ['Height above PCC top (m)','Left/back from fixed top C/L (m)','Right/front from fixed top C/L (m)','Total wall width (m)','Station type'],
   ...d.controls.map(p=>[p.height,p.left,p.right,p.total,p.junction?'Batter change':'Setting-out']),
-  [],['Source / limitation','Preliminary geometric calculation only. Verify the project-specific approved drawing, actual levels, excavation profile, drainage, stability and measurements.'],
+  [],['Source / limitation','Preliminary geometric calculation only. Verify the project-specific approved drawing, actual levels, excavation profile, stability and measurements.'],
   ['Status','Not an official tender abstract, certified structural design or government-approved quantity.']
  ];
  return '\uFEFF'+rows.map(row=>row.map(safeCell).join(',')).join('\r\n')+'\r\n';
