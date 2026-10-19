@@ -1,6 +1,14 @@
-# PWD Field Engineer Assistant — Android PWA
+# PWD Field Engineer Assistant — Android APK development
 
-A focused, installable Maharashtra PWD field engineering web app: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
+Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
+
+## Final delivery decision (19 October 2026)
+
+**Android APK is the required end product.** The Chrome installable PWA is **not** the final release. The new `android/` project bundles existing tested civil-engineering screens into an actual Android app, with Android launcher, private local-file picker, and system print integration. This is initially a **Java Android shell containing WebView-based engineering screens**, not yet a fully rewritten native UI. See [Android build and limitations](android/README.md).
+
+A debug-signed test APK must be **built by GitHub Actions and tested on Android** before anyone can claim an installable trial is ready. Production release signing and Android acceptance remain separate, pending milestones. The web preview remains for regression testing only.
+
+**Retaining Wall:** the weep-hole concept, inputs, counts, cautions, calculated output and CSV columns have been removed from the current feature and guarded by release tests.
 
 ## Keep — active modules
 - **Calculators** — geometry, survey and source-controlled civil unit conversions. Covers international length/area/volume including **square mile (mi²)**, Indian Maharashtra units (**guntha, hectare, are, acre, gaj/var, cent/decimal/dismil, brass and quintal**), US/Imperial measures, flows, structural loads and temperature. From/To, swap and unit search are available offline; bigha/biswa/katha are deliberately not assigned universal conversion factors.
