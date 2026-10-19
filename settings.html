@@ -23,9 +23,9 @@ async function storage(){if(!navigator.storage?.estimate)return;const e=await na
   if(!confirm('Clear public app caches? Saved private PDFs are not deleted by this action. You may need Internet to reopen app pages.'))return;
   try{
     for(const k of await caches.keys())
-      if(k.startsWith('pwd-tools-')||k.startsWith('pwd-v2-'))await caches.delete(k);
+      if(k.startsWith('pwd-tools-')||k.startsWith('pwd-v2-')||k==='pwd-public-pdfjs-offline-v1')await caches.delete(k);
     await storage();
-    alert('App cache cleared. Refresh while online to cache public pages again.');
+    alert('Public app and PDF renderer caches cleared. Your privately saved PDFs remain. Reopen Library and tap Prepare offline reader when online.');
   }catch(error){alert('Cache could not be cleared: '+error.message)}
 };resetLocal.onclick=()=>{
  if(!confirm('Reset PWD profile, recent tools and appearance settings? Private PDFs saved in this browser will remain.'))return;

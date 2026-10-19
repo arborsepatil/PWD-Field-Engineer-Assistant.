@@ -36,7 +36,11 @@ const swTestContext={
     addEventListener(name,handler){events[name]=handler}
   },
   caches:{
-    match:async target=>target==='./index.html'?offlineShell:undefined,
+    match:async (target,options)=>{
+      if(target==='./index.html')return offlineShell;
+      if(options?.ignoreSearch&&/\/(?:library|pdf_viewer)\.html\?/.test(target.url||''))return {kind:'cached-offline-reader'};
+      return undefined;
+    },
     open:async()=>({put:async()=>{}})
   },
   fetch:async request=>{
@@ -55,6 +59,11 @@ const exercise=async (mode,filename)=>{
 };
 const navFallback=await exercise('navigate','offline-page.html');
 assert.equal(navFallback.kind,'offline-page','Offline navigation must return cached HTML fallback');
+const libraryOffline=await exercise('navigate','library.html?section=ssr');
+assert.equal(libraryOffline.kind,'cached-offline-reader','SSR Library query route must open cached page offline');
+const pdfOffline=await exercise('navigate','pdf_viewer.html?file=private-catalog-id');
+assert.equal(pdfOffline.kind,'cached-offline-reader','Selected PDF viewer query route must open offline');
+
 await assert.rejects(
   exercise('same-origin','uncached-script.js'),
   /network offline/,
@@ -934,6 +943,42 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.equal(revoked,1,'Forget PDF must revoke the object URL');
  source.dispose();
  process.stdout.write('Unified Drive library PDF viewer, touch paging and device-private attachment checks passed\n');
+}
+
+// Offline-first PDF Library mobile quality checks (private bytes never committed).
+{
+ const library=load('library.html'),offline=load('library-offline.js'),bridge=load('bridge-local-source.js');
+ new vm.Script(offline,{filename:'library-offline.js'});
+ assert.ok(shell.includes('./library-offline.js'),'Offline Library UI controller not precached');
+ assert.ok(library.includes('./library-offline.js'),'Offline Library controller not loaded');
+ for(const id of ['bulkImport','offlineOne','offlineMany','prepareOfflineReader','showOfflineOnly','offlineProgress'])
+   assert.ok(library.includes('id="'+id+'"'),'Missing mobile offline Library control: '+id);
+ for(const action of ['data-offline-save','data-offline-remove','data-offline-export'])
+   assert.ok(library.includes(action),'Missing per-book offline action: '+action);
+ assert.ok(library.includes("offline.list()"),'Offline Library must show saved books after reload');
+ assert.ok(library.includes("offline.save(id,file"),'Single-book import must save locally');
+ assert.ok(library.includes("offline.save(record.id,file)"),'Bulk import must save locally');
+ assert.ok(library.includes('readerReady'),'Library must check PDF renderer readiness');
+ assert.ok(library.includes("offline.requestDurableStorage()"),'Mobile persistent-storage request absent');
+ assert.ok(sw.includes("const PDFJS_CACHE='pwd-public-pdfjs-offline-v1'"),'Stable renderer offline cache missing');
+ assert.ok(sw.includes("caches.open(PDFJS_CACHE)"),'Service worker does not read persistent renderer assets');
+ assert.ok(!shell.some(x=>x.endsWith('.pdf')),'Copyright-controlled original PDF must not ship in app cache');
+ for(const id of ['13hCYBiVR-XWToOtVpbS2ZnjvQFz5wWcr','1juIQ-FJLpBsJzh2dKJlFxkixRbsrmEOv'])
+   assert.ok(bridge.includes(id),'Bridge PDF must share Library storage: '+id);
+ assert.ok(bridge.includes('migratedFromLegacy'),'Existing saved bridge PDFs need migration');
+ const sandbox={window:{PWDDrivePDFCatalog:driveCatalog},navigator:{},Blob,Uint8Array,Promise,Date};
+ vm.runInNewContext(offline,sandbox,{filename:'offline-pdf-api'});
+ const api=sandbox.window.PWDOfflineLibrary;
+ assert.ok(api,'Offline private PDF API missing');
+ assert.equal(api.normalized('42. IS_456 (2000).pdf'),'is 456 2000');
+ assert.equal(api.normalized('PWD_Standard_Plans_Road_Bridges_2002.pdf'),'pwd standard plans road bridges 2002');
+ const isCode=driveCatalog.find(x=>x.sub==='IS'&&/IS 456 /.test(x.name));
+ assert.ok(api.fileMatch({name:'IS_456_2000.pdf'},isCode),'Filename based exact matching failed');
+ assert.equal(api.fileMatch({name:'IRC 78 2014.pdf'},isCode),false,'Cross-publication file matched');
+ await api.checkPDF(new Blob(['%PDF-1.7'+'.'.repeat(250)],{type:'application/pdf'}));
+ await assert.rejects(api.checkPDF(new Blob(['not-a-pdf'.repeat(25)])),/does not appear to be a PDF/);
+ assert.equal(await api.rendererReady(),false,'No browser cache must report PDF renderer not ready');
+ process.stdout.write('Offline PDF Library controls, file matching, renderer preparation and bridge shared storage verified\n');
 }
 
 // Cache a pinned, publicly distributable PDF.js renderer after successful first use.
