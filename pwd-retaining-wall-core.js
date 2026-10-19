@@ -40,6 +40,32 @@ function section(H,TW){
  return {stations,segments,wallArea,baseWidth:stations[stations.length-1].total,
    frontBreak:H>2.5?H-H/5:null,backBreak:H>2.5?2.5:null};
 }
+
+/* Construction-setting-out stations measured UP from top of PCC.
+ * Each batter junction interrupts the 1 m interval; after the junction a
+ * fresh 1 m interval starts. Do not insert the abandoned intermediate metre.
+ * No design assumptions: junction elevations must come from the same profile.
+ */
+function constructionLevels(H,junctions=[],interval=1){
+ if(!Number.isFinite(H)||H<=0||!Number.isFinite(interval)||interval<=0)
+   throw Error('Height and construction interval must be positive numbers.');
+ const sorted=junctions.map(j=>Number(typeof j==='number'?j:j.height)).sort((a,b)=>a-b);
+ if(sorted.some(v=>!Number.isFinite(v)||v<0||v>H))throw Error('Batter junction must lie inside the wall height.');
+ const unique=sorted.filter((v,i)=>v>EPS&&v<H-EPS&&(i===0||v-sorted[i-1]>EPS));
+ const levels=[0];let last=0,i=0;
+ while(last<H-EPS){
+   let next=Math.min(H,last+interval);
+   while(i<unique.length&&unique[i]<=last+EPS)i++;
+   if(i<unique.length&&unique[i]<=next+EPS)next=unique[i++];
+   if(next<=last+EPS)throw Error('Invalid construction level spacing.');
+   last=next;
+   levels.push(last);
+   if(levels.length>1000)throw Error('Too many construction levels.');
+ }
+ if(Math.abs(levels[levels.length-1]-H)<=EPS)levels[levels.length-1]=H;
+ return levels;
+}
+
 function calculate(v){
  const H=input('Wall height H',v.H,0.5,10);
  const L=input('Wall length L',v.L,0,Number.MAX_VALUE,true);
@@ -71,13 +97,23 @@ function calculate(v){
  const values=[geo.wallArea,baseW,pccW,concrete,pcc,soling,exc,filter,weepApprox];
  if(values.some(x=>!Number.isFinite(x))||!Number.isSafeInteger(weepApprox))
    throw Error('Calculated size is too large for a reliable quantity. Review inputs.');
- const checkpoints=Array.from({length:Math.ceil(H)},(_,i)=>i).filter(x=>x<H);
- checkpoints.push(H,...geo.stations.map(x=>x.depth));
- const controls=checkpoints.sort((a,b)=>a-b).filter((x,i,arr)=>i===0||x-arr[i-1]>EPS)
-   .map(depth=>profileAt(H,TW,depth));
+ const junctions=strict?[
+   {height:H/5,side:'right',description:'Right/front 1:4 ↔ 1:1'},
+   {height:H-2.5,side:'left',description:'Left/back vertical ↔ 1:6'}
+ ]:[];
+ const stationHeights=constructionLevels(H,junctions,1);
+ const controls=stationHeights.map(height=>{
+   const depth=H-height;
+   const z=profileAt(H,TW,depth);
+   const sideChanges=junctions.filter(j=>Math.abs(j.height-height)<=EPS);
+   return {...z,height,left:z.back,right:z.front,
+      junction:sideChanges.length>0,
+      junctionSides:sideChanges.map(j=>j.side),
+      intervalFromPrevious:height===0?0:height-stationHeights[stationHeights.indexOf(height)-1]};
+ });
  return {H,L,TW,strict,wallArea:geo.wallArea,baseW,pccW,pccT,solT,grade,
   backOff,frontOff,concrete,pcc,soling,exc,excD,filter,filterT,weepH,weepV,
-  weepColumns,weepRows,weepApprox,sections:geo.segments,stations:geo.stations,controls,
+  weepColumns,weepRows,weepApprox,sections:geo.segments,stations:geo.stations,controls,junctions,
   frontBreak:geo.frontBreak,backBreak:geo.backBreak,BRASS,
   excavationReminder:excD<pccT+solT-EPS,
   profileReminder:true};
@@ -127,12 +163,12 @@ function exportCSV(d,project=''){
   ['Item','Calculation basis','Cross-section / unit length (m²)','Length (m)','Unit','Quantity','Caution'],
   ...measurementRows(d).map(r=>[r.item,r.basis,r.crossSection,r.length,r.unit,r.quantity,r.note]),
   [],['FIELD WIDTH CONTROL — FIXED TOP CENTRELINE'],
-  ['Depth below top (m)','Back from centreline (m)','Front from centreline (m)','Total wall width (m)'],
-  ...d.controls.map(p=>[p.depth,p.back,p.front,p.total]),
+  ['Height above PCC top (m)','Left/back from fixed top C/L (m)','Right/front from fixed top C/L (m)','Total wall width (m)','Station type'],
+  ...d.controls.map(p=>[p.height,p.left,p.right,p.total,p.junction?'Batter change':'Setting-out']),
   [],['Source / limitation','Preliminary geometric calculation only. Verify the project-specific approved drawing, actual levels, excavation profile, drainage, stability and measurements.'],
   ['Status','Not an official tender abstract, certified structural design or government-approved quantity.']
  ];
  return '\uFEFF'+rows.map(row=>row.map(safeCell).join(',')).join('\r\n')+'\r\n';
 }
-root.PWDWallCore={BRASS,input,profileAt,section,calculate,measurementRows,exportCSV};
+root.PWDWallCore={BRASS,input,profileAt,section,constructionLevels,calculate,measurementRows,exportCSV};
 })(typeof window!=='undefined'?window:globalThis);
