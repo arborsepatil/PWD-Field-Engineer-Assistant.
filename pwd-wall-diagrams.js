@@ -6,6 +6,16 @@
 'use strict';
 const DARK='#263b52',BLUE='#1768bd',MUTED='#65768a',J='#9a690e';
 const fmt=(n,dp=3)=>Number(n).toFixed(dp);
+// Show unique, true station heights even when two junctions lie within 1 mm.
+// Precision affects ONLY labels, never input section geometry or quantities.
+function stationPrecision(controls){
+ const heights=controls.map(c=>c.height);
+ for(let digits=3;digits<=12;digits++){
+  const labels=heights.map(h=>fmt(h,digits));
+  if(new Set(labels).size===labels.length)return digits;
+ }
+ return 12;
+}
 const ln=(x1,y1,x2,y2,color=MUTED,w=1,dash='')=>
  '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+color+'" stroke-width="'+w+'"'+
  (dash?' stroke-dasharray="'+dash+'"':'')+'/>';
@@ -55,6 +65,7 @@ function stagger(rows,minY,maxY,gap=29){
 function renderDimension(d){
  const cx=433,base=446,scale=Math.min(350/d.H,320/d.pccW,85/(d.pccT+d.solT));
  const x=v=>cx+v*scale,y=dep=>base-(d.H-dep)*scale;
+ const stationDigits=stationPrecision(d.controls);
  const top=y(0),foot=footing(d,x,base,scale),upper=face(d,0),lower=face(d,d.H);
  let out='<rect width="960" height="616" fill="#fff"/>';
  out+=txt(480,27,'DIAGRAM 1 · DIMENSIONED WALL SECTION',17,'middle',DARK,800);
@@ -65,7 +76,7 @@ function renderDimension(d){
  out+=widthDimension(x(-upper.back),x(upper.front),top-14,'TW '+fmt(d.TW,2));
  out+=widthDimension(x(-lower.back),x(lower.front),base-13,'BW '+fmt(d.baseW,3));
  out+=widthDimension(foot.l,foot.r,foot.low+20,'PCC W = Soling W = '+fmt(d.pccW,3));
- out+=heightDimension(78,top,base,'Wall H '+fmt(d.H,3));
+ out+=heightDimension(78,top,base,'Wall H '+fmt(d.H,stationDigits));
  out+=heightDimension(746,base,foot.mid,'PCC t '+fmt(d.pccT,3));
  out+=heightDimension(746,foot.mid,foot.low,'Soling t '+fmt(d.solT,3));
  out+=txt(287,base+4,'0.00 = PCC top',11,'end',MUTED,700);
@@ -77,7 +88,7 @@ function renderDimension(d){
   for(const event of stagger(events,123,403,33)){
    out+=dot(event.px,event.y)+ln(event.px,event.y,660,event.labelY,J,1.1);
    out+=txt(671,event.labelY-3,event.side==='left'?'LEFT/BACK BATTER':'RIGHT/FRONT BATTER',11,'start',J,800);
-   out+=txt(671,event.labelY+12,'changes @ '+fmt(event.height,3)+' m above PCC',11,'start',DARK,650);
+   out+=txt(671,event.labelY+12,'changes @ '+fmt(event.height,stationDigits)+' m above PCC',11,'start',DARK,650);
   }
  }
  out+=txt(480,581,d.strict?'Batter changes individually identified on their own faces':'Lower wall (H ≤ 2.50 m): no higher-profile junctions',12,'middle',MUTED);
@@ -87,6 +98,7 @@ function renderDimension(d){
 function renderSettingOut(d){
  const cx=520,base=556,scale=Math.min(448/d.H,315/d.pccW);
  const x=v=>cx+v*scale,yHeight=h=>base-h*scale,yDepth=dep=>yHeight(d.H-dep);
+ const stationDigits=stationPrecision(d.controls);
  let out='<rect width="1040" height="660" fill="#fff"/>';
  out+=txt(520,26,'DIAGRAM 2 · BOTTOM-UP FIELD SETTING-OUT',18,'middle',DARK,800);
  out+=txt(520,47,'0.00 = TOP OF PCC · Offsets from fixed top-width centreline',12,'middle',MUTED);
@@ -107,7 +119,7 @@ function renderSettingOut(d){
   out+=ln(xl,actual-5,xl,actual+5,BLUE,1)+ln(xr,actual-5,xr,actual+5,BLUE,1);
   if(station.junction)out+=dot(station.junctionSides.includes('left')?xl:xr,actual);
   out+=ln(365,shown,xl-6,actual,color,1)+ln(xr+6,actual,800,shown,color,1);
-  out+=txt(95,shown+4,fmt(station.height,3),13,'start',station.junction?J:DARK,station.junction?800:600);
+  out+=txt(95,shown+4,fmt(station.height,stationDigits),13,'start',station.junction?J:DARK,station.junction?800:600);
   out+=txt(345,shown+4,fmt(station.left,3),13,'middle',BLUE,750);
   out+=txt(835,shown+4,fmt(station.right,3),13,'middle',BLUE,750);
   if(station.junction)out+=txt(1004,shown+4,station.junctionSides.map(s=>s==='left'?'L':'R').join('+')+' Δ',11,'end',J,800);
@@ -117,5 +129,5 @@ function renderSettingOut(d){
  out+=txt(520,649,'Setting-out aid only · verify the approved wall section and left/back orientation',11,'middle',MUTED);
  return out;
 }
-root.PWDWallDiagrams={renderDimension,renderSettingOut,stagger};
+root.PWDWallDiagrams={renderDimension,renderSettingOut,stagger,stationPrecision};
 })(typeof window!=='undefined'?window:globalThis);
