@@ -266,17 +266,54 @@ function renderNotes(){
 }
 function openNotesFrom(prefix){
  let cat,item,wc;
- if(prefix==='q'){cat=$('qCat').value;item=$('qItem').value;wc=Number($('qWC').value)}
- else if(prefix==='a'){cat=$('aCat').value;item=$('aItem').value;wc=Number($('aWC').value)}
- else {cat=$('rCat').value;item=$('rItem').value;wc=Number($('rWC').value)}
- $('nRow').value=cat+'|'+item;$('nWC').value=Number.isFinite(wc)?wc:.50;showTab('notes');renderNotes();
+ if(prefix==='q'){cat=$('qCat').value;item=$('qItem').value;wc=Number($('qWC').value);returnTab='qty'}
+ else if(prefix==='a'){cat=$('aCat').value;item=$('aItem').value;wc=Number($('aWC').value);returnTab='ajax'}
+ else {cat=lastSelection.cat;item=lastSelection.item;wc=lastSelection.wc;returnTab='nominal'}
+ $('nRow').value=cat+'|'+item;
+ $('nWC').value=Number.isFinite(wc)?wc:.50;
+ showTab('notes');renderNotes();
 }
-function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));$(id).classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+function showTab(id){
+ if(!['qty','ajax','nominal','notes'].includes(id))return;
+ document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
+ document.querySelectorAll('.tab').forEach(t=>{
+  const active=t.dataset.tab===id;
+  t.classList.toggle('active',active);
+  t.setAttribute('aria-selected',String(active));
+ });
+ $(id).classList.remove('hidden');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderNominal(){
+ try{
+  const grade=$('nomGrade').value,units=num('nomMeasures');
+  const n=PWDBatchCore.nominal(grade,units,NOMINAL);
+  $('nomOut').innerHTML=`<div class="result"><span>Cement</span><b>${fmt(n.cement,2)} measure(s)</b></div>
+   <div class="result"><span>Sand</span><b>${fmt(n.sand,2)} measure(s)</b></div>
+   <div class="result"><span>Coarse aggregate</span><b>${fmt(n.coarse,2)} measure(s)</b></div>`;
+  document.querySelectorAll('[data-nom-grade]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.nomGrade===grade)));
+ }catch(e){$('nomOut').innerHTML='<div class="danger" role="alert">'+e.message+'</div>'}
+}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>showTab(t.dataset.tab));
-$('aBasis').onchange=toggleABasis;
-setupPair('qCat','qItem','qSource');setupPair('aCat','aItem','aSource');setupPair('rCat','rItem','rSource');
-['dSand','d10','d20','d40'].forEach(id=>$(id).addEventListener('input',()=>{calcQty();calcAjax();calcRMC()}));
+$('notesReturn').onclick=()=>showTab(returnTab);
+$('aBasis').onchange=()=>{toggleABasis();calcAjax()};
+setupPair('qCat','qItem','qSource');setupPair('aCat','aItem','aSource');
+['dSand','d10','d20','d40'].forEach(id=>$(id).addEventListener('input',calcAjax));
+$('qty').addEventListener('input',calcQty);
+$('qty').addEventListener('change',calcQty);
+$('ajax').addEventListener('input',calcAjax);
+$('ajax').addEventListener('change',calcAjax);
 $('nRow').innerHTML='<option value="">No source row selected</option>'+allRows().map(r=>`<option value="${r.cat}|${r.id}">${r.label} — ${r.name}</option>`).join('');
-$('nomGrid').innerHTML=NOMINAL.map(([g,r])=>`<div class="card"><b>${g}</b><div class="ratio">${r}</div><small>Cement : Fine aggregate : Coarse aggregate</small></div>`).join('');
-toggleABasis();calcQty();calcAjax();calcRMC();renderNotes();
+$('nomGrade').innerHTML=NOMINAL.map(([grade])=>`<option value="${grade}">${grade}</option>`).join('');
+$('nomGrade').value='M15';
+$('nomGrid').innerHTML=NOMINAL.map(([grade,ratio])=>`<button type="button" class="nomPick" data-nom-grade="${grade}" aria-pressed="false"><b>${grade}</b><div class="ratio">${ratio}</div><small>Cement : Fine : Coarse</small></button>`).join('');
+$('nomGrid').addEventListener('click',e=>{
+ const button=e.target.closest('[data-nom-grade]');
+ if(!button)return;
+ $('nomGrade').value=button.dataset.nomGrade;
+ renderNominal();
+});
+$('nomGrade').onchange=renderNominal;
+$('nomMeasures').oninput=renderNominal;
+toggleABasis();calcQty();calcAjax();renderNominal();renderNotes();
 </script><script src="./app-shell.js"></script></body></html>
