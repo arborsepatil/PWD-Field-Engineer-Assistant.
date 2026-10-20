@@ -52,6 +52,13 @@ The Library contains 73 catalogued **Drive links and titles**, not book PDFs. Or
 - Offline status means the browser retained a PDF file, **not** that its contents, edition, title block, revision or engineering applicability have been verified.
 - **Read PDF in app** may display Google Drive preview when a local PDF is absent. If Google blocks embedded preview, **Google Drive** remains the online fallback.
 
+## RCC 2023 source quantity verification and optional length (Phase 5)
+
+- The book's 27 standard cross-sections were independently reconstructed as polygons from dimensions A–I. Their computed areas (m²) agree with original printed concrete volumes (m³) for a 1 m section to within 0.0075 m³ (rounding). This is a **geometrical engineering inference**, NOT an explicit published statement that all source material entries are per-running-metre.
+- The RCC screen now optionally accepts project wall length L (m). If entered, it displays **planning-only** structural RCC = unrounded polygonal cross-section area × L and **separate** levelling PCC M15 = B footing width × 0.100 m (from GAD) × L, with checked unit dimensions.
+- Original source-table RCC and steel quantities remain unchanged and separately labelled. Source steel mass is **not multiplied** by entered length; all BBS bars require engineering-verified counts and cutting lengths, and source notes must be checked for changes to site geometry, levels and applicability.
+- Both planning quantities can be exported in the BBS CSV under their own **GEOMETRY-BASED PLANNING QUANTITY** heading. A drawing view or geometrical agreement is not a stability check, site measurement, approval or quantity-certification.
+
 ## Retaining Wall — two engineering drawings and bottom-up setting-out
 
 - **Diagram 1, dimensioned section:** on the existing section model, mark wall height, top width, bottom width, PCC/soling common width and their individual thicknesses. For heights above 2.50 m identify the independently computed left/back and right/front batter-change junctions at their heights **above top of PCC**. Keep this diagram clear; do not overcrowd it with 1 m station offsets.
