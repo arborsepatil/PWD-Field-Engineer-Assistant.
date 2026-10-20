@@ -10,9 +10,8 @@ if(!catalog||!math||!$('steelFamilies'))return;
 let family='beam',selected=null,last=null,lastEntry=null;
 const source=id=>catalog.SOURCES[id];
 const format=(x,d=2)=>Number(x).toLocaleString('en-IN',{maximumFractionDigits:d,minimumFractionDigits:d});
-const text=(el,value)=>{el.textContent=String(value)};
 function shapeSvg(type,data={}){
- const blue='#286ab1',steel='#d6e7f5',ink='#23425c';
+ const blue='var(--diagram-ink)',steel='var(--diagram-metal)',ink='var(--diagram-ink)';
  let body='',info='';
  const n=v=>Number(v).toLocaleString('en-IN');
  if(type==='beam'){
@@ -37,23 +36,27 @@ function shapeSvg(type,data={}){
  const label=data.designation||type.charAt(0).toUpperCase()+type.slice(1);
  // All text originates in app-authored names; SVG only has known static shapes.
  return '<svg viewBox="0 0 488 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative '+type+' cross-section, not a fabrication drawing">'+
-  '<rect width="488" height="310" fill="#ffffff"/><g fill="'+steel+'" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round">'+body+'</g>'+
+  '<rect width="488" height="310" fill="var(--diagram-bg)"/><g fill="'+steel+'" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round">'+body+'</g>'+
   '<text x="244" y="25" fill="'+blue+'" text-anchor="middle" font-size="15" font-weight="700">'+label.replace(/&/g,'&amp;')+'</text>'+
   '<text x="244" y="286" fill="'+ink+'" text-anchor="middle" font-size="12">'+info+'</text>'+
-  '<text x="244" y="304" fill="#65768a" text-anchor="middle" font-size="10">Diagram indicative only · not to scale · check published section drawing</text></svg>';
+  '<text x="244" y="304" fill="var(--diagram-sub)" text-anchor="middle" font-size="10">Schematic only · not to scale</text></svg>';
 }
 function setFamily(next){
  family=next;selected=null;last=null;lastEntry=null;
- for(const button of $('steelFamilies').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.family===next));
+ for(const button of $('steelFamilies').querySelectorAll('button'))
+  button.setAttribute('aria-pressed',String(button.dataset.family===next));
  const custom=next==='calculated';
  $('catalogDetails').hidden=custom;$('customDetails').hidden=!custom;
- $('steelDetail').hidden=!custom;
  if(custom){
-  $('steelTitle').textContent='Theoretical dimensions, not a BIS product row';
-  $('steelStatus').textContent='Calculated · density assumption';
-  $('steelMass').textContent='Calculated below';
-  $('steelSource').removeAttribute('href');$('sourceLinks').hidden=true;
-  $('steelDataCaution').textContent='This is not a manufacturer-published nominal mass or section-property schedule.';
+  $('steelDetail').hidden=false;
+  $('steelTitle').textContent='Custom shape';
+  $('steelStatus').textContent='Calculated · 7,850 kg/m³';
+  $('steelStatus').classList.remove('archive');
+  $('steelMassCaption').textContent='Calculated mass per metre';
+  $('steelSource').removeAttribute('href');
+  $('sourceLinks').hidden=true;
+  $('steelArchiveNote').hidden=true;
+  $('steelDataCaution').textContent='Theoretical geometry, not a published section mass.';
   updateCustomInputs();
  }else{
   $('sourceLinks').hidden=false;
@@ -64,25 +67,33 @@ function setFamily(next){
 function makeFamilyButtons(){
  for(const cat of catalog.categories){
   const button=document.createElement('button');
-  button.type='button';button.dataset.family=cat.id;button.textContent=cat.label;
-  button.setAttribute('aria-pressed','false');button.addEventListener('click',()=>setFamily(cat.id));
+  button.type='button';button.dataset.family=cat.id;
+  button.textContent=cat.label==='Plates & bars'?'Plate / bar':cat.label;
+  button.setAttribute('aria-pressed','false');
+  button.addEventListener('click',()=>setFamily(cat.id));
   $('steelFamilies').append(button);
  }
 }
 function renderRows(){
  const rows=catalog.search($('steelSearch').value,family);
- const root=$('steelResults');root.replaceChildren();
- $('noResults').hidden=rows.length!==0;
- $('steelCount').textContent=rows.length+' published manufacturer records in this section family (curated V1 subset).';
+ const field=$('steelResults');
+ // Keep the last selection if it still belongs to the current filtered result.
+ const wanted=rows.some(x=>x.id===selected?.id)?selected.id:
+   (!selected&&family==='beam'&&rows.some(x=>x.id==='ISMB200')?'ISMB200':rows[0]?.id);
+ field.replaceChildren();
  for(const row of rows){
-  const btn=document.createElement('button');btn.className='pick';btn.type='button';
-  btn.setAttribute('aria-pressed',String(selected?.id===row.id));
-  const name=document.createElement('b');name.textContent=row.designation;
-  const subtitle=document.createElement('span');subtitle.textContent=format(row.kgPerM,2)+' kg/m · '+(row.basis==='archived-manufacturer-only'?'Archive / verify latest':'SAIL 2023');
-  btn.append(name,subtitle);
-  btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateResult();});
-  root.append(btn);
+  const option=document.createElement('option');
+  option.value=row.id;
+  option.textContent=row.designation+' · '+format(row.kgPerM)+' kg/m';
+  field.append(option);
  }
+ if(wanted)field.value=wanted;
+ field.disabled=rows.length===0;
+ selected=rows.find(x=>x.id===wanted)||null;
+ $('noResults').hidden=rows.length>0;
+ $('steelCount').textContent=rows.length?rows.length+' sizes available':'';
+ renderDetail();
+ updateResult();
 }
 function propertyTable(row){
  const tbody=document.createElement('tbody');
@@ -109,17 +120,21 @@ function propertyTable(row){
 function renderDetail(){
  if(!selected){$('steelDetail').hidden=true;return;}
  const src=source(selected.sourceId);
+ const archived=selected.basis==='archived-manufacturer-only';
  $('steelDetail').hidden=false;
  $('steelTitle').textContent=selected.designation;
- $('steelStatus').textContent=selected.basis==='archived-manufacturer-only'?'Archived · requires latest check':'SAIL published · 2023';
+ $('steelStatus').textContent=archived?'Archive · 2020':'SAIL · 2023';
+ $('steelStatus').classList.toggle('archive',archived);
+ $('steelArchiveNote').hidden=!archived;
+ $('steelMassCaption').textContent='Published mass per metre';
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
- $('steelDataCaution').textContent=selected.basis==='archived-manufacturer-only'?
-  'Manufacturer reference from 2020. This row has NOT been revalidated against IS 808:2021. Do not treat it as the current BIS table or evidence of present mill availability.':
-  '2023 SAIL manufacturer-published values; this row has NOT been independently checked against a licensed IS 808:2021 table or current production. Section properties are shown only when present in the cited SAIL brochure.';
+ $('steelDataCaution').textContent=archived?
+   'This 2020 row is not rechecked against IS 808:2021 or current mill availability.':
+   'Manufacturer data (2023), not independently verified against each row of IS 808:2021.';
  const a=$('steelSource');a.href=src.url;a.textContent=src.label;
- $('steelSourceDate').textContent='Source publication: '+src.date+' · '+src.note;
+ $('steelSourceDate').textContent='Published '+src.date+' · '+src.note;
  $('sourceLinks').hidden=false;
 }
 function updateCustomInputs(){
@@ -128,7 +143,7 @@ function updateCustomInputs(){
  $('steelWidthField').hidden=!rectangle;$('steelThickField').hidden=!rectangle;
  $('steelDiameterField').hidden=type!=='round';$('steelSideField').hidden=type!=='square';
  $('steelSectionDiagram').innerHTML=shapeSvg(type);
- $('steelProperties').textContent='Dimensions entered below are not taken from the manufacturer catalogue.';
+ $('steelProperties').textContent='User-entered dimensions · theoretical density 7,850 kg/m³.';
  updateResult();
 }
 function calculate(){
@@ -153,7 +168,7 @@ function updateResult(){
   $('outKg').textContent=format(q.totalMassKg,2);
   $('outTonne').textContent=format(q.totalTonnes,4);
   $('outMethod').textContent=q.basis;
-  $('outPrice').textContent=q.totalPrice===null?'Rate not entered · no price estimated':'Indicative material cost: ₹'+format(q.totalPrice,2)+' (excluding GST, fabrication, wastage and transport)';
+  $('outPrice').textContent=q.totalPrice===null?'':'Cost: ₹'+format(q.totalPrice,2)+' · before taxes/transport';
   if(family==='calculated')$('steelMass').textContent=format(q.unitMassKgM,3);
  }catch(err){
   last=null;lastEntry=null;$('output').hidden=true;
@@ -184,11 +199,20 @@ function showStandards(){
 }
 makeFamilyButtons();showStandards();
 $('steelSearch').addEventListener('input',renderRows);
+$('steelResults').addEventListener('change',()=>{
+ selected=catalog.byId($('steelResults').value);
+ renderDetail();updateResult();
+});
 $('steelCustomShape').addEventListener('change',updateCustomInputs);
 for(const id of ['steelLength','steelCountPieces','steelRate','steelWidth','steelThickness','steelDiameter','steelSide'])
  $(id).addEventListener('input',updateResult);
 $('steelCalculate').addEventListener('click',updateResult);
 $('steelExport').addEventListener('click',saveCsv);
-$('steelPrint').addEventListener('click',()=>window.print());
+$('steelPrint').addEventListener('click',()=>{
+ const details=$('steelMore');const wasOpen=details.open;
+ details.open=true;
+ window.print();
+ window.addEventListener('afterprint',()=>{details.open=wasOpen;},{once:true});
+});
 setFamily('beam');
 })();
