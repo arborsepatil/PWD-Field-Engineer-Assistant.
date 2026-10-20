@@ -68,7 +68,44 @@ function svg(record){
  out+='</svg>';
  return out;
 }
-const api=Object.freeze({geometry,svg});
+/* Independent concrete takeoff: polygon area of the exact source A-I cross-section.
+ * The source table volumes match one-metre extrusions within 0.0075 m³
+ * across all 27 records. This is a geometric INFERENCE, not a quoted
+ * per-running-metre statement from the book. It excludes construction
+ * excavation, out-of-profile concrete, rebar, laps and all site adjustments.
+ */
+function crossSectionAreaM2(record){
+ const d=geometry(record);
+ const vertices=[[0,0],[0,d.H],[d.F,d.G],[d.xStemTop,d.A],[d.xToe,d.A],[d.xToe,d.G],[d.B,d.H],[d.B,0]];
+ let doubleArea=0;
+ for(let i=0;i<vertices.length;i++){
+  const a=vertices[i],b=vertices[(i+1)%vertices.length];
+  doubleArea+=a[0]*b[1]-b[0]*a[1];
+ }
+ const area=Math.abs(doubleArea)/2e6;
+ if(!(area>0)&&Number.isFinite(area))throw Error('Invalid RCC cross-section.');
+ return area;
+}
+function quantityForLength(record,lengthM){
+ if(lengthM===''||lengthM===null||lengthM===undefined)throw Error('Wall length is required for geometry takeoff.');
+ const length=Number(lengthM);
+ if(!Number.isFinite(length)||length<0.01||length>10000)
+  throw Error('Wall length must be 0.01 to 10,000 m.');
+ const d=geometry(record),areaM2=crossSectionAreaM2(record);
+ const diffM3PerM=Math.abs(areaM2-record.concreteM3);
+ if(!Number.isFinite(record.concreteM3)||diffM3PerM>0.01)
+  throw Error('Source drawing geometry does not reconcile to the printed concrete table.');
+ return Object.freeze({
+  lengthM:length,crossSectionAreaM2:areaM2,sourceConcreteM3:record.concreteM3,
+  sourceDifferenceM3PerM:diffM3PerM,concretePlanningM3:areaM2*length,
+  // GAD 151-1/4 shows 100 mm PCC M15 levelling on full footing width B.
+  // Unlike structural RCC, this separate levelling-layer quantity is derived.
+  pccLevellingWidthM:d.B/1000,pccLevellingThicknessM:d.pccThicknessMm/1000,
+  pccLevellingPlanningM3:(d.B/1000)*(d.pccThicknessMm/1000)*length,
+  note:'GEOMETRIC PLANNING TAKEOFF; not source-certified site measurement or RCC steel calculation'
+ });
+}
+const api=Object.freeze({geometry,svg,crossSectionAreaM2,quantityForLength});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDRCC2023Section=api;
 })(typeof window!=='undefined'?window:globalThis);
