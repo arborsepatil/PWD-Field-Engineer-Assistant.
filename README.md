@@ -10,6 +10,9 @@ A debug-signed test APK must be **built by GitHub Actions and tested on Android*
 
 **Retaining Wall:** the weep-hole concept, inputs, counts, cautions, calculated output and CSV columns have been removed from the current feature and guarded by release tests.
 
+**Retaining Walls (2023 RCC reference):** two top-level choices only: the existing **PCC** retaining-wall section/quantity calculator (core arithmetic unchanged) and **RCC 2023** from the original PWD bridge type-plan Part 2 Section G. The RCC screen supports the exact 27 SBC/height columns from PDF sheets 210–212, displaying dimensions A–I, printed steel/concrete quantities and **MK1–MK11** bar diameters (mm) and centre-to-centre spacings (mm). The original dashes are preserved as absent table entries. Drawing 151-1/4 on PDF page 209 is linked to identify marks. Reinforcement tables are source lookups **not** a computed bar-bending schedule, a stability check, steel-cutting calculation or site approval. Type plans explicitly state minor bridges/culverts with raft foundations; other wall scenarios require engineering review. The source's 25 t/m², 4.5 m printed steel-per-m³ inconsistency remains flagged. Private PDF bytes stay out of the APK.
+
+
 ## Keep — active modules
 - **Calculators** — geometry, survey and source-controlled civil unit conversions. Covers international length/area/volume including **square mile (mi²)**, Indian Maharashtra units (**guntha, hectare, are, acre, gaj/var, cent/decimal/dismil, brass and quintal**), US/Imperial measures, flows, structural loads and temperature. From/To, swap and unit search are available offline; bigha/biswa/katha are deliberately not assigned universal conversion factors.
 - **Site Tools** — focused three-workflow Concrete Batch Assistant (material order, AJAX batching, nominal mix), retaining wall section quantities, concrete mix design

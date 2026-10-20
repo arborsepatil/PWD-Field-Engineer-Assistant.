@@ -75,4 +75,68 @@ new vm.Script(app,{filename:'rcc-wall-2023-app.js'});
 assert.match(app,/sourceRatioDiscrepancy/);
 assert.match(app,/\.textContent=/);
 assert.doesNotMatch(app,/Math\.round\(.*height|Math\.ceil\(.*height/i);
+// Keep the engineering type-plan exact-height data and bar schedule aligned.
+const rebarSrc=read('rcc-wall-2023-rebar.js');
+const rebarContext={module:{exports:{}}};
+vm.runInNewContext(rebarSrc,rebarContext,{filename:'rcc-wall-2023-rebar.js'});
+const rebar=rebarContext.module.exports;
+assert.equal(rebar.count,27);
+assert.equal(rebar.markNames.length,11);
+assert.deepEqual(Array.from(rebar.markNames),Array.from({length:11},(_,i)=>'MK'+(i+1)));
+let cells=0,notShown=0;
+for(const sbc of api.sbcs){
+ for(const height of api.heightsFor(sbc)){
+  const row=api.recordFor(sbc,height);
+  const schedule=rebar.reinforcementFor(sbc,height);
+  assert.equal(schedule.pdfPage,row.pdfPage,'Rebar sheet must match dimensions sheet');
+  assert.equal(schedule.heightM,row.heightM);
+  assert.equal(schedule.sbc,row.sbc);
+  assert.equal(schedule.marks.length,11);
+  assert.ok(schedule.marks.every(m=>typeof m.location==='string'&&m.location.length>12),'Missing GAD mark location');
+  for(const mark of schedule.marks){
+   cells++;
+   if(mark.present){
+    assert.ok([10,12,16,20].includes(mark.diameterMm),'Printed diameter must be transcribed');
+    assert.ok(Number.isInteger(mark.spacingMm)&&mark.spacingMm>=110&&mark.spacingMm<=250);
+   }else{
+    notShown++;
+    assert.equal(mark.diameterMm,null,'Absent bar diameter must remain unset');
+    assert.equal(mark.spacingMm,null,'Absent bar spacing must remain unset');
+   }
+  }
+ }
+}
+assert.equal(cells,297);
+assert.equal(notShown,10,'Original MK2/MK8 absent cells must remain dashes');
+const mk=(sbc,height,name)=>rebar.reinforcementFor(sbc,height).marks.find(x=>x.mark===name);
+assert.equal(mk(10,2,'MK2').present,false);
+assert.match(mk(10,2,'MK1').location,/Raft bottom/);
+assert.match(mk(10,2,'MK2').location,/toe-side/);
+assert.match(mk(15,6.5,'MK5').location,/heel-side/);
+assert.match(mk(25,8,'MK11').location,/non-earth face/);
+assert.equal(mk(10,3,'MK8').diameterMm,10);
+assert.equal(mk(10,4,'MK7').diameterMm,12);
+assert.equal(mk(15,2.5,'MK7').spacingMm,150);
+assert.equal(mk(15,3.5,'MK2').spacingMm,220);
+assert.equal(mk(15,6.5,'MK4').diameterMm,16);
+assert.equal(mk(15,6.5,'MK10').spacingMm,150);
+assert.equal(mk(25,5,'MK4').diameterMm,16);
+assert.equal(mk(25,6.5,'MK10').spacingMm,170);
+assert.equal(mk(25,7.5,'MK6').spacingMm,130);
+assert.equal(mk(25,8.5,'MK2').diameterMm,16);
+assert.equal(mk(25,8.5,'MK4').diameterMm,20);
+assert.equal(mk(25,8.5,'MK10').spacingMm,110);
+assert.equal(mk(25,8.5,'MK11').spacingMm,150);
+assert.equal(rebar.reinforcementFor(25,6.75),null,'No interpolation of bar spacing');
+assert.equal(rebar.reinforcementFor(20,6),null,'Unlisted SBC must not receive a schedule');
+assert.equal(rebar.reinforcementFor(15,''),null,'Blank wall height must not receive reinforcement');
+for(const id of ['rccRebarSection','rccRebarRows','rccRebarCount','rccRebarUnavailable'])
+ assert.ok(ui.includes('id="'+id+'"'),'Missing RCC rebar UI '+id);
+assert.match(ui,/src="\.\/rcc-wall-2023-rebar\.js"/);
+assert.match(app,/PWDRCC2023Rebar/);
+assert.match(app,/schedule\.pdfPage===row\.pdfPage/);
+assert.match(app,/entry\.present\?String\(entry\.diameterMm\):'—'/);
+assert.doesNotMatch(app,/barLength|barWeight|bendSchedule|calcBarMass/i);
+assert.ok(read('sw.js').includes('./rcc-wall-2023-rebar.js'),'Rebar lookup not cached offline');
+console.log('2023 reinforcement QA passed: 27 sets, 297 MK entries, 10 source dashes, no unsupported heights or fabricated BBS.');
 console.log('RCC 2023 source schedule QA passed: 27 exact height/SBC records, A-I dimensions, concrete, steel, source page links, one printed inconsistency preserved.');
