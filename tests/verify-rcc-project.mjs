@@ -97,4 +97,44 @@ assert.doesNotMatch(app,/auto[- ]?design|designApproval/i);
 assert.doesNotMatch(page,/masonry/i);
 for(const asset of ['rcc-wall-2023-section.js','rcc-wall-2023-bbs.js'])
  assert.ok(read('sw.js').includes("'./"+asset+"'"),'Offline cache excludes '+asset);
+// Stage 5: arithmetic cross-check all 27 printed volumes against the
+// A-I sectional polygon. This supports planning per-metre takeoff as an
+// engineering inference rather than an unlabelled source statement.
+let maxDeviation=0;
+for(const sbc of data.sbcs)for(const height of data.heightsFor(sbc)){
+ const source=data.recordFor(sbc,height);
+ const areaM2=section.crossSectionAreaM2(source);
+ assert.ok(Number.isFinite(areaM2)&&areaM2>0);
+ const delta=Math.abs(areaM2-source.concreteM3);
+ maxDeviation=Math.max(maxDeviation,delta);
+ assert.ok(delta<=0.01,'Concrete section must reconcile source '+sbc+'/'+height+' by <=0.01 m³: '+delta);
+ const takeoff=section.quantityForLength(source,12.5);
+ assert.equal(takeoff.lengthM,12.5);
+ assert.ok(Math.abs(takeoff.concretePlanningM3-areaM2*12.5)<1e-9);
+ assert.ok(Math.abs(takeoff.pccLevellingPlanningM3-(source.dimensionsMm.B/1000)*0.1*12.5)<1e-9);
+ assert.equal(takeoff.sourceConcreteM3,source.concreteM3);
+}
+assert.ok(Math.abs(maxDeviation-0.0075)<1e-8,'Worst source rounding difference must remain stable');
+const projectArea=section.crossSectionAreaM2(original);
+assert.ok(Math.abs(projectArea-2.4225)<1e-9);
+const planned=section.quantityForLength(original,12);
+assert.ok(Math.abs(planned.concretePlanningM3-29.07)<1e-9);
+assert.ok(Math.abs(planned.pccLevellingPlanningM3-3.6)<1e-9);
+assert.equal(original.concreteM3,2.42,'Printed book table must not be replaced by geometry takeoff');
+assert.ok(planned.note.includes('PLANNING'));
+for(const length of ['',0,-1,'negative',null,undefined,NaN,10001,Infinity])
+ assert.throws(()=>section.quantityForLength(original,length),'Invalid length must reject: '+String(length));
+const takenCsv=bbs.draftCsv('Culvert Approach',original,schedule,{MK7:{count:10,cutLengthM:5.2}},planned);
+assert.ok(takenCsv.includes('GEOMETRY-BASED PLANNING QUANTITY'));
+assert.ok(takenCsv.includes('29.070'));
+assert.ok(takenCsv.includes('3.600'));
+assert.ok(takenCsv.includes('per running metre basis inferred'));
+assert.ok(takenCsv.includes('No inferred project-length steel quantity'));
+for(const id of ['rccLength','rccGeometryTakeoff','rccPlanConcrete','rccPlanPcc','rccPlanArea','rccPlanBasis','rccPlanError'])
+ assert.ok(page.includes('id="'+id+'"'),'Missing RCC length takeoff UI '+id);
+assert.match(app,/section\.quantityForLength\(selectedRow/);
+assert.match(app,/rccLength.*addEventListener\('input',refreshGeometryQuantity\)/);
+assert.match(app,/draftValues,planning\)/);
+assert.ok(!app.includes('row.steelKg*'),'Printed source steel MUST NOT be scaled by length');
+console.log('RCC Phase 5 checked 27 original-to-geometry concrete matches (max diff '+maxDeviation+' m³), optional length, separate PCC and steel boundaries.');
 console.log('RCC Phase 4 verified: 27 dimensioned cross-sections, optional project label, manual BBS mass, CSV injection guard, no false quantity scaling.');
