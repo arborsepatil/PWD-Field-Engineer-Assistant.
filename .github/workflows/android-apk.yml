@@ -62,6 +62,7 @@ jobs:
           test -f android/app/src/main/assets/www/pwd_pcc_wall_reference.html
           test -f android/app/src/main/assets/www/pwd_rcc_wall_reference.html
           test -f android/app/src/main/assets/www/rcc-wall-2023-data.js
+          test -f android/app/src/main/assets/www/rcc-wall-2023-rebar.js
           test -f android/app/src/main/assets/www/rcc-wall-2023-app.js
           test -f android/app/src/main/assets/www/pwd_retaining_wall_section_quantity.html
           test -f android/app/src/main/assets/www/pwd-wall-diagrams.js
