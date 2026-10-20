@@ -1,31 +1,206 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f8fc"><title>Steel Table · PWD Field Assistant</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f8fc">
+<title>Steel Table · PWD Field Assistant</title>
 <style>
-:root{--bg:#f5f8fc;--card:#fff;--ink:#0b1830;--muted:#52637c;--line:#dce5f0;--accent:#0b6cff;--soft:#eef4ff;--warn:#a36b10}
-html[data-theme=dark]{--bg:#07111f;--card:#0c1b2f;--ink:#f4f8ff;--muted:#aebbd0;--line:#20344f;--soft:#102744;--warn:#efc178}
-*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{color:var(--accent)}.top{position:sticky;z-index:5;top:0;background:var(--card);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}.top a{text-decoration:none;font-weight:800}.top b{letter-spacing:.015em}
-main{max-width:1040px;margin:0 auto;padding:14px 13px 110px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px}
-h1{font-size:25px;line-height:1.2;margin:0 0 8px}h2{font-size:17px;margin:0 0 10px}h3{font-size:14px;margin:8px 0}p{color:var(--muted);margin:5px 0 10px}.small{color:var(--muted);font-size:12px}.eyebrow{font-size:11px;color:var(--accent);font-weight:850;letter-spacing:.07em;text-transform:uppercase}
-fieldset{border:0;padding:0;min-width:0}label{display:block;font-size:12px;font-weight:800;margin:0 0 5px}input,select{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px;width:100%;min-width:0;min-height:45px}
-input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.field{min-width:0}
-.tabs{display:flex;gap:7px;overflow-x:auto;padding:4px 0 8px}.tabs button{border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);padding:9px 13px;white-space:nowrap;min-height:42px;font-weight:800;cursor:pointer}.tabs button[aria-pressed=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
-.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:310px;overflow:auto}.pick{font:inherit;text-align:left;border:1px solid var(--line);padding:10px;border-radius:11px;background:var(--card);color:var(--ink);cursor:pointer}.pick b,.pick span{display:block}.pick span{font-size:12px;color:var(--muted);margin-top:4px}.pick[aria-pressed=true]{border-color:var(--accent);background:var(--soft)}
-.tag{display:inline-flex;background:var(--soft);border:1px solid var(--line);color:var(--ink);padding:3px 8px;border-radius:99px;font-size:11px;font-weight:800}.warning{border-left:3px solid var(--warn);background:var(--soft);padding:10px 12px;border-radius:10px;font-size:12px;margin:10px 0;color:var(--ink)}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stat{background:var(--soft);padding:11px 9px;border-radius:11px}.stat span{font-size:11px;color:var(--muted);display:block}.stat b{font-size:20px;overflow-wrap:anywhere}
-.figure{background:#fff;border:1px solid var(--line);border-radius:12px;min-height:188px;margin:12px 0;overflow:hidden;touch-action:pan-y}.figure svg{display:block;width:100%;max-height:280px}
-table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:12px}td:last-child{text-align:right;font-weight:750}th{background:var(--soft)}
-.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
-button.action{color:#fff;background:var(--accent);border:1px solid var(--accent);border-radius:11px;font:inherit;font-weight:800;padding:12px 10px;cursor:pointer;min-height:45px}.action.secondary{color:var(--accent);background:var(--soft);border-color:var(--line)}.sourceLink{display:inline-block;overflow-wrap:anywhere}
-#steelDetail[hidden],#customDetails[hidden],#catalogDetails[hidden],#output[hidden],#noResults[hidden],#steelError[hidden]{display:none}
-@media(max-width:600px){.three,.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.results{grid-template-columns:1fr}.card{padding:13px}h1{font-size:23px}}
-@media print{.top,.hero,#searchCard,.actions,#sourceLinks{display:none!important}body{background:white!important;color:#111!important}main{padding:0}.card{border:1px solid #ddd;break-inside:avoid}#steelDetail[hidden],#output[hidden]{display:none!important}.figure svg{max-height:220px}}
-</style><link rel="stylesheet" href="./app-global.css"></head>
-<body><header class="top"><a href="./index.html">‹ Home</a><b>Steel Table</b></header><main>
-<section class="card hero"><div class="eyebrow">Site Tools · Steel Reference · V1</div><h1>Steel Table & Weight Calculator</h1><p>Search manufacturer-published sections, view drawing references and estimate weights. Works offline after app installation. Current Indian Standards and dated manufacturer records are identified separately.</p><span class="tag">No structural design · No RCC BBS</span></section>
-<section class="card" id="searchCard"><h2>Choose steel section</h2><div class="tabs" id="steelFamilies" aria-label="Section families"></div><div id="catalogDetails"><label for="steelSearch">Search designation</label><input id="steelSearch" type="search" placeholder="ISMB 200, ISMC 150, ISA 100…" autocomplete="off"><p class="small" id="steelCount"></p><div class="results" id="steelResults" aria-label="Available manufacturer table entries"></div><p id="noResults" class="warning" hidden>No matching verified manufacturer entry in this edition. Do not use a made-up section value.</p></div>
-<div id="customDetails" hidden><p class="warning">Geometric theoretical mass only: assumed steel density 7,850 kg/m³. These are user-entered dimensions, <b>not BIS section-table mass figures</b>.</p><div class="field"><label for="steelCustomShape">Cross-section type</label><select id="steelCustomShape"><option value="plate">Plate / strip</option><option value="flat">Flat bar</option><option value="round">Round solid bar</option><option value="square">Square solid bar</option></select></div><div class="grid" style="margin-top:10px"><div class="field" id="steelWidthField"><label for="steelWidth">Width (mm)</label><input id="steelWidth" type="number" min="0.1" step="any" value="100"></div><div class="field" id="steelThickField"><label for="steelThickness">Thickness (mm)</label><input id="steelThickness" type="number" min="0.1" step="any" value="10"></div><div class="field" id="steelDiameterField" hidden><label for="steelDiameter">Diameter (mm)</label><input id="steelDiameter" type="number" min="0.1" step="any" value="12"></div><div class="field" id="steelSideField" hidden><label for="steelSide">Side (mm)</label><input id="steelSide" type="number" min="0.1" step="any" value="20"></div></div></div></section>
-<section id="steelDetail" class="card" hidden aria-live="polite"><h2 id="steelTitle">Selected section</h2><div class="grid"><div><span class="small">Data status</span><div id="steelStatus" class="tag">Source attributed</div></div><div><span class="small">Published unit mass</span><div><b id="steelMass">—</b> kg/m</div></div></div><div id="steelSectionDiagram" class="figure" aria-label="Illustrative section shape"></div><h3>Published section dimensions & properties</h3><div id="steelProperties"></div><div class="warning" id="steelDataCaution"></div><div id="sourceLinks" class="small"><b>Manufacturer source:</b> <a id="steelSource" class="sourceLink" href="#" rel="noopener noreferrer">Open original publication</a><div id="steelSourceDate"></div><p>IS 808:2021 defines applicable hot-rolled section dimensions and properties. Current standard edition does not automatically verify every manufacturer brochure row. Material grade and MTC must be separately checked against applicable specifications, including IS 2062 (Part 1):2025 where relevant.</p></div></section>
-<section class="card"><h2>Calculate material quantity</h2><div class="three"><div class="field"><label for="steelLength">Length per piece (m)</label><input id="steelLength" type="number" min="0.001" step="any" value="6"></div><div class="field"><label for="steelCountPieces">Pieces (No.)</label><input id="steelCountPieces" type="number" min="1" step="1" value="1"></div><div class="field"><label for="steelRate">Optional rate (₹/kg)</label><input id="steelRate" type="number" min="0" step="any" placeholder="Optional"></div></div><p class="small">Weight = published kg/m × member length × pieces, or separately calculated geometric mass for plates/solid bars. Fabrication loss, welding, connections and transport are excluded.</p><div class="warning" id="steelError" hidden role="alert"></div><div id="output" hidden aria-live="polite"><div class="stats"><div class="stat"><span>kg / m</span><b id="outUnit">—</b></div><div class="stat"><span>Total kg</span><b id="outKg">—</b></div><div class="stat"><span>Tonnes</span><b id="outTonne">—</b></div></div><div class="small" id="outPrice"></div><p class="small" id="outMethod"></p></div><div class="actions"><button class="action" type="button" id="steelCalculate">Calculate weight</button><button class="action secondary" type="button" id="steelExport">Export CSV</button><button class="action secondary" type="button" id="steelPrint">Print / Save PDF</button></div></section>
-<section class="card"><h2>Standards and verification</h2><p>Dataset V1 includes a limited SAIL manufacturer catalogue. Beam/channel values come from SAIL 2023 publications; archived angle rows are clearly flagged 2020 and require current-row verification before design/procurement decisions. Hollow-section catalogues will be added after verifying their latest product amendments. This app is an aid to quantities, not structural member sizing, checking or material acceptance.</p><div id="steelStandards"></div></section>
-</main><script src="./pwd-steel-catalog.js"></script><script src="./pwd-steel-core.js"></script><script src="./pwd-steel-app.js"></script><script src="./app-shell.js"></script></body></html>
+:root{
+ color-scheme:light;
+ --bg:#f5f8fc;--card:#fff;--ink:#12283f;--muted:#53657c;--line:#d6e1ed;
+ --soft:#eef3f9;--accent:#0b6cff;--action:#173654;--action-text:#fff;
+ --active-bg:#203f5b;--active-text:#fff;--status:#63420d;
+ --diagram-bg:#f9fbfd;--diagram-metal:#c5d9e9;--diagram-ink:#274861;--diagram-sub:#51657b;
+ --shadow:0 2px 12px rgba(22,48,78,.035);
+}
+html[data-theme="dark"]{
+ color-scheme:dark;
+ --bg:#081320;--card:#101f31;--ink:#eff5ff;--muted:#afbdd0;--line:#34485f;
+ --soft:#1a2c42;--action:#d4e7ff;--action-text:#10253e;
+ --active-bg:#d4e7ff;--active-text:#10253e;--status:#f3cc86;
+ --diagram-bg:#14263a;--diagram-metal:#557b99;--diagram-ink:#dfedff;--diagram-sub:#bdcee1;
+ --shadow:none;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{font-size:calc(16px * var(--font-scale,1));background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:0.91rem/1.45 system-ui,-apple-system,Roboto,"Segoe UI",sans-serif;
+ -webkit-font-smoothing:antialiased}
+a{color:var(--ink)}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;
+ min-height:54px;padding:8px 14px;border-bottom:1px solid var(--line);background:var(--card)}
+.back,.settings-link{color:var(--ink);text-decoration:none;min-height:38px;display:inline-flex;align-items:center}
+.back{font-weight:650;gap:4px}.back:before{content:"‹";font-size:1.6rem;line-height:1}
+header strong{margin:auto;font-size:1rem;font-weight:800}
+.settings-link{font-size:.8rem;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+main{max-width:850px;margin:0 auto;padding:13px 12px calc(20px + env(safe-area-inset-bottom))}
+.page-heading{padding:2px 2px 12px}
+h1{font-size:1.32rem;line-height:1.25;letter-spacing:-.025em;margin:0}
+.page-heading p{margin:4px 0 0;color:var(--muted);font-size:.81rem}
+.card{border-radius:16px;background:var(--card);border:1px solid var(--line);
+ box-shadow:var(--shadow);padding:14px;margin-bottom:11px;min-width:0}
+.card h2{margin:0 0 10px;font-size:.96rem;line-height:1.3;font-weight:800}
+label{display:block;font-size:.76rem;color:var(--muted);font-weight:700;margin:0 0 5px}
+input,select{font:inherit;font-size:1rem;color:var(--ink);background:var(--card);
+ width:100%;min-width:0;min-height:46px;border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+input::placeholder{color:var(--muted);opacity:.85}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{
+ outline:3px solid var(--accent);outline-offset:2px
+}
+.tabs{display:flex;gap:7px;overflow-x:auto;padding:3px 1px 11px;scrollbar-width:thin}
+.tabs button{white-space:nowrap;cursor:pointer;font:inherit;font-weight:700;font-size:.79rem;
+ color:var(--ink);background:var(--soft);border:1px solid var(--line);
+ border-radius:11px;min-height:40px;padding:8px 12px}
+.tabs button[aria-pressed="true"]{color:var(--active-text);background:var(--active-bg);border-color:var(--active-bg)}
+.field{min-width:0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.choose-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.micro{font-size:.73rem;color:var(--muted);margin:6px 0 0}
+.empty{border-radius:10px;padding:10px;background:var(--soft);color:var(--ink);font-size:.8rem;margin:8px 0 0}
+.member-row{display:grid;grid-template-columns:1fr 144px;gap:11px;align-items:center}
+.section-title{font-weight:800;font-size:1.1rem;line-height:1.25;margin:0 0 3px}
+.status{display:inline-block;border:1px solid var(--line);border-radius:8px;
+ color:var(--muted);font-size:.7rem;font-weight:700;padding:3px 7px;margin:4px 0 10px}
+.status.archive{color:var(--status);border-color:var(--status)}
+.value-label{font-size:.73rem;color:var(--muted);margin:0 0 1px}
+.mass-value{font-size:1.35rem;font-weight:850;letter-spacing:-.025em;white-space:nowrap}
+.mass-value small{font-size:.76rem;font-weight:650;letter-spacing:0}
+.figure{margin:0;background:var(--diagram-bg);border:1px solid var(--line);
+ border-radius:12px;overflow:hidden;min-height:102px}
+.figure svg{width:100%;display:block;height:auto;max-height:142px}
+details{margin-top:9px;border-top:1px solid var(--line);padding-top:9px}
+summary{cursor:pointer;font-size:.82rem;font-weight:750;min-height:30px;color:var(--ink)}
+.detail-contents{padding-top:7px}
+table{border-collapse:collapse;width:100%;font-size:.76rem}
+td{padding:8px 3px;border-bottom:1px solid var(--line)}
+td:first-child{color:var(--muted)}
+td:last-child{text-align:right;font-weight:750}
+.source{padding:9px 0;font-size:.75rem;color:var(--muted);overflow-wrap:anywhere}
+.source a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.small-note{color:var(--muted);font-size:.75rem;line-height:1.45;margin:7px 0 0}
+.archive-note{font-size:.74rem;color:var(--status);margin:8px 0 0}
+#steelDataCaution{font-size:.75rem;color:var(--muted);margin:8px 0}
+.input-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.input-grid input{text-align:left;font-variant-numeric:tabular-nums}
+.result-card{margin-top:13px;padding:12px;border-radius:13px;background:var(--soft);border:1px solid var(--line)}
+.main-total{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.main-total span{font-size:.81rem;color:var(--muted);font-weight:750}
+.main-total b{font-size:1.55rem;letter-spacing:-.025em;font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.stat span{display:block;font-size:.73rem;color:var(--muted)}.stat b{font-size:.96rem;font-variant-numeric:tabular-nums}
+#outPrice{font-weight:800;font-size:.88rem;margin-top:7px}
+#outMethod{color:var(--muted);font-size:.72rem;margin:7px 0 0}
+#errorMessage,#steelError{color:var(--status);font-size:.8rem;padding:9px;background:var(--soft);border-radius:9px;margin:8px 0}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:11px}
+button.action{font:inherit;font-size:.8rem;font-weight:800;cursor:pointer;
+ border-radius:10px;padding:10px 8px;min-height:44px;border:1px solid var(--line);
+ background:var(--soft);color:var(--ink)}
+button.action.primary{background:var(--action);color:var(--action-text);border-color:var(--action)}
+.reference{font-size:.78rem;margin:0 0 8px}
+.reference details{margin:0}
+#steelStandards p{margin:8px 0;font-size:.75rem;color:var(--muted)}
+#steelStandards a{color:var(--ink)}
+@media(max-width:520px){
+ main{padding:11px 10px calc(20px + env(safe-area-inset-bottom))}
+ .card{padding:12px;margin-bottom:9px}
+ .choose-grid{grid-template-columns:1fr}
+ .member-row{grid-template-columns:1fr 125px}
+ .input-grid{grid-template-columns:1fr 1fr}
+ .field.rate{grid-column:1/-1}
+ .figure svg{max-height:125px}
+ .actions{grid-template-columns:repeat(2,1fr)}
+ .actions button:first-child{grid-column:1/-1}
+}
+@media print{
+ header,.page-heading,#searchCard,.actions,.reference{display:none!important}
+ body{color:#111;background:#fff}main{padding:0;max-width:none}
+ .card{box-shadow:none;border:1px solid #aaa;break-inside:avoid}
+ .figure{background:#fff!important}.figure svg{max-height:145px}
+ #steelDetail[hidden],#output[hidden]{display:none!important}
+}
+</style>
+<link rel="stylesheet" href="./app-global.css">
+</head>
+<body data-pwd-shell="off">
+<header><a class="back" href="./index.html">Home</a><strong>Steel Table</strong><a class="settings-link" href="./settings.html">Appearance</a></header>
+<main>
+<div class="page-heading"><h1>Steel Table</h1><p>Section weight & quantity · Offline</p></div>
+<section class="card" id="searchCard">
+<h2>1 · Select section</h2>
+<div class="tabs" id="steelFamilies" aria-label="Section families"></div>
+<div id="catalogDetails">
+<div class="choose-grid">
+<div class="field"><label for="steelSearch">Search size</label><input id="steelSearch" type="search" placeholder="ISMB 200" autocomplete="off"></div>
+<div class="field"><label for="steelResults">Section</label><select id="steelResults" aria-label="Select steel section"></select></div>
+</div>
+<p class="micro" id="steelCount"></p>
+<p class="empty" id="noResults" hidden>No matching section in this dataset.</p>
+</div>
+<div id="customDetails" hidden>
+<div class="field"><label for="steelCustomShape">Shape</label>
+<select id="steelCustomShape"><option value="plate">Plate</option><option value="flat">Flat bar</option><option value="round">Round bar</option><option value="square">Square bar</option></select></div>
+<div class="grid" style="margin-top:10px">
+<div class="field" id="steelWidthField"><label for="steelWidth">Width (mm)</label><input id="steelWidth" type="number" min="0.1" step="any" value="100"></div>
+<div class="field" id="steelThickField"><label for="steelThickness">Thickness (mm)</label><input id="steelThickness" type="number" min="0.1" step="any" value="10"></div>
+<div class="field" id="steelDiameterField" hidden><label for="steelDiameter">Diameter (mm)</label><input id="steelDiameter" type="number" min="0.1" step="any" value="12"></div>
+<div class="field" id="steelSideField" hidden><label for="steelSide">Side (mm)</label><input id="steelSide" type="number" min="0.1" step="any" value="20"></div>
+</div>
+<p class="micro">Theoretical mass · assumed density 7,850 kg/m³</p>
+</div>
+</section>
+<section id="steelDetail" class="card" hidden aria-live="polite">
+<div class="member-row">
+<div>
+<h2 class="section-title" id="steelTitle">Selected section</h2>
+<div class="status" id="steelStatus">SAIL · Published</div>
+<div class="value-label" id="steelMassCaption">Mass per metre</div>
+<div class="mass-value"><span id="steelMass">—</span> <small>kg/m</small></div>
+</div>
+<div id="steelSectionDiagram" class="figure" aria-label="Illustrative section shape"></div>
+</div>
+<details id="steelMore"><summary>Dimensions, properties & source</summary>
+<div class="detail-contents">
+<div id="steelProperties"></div>
+<div id="steelDataCaution"></div>
+<div id="sourceLinks" class="source">Source: <a id="steelSource" href="#" rel="noopener noreferrer">Open publication</a><div id="steelSourceDate"></div></div>
+</div>
+</details>
+<p class="archive-note" id="steelArchiveNote" hidden>Archived source — current IS 808 values not verified.</p>
+</section>
+<section class="card">
+<h2>2 · Quantity</h2>
+<div class="input-grid">
+<div class="field"><label for="steelLength">Length (m)</label><input id="steelLength" type="number" min="0.001" step="any" value="6"></div>
+<div class="field"><label for="steelCountPieces">Pieces</label><input id="steelCountPieces" type="number" min="1" step="1" value="1"></div>
+<div class="field rate"><label for="steelRate">Rate ₹/kg · optional</label><input id="steelRate" type="number" min="0" step="any" placeholder="—"></div>
+</div>
+<div id="steelError" role="alert" hidden></div>
+<div id="output" class="result-card" hidden aria-live="polite">
+<div class="main-total"><span>Total weight</span><b><span id="outKg">—</span> kg</b></div>
+<div class="stats">
+<div class="stat"><span>Mass / metre</span><b><span id="outUnit">—</span> kg/m</b></div>
+<div class="stat"><span>Tonnes</span><b id="outTonne">—</b></div>
+</div>
+<div id="outPrice"></div><p id="outMethod" hidden></p>
+</div>
+<div class="actions">
+<button class="action primary" type="button" id="steelCalculate">Calculate</button>
+<button class="action" type="button" id="steelExport">Export CSV</button>
+<button class="action" type="button" id="steelPrint">Save PDF</button>
+</div>
+</section>
+<section class="card reference">
+<details id="steelReferenceDetails"><summary>Data sources & limitations</summary>
+<p class="small-note">Catalogue: dated manufacturer records, not a verified copy of the current BIS steel tables. Check relevant standards, approved drawings and MTC before procurement or design.</p>
+<p class="small-note">Weight excludes fabrication, connections and wastage. Cost excludes taxes, transport and other charges.</p>
+<div id="steelStandards"></div>
+</details>
+</section>
+</main>
+<script src="./pwd-steel-catalog.js"></script>
+<script src="./pwd-steel-core.js"></script>
+<script src="./pwd-steel-app.js"></script>
+<script src="./app-shell.js"></script>
+</body>
+</html>
