@@ -1,36 +1,18 @@
 /* PWD 2023 RCC wall: exact source height/SBC lookup, dimensioned diagram,
- * project label and optional manual engineer-controlled draft BBS.
- * No extrapolated/derived type-plan quantities or automatic bar cut lengths.
+ * project label, source reinforcement reference and quantity export.
+ * BBS cutting lengths and bar weight calculations deferred.
  */
 (function(){
 'use strict';
 const api=window.PWDRCC2023, section=window.PWDRCC2023Section;
-const bbs=window.PWDRCC2023BBS, markSource=window.PWDRCC2023Rebar;
+const markSource=window.PWDRCC2023Rebar;
 const $=id=>document.getElementById(id);
-if(!api||!section||!bbs||!markSource||!$('rccSbc')||!$('rccHeight')||!$('rccResult'))return;
+if(!api||!section||!markSource||!$('rccSbc')||!$('rccHeight')||!$('rccResult'))return;
 const sbcSelect=$('rccSbc'),heightSelect=$('rccHeight'),project=$('rccProject');
 const q=new URLSearchParams(location.search);
 const initialSbc=api.sbcs.includes(Number(q.get('sbc')))?String(Number(q.get('sbc'))):'10';
 sbcSelect.value=initialSbc;
-let selectedRow=null,selectedSchedule=null,draftValues={};
-function draftKey(){
- // Keeps different project names and different source configurations isolated.
- const name=project.value.trim().toLowerCase().slice(0,180);
- return 'pwd-rcc-bbs-draft-v1:'+encodeURIComponent(name)+':'+sbcSelect.value+':'+heightSelect.value;
-}
-function readDraft(){
- try{
-  const raw=window.localStorage.getItem(draftKey());
-  const saved=raw?JSON.parse(raw):null;
-  if(saved&&typeof saved==='object'&&!Array.isArray(saved))return saved;
- }catch(_e){ /* Storage might be disabled; worksheet remains usable in memory. */ }
- return {};
-}
-function saveDraft(){
- try{window.localStorage.setItem(draftKey(),JSON.stringify(draftValues));}
- catch(_e){ /* Do not break quantity calculations when storage is unavailable. */ }
-}
-
+let selectedRow=null,selectedSchedule=null;
 function fillHeights(preferred){
  const allowed=api.heightsFor(sbcSelect.value);
  heightSelect.replaceChildren();
@@ -65,52 +47,6 @@ function refreshProject(){
  const label=$('rccProjectTitle');
  label.textContent=project.value.trim()?'Work: '+project.value.trim():'';
  label.hidden=!project.value.trim();
-}
-function updateBbs(){
- if(!selectedSchedule)return;
- const result=bbs.worksheet(selectedSchedule,draftValues);
- const total=$('rccBbsTotal'),status=$('rccBbsStatus');
- total.textContent='Draft steel weight from entered bars: '+result.totalWeightKg.toFixed(3)+' kg';
- status.textContent=result.completed+' valid mark entries · '+result.pending.length+' not completed · '+
-   result.invalid.length+' invalid. '+(result.allVerified?'All listed source marks entered; engineering review still required.':'Partial total only, not a completed BBS.');
- for(const item of selectedSchedule.marks){
-  if(!item.present)continue;
-  const weightCell=$('rccBbsMass_'+item.mark);
-  const filled=result.items.find(x=>x.mark===item.mark);
-  const bad=result.invalid.find(x=>x.mark===item.mark);
-  weightCell.textContent=filled?filled.weightKg.toFixed(3):bad?'Check input':'—';
- }
-}
-function buildBbs(schedule){
- const tbody=$('rccBbsRows');
- tbody.replaceChildren();
- draftValues=readDraft();
- for(const entry of schedule.marks){
-  const tr=document.createElement('tr');
-  const mark=document.createElement('th');mark.scope='row';mark.textContent=entry.mark;
-  const info=document.createElement('td');info.textContent=entry.present?entry.diameterMm+' mm @ '+entry.spacingMm+' C/C':'Not shown in source';
-  const tdCount=document.createElement('td'),tdLength=document.createElement('td'),tdMass=document.createElement('td');
-  const mass=document.createElement('span');mass.id='rccBbsMass_'+entry.mark;
-  mass.textContent='—';tdMass.appendChild(mass);
-  if(entry.present){
-   const count=document.createElement('input');count.type='number';count.min='1';count.max='1000000';count.step='1';count.placeholder='Count';count.setAttribute('aria-label',entry.mark+' engineer-entered bar count');
-   const len=document.createElement('input');len.type='number';len.min='0.001';len.max='100';len.step='0.001';len.placeholder='metres';len.setAttribute('aria-label',entry.mark+' engineer-verified cutting length in metres');
-   const saved=draftValues[entry.mark]||{};
-   count.value=String(saved.count??'');
-   len.value=String(saved.cutLengthM??'');
-   const update=()=>{
-    draftValues[entry.mark]={count:count.value,cutLengthM:len.value};
-    saveDraft();
-    updateBbs();
-   };
-   count.addEventListener('input',update);len.addEventListener('input',update);
-   tdCount.appendChild(count);tdLength.appendChild(len);
-  }else{
-   tdCount.textContent='—';tdLength.textContent='—';
-  }
-  tr.append(mark,info,tdCount,tdLength,tdMass);tbody.appendChild(tr);
- }
- updateBbs();
 }
 // Native finger-gesture panning/pinching; no on-screen zoom buttons.
 (function enableGestures(){
@@ -174,7 +110,6 @@ function render(){
  selectedSchedule=validSchedule?schedule:null;
  $('rccRebarSection').hidden=!validSchedule;
  $('rccRebarUnavailable').hidden=Boolean(validSchedule);
- $('rccBbsSection').hidden=!validSchedule;
  const tbody=$('rccRebarRows');tbody.replaceChildren();
  if(validSchedule){
   for(const entry of schedule.marks){
@@ -187,9 +122,8 @@ function render(){
   }
   const omitted=schedule.marks.filter(item=>!item.present).length;
   $('rccRebarCount').textContent='11 marks checked against PWD 2023 sheet · '+(11-omitted)+' shown · '+omitted+' not shown (—).';
-  buildBbs(schedule);
  }else{
-  $('rccRebarCount').textContent='';draftValues={};
+  $('rccRebarCount').textContent='';
  }
  refreshGeometryQuantity();
  $('rccDrawingLink').href='./pdf_viewer.html?doc=bridge2023&page='+row.pdfPage;
@@ -199,20 +133,59 @@ sbcSelect.addEventListener('change',()=>{const old=heightSelect.value;fillHeight
 heightSelect.addEventListener('change',render);
 project.addEventListener('input',refreshProject);
 $('rccLength').addEventListener('input',refreshGeometryQuantity);
-project.addEventListener('change',render); // Switch BBS draft context when project name changes.
-$('rccBbsCsv').addEventListener('click',()=>{
- if(!selectedRow||!selectedSchedule)return;
- let planning=null;
- if($('rccLength').value!==''){
-  try{planning=section.quantityForLength(selectedRow,$('rccLength').value);}
-  catch(_e){ /* Invalid project length is reported on-screen; export BBS alone. */ }
+// Export source schedules plus optional GAD-derived concrete quantities, not a BBS.
+function csvCell(value){
+ let s=String(value??'');
+ if(/^\\s*[=+\\-@\\t\\r]/.test(s))s="'"+s;
+ return '"'+s.replace(/"/g,'""')+'"';
+}
+function quantityStatementCsv(){
+ if(!selectedRow)return null;
+ const row=selectedRow,lines=[];
+ const add=(...values)=>lines.push(values.map(csvCell).join(','));
+ add('PWD 2023 RCC RETAINING WALL · DRAFT QUANTITY STATEMENT');
+ add('Work name (optional)',project.value.trim());
+ add('Drawing reference',row.drawing);
+ add('Original PDF page',row.pdfPage);
+ add('SBC · standard drawing (t/m²)',row.sbc);
+ add('Standard wall height (m)',row.heightM);
+ add('Original PWD concrete (m³ · source table)',row.concreteM3);
+ add('Original PWD steel (kg · source table)',row.steelKg);
+ add('Printed steel ratio (kg/m³)',row.printedSteelKgPerM3);
+ if(row.sourceRatioDiscrepancy)add('CAUTION','Source steel ratio does not reconcile with steel ÷ concrete; verify original drawing');
+ add('GAD dimension','Value (mm)');
+ for(const [mark,mm] of Object.entries(row.dimensionsMm))add(mark,mm);
+ const enteredLength=$('rccLength').value;
+ if(enteredLength!==''){
+  let qty;
+  try{qty=section.quantityForLength(row,enteredLength);}
+  catch(error){
+   $('rccPlanError').textContent='Cannot export quantity statement: '+error.message;
+   $('rccPlanError').hidden=false;
+   return null;
+  }
+  add('GEOMETRY-BASED PLANNING QUANTITIES','Not source-certified bill quantities');
+  add('Entered wall length (m)',qty.lengthM);
+  add('Raft RCC volume (m³)',qty.raftConcretePlanningM3.toFixed(3));
+  add('Stem RCC volume (m³)',qty.stemConcretePlanningM3.toFixed(3));
+  add('Total structural RCC (m³)',qty.concretePlanningM3.toFixed(3));
+  add('M15 PCC levelling (m³; separate)',qty.pccLevellingPlanningM3.toFixed(3));
+  add('Method','A–I geometry area × length; original PWD table values unchanged');
  }
- const csv=bbs.draftCsv(project.value.trim(),selectedRow,selectedSchedule,draftValues,planning);
- const filename='PWD_RCC_2023_BBS_'+selectedRow.sbc+'_'+selectedRow.heightM.toFixed(1)+'m.csv';
+ add('Reinforcement source-only reference','No BBS cutting or project steel calculations');
+ add('Mark','GAD location','Diameter (mm)','C/C spacing (mm)');
+ if(selectedSchedule)for(const bar of selectedSchedule.marks)
+  add(bar.mark,bar.location,bar.present?bar.diameterMm:'—',bar.present?bar.spacingMm:'—');
+ add('Excluded','Bar bending, bar counts, cutting lengths, laps, waste, and structural design checks');
+ return '\\ufeff'+lines.join('\\r\\n')+'\\r\\n';
+}
+$('rccQuantityCsv').addEventListener('click',()=>{
+ const csv=quantityStatementCsv();
+ if(!csv||!selectedRow)return;
+ const filename='PWD_RCC_2023_QUANTITY_'+selectedRow.sbc+'_'+selectedRow.heightM.toFixed(1)+'m.csv';
  if(location.host==='appassets.androidplatform.net'){
-   // Origin-restricted Android handler presents ACTION_CREATE_DOCUMENT.
-   window.prompt('__PWD_ANDROID_CSV_EXPORT_V1__'+JSON.stringify({filename,content:csv}));
-   return;
+  window.prompt('__PWD_ANDROID_CSV_EXPORT_V1__'+JSON.stringify({filename,content:csv}));
+  return;
  }
  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
  const href=URL.createObjectURL(blob),a=document.createElement('a');
