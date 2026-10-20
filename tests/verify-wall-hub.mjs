@@ -34,6 +34,6 @@ assert.match(rcc,/SBC 10 t\/m²/);
 assert.match(rcc,/SBC 15 t\/m²/);
 assert.match(rcc,/SBC 25 t\/m²/);
 assert.doesNotMatch(rcc,/doc=bridge2002/);
-assert.match(pack,/\\"\\.html\\"/);
+assert.ok(pack.includes('".html"'), 'HTML screens must be packaged in Android APK');
 assert.doesNotMatch(pcc+rcc,/auto-adopt|auto-design|automatic structural approval/i);
 console.log('Retaining walls hub passed: masonry geometry retained, PCC and RCC drawings isolated, original PDF pages linked, no unsupported auto-design.');
