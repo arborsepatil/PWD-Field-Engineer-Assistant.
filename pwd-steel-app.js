@@ -40,7 +40,7 @@ function shapeSvg(type,data={}){
   '<rect width="488" height="310" fill="#ffffff"/><g fill="'+steel+'" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round">'+body+'</g>'+
   '<text x="244" y="25" fill="'+blue+'" text-anchor="middle" font-size="15" font-weight="700">'+label.replace(/&/g,'&amp;')+'</text>'+
   '<text x="244" y="286" fill="'+ink+'" text-anchor="middle" font-size="12">'+info+'</text>'+
-  '<text x="244" y="304" fill="#65768a" text-anchor="middle" font-size="10">Diagram indicative only · not to scale · check manufacturer's section drawing</text></svg>';
+  '<text x="244" y="304" fill="#65768a" text-anchor="middle" font-size="10">Diagram indicative only · not to scale · check published section drawing</text></svg>';
 }
 function setFamily(next){
  family=next;selected=null;last=null;lastEntry=null;
