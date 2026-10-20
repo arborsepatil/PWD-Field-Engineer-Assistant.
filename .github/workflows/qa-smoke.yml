@@ -19,3 +19,4 @@ jobs:
         run: |
           node tests/verify-release.mjs
           node tests/verify-wall-hub.mjs
+          node tests/verify-rcc-2023.mjs
