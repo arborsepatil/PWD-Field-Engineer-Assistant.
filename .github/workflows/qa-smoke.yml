@@ -20,3 +20,4 @@ jobs:
           node tests/verify-release.mjs
           node tests/verify-wall-hub.mjs
           node tests/verify-rcc-2023.mjs
+          node tests/verify-rcc-project.mjs
