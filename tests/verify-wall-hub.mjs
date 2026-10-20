@@ -47,12 +47,16 @@ assert.match(pccRefs,/Confirm material and section/);
 assert.match(pccRefs,/not automatically used in its geometry/);
 assert.doesNotMatch(pccRefs,/masonry/i);
 
-for(const pg of [209,210,211,212])
-  assert.match(rcc,new RegExp('doc=bridge2023&amp;page='+pg+'\\b'));
-for(const value of ['SBC 10 t/m²','SBC 15 t/m²','SBC 25 t/m²'])
-  assert.ok(rcc.includes(value),'Missing RCC bearing capacity '+value);
-assert.doesNotMatch(rcc,/doc=bridge2002|quantity calculator|Masonry Wall/);
+assert.match(rcc,/doc=bridge2023&amp;page=209/);
+assert.match(rcc,/id="rccSbc"/);
+assert.match(rcc,/id="rccHeight"/);
+assert.match(rcc,/src="\.\/rcc-wall-2023-data\.js"/);
+assert.match(rcc,/src="\.\/rcc-wall-2023-app\.js"/);
+assert.match(rcc,/raft foundations/);
+assert.doesNotMatch(rcc,/doc=bridge2002|Masonry Wall/);
+for(const f of ['rcc-wall-2023-data.js','rcc-wall-2023-app.js'])
+  assert.ok(shell.includes('./'+f),'Uncached RCC source script '+f);
 for(const f of ['pwd_retaining_walls.html','pwd_retaining_wall_section_quantity.html','pwd_pcc_wall_reference.html','pwd_rcc_wall_reference.html'])
   assert.ok(shell.includes('./'+f),'Uncached page: '+f);
 assert.ok(pack.includes('".html"'), 'HTML screens must be packaged in Android APK');
-console.log('Retaining walls verified: PCC existing quantities, separate bridge return references, RCC 2023 source drawings, exactly two segments.');
+console.log('Retaining walls verified: PCC existing quantities, separate bridge return references, RCC 2023 exact source schedules, exactly two segments.');

@@ -50,6 +50,8 @@ jobs:
         run: node tests/verify-release.mjs
       - name: Verify retaining wall construction-type navigation
         run: node tests/verify-wall-hub.mjs
+      - name: Verify RCC 2023 exact source schedules
+        run: node tests/verify-rcc-2023.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
@@ -59,6 +61,8 @@ jobs:
           test -f android/app/src/main/assets/www/pwd_retaining_walls.html
           test -f android/app/src/main/assets/www/pwd_pcc_wall_reference.html
           test -f android/app/src/main/assets/www/pwd_rcc_wall_reference.html
+          test -f android/app/src/main/assets/www/rcc-wall-2023-data.js
+          test -f android/app/src/main/assets/www/rcc-wall-2023-app.js
           test -f android/app/src/main/assets/www/pwd_retaining_wall_section_quantity.html
           test -f android/app/src/main/assets/www/pwd-wall-diagrams.js
           test -f android/app/src/main/assets/www/pwd_mix_batch_assistant.html
