@@ -68,7 +68,7 @@ assert.equal(w.pending.length,schedule.marks.filter(m=>m.present).length-2);
 assert.equal(w.allVerified,false);
 assert.ok(Math.abs(w.totalWeightKg-result.weightKg)<1e-8);
 const csv=bbs.draftCsv('=HYPERLINK("unsafe")',original,schedule,{MK7:{count:10,cutLengthM:5.2}});
-assert.ok(csv.includes("'\"=HYPERLINK")); // spreadsheet formula escaped
+assert.ok(csv.includes("'=HYPERLINK")); // spreadsheet formula prefixed with apostrophe
 assert.ok(csv.includes('Printed material amounts are source-table values'));
 assert.ok(csv.includes('Only completed and valid entries'));
 assert.ok(csv.includes('DRAFT BBS TOTAL'));
