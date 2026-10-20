@@ -58,6 +58,10 @@ function draftCsv(project,record,schedule,inputs,planningTakeoff=null){
   line(['GEOMETRY-BASED PLANNING QUANTITY','NOT official PWD book table and not certified field measurement']);
   line(['Entered project wall length (m)',planningTakeoff.lengthM]);
   line(['Calculated RCC section area (m²)',planningTakeoff.crossSectionAreaM2.toFixed(5)]);
+  line(['Calculated raft RCC cross-section area (m²)',planningTakeoff.raftCrossSectionM2.toFixed(5)]);
+  line(['Calculated stem RCC cross-section area (m²)',planningTakeoff.stemCrossSectionM2.toFixed(5)]);
+  line(['RAFT RCC volume (m³; planning)',planningTakeoff.raftConcretePlanningM3.toFixed(3)]);
+  line(['STEM RCC volume (m³; planning)',planningTakeoff.stemConcretePlanningM3.toFixed(3)]);
   line(['Calculated structural RCC volume (m³)',planningTakeoff.concretePlanningM3.toFixed(3)]);
   line(['Calculated M15 levelling PCC 100 mm volume (m³)',planningTakeoff.pccLevellingPlanningM3.toFixed(3)]);
   line(['Geometry source','PWD 2023 GAD 151-1/4 dimensions A–I; per running metre basis inferred from geometric match across 27 printed table rows']);

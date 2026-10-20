@@ -49,6 +49,8 @@ function refreshGeometryQuantity(){
  if(!selectedRow||lengthField.value==='')return;
  try{
   const q=section.quantityForLength(selectedRow,lengthField.value);
+  $('rccPlanRaft').textContent=q.raftConcretePlanningM3.toFixed(3);
+  $('rccPlanStem').textContent=q.stemConcretePlanningM3.toFixed(3);
   $('rccPlanConcrete').textContent=q.concretePlanningM3.toFixed(3);
   $('rccPlanPcc').textContent=q.pccLevellingPlanningM3.toFixed(3);
   $('rccPlanArea').textContent=q.crossSectionAreaM2.toFixed(4);

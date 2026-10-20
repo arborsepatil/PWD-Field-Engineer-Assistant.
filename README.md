@@ -67,6 +67,17 @@ The Library contains 73 catalogued **Drive links and titles**, not book PDFs. Or
 - **Field table and export:** station height upward from PCC top, left/right offsets, total width, batter-change marker, same sequence in working CSV. Drawing labels have independent anti-overlap rails and both diagrams support finger pinch zoom. Printable output includes both drawings.
 - The two existing section profiles, quantities, safety cautions and unapproved-drawing limitations are preserved. Batter-change heights in actual sections come from the original wall geometry; the examples illustrate the construction-level algorithm rather than inventing new batter geometry.
 
+## RCC Retaining Wall 2023 — component quantity breakdown
+
+After selecting exactly one of the 27 source SBC/height cases and optionally entering wall length, the app calculates **non-overlapping RCC raft and RCC stem quantities** independently from the *existing verified* A–I geometry, as a **geometry-based planning takeoff**:
+- **Raft area**: `[B×H + (G−H)×(F+D)/2 + E×(G−H)] / 1,000,000` m² (source dimensions in mm).
+- **Stem area**: `[(E+I)×(A−G)/2] / 1,000,000` m².
+- **RCC volume**: (raft area + stem area) × wall length. The same source-derived total area matches the printed 2023 table within 0.0075 m² for all 27 rows. No source table value is altered.
+- **M15 levelling PCC**: B × 0.100 m × wall length, separately sourced from GAD PDF page 209.
+- Raft + stem quantity lines appear in the Android screen and draft BBS CSV, with regression checks that **their sum exactly matches the original calculated structural RCC** for all 27 cases.
+
+This is **not** a checked structural design, a PWD type-plan per-metre statement, or a certified field measurement. No extrapolated site steel quantity, end-wall return, transitions, excavation, variations, wastage or bar cut length is included. PCC wall calculator's separate source/quantity engine is unchanged.
+
 ## Retaining Wall — section/quantity polish
 
 - The tool **retains the existing project's two geometric profiles**: lower (H ≤ 2.50 m) and the fixed piecewise section (2.50 m < H ≤ 10.00 m). It does not infer new wall types, design dimensions or stability criteria.
