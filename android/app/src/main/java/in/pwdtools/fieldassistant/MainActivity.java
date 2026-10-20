@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintManager;
 import android.content.Context;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import org.json.JSONObject;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -29,9 +32,12 @@ import androidx.webkit.WebViewAssetLoader;
 public final class MainActivity extends Activity {
     private static final String BASE_URL = "https://appassets.androidplatform.net/assets/www/";
     private static final String PRINT_PROMPT = "__PWD_ANDROID_PRINT_V1__";
+    private static final String CSV_PROMPT = "__PWD_ANDROID_CSV_EXPORT_V1__";
+    private static final int CSV_REQUEST = 905;
     private static final int FILE_REQUEST = 904;
     private WebView webView;
     private ValueCallback<Uri[]> fileCallback;
+    private String pendingCsvContent;
 
     @Override
     public void onCreate(Bundle state) {
@@ -115,6 +121,32 @@ public final class MainActivity extends Activity {
                     runOnUiThread(() -> printCurrentPage());
                     return true;
                 }
+
+                if (url != null && url.startsWith(BASE_URL)
+                        && message != null && message.startsWith(CSV_PROMPT)) {
+                    result.confirm("");
+                    try {
+                        String json = message.substring(CSV_PROMPT.length());
+                        if (json.length() > 120000) throw new IllegalArgumentException("Export too large.");
+                        JSONObject payload = new JSONObject(json);
+                        String content = payload.getString("content");
+                        String name = payload.optString("filename", "PWD_RCC_BBS_Draft.csv")
+                            .replaceAll("[^A-Za-z0-9._-]", "_");
+                        if (name.length() > 100) name = name.substring(0, 96) + ".csv";
+                        if (!name.endsWith(".csv")) name += ".csv";
+                        if (content.length() > 100000) throw new IllegalArgumentException("CSV too large.");
+                        pendingCsvContent = content;
+                        Intent save = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                        save.addCategory(Intent.CATEGORY_OPENABLE);
+                        save.setType("text/csv");
+                        save.putExtra(Intent.EXTRA_TITLE, name);
+                        startActivityForResult(save, CSV_REQUEST);
+                    } catch (Exception e) {
+                        pendingCsvContent = null;
+                        Toast.makeText(MainActivity.this, "Could not open CSV save dialog.", Toast.LENGTH_LONG).show();
+                    }
+                    return true;
+                }
                 return super.onJsPrompt(view, url, message, defaultValue, result);
             }
         });
@@ -136,6 +168,23 @@ public final class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int code, int result, Intent data) {
         super.onActivityResult(code, result, data);
+
+        if (code == CSV_REQUEST) {
+            try {
+                if (result == RESULT_OK && data != null && data.getData() != null && pendingCsvContent != null) {
+                    try (OutputStream stream = getContentResolver().openOutputStream(data.getData())) {
+                        if (stream == null) throw new IllegalStateException("No writable file.");
+                        stream.write(pendingCsvContent.getBytes(StandardCharsets.UTF_8));
+                    }
+                    Toast.makeText(this, "Draft BBS CSV saved.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(this, "CSV save failed. Try Print / Save PDF.", Toast.LENGTH_LONG).show();
+            } finally {
+                pendingCsvContent = null;
+            }
+            return;
+        }
         if (code == FILE_REQUEST && fileCallback != null) {
             Uri[] uris = WebChromeClient.FileChooserParams.parseResult(result, data);
             fileCallback.onReceiveValue(uris);
