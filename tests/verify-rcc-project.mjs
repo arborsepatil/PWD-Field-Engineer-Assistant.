@@ -95,7 +95,7 @@ assert.match(app,/appassets\.androidplatform\.net/);
 assert.ok(!/\b(projectName|siteLength)\s*\*\s*row\.(concreteM3|steelKg)/.test(app));
 assert.doesNotMatch(app,/auto[- ]?design|designApproval/i);
 assert.doesNotMatch(page,/masonry/i);
-for(const asset of ['rcc-wall-2023-section.js','rcc-wall-2023-bbs.js'])
+for(const asset of ['rcc-wall-2023-section.js'])
  assert.ok(read('sw.js').includes("'./"+asset+"'"),'Offline cache excludes '+asset);
 // Stage 5: arithmetic cross-check all 27 printed volumes against the
 // A-I sectional polygon. This supports planning per-metre takeoff as an
@@ -172,3 +172,5 @@ assert.match(app,/Stem RCC volume/);
 assert.match(app,/Original PWD steel/);
 assert.match(app,/__PWD_ANDROID_CSV_EXPORT_V1__/);
 console.log('RCC Phase 7 scope verified: source MK1-MK11 table and concrete quantity CSV active, BBS cutting UI deferred.');
+
+assert.ok(!read('sw.js').includes("'./rcc-wall-2023-bbs.js'"),'Deferred BBS must not be offline cached');
