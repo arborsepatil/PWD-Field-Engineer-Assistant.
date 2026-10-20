@@ -13,6 +13,24 @@ const q=new URLSearchParams(location.search);
 const initialSbc=api.sbcs.includes(Number(q.get('sbc')))?String(Number(q.get('sbc'))):'10';
 sbcSelect.value=initialSbc;
 let selectedRow=null,selectedSchedule=null,draftValues={};
+function draftKey(){
+ // Keeps different project names and different source configurations isolated.
+ const name=project.value.trim().toLowerCase().slice(0,180);
+ return 'pwd-rcc-bbs-draft-v1:'+encodeURIComponent(name)+':'+sbcSelect.value+':'+heightSelect.value;
+}
+function readDraft(){
+ try{
+  const raw=window.localStorage.getItem(draftKey());
+  const saved=raw?JSON.parse(raw):null;
+  if(saved&&typeof saved==='object'&&!Array.isArray(saved))return saved;
+ }catch(_e){ /* Storage might be disabled; worksheet remains usable in memory. */ }
+ return {};
+}
+function saveDraft(){
+ try{window.localStorage.setItem(draftKey(),JSON.stringify(draftValues));}
+ catch(_e){ /* Do not break quantity calculations when storage is unavailable. */ }
+}
+
 function fillHeights(preferred){
  const allowed=api.heightsFor(sbcSelect.value);
  heightSelect.replaceChildren();
@@ -47,7 +65,7 @@ function updateBbs(){
 function buildBbs(schedule){
  const tbody=$('rccBbsRows');
  tbody.replaceChildren();
- draftValues={};
+ draftValues=readDraft();
  for(const entry of schedule.marks){
   const tr=document.createElement('tr');
   const mark=document.createElement('th');mark.scope='row';mark.textContent=entry.mark;
@@ -58,8 +76,12 @@ function buildBbs(schedule){
   if(entry.present){
    const count=document.createElement('input');count.type='number';count.min='1';count.max='1000000';count.step='1';count.placeholder='Count';count.setAttribute('aria-label',entry.mark+' engineer-entered bar count');
    const len=document.createElement('input');len.type='number';len.min='0.001';len.max='100';len.step='0.001';len.placeholder='metres';len.setAttribute('aria-label',entry.mark+' engineer-verified cutting length in metres');
+   const saved=draftValues[entry.mark]||{};
+   count.value=String(saved.count??'');
+   len.value=String(saved.cutLengthM??'');
    const update=()=>{
     draftValues[entry.mark]={count:count.value,cutLengthM:len.value};
+    saveDraft();
     updateBbs();
    };
    count.addEventListener('input',update);len.addEventListener('input',update);
@@ -156,6 +178,7 @@ fillHeights(q.get('height'));
 sbcSelect.addEventListener('change',()=>{const old=heightSelect.value;fillHeights(old);render();});
 heightSelect.addEventListener('change',render);
 project.addEventListener('input',refreshProject);
+project.addEventListener('change',render); // Switch BBS draft context when project name changes.
 $('rccBbsCsv').addEventListener('click',()=>{
  if(!selectedRow||!selectedSchedule)return;
  const csv=bbs.draftCsv(project.value.trim(),selectedRow,selectedSchedule,draftValues);
