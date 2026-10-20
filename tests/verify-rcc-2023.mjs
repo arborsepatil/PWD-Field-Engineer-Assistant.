@@ -1,0 +1,78 @@
+/** RCC retaining-wall source schedule contract: compare exact values to printed 2023 drawings. */
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+const root=path.resolve(import.meta.dirname,'..');
+const read=f=>fs.readFileSync(path.join(root,f),'utf8');
+const source=read('rcc-wall-2023-data.js');
+const ui=read('pwd_rcc_wall_reference.html');
+const app=read('rcc-wall-2023-app.js');
+const context={module:{exports:{}}};
+vm.runInNewContext(source,context,{filename:'rcc-wall-2023-data.js'});
+const api=context.module.exports;
+assert.deepEqual(Array.from(api.sbcs),[10,15,25]);
+assert.equal(api.count,27);
+assert.deepEqual(Array.from(api.heightsFor(10)),[2,2.5,3,3.5,4,4.5,5]);
+assert.deepEqual(Array.from(api.heightsFor(15)),[2,2.5,3,3.5,4,4.5,5,5.5,6,6.5]);
+assert.deepEqual(Array.from(api.heightsFor(25)),[4,4.5,5,5.5,6,6.5,7,7.5,8,8.5]);
+let count=0,discrepancies=[];
+for(const sbc of api.sbcs){
+ for(const height of api.heightsFor(sbc)){
+  count++;
+  const row=api.recordFor(sbc,height);
+  assert.equal(row.sbc,sbc);
+  assert.equal(row.heightM,height);
+  assert.equal(row.dimensionsMm.A,height*1000);
+  assert.equal(Object.keys(row.dimensionsMm).join(''),'ABCDEFGHI');
+  assert.equal(row.dimensionsMm.H,300);
+  assert.equal(row.dimensionsMm.I,300);
+  assert.ok(Object.values(row.dimensionsMm).every(x=>Number.isInteger(x)&&x>0));
+  assert.ok(row.concreteM3>0&&row.steelKg>0);
+  assert.equal(row.pdfPage,({10:210,15:211,25:212})[sbc]);
+  assert.equal(row.gadPage,209);
+  assert.ok(row.drawing.includes('RETWALL/151-'));
+  if(row.sourceRatioDiscrepancy)discrepancies.push({sbc,height});
+ }
+}
+assert.equal(count,27);
+assert.deepEqual(discrepancies,[{sbc:25,height:4.5}]);
+const p10=api.recordFor(10,2);
+assert.equal(p10.dimensionsMm.B,1750);
+assert.equal(p10.dimensionsMm.C,1700);
+assert.equal(p10.concreteM3,1.035);
+assert.equal(p10.steelKg,57.28);
+assert.equal(p10.printedSteelKgPerM3,55.4);
+const p15=api.recordFor(15,6.5);
+assert.equal(p15.dimensionsMm.D,1700);
+assert.equal(p15.dimensionsMm.F,2650);
+assert.equal(p15.concreteM3,5.15);
+assert.equal(p15.steelKg,372.77);
+assert.equal(p15.printedSteelKgPerM3,72.4);
+const p25=api.recordFor(25,8.5);
+assert.equal(p25.dimensionsMm.B,5700);
+assert.equal(p25.dimensionsMm.C,8200);
+assert.equal(p25.concreteM3,8.25);
+assert.equal(p25.steelKg,651.59);
+assert.equal(p25.printedSteelKgPerM3,79.0);
+const mismatch=api.recordFor(25,4.5);
+assert.equal(mismatch.concreteM3,2.82);
+assert.equal(mismatch.steelKg,156.69);
+assert.equal(mismatch.printedSteelKgPerM3,56.3);
+assert.ok(Math.abs(mismatch.computedSteelKgPerM3-55.56382978723404)<1e-7);
+assert.equal(api.recordFor(10,2.75),null,'No interpolated standard plan allowed');
+assert.equal(api.recordFor(25,3),null,'Height outside table must not be selected');
+assert.equal(api.recordFor(20,4),null,'Unsupported SBC must not auto-select nearest');
+assert.equal(api.recordFor(25,''),null,'Blank height must never select a plan');
+for(const id of ['rccSbc','rccHeight','rccResult','rccDims','rccMismatch','rccDrawingLink'])
+ assert.match(ui,new RegExp('id="'+id+'"'));
+assert.match(ui,/src="\.\/rcc-wall-2023-data\.js"/);
+assert.match(ui,/src="\.\/rcc-wall-2023-app\.js"/);
+assert.match(ui,/doc=bridge2023&amp;page=209/);
+assert.match(ui,/minor bridges\/culverts with raft foundations/i);
+assert.match(ui,/automatic multiplication by site wall length is intentionally disabled/);
+new vm.Script(app,{filename:'rcc-wall-2023-app.js'});
+assert.match(app,/sourceRatioDiscrepancy/);
+assert.match(app,/\.textContent=/);
+assert.doesNotMatch(app,/Math\.round\(.*height|Math\.ceil\(.*height/i);
+console.log('RCC 2023 source schedule QA passed: 27 exact height/SBC records, A-I dimensions, concrete, steel, source page links, one printed inconsistency preserved.');
