@@ -22,3 +22,4 @@ jobs:
           node tests/verify-rcc-2023.mjs
           node tests/verify-rcc-project.mjs
           node tests/verify-steel-table.mjs
+          node tests/verify-steel-ui.mjs
