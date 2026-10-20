@@ -2,6 +2,10 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table test UX polish (20 October 2026)
+
+The installed Android steel screen now follows **Select → Length/Pieces → Total kg**. Selected manufacturer row defaults to the first available value; live changes recalculate instantly. Optional price appears only after rate entry. Long section drawings, dimensions, source statements and BIS caution details are behind two accessible collapsible sections. Uses system fonts, current app font scale/theme setting, and dynamic SVG colors in light/dark mode (contrast tests for readable text and buttons). The Steel Table's floating quick-calculator shortcut is suppressed only on this screen to keep the input/output clear. No engineering data or RCC BBS changes.
+
 ## Steel Table V1 — offline, source-attributed manufacturer data
 
 **Navigation:** Home → Site Tools → Steel Table. Included as local HTML/JavaScript

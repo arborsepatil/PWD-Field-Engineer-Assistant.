@@ -12,7 +12,7 @@ const source=id=>catalog.SOURCES[id];
 const format=(x,d=2)=>Number(x).toLocaleString('en-IN',{maximumFractionDigits:d,minimumFractionDigits:d});
 const text=(el,value)=>{el.textContent=String(value)};
 function shapeSvg(type,data={}){
- const blue='#286ab1',steel='#d6e7f5',ink='#23425c';
+ // Section diagrams use CSS tokens so white backgrounds never glare in dark mode.
  let body='',info='';
  const n=v=>Number(v).toLocaleString('en-IN');
  if(type==='beam'){
@@ -37,29 +37,37 @@ function shapeSvg(type,data={}){
  const label=data.designation||type.charAt(0).toUpperCase()+type.slice(1);
  // All text originates in app-authored names; SVG only has known static shapes.
  return '<svg viewBox="0 0 488 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative '+type+' cross-section, not a fabrication drawing">'+
-  '<rect width="488" height="310" fill="#ffffff"/><g fill="'+steel+'" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round">'+body+'</g>'+
-  '<text x="244" y="25" fill="'+blue+'" text-anchor="middle" font-size="15" font-weight="700">'+label.replace(/&/g,'&amp;')+'</text>'+
-  '<text x="244" y="286" fill="'+ink+'" text-anchor="middle" font-size="12">'+info+'</text>'+
-  '<text x="244" y="304" fill="#65768a" text-anchor="middle" font-size="10">Diagram indicative only · not to scale · check published section drawing</text></svg>';
+  '<rect width="488" height="310" class="bg"/><g class="shape" stroke-width="3" stroke-linejoin="round">'+body+'</g>'+
+  '<text x="244" y="25" class="ink" text-anchor="middle" font-size="15" font-weight="700">'+label.replace(/&/g,'&amp;')+'</text>'+
+  '<text x="244" y="286" class="ink" text-anchor="middle" font-size="12">'+info+'</text>'+
+  '<text x="244" y="304" class="muted" text-anchor="middle" font-size="10">Illustrative · not to scale</text></svg>';
 }
 function setFamily(next){
  family=next;selected=null;last=null;lastEntry=null;
  for(const button of $('steelFamilies').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.family===next));
  const custom=next==='calculated';
  $('catalogDetails').hidden=custom;$('customDetails').hidden=!custom;
- $('steelDetail').hidden=!custom;
  if(custom){
-  $('steelTitle').textContent='Theoretical dimensions, not a BIS product row';
-  $('steelStatus').textContent='Calculated · density assumption';
-  $('steelMass').textContent='Calculated below';
+  $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
+  $('steelTitle').textContent='Theoretical section';
+  $('steelStatus').textContent='Calculated';
+  $('steelMass').textContent='—';
   $('steelSource').removeAttribute('href');$('sourceLinks').hidden=true;
-  $('steelDataCaution').textContent='This is not a manufacturer-published nominal mass or section-property schedule.';
+  $('steelDataCaution').textContent='Theoretical weight uses assumed density: 7850 kg/m³. Not a nominal BIS value.';
   updateCustomInputs();
  }else{
   $('sourceLinks').hidden=false;
   renderRows();
+  renderDetail();
  }
+ updateSelectedSummary();
  updateResult();
+}
+function updateSelectedSummary(){
+ const custom=family==='calculated';
+ $('steelPicked').hidden=!custom&&!selected;
+ $('steelPickedName').textContent=custom?$('steelCustomShape').selectedOptions[0].textContent:selected?.designation||'';
+ $('steelPickedStatus').textContent=custom?'Theoretical weight':selected?.basis==='archived-manufacturer-only'?'Archive · verify latest':'SAIL 2023';
 }
 function makeFamilyButtons(){
  for(const cat of catalog.categories){
@@ -71,18 +79,20 @@ function makeFamilyButtons(){
 }
 function renderRows(){
  const rows=catalog.search($('steelSearch').value,family);
+ if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
  const root=$('steelResults');root.replaceChildren();
  $('noResults').hidden=rows.length!==0;
- $('steelCount').textContent=rows.length+' published manufacturer records in this section family (curated V1 subset).';
+ $('steelCount').textContent=rows.length+' sections';
  for(const row of rows){
   const btn=document.createElement('button');btn.className='pick';btn.type='button';
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
   const name=document.createElement('b');name.textContent=row.designation;
-  const subtitle=document.createElement('span');subtitle.textContent=format(row.kgPerM,2)+' kg/m · '+(row.basis==='archived-manufacturer-only'?'Archive / verify latest':'SAIL 2023');
+  const subtitle=document.createElement('span');subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(row.basis==='archived-manufacturer-only'?' · Archive':'');
   btn.append(name,subtitle);
-  btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateResult();});
+  btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
   root.append(btn);
  }
+ updateSelectedSummary();
 }
 function propertyTable(row){
  const tbody=document.createElement('tbody');
@@ -107,19 +117,19 @@ function propertyTable(row){
  const table=document.createElement('table');table.append(tbody);return table;
 }
 function renderDetail(){
- if(!selected){$('steelDetail').hidden=true;return;}
+ if(!selected){$('steelDetail').hidden=true;$('steelDetailsEmpty').hidden=false;return;}
  const src=source(selected.sourceId);
- $('steelDetail').hidden=false;
+ $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
  $('steelTitle').textContent=selected.designation;
  $('steelStatus').textContent=selected.basis==='archived-manufacturer-only'?'Archived · requires latest check':'SAIL published · 2023';
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
  $('steelDataCaution').textContent=selected.basis==='archived-manufacturer-only'?
-  'Manufacturer reference from 2020. This row has NOT been revalidated against IS 808:2021. Do not treat it as the current BIS table or evidence of present mill availability.':
-  '2023 SAIL manufacturer-published values; this row has NOT been independently checked against a licensed IS 808:2021 table or current production. Section properties are shown only when present in the cited SAIL brochure.';
+  'Archived 2020 data · verify against the latest standard before procurement.':
+  'SAIL 2023 · not independently checked against current BIS rows.';
  const a=$('steelSource');a.href=src.url;a.textContent=src.label;
- $('steelSourceDate').textContent='Source publication: '+src.date+' · '+src.note;
+ $('steelSourceDate').textContent=src.date+' · Manufacturer source, not official BIS certification';
  $('sourceLinks').hidden=false;
 }
 function updateCustomInputs(){
@@ -128,7 +138,8 @@ function updateCustomInputs(){
  $('steelWidthField').hidden=!rectangle;$('steelThickField').hidden=!rectangle;
  $('steelDiameterField').hidden=type!=='round';$('steelSideField').hidden=type!=='square';
  $('steelSectionDiagram').innerHTML=shapeSvg(type);
- $('steelProperties').textContent='Dimensions entered below are not taken from the manufacturer catalogue.';
+ $('steelProperties').textContent='User-entered dimensions';
+ updateSelectedSummary();
  updateResult();
 }
 function calculate(){
@@ -148,16 +159,20 @@ function updateResult(){
  try{
   const {q,entry}=calculate();
   last=q;lastEntry=entry;
-  $('steelError').hidden=true;$('output').hidden=false;
+  $('steelEmpty').hidden=true;$('steelError').hidden=true;$('output').hidden=false;
   $('outUnit').textContent=format(q.unitMassKgM,3);
   $('outKg').textContent=format(q.totalMassKg,2);
   $('outTonne').textContent=format(q.totalTonnes,4);
   $('outMethod').textContent=q.basis;
-  $('outPrice').textContent=q.totalPrice===null?'Rate not entered · no price estimated':'Indicative material cost: ₹'+format(q.totalPrice,2)+' (excluding GST, fabrication, wastage and transport)';
+  $('outPrice').hidden=q.totalPrice===null;
+  $('outPrice').textContent=q.totalPrice===null?'':'Approx. material cost ₹'+format(q.totalPrice,2);
   if(family==='calculated')$('steelMass').textContent=format(q.unitMassKgM,3);
  }catch(err){
   last=null;lastEntry=null;$('output').hidden=true;
-  $('steelError').textContent=err.message;$('steelError').hidden=false;
+  const missing=!selected&&family!=='calculated';
+  $('steelEmpty').hidden=!missing;
+  $('steelError').hidden=missing;
+  $('steelError').textContent=missing?'':err.message;
  }
 }
 function saveCsv(){
@@ -183,7 +198,7 @@ function showStandards(){
  }
 }
 makeFamilyButtons();showStandards();
-$('steelSearch').addEventListener('input',renderRows);
+$('steelSearch').addEventListener('input',()=>{renderRows();renderDetail();updateSelectedSummary();updateResult();});
 $('steelCustomShape').addEventListener('change',updateCustomInputs);
 for(const id of ['steelLength','steelCountPieces','steelRate','steelWidth','steelThickness','steelDiameter','steelSide'])
  $(id).addEventListener('input',updateResult);
