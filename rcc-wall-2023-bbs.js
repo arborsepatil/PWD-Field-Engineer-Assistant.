@@ -44,7 +44,7 @@ function protectCsv(v){
  if(/^\s*[=+@\-\t\r]/.test(s))s="'"+s;
  return '"'+s.replace(/"/g,'""')+'"';
 }
-function draftCsv(project,record,schedule,inputs){
+function draftCsv(project,record,schedule,inputs,planningTakeoff=null){
  const sheet=worksheet(schedule,inputs),lines=[];
  const line=a=>lines.push(a.map(protectCsv).join(','));
  line(['RCC PWD 2023 · DRAFT BBS · VERIFY BEFORE SITE USE']);
@@ -54,6 +54,16 @@ function draftCsv(project,record,schedule,inputs){
  line(['Original concrete (m³; printed)',record.concreteM3]);
  line(['Original steel (kg; printed)',record.steelKg]);
  line(['ATTENTION','Printed material amounts are source-table values, NOT totals from the BBS below']);
+ if(planningTakeoff){
+  line(['GEOMETRY-BASED PLANNING QUANTITY','NOT official PWD book table and not certified field measurement']);
+  line(['Entered project wall length (m)',planningTakeoff.lengthM]);
+  line(['Calculated RCC section area (m²)',planningTakeoff.crossSectionAreaM2.toFixed(5)]);
+  line(['Calculated structural RCC volume (m³)',planningTakeoff.concretePlanningM3.toFixed(3)]);
+  line(['Calculated M15 levelling PCC 100 mm volume (m³)',planningTakeoff.pccLevellingPlanningM3.toFixed(3)]);
+  line(['Geometry source','PWD 2023 GAD 151-1/4 dimensions A–I; per running metre basis inferred from geometric match across 27 printed table rows']);
+  line(['CAUTION','No inferred project-length steel quantity; BBS remains a separate engineer-entered worksheet']);
+ }
+
  line(['Mark','Location','Diameter (mm)','Spacing (mm C/C)','Bars (entered)','Cut length (m; entered)','Theoretical kg/m','Calculated weight (kg)','Status']);
  for(const bar of schedule.marks){
   if(!bar.present){line([bar.mark,bar.location,'—','—','','','','','Not listed in source']);continue;}

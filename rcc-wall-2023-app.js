@@ -42,6 +42,23 @@ function fillHeights(preferred){
  if(allowed.includes(Number(preferred)))heightSelect.value=String(Number(preferred));
  else if(allowed.length)heightSelect.value=String(allowed[0]);
 }
+function refreshGeometryQuantity(){
+ const report=$('rccGeometryTakeoff'),error=$('rccPlanError');
+ const lengthField=$('rccLength');
+ report.hidden=true;error.hidden=true;
+ if(!selectedRow||lengthField.value==='')return;
+ try{
+  const q=section.quantityForLength(selectedRow,lengthField.value);
+  $('rccPlanConcrete').textContent=q.concretePlanningM3.toFixed(3);
+  $('rccPlanPcc').textContent=q.pccLevellingPlanningM3.toFixed(3);
+  $('rccPlanArea').textContent=q.crossSectionAreaM2.toFixed(4);
+  $('rccPlanBasis').textContent='Entered L: '+q.lengthM+' m · Footing B: '+q.pccLevellingWidthM.toFixed(3)+' m · Levelling PCC: 0.100 m · Source/GAD geometric agreement: ±'+q.sourceDifferenceM3PerM.toFixed(4)+' m³ for a 1 m section.';
+  report.hidden=false;
+ }catch(e){
+  error.textContent='Length-based takeoff unavailable: '+e.message;
+  error.hidden=false;
+ }
+}
 function refreshProject(){
  const label=$('rccProjectTitle');
  label.textContent=project.value.trim()?'Work: '+project.value.trim():'';
@@ -172,16 +189,23 @@ function render(){
  }else{
   $('rccRebarCount').textContent='';draftValues={};
  }
+ refreshGeometryQuantity();
  $('rccDrawingLink').href='./pdf_viewer.html?doc=bridge2023&page='+row.pdfPage;
 }
 fillHeights(q.get('height'));
 sbcSelect.addEventListener('change',()=>{const old=heightSelect.value;fillHeights(old);render();});
 heightSelect.addEventListener('change',render);
 project.addEventListener('input',refreshProject);
+$('rccLength').addEventListener('input',refreshGeometryQuantity);
 project.addEventListener('change',render); // Switch BBS draft context when project name changes.
 $('rccBbsCsv').addEventListener('click',()=>{
  if(!selectedRow||!selectedSchedule)return;
- const csv=bbs.draftCsv(project.value.trim(),selectedRow,selectedSchedule,draftValues);
+ let planning=null;
+ if($('rccLength').value!==''){
+  try{planning=section.quantityForLength(selectedRow,$('rccLength').value);}
+  catch(_e){ /* Invalid project length is reported on-screen; export BBS alone. */ }
+ }
+ const csv=bbs.draftCsv(project.value.trim(),selectedRow,selectedSchedule,draftValues,planning);
  const filename='PWD_RCC_2023_BBS_'+selectedRow.sbc+'_'+selectedRow.heightM.toFixed(1)+'m.csv';
  if(location.host==='appassets.androidplatform.net'){
    // Origin-restricted Android handler presents ACTION_CREATE_DOCUMENT.

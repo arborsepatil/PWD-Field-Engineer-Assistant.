@@ -35,7 +35,7 @@ table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:
 .bbsBox table{min-width:570px}.bbsBox th{font-size:12px}.bbsBox td{vertical-align:middle}
 .bbsBox input{max-width:120px;min-width:90px;text-align:right}
 .bbsBox button{border:none;font:inherit;cursor:pointer}.bbsBox button.secondary{border:1px solid var(--line)}
-.bbsTotal{padding:12px 14px;background:var(--soft);border-radius:12px;font-weight:800;margin-top:12px}
+.takeoff{border-top:1px solid var(--line);margin:16px 0;padding-top:16px}.takeoff[hidden],#rccPlanError[hidden]{display:none}.bbsTotal{padding:12px 14px;background:var(--soft);border-radius:12px;font-weight:800;margin-top:12px}
 @media print{header,.hero,.projectField,.drawingWrap+ .caption,.links,#rccBbsCsv,#rccPrint{display:none!important}body{background:#fff!important;color:#111!important}main{max-width:none;padding:0}.card{break-inside:avoid;border:1px solid #bbb}.drawingWrap{break-inside:avoid;border:1px solid #bbb}.drawingWrap svg{transform:none!important}.bbsBox input{border:0;background:transparent;padding:0}.projectResult{background:none}}
 </style><link rel="stylesheet" href="./app-global.css"></head>
 <body><header><a href="./pwd_retaining_walls.html">‹ Retaining Walls</a><b>RCC · 2023</b></header>
@@ -44,12 +44,18 @@ table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:
 <section class="card"><h2>Project and type-plan selection</h2><div class="field projectField"><label for="rccProject">Project / Work name <span class="caption">(optional)</span></label><input id="rccProject" type="text" placeholder="E.g., Road-side return wall near culvert" maxlength="180" autocomplete="off"></div><div class="grid">
 <div><label for="rccSbc">Drawing SBC (t/m²)</label><select id="rccSbc"><option value="10">10 t/m²</option><option value="15">15 t/m²</option><option value="25">25 t/m²</option></select></div>
 <div><label for="rccHeight">Wall height shown in drawing (m)</label><select id="rccHeight"></select></div></div>
-<p class="caption">Choose only one of the heights actually printed for that SBC. Site SBC requires appropriate investigation and confirmation before use.</p>
+<p class="caption">Choose only one of the heights actually printed for that SBC. Site SBC requires appropriate investigation and confirmation before use.</p><div class="field projectField"><label for="rccLength">Wall length L (m) <span class="caption">(optional · planning takeoff)</span></label><input id="rccLength" type="number" min="0.01" max="10000" step="0.01" inputmode="decimal" placeholder="Enter to estimate RCC and PCC volume"><p class="caption">Leave blank to see only original PWD table quantities. This length does not automatically scale the steel table or BBS.</p></div>
 </section>
 <section class="card" id="rccResult" hidden aria-live="polite"><div id="rccProjectTitle" class="projectResult" hidden></div><h2>Original 2023 schedule</h2>
 <div class="caption" id="rccSheet"></div>
 <div class="statgrid"><div class="stat"><span>Concrete (m³) · printed</span><strong id="rccConcrete">—</strong></div><div class="stat"><span>Steel (kg) · printed</span><strong id="rccSteel">—</strong></div><div class="stat"><span>Steel per m³ · printed</span><strong id="rccRatio">—</strong></div></div>
 <div id="rccMismatch" class="note warn" hidden role="alert"></div>
+<section id="rccGeometryTakeoff" class="takeoff" hidden aria-live="polite">
+<h2>Project-length quantity · Geometry-based estimate</h2>
+<div class="statgrid"><div class="stat"><span>Structural RCC volume (m³)</span><strong id="rccPlanConcrete">—</strong></div><div class="stat"><span>Levelling PCC volume (m³)</span><strong id="rccPlanPcc">—</strong></div><div class="stat"><span>RCC section area (m²)</span><strong id="rccPlanArea">—</strong></div></div>
+<p class="caption" id="rccPlanBasis"></p>
+<div class="note"><b>Inferred geometry, not printed totals:</b> RCC volume = cross-section A–I area × entered length. Levelling PCC uses 100 mm thickness × footing width B × entered length from GAD 151-1/4. Source-table concrete figures are left unchanged above. Do not use as certified quantities until approved drawings, transitions, foundation and wall length are checked. No steel extrapolation is performed.</div>
+</section><div id="rccPlanError" class="note warn" hidden role="alert"></div>
 <h2>Dimensioned section · A–I</h2><p class="caption">Dynamic geometry uses the same A–I dimensions in the selected 2023 sheet. One finger to pan, two fingers to pinch; no zoom buttons. Drawing is a schematic, not an approved section.</p><div class="drawingWrap" id="rccDiagramViewport" aria-label="Finger gesture pan and pinch RCC drawing"><div id="rccDiagramContent"></div></div><p class="caption">Source: 2023 PDF 209 general arrangement + selected SBC page. The 100 mm M15 PCC shown underneath the raft is a drawing note, not an added source quantity.</p><h2>Dimensions A–I (mm)</h2>
 <p class="caption">Letter labels come directly from the 2023 general arrangement drawing. Do not interpret or rename the dimensions without viewing the original sheet.</p>
 <div class="tablegrid" id="rccDims"></div>
