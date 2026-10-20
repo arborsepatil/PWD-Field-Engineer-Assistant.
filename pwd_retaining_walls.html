@@ -7,18 +7,17 @@ header b{flex:1;text-align:right}main{max-width:940px;margin:auto;padding:16px 1
 h1{font-size:24px;line-height:1.2;margin:4px 0 9px}h2{font-size:17px;margin:0 0 8px}
 p{margin:0 0 10px;color:var(--muted)}.eyebrow{font-weight:850;letter-spacing:.07em;text-transform:uppercase;font-size:11px;color:var(--accent)}
 .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:16px;margin-bottom:13px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{margin:0;display:flex;flex-direction:column;gap:8px}.card p{flex:1}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{margin:0;display:flex;flex-direction:column;gap:8px}.card p{flex:1}
 .action{display:block;border-radius:12px;padding:11px 12px;text-decoration:none;background:var(--accent);color:white;font-weight:800;text-align:center;min-height:44px}
 .secondary{background:var(--soft);color:var(--accent);border:1px solid var(--line)}.caption{font-size:12px;color:var(--muted)}.tag{font-size:11px;display:inline-block;border:1px solid var(--line);background:var(--soft);padding:3px 7px;border-radius:99px;color:var(--ink);font-weight:800}
 .group{margin:15px 0}.refs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.ref{padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--card)}.ref b{display:block;overflow-wrap:anywhere}.ref p{margin:6px 0}.ref .action{margin-top:10px}
 .note{background:var(--soft);border-left:3px solid var(--accent);border-radius:12px;padding:11px;color:var(--ink);font-size:12px}
 @media(max-width:620px){.grid,.refs{grid-template-columns:1fr}main{padding:12px 12px 100px}h1{font-size:22px}}
 </style><link rel="stylesheet" href="./app-global.css"></head><body><header><a href="./index.html">‹ Back</a><b>Retaining Walls</b></header><main>
-<section class="hero"><div class="eyebrow">Site Tools / Engineering</div><h1>Retaining Walls</h1><p>Select the construction type. Each section has its own scope: existing field section and quantities, or original PWD type-plan drawings.</p></section>
-<section class="grid" aria-label="Wall construction types">
-  <article class="card"><div class="tag">Existing calculation preserved</div><h2>🧱 Masonry Wall</h2><p>Existing stone-masonry section template, setting-out diagrams and quantity calculator. No change to its formulas.</p><a class="action" href="./pwd_retaining_wall_section_quantity.html">Open masonry calculator ›</a></article>
-  <article class="card"><div class="tag">Drawing reference only</div><h2>⬛ PCC / Solid Return Wall</h2><p>2023 PCC solid return wall drawing and separately listed 2002 solid return and abutment references. No automated design or quantity claim.</p><a class="action" href="./pwd_pcc_wall_reference.html">Open PCC references ›</a></article>
-  <article class="card"><div class="tag">Drawing reference only</div><h2>🏗️ RCC Retaining Wall</h2><p>2023 Section G wall drawings: general arrangement and SBC-specific standard plans. Quantity and reinforcement extraction are pending source validation.</p><a class="action" href="./pwd_rcc_wall_reference.html">Open RCC references ›</a></article>
+<section class="hero"><div class="eyebrow">Site Tools / Engineering</div><h1>Retaining Walls</h1><p>Two sections only: PCC uses our existing quantity calculator; RCC uses the original PWD 2023 standard drawings.</p></section>
+<section class="grid" aria-label="Retaining wall types">
+  <article class="card"><div class="tag">Existing field calculator</div><h2>⬛ PCC Retaining Wall</h2><p>Open our existing plain-concrete wall section calculator: dimensions, bottom-up field setting-out, concrete and footing quantities, excavation, soling and filter backing.</p><a class="action" href="./pwd_retaining_wall_section_quantity.html">Open PCC calculator ›</a></article>
+  <article class="card"><div class="tag">PWD 2023 · Source type plans</div><h2>🏗️ RCC Retaining Wall</h2><p>2023 bridge book Section G: original RCC retaining-wall drawings with 10, 15 and 25 t/m² SBC categories. Future quantity extraction only after original tables are verified.</p><a class="action" href="./pwd_rcc_wall_reference.html">Open RCC 2023 plans ›</a></article>
 </section>
-<section class="group note"><b>Engineering boundary:</b> source type-plan applicability, site investigation, groundwater, surcharge, stability, foundation and approval need separate checking. Showing a drawing is not an approval or a design check.</section>
+<section class="group note"><b>Engineering boundary:</b> source type-plan applicability, site investigation, groundwater, surcharge, stability, foundation and approval need separate checking. Our PCC quantities are based on their existing section profile, not the separate bridge return-wall type plan. Showing a drawing is not an approval or a design check.</section>
 </main><script src="./app-shell.js"></script></body></html>
