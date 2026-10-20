@@ -38,7 +38,7 @@ assert.match(builder,/androidx\.webkit:webkit/);
 assert.match(workflow,/assembleDebug/);
 assert.match(workflow,/upload-artifact/);
 assert.match(workflow,/prepare_assets\.py/);
-assert.match(pack,/EXCLUDED = \{"sw\.js"\}/);
+assert.match(pack,/EXCLUDED = \{"sw\.js", "rcc-wall-2023-bbs\.js"\}/);
 assert.match(pack,/not any\(p\.suffix\.lower\(\) == "\.pdf"/);
 assert.doesNotMatch(activity,/setAllowUniversalAccessFromFileURLs\(true\)/);
 assert.doesNotMatch(activity,/addJavascriptInterface/); // untrusted frames
