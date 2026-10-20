@@ -14,10 +14,10 @@ new vm.Script(js,{filename:'pwd-steel-app.js'});
 const light=css.match(/:root\{([^}]+)\}/)?.[1],dark=css.match(/html\[data-theme="dark"\]\{([^}]+)\}/)?.[1];
 assert.ok(light&&dark,'Both themes must be individually tokenized');
 const color=(block,key)=>{
- const rx=new RegExp('--'+key+':(#[0-9A-Fa-f]{6})');
+ const rx=new RegExp('--'+key+':(#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{3})(?![0-9A-Fa-f])');
  const found=block.match(rx);
  assert.ok(found,'Missing '+key+' palette token');
- return found[1];
+ return found[1].length===4?'#'+[...found[1].slice(1)].map(ch=>ch+ch).join(''):found[1];
 };
 function luminance(hex){
  const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
