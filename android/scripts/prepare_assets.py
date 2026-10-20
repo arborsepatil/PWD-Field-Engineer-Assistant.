@@ -11,7 +11,7 @@ import shutil
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "android/app/src/main/assets/www"
 EXTENSIONS = {".html", ".js", ".css", ".json", ".svg", ".png", ".webp", ".jpg", ".jpeg"}
-EXCLUDED = {"sw.js"}  # Android APK bundles its assets. Not an installable browser PWA.
+EXCLUDED = {"sw.js", "rcc-wall-2023-bbs.js"}  # Defer BBS cutting; do not ship future-only calculation code in APK.
 OUTPUT.mkdir(parents=True, exist_ok=True)
 count = 0
 for file in ROOT.iterdir():

@@ -52,7 +52,7 @@ jobs:
         run: node tests/verify-wall-hub.mjs
       - name: Verify RCC 2023 exact source schedules
         run: node tests/verify-rcc-2023.mjs
-      - name: Validate RCC project, dimensioned section and draft BBS
+      - name: Validate RCC project, dimensioned section and deferred BBS boundary
         run: node tests/verify-rcc-project.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
@@ -66,7 +66,7 @@ jobs:
           test -f android/app/src/main/assets/www/rcc-wall-2023-data.js
           test -f android/app/src/main/assets/www/rcc-wall-2023-rebar.js
           test -f android/app/src/main/assets/www/rcc-wall-2023-section.js
-          test -f android/app/src/main/assets/www/rcc-wall-2023-bbs.js
+          test ! -f android/app/src/main/assets/www/rcc-wall-2023-bbs.js
           test -f android/app/src/main/assets/www/rcc-wall-2023-app.js
           test -f android/app/src/main/assets/www/pwd_retaining_wall_section_quantity.html
           test -f android/app/src/main/assets/www/pwd-wall-diagrams.js

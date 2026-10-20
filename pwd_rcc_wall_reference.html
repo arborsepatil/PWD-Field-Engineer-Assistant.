@@ -26,17 +26,17 @@ table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:
 #rccMismatch[hidden],#rccResult[hidden],#rccRebarSection[hidden],#rccRebarUnavailable[hidden]{display:none}
 @media(max-width:620px){main{padding:12px 12px 100px}.statgrid{grid-template-columns:1fr}.links{grid-template-columns:1fr}h1{font-size:22px}}
 
-.projectField{margin:12px 0}.field input,.bbsBox input{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);padding:10px 9px;min-height:42px;font:inherit;font-size:16px}
+.projectField{margin:12px 0}.field input{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);padding:10px 9px;min-height:42px;font:inherit;font-size:16px}
 .projectResult{margin:0 0 12px;padding:10px;border-radius:11px;background:var(--soft);font-weight:800;overflow-wrap:anywhere}
 .drawingWrap{width:100%;aspect-ratio:1060/780;border:1px solid var(--line);border-radius:14px;background:white;overflow:hidden;touch-action:none;cursor:grab;user-select:none;position:relative;margin:12px 0}
 .drawingWrap svg{width:100%;height:100%;display:block;pointer-events:none;transform-origin:50% 50%;will-change:transform}
 .drawingWrap:active{cursor:grabbing}
-.bbsBox{border-top:1px solid var(--line);margin-top:18px;padding-top:14px}
-.bbsBox table{min-width:570px}.bbsBox th{font-size:12px}.bbsBox td{vertical-align:middle}
-.bbsBox input{max-width:120px;min-width:90px;text-align:right}
-.bbsBox button{border:none;font:inherit;cursor:pointer}.bbsBox button.secondary{border:1px solid var(--line)}
-.takeoff{border-top:1px solid var(--line);margin:16px 0;padding-top:16px}.takeoff[hidden],#rccPlanError[hidden]{display:none}.bbsTotal{padding:12px 14px;background:var(--soft);border-radius:12px;font-weight:800;margin-top:12px}
-@media print{header,.hero,.projectField,.drawingWrap+ .caption,.links,#rccBbsCsv,#rccPrint{display:none!important}body{background:#fff!important;color:#111!important}main{max-width:none;padding:0}.card{break-inside:avoid;border:1px solid #bbb}.drawingWrap{break-inside:avoid;border:1px solid #bbb}.drawingWrap svg{transform:none!important}.bbsBox input{border:0;background:transparent;padding:0}.projectResult{background:none}}
+
+
+
+.links button{border:1px solid var(--line);font:inherit;cursor:pointer}
+.takeoff{border-top:1px solid var(--line);margin:16px 0;padding-top:16px}.takeoff[hidden],#rccPlanError[hidden]{display:none}
+@media print{header,.hero,.projectField,.drawingWrap+ .caption,.links,#rccQuantityCsv,#rccPrint{display:none!important}body{background:#fff!important;color:#111!important}main{max-width:none;padding:0}.card{break-inside:avoid;border:1px solid #bbb}.drawingWrap{break-inside:avoid;border:1px solid #bbb}.drawingWrap svg{transform:none!important}.projectResult{background:none}}
 </style><link rel="stylesheet" href="./app-global.css"></head>
 <body><header><a href="./pwd_retaining_walls.html">‹ Retaining Walls</a><b>RCC · 2023</b></header>
 <main>
@@ -44,7 +44,7 @@ table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:
 <section class="card"><h2>Project and type-plan selection</h2><div class="field projectField"><label for="rccProject">Project / Work name <span class="caption">(optional)</span></label><input id="rccProject" type="text" placeholder="E.g., Road-side return wall near culvert" maxlength="180" autocomplete="off"></div><div class="grid">
 <div><label for="rccSbc">Drawing SBC (t/m²)</label><select id="rccSbc"><option value="10">10 t/m²</option><option value="15">15 t/m²</option><option value="25">25 t/m²</option></select></div>
 <div><label for="rccHeight">Wall height shown in drawing (m)</label><select id="rccHeight"></select></div></div>
-<p class="caption">Choose only one of the heights actually printed for that SBC. Site SBC requires appropriate investigation and confirmation before use.</p><div class="field projectField"><label for="rccLength">Wall length L (m) <span class="caption">(optional · planning takeoff)</span></label><input id="rccLength" type="number" min="0.01" max="10000" step="0.01" inputmode="decimal" placeholder="Enter to estimate RCC and PCC volume"><p class="caption">Leave blank to see only original PWD table quantities. This length does not automatically scale the steel table or BBS.</p></div>
+<p class="caption">Choose only one of the heights actually printed for that SBC. Site SBC requires appropriate investigation and confirmation before use.</p><div class="field projectField"><label for="rccLength">Wall length L (m) <span class="caption">(optional · planning takeoff)</span></label><input id="rccLength" type="number" min="0.01" max="10000" step="0.01" inputmode="decimal" placeholder="Enter to estimate RCC and PCC volume"><p class="caption">Leave blank to see only original PWD table quantities. This length does not scale the printed steel table. Bar-bending calculations are not part of this module.</p></div>
 </section>
 <section class="card" id="rccResult" hidden aria-live="polite"><div id="rccProjectTitle" class="projectResult" hidden></div><h2>Original 2023 schedule</h2>
 <div class="caption" id="rccSheet"></div>
@@ -63,9 +63,11 @@ table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:
 <p class="caption">Exactly as shown in the selected 2023 reinforcement table. Bar dia. in mm; spacing in mm centre-to-centre (C/C). Locations are paraphrased from GAD 151-1/4 (PDF p.209). A dash (—) means the source table has no entry for that mark and height.</p>
 <div class="tableWrap" id="rccRebarSection" hidden><table><thead><tr><th scope="col">Bar mark</th><th scope="col">GAD location</th><th scope="col">Bar dia. (mm)</th><th scope="col">Spacing (mm C/C)</th></tr></thead><tbody id="rccRebarRows"></tbody></table><p class="caption" id="rccRebarCount" aria-live="polite"></p></div>
 <div class="note" id="rccRebarUnavailable" hidden>Reinforcement source data are unavailable or do not match the selected drawing. Open the original PDF sheet instead; do not assume reinforcement values.</div>
-<div class="note"><b>Source-table reference only:</b> mark diameter and spacing are not a bar-bending schedule. Cutting lengths, laps, hook/bend dimensions, layer positions and independent steel-weight calculations require the full approved reinforcement drawings and engineering checks.</div>
-<section class="bbsBox" id="rccBbsSection"><h2>Draft bar-bending worksheet · Engineer input</h2><p class="caption">Bar marks/diameter/spacing come from the book. Enter actual bar count and verified cutting length for each mark from approved drawings to calculate draft steel weight. This does not infer hooks, lap, bends or cutting lengths. Draft entries are auto-saved locally per project name, SBC and height (no cloud sync). For multiple works, enter a project name to keep drafts separate.</p><div class="tableWrap"><table><thead><tr><th>Mark</th><th>Dia. / C/C</th><th>Count (No.)</th><th>Cut length (m)</th><th>Draft weight (kg)</th></tr></thead><tbody id="rccBbsRows"></tbody></table></div><div class="bbsTotal" id="rccBbsTotal">Enter site-verified bar counts and cutting lengths</div><div class="caption" id="rccBbsStatus" aria-live="polite"></div><p class="caption">Theoretical mass uses steel density 7,850 kg/m³. Draft BBS total is deliberately separate from the PWD book steel quantity: the book does not explicitly establish its quantity-length basis.</p><div class="links"><button id="rccBbsCsv" type="button" class="action secondary">Export draft BBS CSV</button><button id="rccPrint" type="button" class="action">Print / Save PDF</button></div></section><div class="links"><a id="rccDrawingLink" class="action" href="./pdf_viewer.html?doc=bridge2023&amp;page=210">Open selected original sheet ›</a><a class="action secondary" href="./pdf_viewer.html?doc=bridge2023&amp;page=209">View general arrangement (A–I) ›</a></div>
-<div class="note"><b>Original-table values only:</b> these are the quantities printed for the selected standard plan. The table does not explicitly identify a per-running-metre basis; automatic multiplication by site wall length is intentionally disabled pending confirmation. These values are not certified site quantities.</div>
+<div class="note"><b>Reinforcement reference only:</b> the MK1–MK11 marks, diameters and spacings come from the 2023 drawing. BBS cutting lengths, laps, bends, bar counts and weight calculations are deferred.</div>
+<div class="links"><button type="button" id="rccQuantityCsv" class="action secondary">Export quantity statement CSV</button><button type="button" id="rccPrint" class="action">Print / Save PDF</button></div>
+<div class="note">Future module: bar-bending schedules and cutting-length calculations are intentionally not included. Use the MK1–MK11 table above as a 2023 drawing reference only.</div>
+<div class="links"><a id="rccDrawingLink" class="action" href="./pdf_viewer.html?doc=bridge2023&amp;page=210">Open selected original sheet ›</a><a class="action secondary" href="./pdf_viewer.html?doc=bridge2023&amp;page=209">View general arrangement (A–I) ›</a></div>
+<div class="note"><b>Original source quantities:</b> printed PWD concrete/steel values are unchanged. Geometry-based length estimates are shown separately above; no source-steel extrapolation or BBS calculations are included. These values are not certified site quantities.</div>
 </section>
 <section class="card"><h2>Engineering scope and precautions</h2>
 <p>The 2023 detail sheets state they are valid for minor bridges/culverts with raft foundations. Refer to the original GAD and notes for concrete grade, reinforcement, cover, soil assumptions and construction details. Neither a drawing match nor a sufficient bearing capacity proves stability or suitability.</p>
@@ -73,4 +75,4 @@ table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:
 <div class="links"><a class="action secondary" href="./bridge_book_2023.html">Open 2023 bridge book index</a><a class="action secondary" href="./pwd_retaining_wall_section_quantity.html">Open separate PCC calculator</a></div>
 </section>
 </main>
-<script src="./rcc-wall-2023-data.js"></script><script src="./rcc-wall-2023-rebar.js"></script><script src="./rcc-wall-2023-section.js"></script><script src="./rcc-wall-2023-bbs.js"></script><script src="./rcc-wall-2023-app.js"></script><script src="./app-shell.js"></script></body></html>
+<script src="./rcc-wall-2023-data.js"></script><script src="./rcc-wall-2023-rebar.js"></script><script src="./rcc-wall-2023-section.js"></script><script src="./rcc-wall-2023-app.js"></script><script src="./app-shell.js"></script></body></html>

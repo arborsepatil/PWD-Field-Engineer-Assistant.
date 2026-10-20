@@ -73,29 +73,29 @@ assert.ok(csv.includes('Printed material amounts are source-table values'));
 assert.ok(csv.includes('Only completed and valid entries'));
 assert.ok(csv.includes('DRAFT BBS TOTAL'));
 assert.ok(!csv.includes('undefined'));
-for(const id of ['rccProject','rccProjectTitle','rccDiagramViewport','rccDiagramContent','rccBbsSection','rccBbsRows','rccBbsTotal','rccBbsCsv','rccPrint'])
+for(const id of ['rccProject','rccProjectTitle','rccDiagramViewport','rccDiagramContent','rccQuantityCsv','rccPrint'])
  assert.ok(page.includes('id="'+id+'"'),'Missing RCC Phase4 UI '+id);
-for(const asset of ['rcc-wall-2023-section.js','rcc-wall-2023-bbs.js'])
+for(const asset of ['rcc-wall-2023-section.js'])
  assert.ok(page.includes('src="./'+asset+'"'), 'Unlinked script '+asset);
 assert.ok(page.includes('pinch'));
 assert.ok(!page.includes('.links,.note.warn,'),'Source inconsistency warning must remain printable');
 assert.match(page,/Print \/ Save PDF/);
 assert.match(app,/section\.svg\(row\)/);
-assert.match(app,/PWDRCC2023BBS/);
-assert.match(app,/cutLengthM/);
+assert.doesNotMatch(app,/PWDRCC2023BBS/);
+assert.doesNotMatch(app,/cutLengthM/);
 assert.match(app,/setPointerCapture/);
 assert.match(app,/window\.print\(\)/);
-assert.match(app,/draftCsv/);
-assert.match(app,/window\.localStorage\.setItem/);
-assert.match(app,/window\.localStorage\.getItem/);
-assert.match(app,/encodeURIComponent\(name\)/);
-assert.match(app,/project\.addEventListener\('change',render\)/);
+assert.match(app,/quantityStatementCsv/);
+assert.doesNotMatch(app,/window\.localStorage\.setItem/);
+assert.doesNotMatch(app,/window\.localStorage\.getItem/);
+assert.doesNotMatch(app,/encodeURIComponent\(name\)/);
+assert.doesNotMatch(app,/project\.addEventListener\('change',render\)/);
 assert.match(app,/__PWD_ANDROID_CSV_EXPORT_V1__/);
 assert.match(app,/appassets\.androidplatform\.net/);
 assert.ok(!/\b(projectName|siteLength)\s*\*\s*row\.(concreteM3|steelKg)/.test(app));
 assert.doesNotMatch(app,/auto[- ]?design|designApproval/i);
 assert.doesNotMatch(page,/masonry/i);
-for(const asset of ['rcc-wall-2023-section.js','rcc-wall-2023-bbs.js'])
+for(const asset of ['rcc-wall-2023-section.js'])
  assert.ok(read('sw.js').includes("'./"+asset+"'"),'Offline cache excludes '+asset);
 // Stage 5: arithmetic cross-check all 27 printed volumes against the
 // A-I sectional polygon. This supports planning per-metre takeoff as an
@@ -154,9 +154,23 @@ for(const id of ['rccLength','rccGeometryTakeoff','rccPlanRaft','rccPlanStem','r
  assert.ok(page.includes('id="'+id+'"'),'Missing RCC length takeoff UI '+id);
 assert.match(app,/section\.quantityForLength\(selectedRow/);
 assert.match(app,/rccLength.*addEventListener\('input',refreshGeometryQuantity\)/);
-assert.match(app,/draftValues,planning\)/);
+assert.match(app,/quantityStatementCsv\(\)/);
 assert.ok(!app.includes('row.steelKg*'),'Printed source steel MUST NOT be scaled by length');
 console.log('RCC Phase 5 checked 27 original-to-geometry concrete matches (max diff '+maxDeviation+' m³), optional length, separate PCC and steel boundaries.');
 console.log('RCC Phase 4 verified: 27 dimensioned cross-sections, optional project label, manual BBS mass, CSV injection guard, no false quantity scaling.');
 
 console.log('RCC Phase 6 checked: all 27 GAD raft + stem volumes partition exactly; project report and CSV include both concrete items without double counting.');
+
+// BBS code stays dormant in repository for future work but must not be callable
+// or bundled as a UI capability in the CURRENT RCC retaining wall screen.
+assert.doesNotMatch(page,/id="rccBbsSection"|id="rccBbsRows"|id="rccBbsCsv"|cut length \(m\)|bar count.*input/i);
+assert.doesNotMatch(page,/src="\.\/rcc-wall-2023-bbs\.js"/);
+assert.doesNotMatch(app,/buildBbs|updateBbs|draftKey|draftValues|rccBbsCsv|bbs\.worksheet/);
+assert.match(app,/PWD_RCC_2023_QUANTITY_/);
+assert.match(app,/Raft RCC volume/);
+assert.match(app,/Stem RCC volume/);
+assert.match(app,/Original PWD steel/);
+assert.match(app,/__PWD_ANDROID_CSV_EXPORT_V1__/);
+console.log('RCC Phase 7 scope verified: source MK1-MK11 table and concrete quantity CSV active, BBS cutting UI deferred.');
+
+assert.ok(!read('sw.js').includes("'./rcc-wall-2023-bbs.js'"),'Deferred BBS must not be offline cached');
