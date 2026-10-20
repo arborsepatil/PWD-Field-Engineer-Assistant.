@@ -136,7 +136,7 @@ $('rccLength').addEventListener('input',refreshGeometryQuantity);
 // Export source schedules plus optional GAD-derived concrete quantities, not a BBS.
 function csvCell(value){
  let s=String(value??'');
- if(/^\\s*[=+\\-@\\t\\r]/.test(s))s="'"+s;
+ if(/^\s*[=+\-@\t\r]/.test(s))s="'"+s;
  return '"'+s.replace(/"/g,'""')+'"';
 }
 function quantityStatementCsv(){
@@ -177,7 +177,7 @@ function quantityStatementCsv(){
  if(selectedSchedule)for(const bar of selectedSchedule.marks)
   add(bar.mark,bar.location,bar.present?bar.diameterMm:'—',bar.present?bar.spacingMm:'—');
  add('Excluded','Bar bending, bar counts, cutting lengths, laps, waste, and structural design checks');
- return '\\ufeff'+lines.join('\\r\\n')+'\\r\\n';
+ return '\ufeff'+lines.join('\r\n')+'\r\n';
 }
 $('rccQuantityCsv').addEventListener('click',()=>{
  const csv=quantityStatementCsv();
