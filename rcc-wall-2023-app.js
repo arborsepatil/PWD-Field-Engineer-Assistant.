@@ -159,9 +159,15 @@ project.addEventListener('input',refreshProject);
 $('rccBbsCsv').addEventListener('click',()=>{
  if(!selectedRow||!selectedSchedule)return;
  const csv=bbs.draftCsv(project.value.trim(),selectedRow,selectedSchedule,draftValues);
+ const filename='PWD_RCC_2023_BBS_'+selectedRow.sbc+'_'+selectedRow.heightM.toFixed(1)+'m.csv';
+ if(location.host==='appassets.androidplatform.net'){
+   // Origin-restricted Android handler presents ACTION_CREATE_DOCUMENT.
+   window.prompt('__PWD_ANDROID_CSV_EXPORT_V1__'+JSON.stringify({filename,content:csv}));
+   return;
+ }
  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
  const href=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=href;a.download='PWD_RCC_2023_BBS_'+selectedRow.sbc+'_'+selectedRow.heightM.toFixed(1)+'m.csv';
+ a.href=href;a.download=filename;
  document.body.appendChild(a);a.click();a.remove();
  setTimeout(()=>URL.revokeObjectURL(href),60000);
 });
