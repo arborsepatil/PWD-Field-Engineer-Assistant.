@@ -54,9 +54,10 @@ function render(){
   for(const entry of schedule.marks){
    const tr=document.createElement('tr');
    const mark=document.createElement('th');mark.scope='row';mark.textContent=entry.mark;
+   const loc=document.createElement('td');loc.textContent=entry.location;
    const dia=document.createElement('td');dia.textContent=entry.present?String(entry.diameterMm):'—';
    const spacing=document.createElement('td');spacing.textContent=entry.present?String(entry.spacingMm):'—';
-   tr.append(mark,dia,spacing);barBody.appendChild(tr);
+   tr.append(mark,loc,dia,spacing);barBody.appendChild(tr);
   }
   const omitted=schedule.marks.filter(item=>!item.present).length;
   $('rccRebarCount').textContent='11 marks checked against PWD 2023 sheet · '+(11-omitted)+' shown · '+omitted+' not shown (—).';
