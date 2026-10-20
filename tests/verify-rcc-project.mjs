@@ -108,9 +108,20 @@ for(const sbc of data.sbcs)for(const height of data.heightsFor(sbc)){
  const delta=Math.abs(areaM2-source.concreteM3);
  maxDeviation=Math.max(maxDeviation,delta);
  assert.ok(delta<=0.01,'Concrete section must reconcile source '+sbc+'/'+height+' by <=0.01 m³: '+delta);
+ // Stage 6: the source GAD stem and raft geometry must partition exactly.
+ const parts=section.componentAreasM2(source);
+ assert.ok(parts.raftCrossSectionM2>0&&parts.stemCrossSectionM2>0,'Both RCC sub-sections are positive');
+ assert.ok(Math.abs(parts.raftCrossSectionM2+parts.stemCrossSectionM2-areaM2)<1e-9,
+  'Raft + stem areas must reconstruct the source polygon for '+sbc+'/'+height);
+ assert.match(parts.raftMethod,/B×H/);
+ assert.match(parts.stemMethod,/E\+I/);
  const takeoff=section.quantityForLength(source,12.5);
  assert.equal(takeoff.lengthM,12.5);
  assert.ok(Math.abs(takeoff.concretePlanningM3-areaM2*12.5)<1e-9);
+ assert.ok(Math.abs(takeoff.raftConcretePlanningM3-parts.raftCrossSectionM2*12.5)<1e-9);
+ assert.ok(Math.abs(takeoff.stemConcretePlanningM3-parts.stemCrossSectionM2*12.5)<1e-9);
+ assert.ok(Math.abs(takeoff.raftConcretePlanningM3+takeoff.stemConcretePlanningM3-takeoff.concretePlanningM3)<1e-8,
+  'Raft + stem RCC volume must equal original RCC volume, not double count');
  assert.ok(Math.abs(takeoff.pccLevellingPlanningM3-(source.dimensionsMm.B/1000)*0.1*12.5)<1e-9);
  assert.equal(takeoff.sourceConcreteM3,source.concreteM3);
 }
@@ -119,6 +130,11 @@ const projectArea=section.crossSectionAreaM2(original);
 assert.ok(Math.abs(projectArea-2.4225)<1e-9);
 const planned=section.quantityForLength(original,12);
 assert.ok(Math.abs(planned.concretePlanningM3-29.07)<1e-9);
+const componentExample=section.componentAreasM2(original);
+assert.ok(Math.abs(componentExample.raftCrossSectionM2-1.0725)<1e-9);
+assert.ok(Math.abs(componentExample.stemCrossSectionM2-1.35)<1e-9);
+assert.ok(Math.abs(planned.raftConcretePlanningM3-12.87)<1e-9);
+assert.ok(Math.abs(planned.stemConcretePlanningM3-16.2)<1e-9);
 assert.ok(Math.abs(planned.pccLevellingPlanningM3-3.6)<1e-9);
 assert.equal(original.concreteM3,2.42,'Printed book table must not be replaced by geometry takeoff');
 assert.ok(planned.note.includes('PLANNING'));
@@ -127,10 +143,14 @@ for(const length of ['',0,-1,'negative',null,undefined,NaN,10001,Infinity])
 const takenCsv=bbs.draftCsv('Culvert Approach',original,schedule,{MK7:{count:10,cutLengthM:5.2}},planned);
 assert.ok(takenCsv.includes('GEOMETRY-BASED PLANNING QUANTITY'));
 assert.ok(takenCsv.includes('29.070'));
+assert.ok(takenCsv.includes('RAFT RCC volume'));
+assert.ok(takenCsv.includes('STEM RCC volume'));
+assert.ok(takenCsv.includes('12.870'));
+assert.ok(takenCsv.includes('16.200'));
 assert.ok(takenCsv.includes('3.600'));
 assert.ok(takenCsv.includes('per running metre basis inferred'));
 assert.ok(takenCsv.includes('No inferred project-length steel quantity'));
-for(const id of ['rccLength','rccGeometryTakeoff','rccPlanConcrete','rccPlanPcc','rccPlanArea','rccPlanBasis','rccPlanError'])
+for(const id of ['rccLength','rccGeometryTakeoff','rccPlanRaft','rccPlanStem','rccPlanConcrete','rccPlanPcc','rccPlanArea','rccPlanBasis','rccPlanError'])
  assert.ok(page.includes('id="'+id+'"'),'Missing RCC length takeoff UI '+id);
 assert.match(app,/section\.quantityForLength\(selectedRow/);
 assert.match(app,/rccLength.*addEventListener\('input',refreshGeometryQuantity\)/);
@@ -138,3 +158,5 @@ assert.match(app,/draftValues,planning\)/);
 assert.ok(!app.includes('row.steelKg*'),'Printed source steel MUST NOT be scaled by length');
 console.log('RCC Phase 5 checked 27 original-to-geometry concrete matches (max diff '+maxDeviation+' m³), optional length, separate PCC and steel boundaries.');
 console.log('RCC Phase 4 verified: 27 dimensioned cross-sections, optional project label, manual BBS mass, CSV injection guard, no false quantity scaling.');
+
+console.log('RCC Phase 6 checked: all 27 GAD raft + stem volumes partition exactly; project report and CSV include both concrete items without double counting.');
