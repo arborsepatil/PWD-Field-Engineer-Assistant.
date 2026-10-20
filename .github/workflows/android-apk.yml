@@ -48,12 +48,17 @@ jobs:
           gradle-version: '9.6.0'
       - name: Run existing engineering release tests
         run: node tests/verify-release.mjs
+      - name: Verify retaining wall construction-type navigation
+        run: node tests/verify-wall-hub.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
         run: python3 android/scripts/prepare_assets.py
       - name: Check APK has no PWA installation workflow or private PDFs
         run: |
+          test -f android/app/src/main/assets/www/pwd_retaining_walls.html
+          test -f android/app/src/main/assets/www/pwd_pcc_wall_reference.html
+          test -f android/app/src/main/assets/www/pwd_rcc_wall_reference.html
           test -f android/app/src/main/assets/www/pwd_retaining_wall_section_quantity.html
           test -f android/app/src/main/assets/www/pwd-wall-diagrams.js
           test -f android/app/src/main/assets/www/pwd_mix_batch_assistant.html

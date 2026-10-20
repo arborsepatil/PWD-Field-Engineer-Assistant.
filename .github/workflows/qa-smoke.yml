@@ -1,4 +1,4 @@
-name: PWD PWA Release Smoke Tests
+name: PWD Field Assistant Release Smoke Tests
 on:
   push:
     branches: [main]
@@ -16,4 +16,6 @@ jobs:
         with:
           node-version: '22'
       - name: Validate offline assets and reader/QC modules
-        run: node tests/verify-release.mjs
+        run: |
+          node tests/verify-release.mjs
+          node tests/verify-wall-hub.mjs
