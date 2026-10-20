@@ -14,7 +14,7 @@ select{width:100%;border:1px solid var(--line);border-radius:11px;background:var
 .statgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
 .stat{background:var(--soft);padding:12px;border-radius:12px}.stat span{font-size:12px;color:var(--muted);display:block}.stat strong{font-size:20px}
 table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}td:last-child{text-align:right;font-weight:750}th{background:var(--soft);font-size:12px}
-.tablegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}
+.tableWrap{max-width:100%;overflow-x:auto;margin:10px 0}.tableWrap th,.tableWrap td{text-align:left}.tableWrap td:last-child{text-align:right}.tableWrap td:nth-child(2){text-align:right}.tableWrap tr:nth-child(even){background:var(--soft)}.tablegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}
 .dim{padding:9px 10px;background:var(--soft);border:1px solid var(--line);border-radius:11px;display:flex;align-items:center;justify-content:space-between;gap:6px}
 .dim b{font-size:16px}.dim span{font-variant-numeric:tabular-nums}
 .action{display:block;border-radius:12px;padding:11px 12px;text-decoration:none;background:var(--accent);color:#fff;text-align:center;font-weight:800;min-height:44px}
@@ -23,7 +23,7 @@ table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:
 .note{border-left:3px solid var(--accent);background:var(--soft);padding:11px 13px;border-radius:10px;margin:12px 0;font-size:12px;color:var(--ink)}
 .note.warn{border-color:var(--amber);color:var(--ink);background:var(--soft)}
 .caption{font-size:12px;color:var(--muted)}
-#rccMismatch[hidden],#rccResult[hidden]{display:none}
+#rccMismatch[hidden],#rccResult[hidden],#rccRebarSection[hidden],#rccRebarUnavailable[hidden]{display:none}
 @media(max-width:620px){main{padding:12px 12px 100px}.statgrid{grid-template-columns:1fr}.links{grid-template-columns:1fr}h1{font-size:22px}}
 </style><link rel="stylesheet" href="./app-global.css"></head>
 <body><header><a href="./pwd_retaining_walls.html">‹ Retaining Walls</a><b>RCC · 2023</b></header>
@@ -41,6 +41,11 @@ table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:
 <h2>Dimensions A–I (mm)</h2>
 <p class="caption">Letter labels come directly from the 2023 general arrangement drawing. Do not interpret or rename the dimensions without viewing the original sheet.</p>
 <div class="tablegrid" id="rccDims"></div>
+<h2>Reinforcement marks MK1–MK11</h2>
+<p class="caption">Exactly as shown in the selected 2023 reinforcement table. Bar dia. in mm; spacing in mm centre-to-centre (C/C). A dash (—) means the source table has no entry for that mark and height.</p>
+<div class="tableWrap" id="rccRebarSection" hidden><table><thead><tr><th scope="col">Bar mark</th><th scope="col">Bar dia. (mm)</th><th scope="col">Spacing (mm C/C)</th></tr></thead><tbody id="rccRebarRows"></tbody></table><p class="caption" id="rccRebarCount" aria-live="polite"></p></div>
+<div class="note" id="rccRebarUnavailable" hidden>Reinforcement source data are unavailable or do not match the selected drawing. Open the original PDF sheet instead; do not assume reinforcement values.</div>
+<div class="note"><b>Source-table reference only:</b> mark diameter and spacing are not a bar-bending schedule. Cutting lengths, laps, hook/bend dimensions, layer positions and independent steel-weight calculations require the full approved reinforcement drawings and engineering checks.</div>
 <div class="links"><a id="rccDrawingLink" class="action" href="./pdf_viewer.html?doc=bridge2023&amp;page=210">Open selected original sheet ›</a><a class="action secondary" href="./pdf_viewer.html?doc=bridge2023&amp;page=209">View general arrangement (A–I) ›</a></div>
 <div class="note"><b>Original-table values only:</b> these are the quantities printed for the selected standard plan. The table does not explicitly identify a per-running-metre basis; automatic multiplication by site wall length is intentionally disabled pending confirmation. These values are not certified site quantities.</div>
 </section>
@@ -50,4 +55,4 @@ table{border-collapse:collapse;width:100%}td,th{padding:10px 12px;border-bottom:
 <div class="links"><a class="action secondary" href="./bridge_book_2023.html">Open 2023 bridge book index</a><a class="action secondary" href="./pwd_retaining_wall_section_quantity.html">Open separate PCC calculator</a></div>
 </section>
 </main>
-<script src="./rcc-wall-2023-data.js"></script><script src="./rcc-wall-2023-app.js"></script><script src="./app-shell.js"></script></body></html>
+<script src="./rcc-wall-2023-data.js"></script><script src="./rcc-wall-2023-rebar.js"></script><script src="./rcc-wall-2023-app.js"></script><script src="./app-shell.js"></script></body></html>
