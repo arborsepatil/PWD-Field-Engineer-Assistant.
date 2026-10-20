@@ -56,6 +56,8 @@ jobs:
         run: node tests/verify-rcc-project.mjs
       - name: Verify source-linked Steel Table V1
         run: node tests/verify-steel-table.mjs
+      - name: Verify Steel Table light/dark UX and mobile readability
+        run: node tests/verify-steel-ui.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
