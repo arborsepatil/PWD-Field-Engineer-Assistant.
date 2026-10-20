@@ -78,6 +78,7 @@ for(const id of ['rccProject','rccProjectTitle','rccDiagramViewport','rccDiagram
 for(const asset of ['rcc-wall-2023-section.js','rcc-wall-2023-bbs.js'])
  assert.ok(page.includes('src="./'+asset+'"'), 'Unlinked script '+asset);
 assert.ok(page.includes('pinch'));
+assert.ok(!page.includes('.links,.note.warn,'),'Source inconsistency warning must remain printable');
 assert.match(page,/Print \/ Save PDF/);
 assert.match(app,/section\.svg\(row\)/);
 assert.match(app,/PWDRCC2023BBS/);
@@ -85,6 +86,8 @@ assert.match(app,/cutLengthM/);
 assert.match(app,/setPointerCapture/);
 assert.match(app,/window\.print\(\)/);
 assert.match(app,/draftCsv/);
+assert.match(app,/__PWD_ANDROID_CSV_EXPORT_V1__/);
+assert.match(app,/appassets\.androidplatform\.net/);
 assert.ok(!/\b(projectName|siteLength)\s*\*\s*row\.(concreteM3|steelKg)/.test(app));
 assert.doesNotMatch(app,/auto[- ]?design|designApproval/i);
 assert.doesNotMatch(page,/masonry/i);
