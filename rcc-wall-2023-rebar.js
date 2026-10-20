@@ -423,6 +423,20 @@ const source={
   }
 };
 const marks=["MK1","MK2","MK3","MK4","MK5","MK6","MK7","MK8","MK9","MK10","MK11"];
+// GAD, p.209: paraphrased locations, not a derived cut-length or bending design.
+const markLocations={
+  "MK1": "Raft bottom · primary continuous bar",
+  "MK2": "Raft bottom · additional toe-side bar",
+  "MK3": "Raft bottom · distribution bar",
+  "MK4": "Raft top · primary continuous bar",
+  "MK5": "Raft top · additional heel-side bar",
+  "MK6": "Raft top · distribution bar",
+  "MK7": "Stem · earth face · primary continuous bar",
+  "MK8": "Stem · earth face · additional bar",
+  "MK9": "Stem · non-earth face · primary continuous bar",
+  "MK10": "Stem · earth face · distribution bar",
+  "MK11": "Stem · non-earth face · distribution bar"
+};
 function reinforcementFor(sbc,height){
   if(height===''||height===null||height===undefined)return null;
   const key=String(sbc);
@@ -434,9 +448,9 @@ function reinforcementFor(sbc,height){
   if(i<0)return null; // Only exact type-plan rows.
   const bars=marks.map(mark=>{
     const code=group.marks[mark][i];
-    if(code==='—')return Object.freeze({mark,present:false,diameterMm:null,spacingMm:null});
+    if(code==='—')return Object.freeze({mark,location:markLocations[mark],present:false,diameterMm:null,spacingMm:null});
     const [diameterMm,spacingMm]=code.split('@').map(Number);
-    return Object.freeze({mark,present:true,diameterMm,spacingMm});
+    return Object.freeze({mark,location:markLocations[mark],present:true,diameterMm,spacingMm});
   });
   return Object.freeze({
     sbc:Number(sbc),heightM:n,pdfPage:group.page,
