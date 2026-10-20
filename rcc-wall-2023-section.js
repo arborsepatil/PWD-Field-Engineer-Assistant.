@@ -86,18 +86,43 @@ function crossSectionAreaM2(record){
  if(!(area>0)&&Number.isFinite(area))throw Error('Invalid RCC cross-section.');
  return area;
 }
+/* Break the same GAD polygon into non-overlapping RCC regions.
+ * - Raft: full bottom rectangle B×H, plus linear top thickening from H to G
+ *   across F (heel) and D (toe), plus E×(G-H) below the stem.
+ * - Stem: taper from base width E at level G to top width I at level A.
+ * Each component's section area is explicitly independent of site length.
+ */
+function componentAreasM2(record){
+ const d=geometry(record);
+ const raftAreaMm2=d.B*d.H+(d.G-d.H)*(d.F+d.D)/2+d.E*(d.G-d.H);
+ const stemAreaMm2=(d.E+d.I)/2*(d.A-d.G);
+ const raftM2=raftAreaMm2/1e6,stemM2=stemAreaMm2/1e6;
+ const full=crossSectionAreaM2(record);
+ if(!(raftM2>0&&stemM2>0))throw Error('Negative or zero raft/stem cross-section.');
+ if(Math.abs(raftM2+stemM2-full)>1e-8)
+   throw Error('Raft and stem breakup does not reconcile the GAD polygon.');
+ return Object.freeze({
+   raftCrossSectionM2:raftM2,stemCrossSectionM2:stemM2,totalCrossSectionM2:full,
+   raftMethod:'B×H + (G−H)×(F+D)/2 + E×(G−H), dimensions in mm; convert mm² to m²',
+   stemMethod:'(E+I)/2 × (A−G), dimensions in mm; convert mm² to m²',
+   note:'Geometry-based component separation, not a separate source quantity table.'
+ });
+}
 function quantityForLength(record,lengthM){
  if(lengthM===''||lengthM===null||lengthM===undefined)throw Error('Wall length is required for geometry takeoff.');
  const length=Number(lengthM);
  if(!Number.isFinite(length)||length<0.01||length>10000)
   throw Error('Wall length must be 0.01 to 10,000 m.');
- const d=geometry(record),areaM2=crossSectionAreaM2(record);
+ const d=geometry(record),components=componentAreasM2(record),areaM2=components.totalCrossSectionM2;
  const diffM3PerM=Math.abs(areaM2-record.concreteM3);
  if(!Number.isFinite(record.concreteM3)||diffM3PerM>0.01)
   throw Error('Source drawing geometry does not reconcile to the printed concrete table.');
  return Object.freeze({
   lengthM:length,crossSectionAreaM2:areaM2,sourceConcreteM3:record.concreteM3,
   sourceDifferenceM3PerM:diffM3PerM,concretePlanningM3:areaM2*length,
+  raftCrossSectionM2:components.raftCrossSectionM2,stemCrossSectionM2:components.stemCrossSectionM2,
+  raftConcretePlanningM3:components.raftCrossSectionM2*length,
+  stemConcretePlanningM3:components.stemCrossSectionM2*length,
   // GAD 151-1/4 shows 100 mm PCC M15 levelling on full footing width B.
   // Unlike structural RCC, this separate levelling-layer quantity is derived.
   pccLevellingWidthM:d.B/1000,pccLevellingThicknessM:d.pccThicknessMm/1000,
@@ -105,7 +130,7 @@ function quantityForLength(record,lengthM){
   note:'GEOMETRIC PLANNING TAKEOFF; not source-certified site measurement or RCC steel calculation'
  });
 }
-const api=Object.freeze({geometry,svg,crossSectionAreaM2,quantityForLength});
+const api=Object.freeze({geometry,svg,crossSectionAreaM2,componentAreasM2,quantityForLength});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDRCC2023Section=api;
 })(typeof window!=='undefined'?window:globalThis);
