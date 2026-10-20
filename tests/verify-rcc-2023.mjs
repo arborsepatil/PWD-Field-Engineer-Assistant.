@@ -92,6 +92,7 @@ for(const sbc of api.sbcs){
   assert.equal(schedule.heightM,row.heightM);
   assert.equal(schedule.sbc,row.sbc);
   assert.equal(schedule.marks.length,11);
+  assert.ok(schedule.marks.every(m=>typeof m.location==='string'&&m.location.length>12),'Missing GAD mark location');
   for(const mark of schedule.marks){
    cells++;
    if(mark.present){
@@ -109,6 +110,10 @@ assert.equal(cells,297);
 assert.equal(notShown,10,'Original MK2/MK8 absent cells must remain dashes');
 const mk=(sbc,height,name)=>rebar.reinforcementFor(sbc,height).marks.find(x=>x.mark===name);
 assert.equal(mk(10,2,'MK2').present,false);
+assert.match(mk(10,2,'MK1').location,/Raft bottom/);
+assert.match(mk(10,2,'MK2').location,/toe-side/);
+assert.match(mk(15,6.5,'MK5').location,/heel-side/);
+assert.match(mk(25,8,'MK11').location,/non-earth face/);
 assert.equal(mk(10,3,'MK8').diameterMm,10);
 assert.equal(mk(10,4,'MK7').diameterMm,12);
 assert.equal(mk(15,2.5,'MK7').spacingMm,150);
