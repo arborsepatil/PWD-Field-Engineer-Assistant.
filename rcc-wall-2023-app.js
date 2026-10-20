@@ -200,7 +200,12 @@ $('rccLength').addEventListener('input',refreshGeometryQuantity);
 project.addEventListener('change',render); // Switch BBS draft context when project name changes.
 $('rccBbsCsv').addEventListener('click',()=>{
  if(!selectedRow||!selectedSchedule)return;
- const csv=bbs.draftCsv(project.value.trim(),selectedRow,selectedSchedule,draftValues);
+ let planning=null;
+ if($('rccLength').value!==''){
+  try{planning=section.quantityForLength(selectedRow,$('rccLength').value);}
+  catch(_e){ /* Invalid project length is reported on-screen; export BBS alone. */ }
+ }
+ const csv=bbs.draftCsv(project.value.trim(),selectedRow,selectedSchedule,draftValues,planning);
  const filename='PWD_RCC_2023_BBS_'+selectedRow.sbc+'_'+selectedRow.heightM.toFixed(1)+'m.csv';
  if(location.host==='appassets.androidplatform.net'){
    // Origin-restricted Android handler presents ACTION_CREATE_DOCUMENT.
