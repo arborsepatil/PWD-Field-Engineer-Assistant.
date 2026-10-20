@@ -2,6 +2,43 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table V1 — offline, source-attributed manufacturer data
+
+**Navigation:** Home → Site Tools → Steel Table. Included as local HTML/JavaScript
+assets inside the installable Android APK; also cached for the optional browser demo.
+
+**Released V1 scope**
+- Search/filter **5 SAIL medium beams**, **6 SAIL medium channels** (source:
+  [SAIL Product Range, 2023-09](https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf)).
+- Display published mass (kg/m) and overall dimensions. Four medium beam rows
+  additionally have source-reported area, Izz, Iyy, Zzz and Zyy from the
+  [SAIL 2023 tapered flange brochure](https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf).
+- **Eight equal-angle records are strictly marked ARCHIVED (SAIL 2020)**, not
+  current-edition verified tables; do not use them as current BIS/availability
+  claims. [Original SAIL archived source](https://www.sail.co.in/sites/default/files/product-brochure/2020-03/Structurals.pdf).
+- Calculate quantity from published kg/m × entered length × integer number of
+  pieces, with an optional user-entered ₹/kg rate.
+- Separate **theoretical geometry** for plate/flat/round/square solid bar:
+  cross-section area × length × **assumed steel density 7850 kg/m³**. These
+  outputs never masquerade as BIS nominal masses. No fabricated hollow-profile
+  gauges or current tubular section masses are in the V1 dataset.
+- Export a source-labelled **draft material quantity CSV** (Android native
+  document picker supported), and print using Android print/PDF.
+- Every published catalogue entry stores manufacturer, URL, publication month,
+  applicable type standard and status. The applicability of **IS 808:2021**
+  and the existence of **IS 2062 (Part 1):2025** were checked via BIS; **this is
+  NOT a licensed reproduction or row-by-row official BIS table verification**.
+  Do not infer suitability, design strength, present rolling availability or
+  field acceptance from catalogue values. Use current approved drawings/MTC.
+- Strictly separated from RCC retaining-wall MK source references and the
+  postponed bar-bending/cutting-length module.
+
+**Remaining**: licensed/current BIS numeric row verification for full IS 808
+catalogue; new verified hollow sections under applicable amended standards;
+more section properties and manufacturer source updates. No online background
+update occurs in the V1 APK: source dates remain visible until a reviewed build
+replaces the versioned dataset.
+
 ## Final delivery decision (19 October 2026)
 
 **Android APK is the required end product.** The Chrome installable PWA is **not** the final release. The new `android/` project bundles existing tested civil-engineering screens into an actual Android app, with Android launcher, private local-file picker, and system print integration. This is initially a **Java Android shell containing WebView-based engineering screens**, not yet a fully rewritten native UI. See [Android build and limitations](android/README.md).
