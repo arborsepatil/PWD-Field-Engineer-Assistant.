@@ -14,29 +14,29 @@ const SOURCES=Object.freeze({
 });
 const beam=(designation,depthMm,widthMm,kgPerM,extra={})=>({id:designation.replaceAll(' ',''),family:'beam',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)',...extra});
 const channel=(designation,depthMm,widthMm,kgPerM)=>({id:designation.replaceAll(' ',''),family:'channel',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)'});
-const angle=(legMm,thickMm,kgPerM)=>({id:'ISA'+legMm+'x'+legMm+'x'+thickMm,family:'angle',designation:'ISA '+legMm+'×'+legMm+'×'+thickMm,depthMm:legMm,widthMm:legMm,thicknessMm:thickMm,kgPerM,sourceId:'sail2020',basis:'archived-manufacturer-only',standard:'IS 808:2021 row not yet cross-checked'});
+const angle=(legMm,thickMm,kgPerM,sourceId='sail2020')=>({id:'ISA'+legMm+'x'+legMm+'x'+thickMm,family:'angle',designation:'ISA '+legMm+'×'+legMm+'×'+thickMm,depthMm:legMm,widthMm:legMm,thicknessMm:thickMm,kgPerM,sourceId,basis:sourceId==='sail2020'?'archived-manufacturer-only':'manufacturer-published',standard:'IS 808:2021 (standard applicability only)'});
 const rows=[
- beam('ISMB 100',100,50,8.95,{areaCm2:11.4,ixCm4:182,iyCm4:12.5,zxCm3:36.4,zyCm3:5.01,webMm:4.7,flangeMm:7,sourceId:'sailProps2023'}),
- beam('ISMB 150',150,75,14.96,{areaCm2:19.0,ixCm4:718,iyCm4:46.7,zxCm3:95.7,zyCm3:12.4,webMm:5,flangeMm:8,sourceId:'sailProps2023'}),
- beam('ISMB 200',200,100,24.17),
- beam('ISMB 250',250,125,37.30,{areaCm2:47.5,ixCm4:5130,iyCm4:334,zxCm3:410,zyCm3:53.5,webMm:6.9,flangeMm:12.5,sourceId:'sailProps2023'}),
- beam('ISMB 300',300,140,46.02,{areaCm2:58.6,ixCm4:8990,iyCm4:486,zxCm3:599,zyCm3:69.4,webMm:7.7,flangeMm:13.1,sourceId:'sailProps2023'}),
+ beam('ISMB 100',100,50,8.95,{areaCm2:11.4,ixCm4:182,iyCm4:12.5,zxCm3:36.4,zyCm3:5.01,webMm:4.7,flangeMm:7,flangeSlopeDeg:98,rootRadiusMm:9,toeRadiusMm:4.5,sourceId:'sailProps2023'}),
+ beam('ISMB 150',150,75,14.96,{areaCm2:19.0,ixCm4:718,iyCm4:46.7,zxCm3:95.7,zyCm3:12.4,webMm:5,flangeMm:8,flangeSlopeDeg:98,rootRadiusMm:9,toeRadiusMm:4.5,sourceId:'sailProps2023'}),
+ beam('ISMB 200',200,100,24.17,{areaCm2:30.8,ixCm4:2110,iyCm4:136,zxCm3:211,zyCm3:27.3,webMm:5.7,flangeMm:10,flangeSlopeDeg:98,rootRadiusMm:11,toeRadiusMm:5.5,sourceId:'sailProps2023'}),
+ beam('ISMB 250',250,125,37.30,{areaCm2:47.5,ixCm4:5130,iyCm4:334,zxCm3:410,zyCm3:53.5,webMm:6.9,flangeMm:12.5,flangeSlopeDeg:98,rootRadiusMm:13,toeRadiusMm:6.5,sourceId:'sailProps2023'}),
+ beam('ISMB 300',300,140,46.02,{areaCm2:58.6,ixCm4:8990,iyCm4:486,zxCm3:599,zyCm3:69.4,webMm:7.7,flangeMm:13.1,flangeSlopeDeg:98,rootRadiusMm:14,toeRadiusMm:7,sourceId:'sailProps2023'}),
  channel('ISMC 75',75,40,7.14),
  channel('ISMC 100',100,50,9.56),
  channel('ISMC 125',125,65,13.10),
  channel('ISMC 150',150,75,16.80),
  channel('ISMC 200',200,75,22.30),
  channel('ISMC 250',250,82,34.20),
- angle(90,6,8.2),angle(90,8,10.8),
- angle(100,6,9.2),angle(100,8,12.1),
+ angle(90,6,8.32,'sail2023'),angle(90,8,10.92,'sail2023'),
+ angle(100,6,9.26,'sail2023'),angle(100,8,12.18,'sail2023'),
  angle(110,8,13.4),angle(130,10,19.7),
- angle(150,10,22.9),angle(200,12,36.8)
+ angle(150,10,22.93,'sail2023'),angle(200,12,36.85,'sail2023')
 ].map(row=>Object.freeze(row));
 const sections=Object.freeze(rows);
 const categories=Object.freeze([
  Object.freeze({id:'beam',label:'Beams',description:'SAIL-published Indian medium beams'}),
  Object.freeze({id:'channel',label:'Channels',description:'SAIL-published Indian medium channels'}),
- Object.freeze({id:'angle',label:'Angles',description:'Archived manufacturer rows; current-edition values still pending validation'}),
+ Object.freeze({id:'angle',label:'Angles',description:'2023 SAIL weights where available; unmatched sizes kept as 2020 archive'}),
  Object.freeze({id:'calculated',label:'Plates & bars',description:'User-dimensioned geometric mass, not a BIS section row'})
 ]);
 const codeReferences=Object.freeze([
