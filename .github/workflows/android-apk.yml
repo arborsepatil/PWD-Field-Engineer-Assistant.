@@ -81,6 +81,8 @@ jobs:
         run: node tests/verify-steel-ux.mjs
       - name: Validate Osdag source records and mass-area safety
         run: node tests/verify-steel-osdag.mjs
+      - name: Verify SAIL 2023 range and full catalogue paging
+        run: node tests/verify-steel-sail-range.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
