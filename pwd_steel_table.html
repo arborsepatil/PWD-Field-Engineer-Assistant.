@@ -42,15 +42,17 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
   <p id="noResults" class="warning" hidden>No data for this size yet. See Data sources for the current audit status.</p>
  </div>
  <div id="customDetails" hidden>
-  <div class="field"><label for="steelCustomShape">Shape</label><select id="steelCustomShape"><option value="plate">Plate / strip</option><option value="flat">Flat bar</option><option value="round">Round bar</option><option value="square">Square bar</option></select></div>
+  <div class="field"><label for="steelCustomShape">Shape</label><select id="steelCustomShape"><option value="plate">Plate / strip</option><option value="flat">Flat bar</option><option value="round">Round bar</option><option value="square">Square bar</option><option value="hollow-shs">Custom SHS · approximate</option><option value="hollow-rhs">Custom RHS · approximate</option><option value="hollow-chs">Custom CHS · theoretical</option></select></div>
   <div class="grid" style="margin-top:10px">
    <div class="field" id="steelWidthField"><label for="steelWidth">Width (mm)</label><input id="steelWidth" type="number" min="0.1" step="any" value="100"></div>
    <div class="field" id="steelThickField"><label for="steelThickness">Thickness (mm)</label><input id="steelThickness" type="number" min="0.1" step="any" value="10"></div>
    <div class="field" id="steelDiameterField" hidden><label for="steelDiameter">Diameter (mm)</label><input id="steelDiameter" type="number" min="0.1" step="any" value="12"></div>
    <div class="field" id="steelSideField" hidden><label for="steelSide">Side (mm)</label><input id="steelSide" type="number" min="0.1" step="any" value="20"></div>
+   <div class="field" id="steelHeightField" hidden><label for="steelHeight">Outer depth (mm)</label><input id="steelHeight" type="number" min="0.1" step="any" value="80"></div>
   </div>
+  <p class="small" id="steelCustomCaution">Custom hollow weights ignore rolled corner radii; do not use as IS 4923/IS 1161 table weights.</p>
  </div>
- <div id="steelPicked" class="selected" hidden aria-live="polite"><strong id="steelPickedName"></strong><span id="steelPickedStatus"></span></div>
+ <div id="steelPicked" class="selected" hidden aria-live="polite"><strong id="steelPickedName"></strong><span id="steelPickedStatus"></span></div><p id="steelWeightConflict" class="warning" hidden>Different manufacturer editions give different mass values for this same nominal size. Check source and approved drawing.</p>
 </section>
 <section class="card" aria-label="Steel quantity calculator">
  <h2>Quantity</h2>
@@ -88,7 +90,7 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 </details>
 <details class="details" id="steelStandardsDisclosure">
  <summary>Data sources & limitations</summary>
- <div class="inside"><p class="small">SAIL 2023 beam/channel data; angle entries use older 2020 records. Check the latest approved tables and material certificates before procurement or design. Plate and solid-bar weights use an assumed density of 7,850 kg/m³.</p><div id="steelStandards"></div><p class="small">Quantity aid only. Not a structural design or RCC bar-bending schedule.</p></div>
+ <div class="inside"><p class="small">IS 808:2021 section types; limited SAIL 2023 and secondary examples. Hollow weights use archived Tata or secondary data, NOT a fully BIS-amended table. Verify current approved tables and MTC for site use.</p><div id="steelStandards"></div><p class="small">Custom hollow mass is theoretical only; rectangular corners are simplified. No structural design or RCC BBS.</p></div>
 </details>
 <footer>Selected reference rows · Full IS 808 table audit pending</footer>
 </main><script src="./pwd-steel-catalog.js"></script><script src="./pwd-steel-core.js"></script><script src="./pwd-steel-app.js"></script><script src="./app-shell.js"></script></body></html>
