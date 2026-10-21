@@ -12,7 +12,7 @@ label{display:block;font-size:.79rem;font-weight:720;margin-bottom:5px}input,sel
 input::placeholder{color:var(--muted);opacity:.83}
 input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.three{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field{min-width:0}.field.rate{grid-column:1/-1}
-.tabs{display:flex;gap:7px;overflow-x:auto;padding:1px 0 13px;scrollbar-width:thin}.tabs button{border:1px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink);padding:9px 13px;white-space:nowrap;min-height:44px;font-size:.84rem;font-weight:750;cursor:pointer}.tabs button[aria-pressed=true]{background:var(--btn);color:var(--btnText);border-color:var(--btn)}
+#steelSeriesField{margin:-2px 0 11px}#steelSeriesField select{min-height:44px;background:var(--card);color:var(--ink);border:1px solid var(--line)}.tabs{display:flex;gap:7px;overflow-x:auto;padding:1px 0 13px;scrollbar-width:thin}.tabs button{border:1px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink);padding:9px 13px;white-space:nowrap;min-height:44px;font-size:.84rem;font-weight:750;cursor:pointer}.tabs button[aria-pressed=true]{background:var(--btn);color:var(--btnText);border-color:var(--btn)}
 .results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;max-height:198px;overflow:auto;overscroll-behavior:contain;padding:1px}.pick{text-align:left;border:1px solid var(--line);padding:11px;border-radius:11px;background:var(--card);color:var(--ink);cursor:pointer;min-height:62px}.pick b,.pick span{display:block}.pick b{font-size:.9rem}.pick span{font-size:.75rem;color:var(--muted);margin-top:3px}.pick[aria-pressed=true]{border-color:var(--accent);background:var(--soft);box-shadow:inset 3px 0 var(--accent)}
 .tag{display:inline-flex;background:var(--soft);border:1px solid var(--line);color:var(--ink);padding:4px 9px;border-radius:100px;font-size:.73rem;font-weight:700}.warning{background:var(--warnBg);color:var(--warn);border-left:3px solid var(--warn);padding:9px 11px;border-radius:9px;font-size:.8rem;margin-top:10px}
 .selected{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;padding:11px 12px;border-radius:11px;background:var(--soft)}.selected strong{font-size:1rem}.selected span{font-size:.74rem;color:var(--muted)}
@@ -33,12 +33,13 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 <section class="card" id="searchCard">
  <div class="titlebar"><div><div class="eyebrow">PWD Field Assistant</div><h1>Steel Table</h1></div><span class="tag">Offline</span></div>
  <div class="tabs" id="steelFamilies" aria-label="Section types"></div>
+ <div class="field" id="steelSeriesField"><label for="steelSeries">Section series</label><select id="steelSeries" aria-label="Choose Indian steel section series"></select></div>
  <div id="catalogDetails">
   <label id="steelSearchLabel" for="steelSearch">Find section</label>
   <input id="steelSearch" type="search" placeholder="Search ISMB, ISMC, ISA…" autocomplete="off">
   <p class="small hide-print" id="steelCount" aria-live="polite"></p>
   <div class="results" id="steelResults" aria-label="Select steel section"></div>
-  <p id="noResults" class="warning" hidden>No matching section in this dataset.</p>
+  <p id="noResults" class="warning" hidden>No data for this size yet. See Data sources for the current audit status.</p>
  </div>
  <div id="customDetails" hidden>
   <div class="field"><label for="steelCustomShape">Shape</label><select id="steelCustomShape"><option value="plate">Plate / strip</option><option value="flat">Flat bar</option><option value="round">Round bar</option><option value="square">Square bar</option></select></div>
@@ -89,5 +90,5 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
  <summary>Data sources & limitations</summary>
  <div class="inside"><p class="small">SAIL 2023 beam/channel data; angle entries use older 2020 records. Check the latest approved tables and material certificates before procurement or design. Plate and solid-bar weights use an assumed density of 7,850 kg/m³.</p><div id="steelStandards"></div><p class="small">Quantity aid only. Not a structural design or RCC bar-bending schedule.</p></div>
 </details>
-<footer>Source-labelled material estimates · No structural design</footer>
+<footer>Selected reference rows · Full IS 808 table audit pending</footer>
 </main><script src="./pwd-steel-catalog.js"></script><script src="./pwd-steel-core.js"></script><script src="./pwd-steel-app.js"></script><script src="./app-shell.js"></script></body></html>

@@ -15,10 +15,10 @@ const catalog=load('pwd-steel-catalog.js'),math=load('pwd-steel-core.js');
 const ui=read('pwd_steel_table.html'),app=read('pwd-steel-app.js'),
  home=read('index.html'),cache=read('sw.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
-assert.equal(catalog.sections.length,19,'No silent addition of unverified catalogue data');
-assert.equal(catalog.sections.filter(x=>x.family==='beam').length,5);
-assert.equal(catalog.sections.filter(x=>x.family==='channel').length,6);
-assert.equal(catalog.sections.filter(x=>x.family==='angle').length,8);
+assert.equal(catalog.sections.length,33,'Curated reference rows must remain controlled');
+assert.equal(catalog.sections.filter(x=>x.family==='beam').length,11);
+assert.equal(catalog.sections.filter(x=>x.family==='channel').length,9);
+assert.equal(catalog.sections.filter(x=>x.family==='angle').length,10);
 assert.equal(catalog.byId('ISMB300').kgPerM,46.02);
 assert.equal(catalog.byId('ISMC150').kgPerM,16.8);
 assert.equal(catalog.byId('ISA100x100x8').kgPerM,12.1);
@@ -29,7 +29,7 @@ assert.equal(catalog.byId('ISMB300').webMm,7.7);
 assert.equal(catalog.byId('ISMB150').zxCm3,95.7);
 assert.equal(catalog.search('ismb 300')[0].designation,'ISMB 300');
 assert.equal(catalog.search('ISMC','channel').length,6);
-assert.equal(catalog.search('ISA','angle').length,8);
+assert.equal(catalog.search('ISA','angle').length,10);
 assert.equal(catalog.search('unknown designation').length,0);
 for(const s of catalog.sections){
  assert.ok(s.kgPerM>0&&Number.isFinite(s.kgPerM));
@@ -37,9 +37,41 @@ for(const s of catalog.sections){
  assert.ok(catalog.SOURCES[s.sourceId],'Every section needs actual manufacturer reference');
  assert.match(catalog.SOURCES[s.sourceId].url,/^https:\/\//);
  assert.ok(s.standard.includes('IS 808:2021'),'State scope/version, not direct BIS table certification');
- if(s.family==='angle')assert.equal(s.basis,'archived-manufacturer-only');
- else assert.equal(s.basis,'manufacturer-published');
+ if(s.basis==='archived-manufacturer-only')assert.equal(s.family,'angle');
+ else assert.ok(['manufacturer-published','secondary-unverified'].includes(s.basis));
 }
+// IS 808:2021 CLASSIFICATION completeness; aliases must resolve against real
+// rows, never synthesized masses or phantom sizes.
+const names=['JB','LB','MB','WB','NPB','WPB','SC','HB','JC','LC','MC','MPC','EQ','UE','PBP'];
+assert.equal(catalog.SERIES.length,names.length);
+for(const series of names){
+ assert.ok(catalog.SERIES.some(s=>s.id===series),'Section classification missing: '+series);
+ assert.ok(catalog.sections.some(x=>catalog.resolveSeries(x)===series),'Missing attributed sample for '+series);
+}
+assert.equal(catalog.search('ISHB 200','column')[0].designation,'HB 200');
+assert.equal(catalog.search('ISSC 100','column')[0].designation,'SC 100');
+assert.equal(catalog.search('ISLB 200','beam')[0].designation,'LB 200');
+assert.equal(catalog.search('ISWB 150','beam')[0].designation,'WB 150');
+assert.equal(catalog.search('ISJC 100','channel')[0].designation,'JC 100');
+assert.equal(catalog.search('ISMCP 150','channel')[0].designation,'MPC 150');
+assert.equal(catalog.search('PBP 200','pile')[0].kgPerM,43.85);
+assert.ok(catalog.search('100x50x8','angle').length>=1,'Unequal angle must be searchable');
+assert.equal(catalog.search('HB 999','column').length,0,'Never invent missing weights');
+assert.equal(catalog.search('HB 200','column','SC').length,0,'Series filter must stay exact');
+assert.equal(catalog.search('HB 200','column','HB').length,1,'Heavy beam series filter');
+assert.equal(catalog.availableSeries('beam').length,6);
+assert.equal(catalog.availableSeries('column').length,2);
+assert.equal(catalog.availableSeries('channel').length,4);
+assert.equal(catalog.availableSeries('angle').length,2);
+assert.equal(catalog.availableSeries('pile').length,1);
+for(const row of catalog.sections.filter(x=>x.basis==='secondary-unverified')){
+ assert.match(row.sourceUrl,/^https:\/\/quickboq\.in\/steel\/tables\//);
+ assert.ok(row.series && names.includes(row.series));
+ assert.ok(row.standard.includes('BIS row not certified'));
+}
+// Missing edition-level source verification must remain explicit.
+assert.match(app,/Secondary · needs BIS audit/);
+assert.match(ui,/id="steelSeries"/);
 const q=math.quantity(catalog.byId('ISMB300'),6,8,70);
 assert.ok(Math.abs(q.totalMassKg-46.02*48)<1e-9);
 assert.ok(Math.abs(q.totalTonnes-2.20896)<1e-9);
@@ -76,4 +108,4 @@ assert.doesNotMatch(app,/barBending|cuttingLength|rccWallBBS|autoStructuralDesig
 assert.ok(!ui.includes('https://fonts.googleapis.com'),'No remote fonts needed for offline use');
 assert.ok(!ui.includes('<iframe'),'Do not load untrusted third party app frames');
 assert.ok(!ui.includes('Steel Table-1.4.3.apk'),'Never bundle user-provided third party APK');
-console.log('Steel Table V1 QA passed: 19 source-linked manufacturer records, archived-angle warnings, weight/price arithmetic, 4 geometric shapes, offline APK wiring and no BBS.');
+console.log('Steel Table V2 QA passed: 19 original records plus 14 source-attributed review rows, all IS 808 families, safe geometry/weights, offline APK and no BBS.');

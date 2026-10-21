@@ -15,7 +15,7 @@ function shapeSvg(type,data={}){
  // Section diagrams use CSS tokens so white backgrounds never glare in dark mode.
  let body='',info='';
  const n=v=>Number(v).toLocaleString('en-IN');
- if(type==='beam'){
+ if(type==='beam'||type==='column'||type==='pile'){
   body='<path d="M138 42H342V77H261V210H342V245H138V210H219V77H138Z" />';
   info='Depth D = '+n(data.depthMm)+' mm · Flange B = '+n(data.widthMm)+' mm';
  }else if(type==='channel'){
@@ -44,6 +44,7 @@ function shapeSvg(type,data={}){
 }
 function setFamily(next){
  family=next;selected=null;last=null;lastEntry=null;
+ updateSeries();
  for(const button of $('steelFamilies').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.family===next));
  const custom=next==='calculated';
  $('catalogDetails').hidden=custom;$('customDetails').hidden=!custom;
@@ -63,11 +64,24 @@ function setFamily(next){
  updateSelectedSummary();
  updateResult();
 }
+function updateSeries(){
+ const select=$('steelSeries');
+ select.replaceChildren();
+ const options=[{id:'all',label:'All series'},...catalog.availableSeries(family)];
+ for(const series of options){
+  const option=document.createElement('option');
+  option.value=series.id;
+  option.textContent=series.label;
+  select.append(option);
+ }
+ $('steelSeriesField').hidden=family==='calculated';
+ select.value='all';
+}
 function updateSelectedSummary(){
  const custom=family==='calculated';
  $('steelPicked').hidden=!custom&&!selected;
  $('steelPickedName').textContent=custom?$('steelCustomShape').selectedOptions[0].textContent:selected?.designation||'';
- $('steelPickedStatus').textContent=custom?'Theoretical weight':selected?.basis==='archived-manufacturer-only'?'Archive · verify latest':'SAIL 2023';
+ $('steelPickedStatus').textContent=custom?'Theoretical weight':selected?.basis==='archived-manufacturer-only'?'Archive · verify latest':selected?.basis==='secondary-unverified'?'Secondary · check BIS row':'SAIL 2023';
 }
 function makeFamilyButtons(){
  for(const cat of catalog.categories){
@@ -78,16 +92,17 @@ function makeFamilyButtons(){
  }
 }
 function renderRows(){
- const rows=catalog.search($('steelSearch').value,family);
+ const rows=catalog.search($('steelSearch').value,family,$('steelSeries').value||'all');
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
  const root=$('steelResults');root.replaceChildren();
  $('noResults').hidden=rows.length!==0;
- $('steelCount').textContent=rows.length+' sections';
+ $('steelCount').textContent=rows.length+' reference entries · full IS 808 size audit pending';
  for(const row of rows){
   const btn=document.createElement('button');btn.className='pick';btn.type='button';
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
   const name=document.createElement('b');name.textContent=row.designation;
-  const subtitle=document.createElement('span');subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(row.basis==='archived-manufacturer-only'?' · Archive':'');
+  const subtitle=document.createElement('span');
+  subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(row.basis==='archived-manufacturer-only'?' · Archive':row.basis==='secondary-unverified'?' · 2021 secondary':'');
   btn.append(name,subtitle);
   btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
   root.append(btn);
@@ -121,15 +136,16 @@ function renderDetail(){
  const src=source(selected.sourceId);
  $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
  $('steelTitle').textContent=selected.designation;
- $('steelStatus').textContent=selected.basis==='archived-manufacturer-only'?'Archived · requires latest check':'SAIL published · 2023';
+ $('steelStatus').textContent=selected.basis==='archived-manufacturer-only'?'Archive · 2020':selected.basis==='secondary-unverified'?'Secondary · needs BIS audit':'SAIL published · 2023';
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
  $('steelDataCaution').textContent=selected.basis==='archived-manufacturer-only'?
   'Archived 2020 data · verify against the latest standard before procurement.':
+  selected.basis==='secondary-unverified'?'Secondary 2021 reference, NOT independently checked against the authoritative BIS numeric row.':
   'SAIL 2023 · not independently checked against current BIS rows.';
- const a=$('steelSource');a.href=src.url;a.textContent=src.label;
- $('steelSourceDate').textContent=src.date+' · Manufacturer source, not official BIS certification';
+ const a=$('steelSource');a.href=selected.sourceUrl||src.url;a.textContent=src.label;
+ $('steelSourceDate').textContent=src.date+' · Reference value; check the current official standard and MTC';
  $('sourceLinks').hidden=false;
 }
 function updateCustomInputs(){
@@ -153,7 +169,7 @@ function calculate(){
  }
  if(!selected)throw Error('Choose a steel section from the search results.');
  const q=math.quantity(selected,L,N,rate),src=source(selected.sourceId);
- return {q,entry:{...selected,sourceLabel:src.label,sourceDate:src.date,sourceStatus:selected.basis}};
+ return {q,entry:{...selected,sourceLabel:src.label+' · '+(selected.sourceUrl||src.url),sourceDate:src.date,sourceStatus:selected.basis}};
 }
 function updateResult(){
  try{
@@ -198,7 +214,20 @@ function showStandards(){
  }
 }
 makeFamilyButtons();showStandards();
-$('steelSearch').addEventListener('input',()=>{renderRows();renderDetail();updateSelectedSummary();updateResult();});
+$('steelSearch').addEventListener('input',()=>{
+ const input=$('steelSearch').value.trim().toUpperCase();
+ const prefix=input.match(/^(?:IS)?(JB|LB|MB|WB|NPB|WPB|SC|HB|JC|LC|MC|MPC|MCP|PBP)\b/);
+ if(prefix){
+  const canonical=prefix[1]==='MCP'?'MPC':prefix[1];
+  const match=catalog.SERIES.find(s=>s.id===canonical);
+  if(match&&match.family!==family)setFamily(match.family);
+  if(match&&$('steelSeries').value!==canonical)$('steelSeries').value=canonical;
+ }
+ renderRows();renderDetail();updateSelectedSummary();updateResult();
+});
+$('steelSeries').addEventListener('change',()=>{
+ selected=null;renderRows();renderDetail();updateSelectedSummary();updateResult();
+});
 $('steelCustomShape').addEventListener('change',updateCustomInputs);
 for(const id of ['steelLength','steelCountPieces','steelRate','steelWidth','steelThickness','steelDiameter','steelSide'])
  $(id).addEventListener('input',updateResult);
