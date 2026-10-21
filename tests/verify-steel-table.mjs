@@ -83,7 +83,7 @@ assert.ok(osdag.sections.some(x=>x.qualityFlag==='mass-area-inconsistent'),'Mass
 assert.ok(osdag.sections.every(x=>x.sourceId==='osdag808'||x.sourceId==='osdagCHS'));
 assert.ok(!catalog.sections.some(x=>x.family==='tube'&&['SHS','RHS'].includes(x.series)),'Never ship obsolete IS 4923:1997 SHS/RHS rows as current');
 assert.match(app,/qualityFlag==='mass-area-inconsistent'/,'UI must block inconsistent source quantity');
-assert.match(app,/mass-area conflict/i);
+assert.match(app,/Mass\/area conflict/i);
 assert.ok(ui.includes('pwd-steel-osdag-license.html'),'Source license must remain accessible in-app');
 assert.ok(ui.indexOf('src="./pwd-steel-osdag.js"')<ui.indexOf('src="./pwd-steel-catalog.js"'),'Load source first');
 assert.ok(cache.includes("'./pwd-steel-osdag.js'"));
