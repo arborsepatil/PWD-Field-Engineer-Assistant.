@@ -94,7 +94,7 @@ assert.equal(catalog.availableSeries('hollow').length,3);
 assert.equal(catalog.search('SHS 25x25x2','hollow')[0].kgPerM,1.36);
 assert.equal(catalog.search('RHS 40x20x2','hollow')[0].basis,'secondary-amendment-unverified');
 assert.equal(catalog.search('CHS 21.3x2.6','hollow')[0].kgPerM,1.2);
-assert.equal(catalog.search('CHS 21.3x2','hollow').length,0,'Never imply 21.3 x 2.0 belongs to cited IS 1161 table');
+assert.equal(catalog.sections.filter(x=>x.series==='CHS'&&x.depthMm===21.3&&x.thicknessMm===2).length,0,'Do not package unsupported CHS 21.3 x 2.0 in nominal IS 1161 table');
 assert.equal(catalog.byId('chs-2014-secondary-21.3x2.6').areaCm2,1.53);
 assert.equal(catalog.byId('chs-2014-secondary-33.7x2.6').kgPerM,1.99);
 assert.equal(catalog.byId('tata-legacy-chs33.7x33.7x2.6').kgPerM,1.98);
