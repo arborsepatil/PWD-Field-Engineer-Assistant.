@@ -8,13 +8,15 @@ Maharashtra PWD field engineering application under development as an **installa
 assets inside the installable Android APK; also cached for the optional browser demo.
 
 **Released V1 scope**
-- Search/filter **5 SAIL medium beams**, **6 SAIL medium channels** (source:
+- Search/filter **5 SAIL medium beams**, **8 SAIL medium channels** (source:
   [SAIL Product Range, 2023-09](https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf)).
 - Display published mass (kg/m) and overall dimensions. All five medium beam rows
   have source-reported area, Izz, Iyy, Zzz and Zyy from the
   [SAIL 2023 tapered flange brochure](https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf).
 - **Six equal-angle records** have SAIL 2023-published exact kg/m values (90×90×6/8, 100×100×6/8, 150×150×10, 200×200×12). **Two remaining angles** (110×110×8 and 130×130×10) are still explicitly labelled archived SAIL 2020; current BIS row and rolling availability remain unverified.
-- Beam cross-section schematics include source-linked D, B, web thickness t, flange thickness T, flange slope α, root radius R₁ and toe radius R₂ where published; drawn fillets remain illustrative rather than fabrication-accurate.
+- Beam **and channel** cross-section schematics include source-linked D, B, web thickness t, flange thickness T, flange slope α, root radius R₁ and toe radius R₂ where published; drawn fillets remain illustrative rather than fabrication-accurate.
+- **ISMC 250 at 34.20 kg/m is the heavy MC 250* variant (B=82 mm)**, distinguished explicitly from ordinary MC 250 (B=80 mm, 30.60 kg/m). Heavy variant must be ordered by mass and size; app search and export show a warning. SAIL 2023 includes MC 300 and MC 400, now included. MC 75 mass remains SAIL range-list only; detailed t/T/radii absent rather than invented.
+- Only beams show symmetrical centroidal y-y/z-z axes in drawings. Channels and angles do not show fabricated centroid axes; engineer should refer to published sectional-property and centroid tables.
 - Calculate quantity from published kg/m × entered length × integer number of
   pieces, with an optional user-entered ₹/kg rate.
 - Separate **theoretical geometry** for plate/flat/round/square solid bar:
@@ -34,7 +36,7 @@ assets inside the installable Android APK; also cached for the optional browser 
 
 **Remaining**: licensed/current BIS numeric row verification for full IS 808
 catalogue; new verified hollow sections under applicable amended standards;
-more section properties and manufacturer source updates. No online background
+full channel/angle centroid, angle toe/root geometry from licensed current publications, and manufacturer source updates. No online background
 update occurs in the V1 APK: source dates remain visible until a reviewed build
 replaces the versioned dataset.
 
