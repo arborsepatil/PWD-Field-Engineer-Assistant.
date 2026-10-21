@@ -2,6 +2,35 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table V4.1 — nominal CHS audit (21 October 2026)
+
+The curated catalog now has **58** rows, plus a **640-row LGPL-3.0
+Osdag open-data overlay**; rows are provenance-labelled and still NOT
+claimed as a licensed numerical BIS 2021/current-amendment reproduction.
+
+A targeted cross-check with an indexed **IS 1161:2014** circular-tube
+reference found that **CHS 21.3 mm OD × 2.0 mm** is NOT in its published
+Table 1 nominal sizes. We removed that unsupportable nominal row rather
+than reporting its old 0.95 kg/m as a current-standard value. The
+reference lists **CHS 21.3 OD × 2.6 mm = 1.20 kg/m**; a new linked
+secondary-source row now makes that size available.
+
+Similarly, the reference lists **CHS 33.7 OD × 2.6 mm = 1.99 kg/m**,
+where an older sample had 1.98 kg/m. The older historical sample stays
+explicitly historical, and the new 1.99 secondary-reference row is
+separate, so a nominal weight conflict is visible rather than hidden.
+
+Reference pages (facts, not a bulk database import):
+- https://quickboq.in/steel/chs-21.3x2.6/
+- https://quickboq.in/steel/chs-33.7x2.6/
+- https://quickboq.in/steel/tables/circular-hollow-sections/
+
+**Scope limitation:** QuickBOQ is a SECONDARY index. The original current
+BIS numeric table has not independently been reconciled line-by-line.
+Do not treat these corrected reference rows or the Osdag overlay as
+design, tender or procurement approvals. Prior mobile UX, source
+warnings, total kg, CSV/print, RCC and deferred BBS boundaries remain.
+
 ## Steel Table V4 — SAIL angle edition audit and dimensioned diagrams (21 October 2026)
 
 - The curated test dataset expands from 49 to **57** source-attributed examples (not including 640 additional Osdag licensed-open rows loaded into the offline Android app).
