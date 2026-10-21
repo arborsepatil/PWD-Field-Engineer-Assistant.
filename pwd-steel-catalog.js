@@ -14,6 +14,8 @@ const SOURCES=Object.freeze({
  sailStruct2023:Object.freeze({label:'SAIL · Structural Product Range',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'SAIL manufacturer range; nominal stock availability and latest BIS row require separate confirmation.'}),
  tataLegacy:Object.freeze({label:'Tata Structura · Archived manufacturer brochure',date:'2015-era',url:'https://www.tatasteel.com/media/23759/tata-steel-structura-brochure.pdf',note:'Historical manufacturer section weight. Published BEFORE Amendment 3 (June 2024) to IS 4923:2017; NOT certified as current amended value.'}),
  rhsSecondary2024:Object.freeze({label:'RHS 2024 amended-table index (secondary)',date:'2024 amendment claimed; audited 2026-10',url:'https://quickboq.in/steel/tables/rectangular-hollow-sections/',note:'Secondary index claims updated IS 4923 Amendment 3 masses; official amended BIS row has not been independently reconciled.'}),
+ osdag808:Object.freeze({label:'Osdag open section data · LGPL-3.0',date:'IS808_Rev · revision unverified',url:'https://github.com/osdag-admin/Osdag/blob/master/src/osdag/data/ResourceFiles/Database/Intg_osdag.sql',note:'Historic IS808_Rev open data; row-by-row alignment with current IS 808:2021 is not established.'}),
+ osdagCHS:Object.freeze({label:'Osdag circular tubes · LGPL-3.0',date:'Source refers to IS 1161:2014',url:'https://github.com/osdag-admin/Osdag/blob/master/src/osdag/data/ResourceFiles/Database/Intg_osdag.sql',note:'Open database CHS. Mass and area must be checked against authorized IS 1161 rows.'}),
  sail2020:Object.freeze({label:'SAIL · Structural Steel Sections, DSP archive (2020)',date:'2020-03',url:'https://www.sail.co.in/sites/default/files/product-brochure/2020-03/Structurals.pdf',note:'Archived manufacturer reference; CURRENT IS 808:2021 row and procurement availability have NOT been cross-verified.'})
 });
 const beam=(designation,depthMm,widthMm,kgPerM,extra={})=>({id:designation.replaceAll(' ',''),family:'beam',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)',...extra});
@@ -115,7 +117,16 @@ const hollowRows=[
  hollow('tata-legacy-chs21.3x21.3x2','CHS',21.3,21.3,2,0.95,'tataLegacy','archived-manufacturer-only',{areaCm2:1.21,ixCm4:0.57,iyCm4:0.57}),
  hollow('tata-legacy-chs33.7x33.7x2.6','CHS',33.7,33.7,2.6,1.98,'tataLegacy','archived-manufacturer-only',{areaCm2:2.54,ixCm4:3.09,iyCm4:3.09})
 ];
-const sections=Object.freeze([...rows,...newRows,...sailExtra,...hollowRows]);
+// Source precedence retains current SAIL and original hand-reviewed hollow
+// entries, then adds the attributed Osdag data (not BIS-certified). Duplicate
+// physical/designation/mass combinations do not create duplicate picker cards.
+function keyRow(x){return [x.family,x.series||'',String(x.designation).toUpperCase().replace(/[×ⅹ]/g,'X').replace(/^IS(?=[A-Z])/,'').replace(/[^A-Z0-9]/g,''),Number(x.kgPerM).toFixed(3)].join(':');}
+const unique=new Map();
+for(const row of [...rows,...newRows,...sailExtra,...hollowRows,...((root.PWDSteelOsdag||{}).sections||[])]){
+ const key=keyRow(row);
+ if(!unique.has(key))unique.set(key,Object.freeze(row));
+}
+const sections=Object.freeze([...unique.values()]);
 
 const SERIES=Object.freeze([
  {id:'JB',family:'beam',label:'JB · Junior',legacy:'ISJB'},
@@ -161,7 +172,7 @@ const codeReferences=Object.freeze([
  Object.freeze({standard:'IS 1161:2014',title:'Circular structural tubes — specification',uri:'https://standards.bis.gov.in/',scope:'Circular tube data require latest amendment review and MTC.'}),
  Object.freeze({standard:'IS 2062 (Part 1):2025',title:'Structural steel material specification',uri:'https://standards.bis.gov.in/',scope:'Material grade control (not used as an IS 808 geometric properties table).'})
 ]);
-function normalized(q){return String(q||'').toUpperCase().replace(/×/g,'X').replace(/[^A-Z0-9]/g,'');}
+function normalized(q){return String(q||'').toUpperCase().replace(/[×ⅹ]/g,'X').replace(/[^A-Z0-9]/g,'');}
 function search(q,family='all',series='all'){
  const term=normalized(q);
  // Prefix-only search must not confuse ISMC with the historical ISMCP
@@ -205,7 +216,7 @@ function collisionGroups(){
 }
 
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,collisionGroups,search,byId});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,collisionGroups,search,byId,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
