@@ -39,7 +39,7 @@ const rows=[
 // Full BIS table-row verification and full sizes remain pending.
 const reference=(series,designation,depthMm,widthMm,kgPerM,props,tableUrl,aliases=[])=>Object.freeze({
  id:'ref-'+series+'-'+designation.replace(/[^A-Za-z0-9]/g,'-')+'-'+kgPerM.toFixed(2),
- family:['SC','HB'].includes(series)?'column': ['JC','LC','MC','MPC'].includes(series)?'channel':series==='PBP'?'pile':series==='UE'?'angle':'beam',
+ family:['SC','HB'].includes(series)?'column': ['JC','LC','MC','MPC'].includes(series)?'channel':series==='PBP'?'pile':['EQ','UE'].includes(series)?'angle':'beam',
  series,designation,depthMm,widthMm,kgPerM,...props,
  aliases,
  sourceId:'secondary808',sourceUrl:tableUrl,
