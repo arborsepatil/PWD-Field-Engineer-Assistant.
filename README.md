@@ -2,6 +2,57 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table V3 — open-source broad catalogue and hollow-section audit
+
+Extends the 33 individually referenced V2 entries using **640 additional
+Osdag open-source section records** (including 81 CHS source entries) taken
+from [Osdag's SQL database](https://github.com/osdag-admin/Osdag/blob/master/src/osdag/data/ResourceFiles/Database/Intg_osdag.sql).
+The importer reads source rows tagged `IS808_Rev` from the Beams, Columns,
+Channels and Angles tables and `IS 1161:2014` from CHS. Legacy Osdag's UC
+foreign column records and obsolete `IS 4923:1997` SHS/RHS records are
+**excluded**. Distinct source variants with equal names but different mass
+remain separate records, without silently averaging or adjusting source values.
+
+**Source/licence:** Adapted public Osdag data (IIT Bombay/FOSSEE contributors)
+is attributed and distributed under **GNU LGPL v3**. The original upstream
+`LICENSE` text is included offline at `pwd-steel-osdag-license.html`, linked
+from Steel Table's source section, and the transformed source stays in
+`pwd-steel-osdag.js`. Osdag's source tag `IS808_Rev` was described as an
+*upcoming revision* in historic Osdag documentation. Therefore **the imported
+numeric rows are NOT claimed to be validated against licensed IS 808:2021
+tables**. The app labels them `Osdag · BIS check` rather than `Verified`.
+SAIL and dated independent secondary records remain separately attributed.
+
+**Arithmetic audit:** For every Osdag record, evaluate
+`|published kg/m − area(cm²)×0.785| / published kg/m`.
+Rows with a discrepancy **above 2.5%** are flagged; quantity/cost calculation
+is *blocked* rather than silently correcting the underlying values. Some
+source values have serious contradictions and require verification. The
+2.5% cut-off is a software data-quality screening threshold, **not a code
+acceptance criterion** or allowable manufacturing tolerance.
+
+**Hollow-section governance:** IS 4923:2017 Amendment 3 (2024) changed RHS
+weights. The official [BIS implementation circular](https://services.bis.gov.in/tmp/Circular_vpMS_2024-08-06.pdf)
+is linked as the authority for that fact. The obsolete SHS/RHS values from
+Osdag's 1997 edition are intentionally *not* imported. CHS records cite
+IS 1161:2014 but require a contemporary approved source check. There is
+**no claim of fully verified IS 808 / IS 4923 / IS 1161 numeric coverage**.
+
+The Android UI remains compact (family and series, filtered sizes, quantity
+inputs, prominent total, collapsible source). Lists render at most sixty
+results on screen at once; search narrows the offline index without loading
+remote data. Print/CSV and light/dark contrast remain supported. RCC BBS
+cutting stays deferred.
+
+### Remaining professional verification
+- Obtain a legitimately accessible current BIS IS 808:2021 and compare every
+  imported relevant row, including starred duplicate designations
+- Verify Osdag CHS unit consistency against authorized IS 1161 edition
+- Acquire current SHS/RHS manufacturer/BIS amended rows before including them
+  in structural product catalogue; never use old IS 4923:1997 tables as current
+- Record which rows have two independent corroborating sources and make
+  verified-only filtering possible; keep reference-only results clearly marked
+
 ## Steel Table V2 — all IS 808 profile series indexed (21 October 2026)
 
 V2 adds **all fifteen hot-rolled IS 808:2021 profile classifications** to the
