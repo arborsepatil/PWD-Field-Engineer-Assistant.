@@ -58,7 +58,7 @@ input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,su
 .choose-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .micro{font-size:.73rem;color:var(--muted);margin:6px 0 0}
 .empty{border-radius:10px;padding:10px;background:var(--soft);color:var(--ink);font-size:.8rem;margin:8px 0 0}
-.member-row{display:grid;grid-template-columns:1fr 144px;gap:11px;align-items:center}
+.member-row{display:block}
 .section-title{font-weight:800;font-size:1.1rem;line-height:1.25;margin:0 0 3px}
 .status{display:inline-block;border:1px solid var(--line);border-radius:8px;
  color:var(--muted);font-size:.7rem;font-weight:700;padding:3px 7px;margin:4px 0 10px}
@@ -66,9 +66,9 @@ input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,su
 .value-label{font-size:.73rem;color:var(--muted);margin:0 0 1px}
 .mass-value{font-size:1.35rem;font-weight:850;letter-spacing:-.025em;white-space:nowrap}
 .mass-value small{font-size:.76rem;font-weight:650;letter-spacing:0}
-.figure{margin:0;background:var(--diagram-bg);border:1px solid var(--line);
+.figure{margin:12px 0 0;background:var(--diagram-bg);border:1px solid var(--line);
  border-radius:12px;overflow:hidden;min-height:102px}
-.figure svg{width:100%;display:block;height:auto;max-height:142px}
+.figure svg{width:100%;display:block;height:auto;max-height:315px}
 details{margin-top:9px;border-top:1px solid var(--line);padding-top:9px}
 summary{cursor:pointer;font-size:.82rem;font-weight:750;min-height:30px;color:var(--ink)}
 .detail-contents{padding-top:7px}
@@ -105,10 +105,10 @@ button.action.primary{background:var(--action);color:var(--action-text);border-c
  main{padding:11px 10px calc(20px + env(safe-area-inset-bottom))}
  .card{padding:12px;margin-bottom:9px}
  .choose-grid{grid-template-columns:1fr}
- .member-row{grid-template-columns:1fr 125px}
+ .member-row{display:block}
  .input-grid{grid-template-columns:1fr 1fr}
  .field.rate{grid-column:1/-1}
- .figure svg{max-height:125px}
+ .figure svg{max-height:300px}
  .actions{grid-template-columns:repeat(2,1fr)}
  .actions button:first-child{grid-column:1/-1}
 }
@@ -120,7 +120,7 @@ button.action.primary{background:var(--action);color:var(--action-text);border-c
  header,.page-heading,#searchCard,.actions,.reference{display:none!important}
  body{color:#111;background:#fff}main{padding:0;max-width:none}
  .card{box-shadow:none;border:1px solid #aaa;break-inside:avoid}
- .figure{background:#fff!important}.figure svg{max-height:145px}
+ .figure{background:#fff!important}.figure svg{max-height:280px}
  #steelDetail[hidden],#output[hidden]{display:none!important}
 }
 </style>
@@ -157,13 +157,13 @@ button.action.primary{background:var(--action);color:var(--action-text);border-c
 <div class="member-row">
 <div>
 <h2 class="section-title" id="steelTitle">Selected section</h2>
-<div class="status" id="steelStatus">SAIL · Published</div>
+<div class="status" id="steelStatus">SAIL · Source-labelled</div>
 <div class="value-label" id="steelMassCaption">Mass per metre</div>
 <div class="mass-value"><span id="steelMass">—</span> <small>kg/m</small></div>
 </div>
 <div id="steelSectionDiagram" class="figure" aria-label="Illustrative section shape"></div>
 </div>
-<details id="steelMore"><summary>Dimensions, properties & source</summary>
+<details id="steelMore"><summary>Source dimensions, section properties & catalogue link</summary>
 <div class="detail-contents">
 <div id="steelProperties"></div>
 <div id="steelDataCaution"></div>
@@ -196,7 +196,7 @@ button.action.primary{background:var(--action);color:var(--action-text);border-c
 </section>
 <section class="card reference">
 <details id="steelReferenceDetails"><summary>Data sources & limitations</summary>
-<p class="small-note">Catalogue: dated manufacturer records, not a verified copy of the current BIS steel tables. Check relevant standards, approved drawings and MTC before procurement or design.</p>
+<p class="small-note">Dimensional and mass reference: <b>IS 808:2021</b> (applicable standard) and individually dated <b>SAIL</b> manufacturer publications. Rows have not been certified against a licensed BIS table. Structural steel material grade: <b>IS 2062 (Part 1):2025</b>. Drawings are original schematics, not fabrication drawings. Check approved drawings, current standard/amendments, and MTC before procurement or structural design.</p>
 <p class="small-note">Weight excludes fabrication, connections and wastage. Cost excludes taxes, transport and other charges.</p>
 <div id="steelStandards"></div>
 </details>
