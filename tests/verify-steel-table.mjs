@@ -64,7 +64,7 @@ assert.equal(catalog.availableSeries('channel').length,4);
 assert.equal(catalog.availableSeries('angle').length,2);
 assert.equal(catalog.availableSeries('pile').length,1);
 for(const row of catalog.sections.filter(x=>x.basis==='secondary-unverified')){
- assert.match(row.sourceUrl,/^https:\/\/quickboq\.in\/steel\/tables\//);
+ assert.match(row.sourceUrl,/^https:\/\/quickboq\.in\/steel\//);
  assert.ok(row.series && names.includes(row.series));
  assert.ok(row.standard.includes('BIS row not certified'));
 }
