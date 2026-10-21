@@ -15,12 +15,22 @@ const catalog=load('pwd-steel-catalog.js'),math=load('pwd-steel-core.js');
 const ui=read('pwd_steel_table.html'),app=read('pwd-steel-app.js'),
  home=read('index.html'),cache=read('sw.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
-assert.equal(catalog.sections.length,19,'No silent addition of unverified catalogue data');
+assert.equal(catalog.sections.length,21,'Only source-attributed SAIL catalogue records may be added');
 assert.equal(catalog.sections.filter(x=>x.family==='beam').length,5);
-assert.equal(catalog.sections.filter(x=>x.family==='channel').length,6);
+assert.equal(catalog.sections.filter(x=>x.family==='channel').length,8);
 assert.equal(catalog.sections.filter(x=>x.family==='angle').length,8);
 assert.equal(catalog.byId('ISMB300').kgPerM,46.02);
 assert.equal(catalog.byId('ISMC150').kgPerM,16.8);
+assert.equal(catalog.byId('ISMC150').webMm,5.7);
+assert.equal(catalog.byId('ISMC150').flangeMm,9);
+assert.equal(catalog.byId('ISMC150').ixCm4,786);
+assert.equal(catalog.byId('ISMC250').kgPerM,34.2);
+assert.equal(catalog.byId('ISMC250').widthMm,82);
+assert.equal(catalog.byId('ISMC250').heavyVariant,true);
+assert.match(catalog.byId('ISMC250').orderNote,/30\.60 kg\/m/);
+assert.equal(catalog.byId('ISMC300').kgPerM,36.3);
+assert.equal(catalog.byId('ISMC400').kgPerM,50.1);
+assert.equal(catalog.byId('ISMC400').flangeMm,15.3);
 assert.equal(catalog.byId('ISA100x100x8').kgPerM,12.18);
 assert.equal(catalog.byId('ISA100x100x8').basis,'manufacturer-published');
 assert.equal(catalog.byId('ISA100x100x8').sourceId,'sail2023');
@@ -33,7 +43,7 @@ assert.equal(catalog.byId('ISMB300').ixCm4,8990);
 assert.equal(catalog.byId('ISMB300').webMm,7.7);
 assert.equal(catalog.byId('ISMB150').zxCm3,95.7);
 assert.equal(catalog.search('ismb 300')[0].designation,'ISMB 300');
-assert.equal(catalog.search('ISMC','channel').length,6);
+assert.equal(catalog.search('ISMC','channel').length,8);
 assert.equal(catalog.search('ISA','angle').length,8);
 assert.equal(catalog.search('unknown designation').length,0);
 for(const s of catalog.sections){
@@ -48,6 +58,11 @@ for(const s of catalog.sections){
   assert.equal(s.flangeSlopeDeg,98,'SAIL medium-beam flange slope source lost');
   assert.ok(s.webMm>0&&s.flangeMm>0);
   assert.ok(s.rootRadiusMm>0&&s.toeRadiusMm>0);
+ }
+ if(s.family==='channel'&&s.id!=='ISMC75'){
+  assert.equal(s.flangeSlopeDeg,96,'SAIL channel flange slope source lost');
+  assert.ok(s.webMm>0&&s.flangeMm>0&&s.rootRadiusMm>0&&s.toeRadiusMm>0);
+  assert.equal(s.sourceId,'sailProps2023');
  }
 }
 const q=math.quantity(catalog.byId('ISMB300'),6,8,70);
@@ -73,6 +88,9 @@ assert.ok(csv.includes('PWD FIELD ASSISTANT'));
 assert.ok(csv.includes('Not a design'));
 assert.ok(csv.includes('Applicable Indian Standard'));
 assert.ok(csv.includes('Manufacturer source URL'));
+assert.ok(csv.includes('Section / ordering warning'));
+const heavy=math.exportCsv({...catalog.byId('ISMC250'),sourceLabel:'SAIL 2023',sourceDate:'2023-10',sourceStatus:'manufacturer-published'},math.quantity(catalog.byId('ISMC250'),6,1,''));
+assert.ok(heavy.includes('30.60 kg/m'),'MC250 heavy warning must survive quantity CSV');
 for(const id of ['steelFamilies','steelSearch','steelResults','steelDetail','steelSectionDiagram','steelProperties','steelLength','steelCountPieces','steelRate','steelCalculate','steelExport','steelPrint','steelCustomShape','steelWidth','steelThickness','steelDiameter','steelSide'])
  assert.ok(ui.includes('id="'+id+'"'),'Missing steel module control '+id);
 for(const asset of ['pwd-steel-catalog.js','pwd-steel-core.js','pwd-steel-app.js']){
@@ -85,6 +103,8 @@ assert.match(app,/__PWD_ANDROID_CSV_EXPORT_V1__/);
 assert.match(app,/window\.print\(\)/);
 assert.match(app,/PWDSteelMath/);
 assert.ok(app.includes('Tapered flange shown'),'Tapered flange SVG explanatory label lost');
+assert.ok(app.includes('Sloping flange profile'),'Source-based channel diagram must remain');
+assert.ok(app.includes("const axes=type==='beam'?"),'Misleading centroid axes added for asymmetrical shapes');
 assert.ok(app.includes('Root radius R₁'),'Root radius property must be shown');
 assert.ok(ui.includes('IS 2062 (Part 1):2025'));
 assert.ok(ui.includes('max-height:300px'),'Android diagram must remain readable');
@@ -92,4 +112,4 @@ assert.doesNotMatch(app,/barBending|cuttingLength|rccWallBBS|autoStructuralDesig
 assert.ok(!ui.includes('https://fonts.googleapis.com'),'No remote fonts needed for offline use');
 assert.ok(!ui.includes('<iframe'),'Do not load untrusted third party app frames');
 assert.ok(!ui.includes('Steel Table-1.4.3.apk'),'Never bundle user-provided third party APK');
-console.log('Steel Table QA passed: 19 SAIL-traceable rows, verified 2023 beam geometries and selected angles, archived exceptions, quantity/price arithmetic, Android diagrams and no BBS.');
+console.log('Steel Table QA passed: 21 source-attributed SAIL rows, beam/channel geometry, heavy MC250 ordering warning, archived angles, quantity/price arithmetic, Android diagrams, no BBS.');
