@@ -10,19 +10,18 @@ assets inside the installable Android APK; also cached for the optional browser 
 **Released V1 scope**
 - Search/filter **5 SAIL medium beams**, **6 SAIL medium channels** (source:
   [SAIL Product Range, 2023-09](https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf)).
-- Display published mass (kg/m) and overall dimensions. Four medium beam rows
-  additionally have source-reported area, Izz, Iyy, Zzz and Zyy from the
+- Display published mass (kg/m) and overall dimensions. All five medium beam rows
+  have source-reported area, Izz, Iyy, Zzz and Zyy from the
   [SAIL 2023 tapered flange brochure](https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf).
-- **Eight equal-angle records are strictly marked ARCHIVED (SAIL 2020)**, not
-  current-edition verified tables; do not use them as current BIS/availability
-  claims. [Original SAIL archived source](https://www.sail.co.in/sites/default/files/product-brochure/2020-03/Structurals.pdf).
+- **Six equal-angle records** have SAIL 2023-published exact kg/m values (90×90×6/8, 100×100×6/8, 150×150×10, 200×200×12). **Two remaining angles** (110×110×8 and 130×130×10) are still explicitly labelled archived SAIL 2020; current BIS row and rolling availability remain unverified.
+- Beam cross-section schematics include source-linked D, B, web thickness t, flange thickness T, flange slope α, root radius R₁ and toe radius R₂ where published; drawn fillets remain illustrative rather than fabrication-accurate.
 - Calculate quantity from published kg/m × entered length × integer number of
   pieces, with an optional user-entered ₹/kg rate.
 - Separate **theoretical geometry** for plate/flat/round/square solid bar:
   cross-section area × length × **assumed steel density 7850 kg/m³**. These
   outputs never masquerade as BIS nominal masses. No fabricated hollow-profile
   gauges or current tubular section masses are in the V1 dataset.
-- Export a source-labelled **draft material quantity CSV** (Android native
+- Export a source-labelled **draft material quantity CSV** with applicable Indian Standard and original manufacturer URL (Android native
   document picker supported), and print using Android print/PDF.
 - Every published catalogue entry stores manufacturer, URL, publication month,
   applicable type standard and status. The applicability of **IS 808:2021**
