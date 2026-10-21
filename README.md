@@ -2,6 +2,15 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table V4 — SAIL angle edition audit and dimensioned diagrams (21 October 2026)
+
+- The curated test dataset expands from 49 to **57** source-attributed examples (not including 640 additional Osdag licensed-open rows loaded into the offline Android app).
+- Eight more **SAIL October 2023 equal-leg angle** masses are recorded individually: 90×90×8/10/12, 100×100×8/10/12, 150×150×10 and 200×200×12. Source: https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf
+- Older 2020 same-dimension values are preserved as historical duplicates. Search results place the dated SAIL 2023 manufacturer rows before historical/secondary rows; source disagreements remain visible.
+- Beam, channel, column, bearing-pile and equal/unequal-angle diagram outlines respond to each entry's nominal D and B; thickness t or t/T is drawn using published fields when supplied. **Unknown gauges, flange slopes, corner radii and centroid axes are not invented.** All diagrams remain schematic, not fabrication drawings.
+- No BIS edition is reproduced. SAIL manufacturer range values are **not** row-by-row certified against an authorized current BIS IS 808:2021 copy. Source date, MTC and approved project specification must still be reviewed. The extensive Osdag rows remain individually attributed and their mass/area quality gates stay in place.
+- Existing tests updated to require 57 curated records, source-priority sorting and preserved historical conflicts; Android debug APK device acceptance remains separate.
+
 ## Steel Table V3 — licensed broad sections with mass/area quality controls
 
 Adds 640 open-source [Osdag](https://github.com/osdag-admin/Osdag) section

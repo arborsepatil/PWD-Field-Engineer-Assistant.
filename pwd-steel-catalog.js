@@ -94,7 +94,17 @@ const sailExtra=[
  {id:'sail23-ISA90x90x6',family:'angle',series:'EQ',designation:'ISA 90×90×6',depthMm:90,widthMm:90,thicknessMm:6,kgPerM:8.32},
  {id:'sail23-ISA100x100x6',family:'angle',series:'EQ',designation:'ISA 100×100×6',depthMm:100,widthMm:100,thicknessMm:6,kgPerM:9.26},
  {id:'sail23-ISA150x150x12',family:'angle',series:'EQ',designation:'ISA 150×150×12',depthMm:150,widthMm:150,thicknessMm:12,kgPerM:27.29},
- {id:'sail23-ISA200x200x16',family:'angle',series:'EQ',designation:'ISA 200×200×16',depthMm:200,widthMm:200,thicknessMm:16,kgPerM:48.53}
+ {id:'sail23-ISA200x200x16',family:'angle',series:'EQ',designation:'ISA 200×200×16',depthMm:200,widthMm:200,thicknessMm:16,kgPerM:48.53},
+ // Explicit SAIL 2023 product-range masses. Retain earlier 2020 rows separately:
+ // source conflicts are surfaced by collisionGroups(), never silently overwritten.
+ {id:'sail23-ISA90x90x8',family:'angle',series:'EQ',designation:'ISA 90×90×8',depthMm:90,widthMm:90,thicknessMm:8,kgPerM:10.92},
+ {id:'sail23-ISA100x100x8',family:'angle',series:'EQ',designation:'ISA 100×100×8',depthMm:100,widthMm:100,thicknessMm:8,kgPerM:12.18},
+ {id:'sail23-ISA150x150x10',family:'angle',series:'EQ',designation:'ISA 150×150×10',depthMm:150,widthMm:150,thicknessMm:10,kgPerM:22.93},
+ {id:'sail23-ISA200x200x12',family:'angle',series:'EQ',designation:'ISA 200×200×12',depthMm:200,widthMm:200,thicknessMm:12,kgPerM:36.85},
+ {id:'sail23-ISA90x90x10',family:'angle',series:'EQ',designation:'ISA 90×90×10',depthMm:90,widthMm:90,thicknessMm:10,kgPerM:13.47},
+ {id:'sail23-ISA90x90x12',family:'angle',series:'EQ',designation:'ISA 90×90×12',depthMm:90,widthMm:90,thicknessMm:12,kgPerM:15.95},
+ {id:'sail23-ISA100x100x10',family:'angle',series:'EQ',designation:'ISA 100×100×10',depthMm:100,widthMm:100,thicknessMm:10,kgPerM:15.04},
+ {id:'sail23-ISA100x100x12',family:'angle',series:'EQ',designation:'ISA 100×100×12',depthMm:100,widthMm:100,thicknessMm:12,kgPerM:17.83}
 ].map((x,i)=>Object.freeze({
  ...x,sourceId:'sailStruct2023',basis:'manufacturer-published',
  standard:'IS 808:2021 (SAIL manufacturer product range; BIS row not separately audited)',
@@ -193,6 +203,14 @@ function search(q,family='all',series='all'){
    keys.push(prefix.legacy,prefix.legacy+' '+x.designation.replace(/^[A-Z]+\s*/, ''));
   }
   return keys.some(k=>normalized(k).includes(term));
+ }).sort((a,b)=>{
+  // Latest dated manufacturer data are easier to select; keep archive and
+  // secondary alternatives visible, never merge nominal conflicts into one.
+  const rank=x=>x.sourceId==='sailStruct2023'||x.sourceId==='sailProps2023'||x.sourceId==='sail2023'?0:
+   x.basis==='manufacturer-published'?1:x.basis==='osdag-open-unverified'?2:
+   x.basis.startsWith('secondary-')?3:4;
+  return rank(a)-rank(b)||a.depthMm-b.depthMm||a.widthMm-b.widthMm||
+   (a.thicknessMm||0)-(b.thicknessMm||0)||a.kgPerM-b.kgPerM;
  });
 }
 function availableSeries(family){return SERIES.filter(s=>s.family===family);}
