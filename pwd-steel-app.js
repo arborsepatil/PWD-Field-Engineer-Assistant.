@@ -7,7 +7,7 @@
 'use strict';
 const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,$=id=>document.getElementById(id);
 if(!catalog||!math||!$('steelFamilies'))return;
-let family='beam',selected=null,last=null,lastEntry=null;
+let family='beam',selected=null,last=null,lastEntry=null,shownLimit=60;
 const source=id=>catalog.SOURCES[id];
 const format=(x,d=2)=>Number(x).toLocaleString('en-IN',{maximumFractionDigits:d,minimumFractionDigits:d});
 const text=(el,value)=>{el.textContent=String(value)};
@@ -77,7 +77,7 @@ function shapeSvg(type,data={}){
   '<text x="250" y="337" class="muted" font-size="10.5" text-anchor="middle">Nominal dimensions · illustrative · not to scale</text></svg>';
 }
 function setFamily(next){
- family=next;selected=null;last=null;lastEntry=null;
+ family=next;selected=null;last=null;lastEntry=null;shownLimit=60;
  updateSeries();
  for(const button of $('steelFamilies').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.family===next));
  const custom=next==='calculated';
@@ -134,8 +134,12 @@ function renderRows(){
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
  const root=$('steelResults');root.replaceChildren();
  $('noResults').hidden=rows.length!==0;
- $('steelCount').textContent=rows.length>60?'Showing 60 / '+rows.length+' · Search to narrow':rows.length+' sourced sizes';
- for(const row of rows.slice(0,60)){
+ const shown=Math.min(rows.length,shownLimit);
+ $('steelCount').textContent=rows.length>shown?'Showing '+shown+' / '+rows.length+' sourced sizes':rows.length+' sourced sizes';
+ const more=$('steelMoreSizes');
+ more.hidden=shown>=rows.length;
+ more.textContent='Show next '+Math.min(60,rows.length-shown)+' sizes';
+ for(const row of rows.slice(0,shownLimit)){
   const btn=document.createElement('button');btn.className='pick';btn.type='button';
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
   const name=document.createElement('b');name.textContent=row.designation;
@@ -264,6 +268,7 @@ function showStandards(){
 }
 makeFamilyButtons();showStandards();
 $('steelSearch').addEventListener('input',()=>{
+ shownLimit=60;
  const input=$('steelSearch').value.trim().toUpperCase();
  const prefix=input.match(/^(?:IS)?(JB|LB|MB|WB|NPB|WPB|SC|HB|JC|LC|MC|MPC|MCP|PBP|SHS|RHS|CHS)\b/);
  if(prefix){
@@ -275,8 +280,9 @@ $('steelSearch').addEventListener('input',()=>{
  renderRows();renderDetail();updateSelectedSummary();updateResult();
 });
 $('steelSeries').addEventListener('change',()=>{
- selected=null;renderRows();renderDetail();updateSelectedSummary();updateResult();
+ shownLimit=60;selected=null;renderRows();renderDetail();updateSelectedSummary();updateResult();
 });
+$('steelMoreSizes').addEventListener('click',()=>{shownLimit+=60;renderRows();});
 $('steelCustomShape').addEventListener('change',updateCustomInputs);
 for(const id of ['steelLength','steelCountPieces','steelRate','steelWidth','steelThickness','steelDiameter','steelSide','steelHeight'])
  $(id).addEventListener('input',updateResult);
