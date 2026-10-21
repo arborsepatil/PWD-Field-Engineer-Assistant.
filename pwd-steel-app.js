@@ -91,7 +91,7 @@ function updateSelectedSummary(){
  $('steelPickedName').textContent=custom?$('steelCustomShape').selectedOptions[0].textContent:selected?.designation||'';
  $('steelPickedStatus').textContent=custom?'Theoretical weight':!selected?'':selected.basis==='archived-manufacturer-only'?'Historic · BIS recheck needed':
   ['secondary-unverified','secondary-amendment-unverified'].includes(selected.basis)?'Secondary · BIS row not checked':
-  source(selected.sourceId)?.label+' · '+source(selected.sourceId)?.date;
+  selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area conflict':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':source(selected.sourceId)?.label+' · '+source(selected.sourceId)?.date;
 }
 function makeFamilyButtons(){
  for(const cat of catalog.categories){
@@ -106,14 +106,14 @@ function renderRows(){
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
  const root=$('steelResults');root.replaceChildren();
  $('noResults').hidden=rows.length!==0;
- $('steelCount').textContent=rows.length+' sourced sizes · full standards audit pending';
- for(const row of rows){
+ $('steelCount').textContent=rows.length>60?'Showing 60 / '+rows.length+' · Search to narrow':rows.length+' sourced sizes';
+ for(const row of rows.slice(0,60)){
   const btn=document.createElement('button');btn.className='pick';btn.type='button';
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
   const name=document.createElement('b');name.textContent=row.designation;
   const subtitle=document.createElement('span');
   subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(row.basis==='archived-manufacturer-only'?' · Archive':
- ['secondary-unverified','secondary-amendment-unverified'].includes(row.basis)?' · Secondary':'');
+ row.basis==='osdag-open-unverified'?' · Open source':['secondary-unverified','secondary-amendment-unverified'].includes(row.basis)?' · Secondary':'');
   btn.append(name,subtitle);
   btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
   root.append(btn);
@@ -147,12 +147,14 @@ function renderDetail(){
  const src=source(selected.sourceId);
  $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
  $('steelTitle').textContent=selected.designation;
- $('steelStatus').textContent=selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
+ $('steelStatus').textContent=selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area check':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
  $('steelDataCaution').textContent=selected.basis==='archived-manufacturer-only'?
   'Historical manufacturer data. For RHS verify IS 4923:2017 Amendment 3 (2024); for SHS/CHS check the latest applicable standard.':
+  selected.qualityFlag==='mass-area-inconsistent'?'Mass and section area disagree by '+selected.massAreaDeltaPct+'%. Weight calculation is blocked until the row is verified.':
+  selected.basis==='osdag-open-unverified'?'Licensed open-source Osdag values; not independently checked against IS 808:2021 or current IS 1161.':
   selected.basis.startsWith('secondary-')?'Secondary reference, not independently checked against an authoritative BIS numeric row.':
   'Manufacturer mass; project-standard and mill test certificate checks remain necessary.';
  const a=$('steelSource');a.href=selected.sourceUrl||src.url;a.textContent=src.label;
@@ -183,6 +185,7 @@ function calculate(){
   return {q,entry:{type:shape,designation:shape+' (user dimensions)',sourceLabel:'User dimensions · theoretical',sourceStatus:'Calculated only'}};
  }
  if(!selected)throw Error('Choose a steel section from the search results.');
+ if(selected.qualityFlag==='mass-area-inconsistent'||catalog.auditRow(selected).includes('mass-vs-area'))throw Error('Mass/area conflict in source row — quantity blocked pending review.');
  const q=math.quantity(selected,L,N,rate),src=source(selected.sourceId);
  return {q,entry:{...selected,sourceLabel:src.label+' · '+(selected.sourceUrl||src.url),sourceDate:src.date,sourceStatus:selected.basis}};
 }
