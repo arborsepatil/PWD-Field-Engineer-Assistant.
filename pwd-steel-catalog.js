@@ -14,6 +14,7 @@ const SOURCES=Object.freeze({
  sailStruct2023:Object.freeze({label:'SAIL · Structural Product Range',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'SAIL manufacturer range; nominal stock availability and latest BIS row require separate confirmation.'}),
  tataLegacy:Object.freeze({label:'Tata Structura · Archived manufacturer brochure',date:'2015-era',url:'https://www.tatasteel.com/media/23759/tata-steel-structura-brochure.pdf',note:'Historical manufacturer section weight. Published BEFORE Amendment 3 (June 2024) to IS 4923:2017; NOT certified as current amended value.'}),
  rhsSecondary2024:Object.freeze({label:'RHS 2024 amended-table index (secondary)',date:'2024 amendment claimed; audited 2026-10',url:'https://quickboq.in/steel/tables/rectangular-hollow-sections/',note:'Secondary index claims updated IS 4923 Amendment 3 masses; official amended BIS row has not been independently reconciled.'}),
+ chsSecondary2014:Object.freeze({label:'IS 1161:2014 circular tube index · secondary',date:'IS 1161:2014 table, reviewed 2026-10',url:'https://quickboq.in/steel/tables/circular-hollow-sections/',note:'Individually checked secondary section-property page; not certified against a licensed official BIS numeric row.'}),
  osdag808:Object.freeze({label:'Osdag open section data · LGPL-3.0',date:'IS808_Rev · revision unverified',url:'https://github.com/osdag-admin/Osdag/blob/master/src/osdag/data/ResourceFiles/Database/Intg_osdag.sql',note:'Historic IS808_Rev open data; row-by-row alignment with current IS 808:2021 is not established.'}),
  osdagCHS:Object.freeze({label:'Osdag circular tubes · LGPL-3.0',date:'Source refers to IS 1161:2014',url:'https://github.com/osdag-admin/Osdag/blob/master/src/osdag/data/ResourceFiles/Database/Intg_osdag.sql',note:'Open database CHS. Mass and area must be checked against authorized IS 1161 rows.'}),
  sail2020:Object.freeze({label:'SAIL · Structural Steel Sections, DSP archive (2020)',date:'2020-03',url:'https://www.sail.co.in/sites/default/files/product-brochure/2020-03/Structurals.pdf',note:'Archived manufacturer reference; CURRENT IS 808:2021 row and procurement availability have NOT been cross-verified.'})
@@ -112,20 +113,23 @@ const sailExtra=[
  aliases:i<2?['MC '+x.depthMm]:['ISA '+x.depthMm+'x'+x.widthMm+'x'+x.thicknessMm]
 }));
 const hollow=(id,series,h,w,t,kg,sourceId,basis,properties={})=>Object.freeze({
- id,series,family:'hollow',designation:series+' '+h+'×'+w+'×'+t,
+ id,series,family:'hollow',designation:series==='CHS'?series+' '+h+'×'+t:series+' '+h+'×'+w+'×'+t,
  depthMm:h,widthMm:w,thicknessMm:t,kgPerM:kg,
  standard:series==='CHS'?'IS 1161:2014 (manufacturer reference only)':
  'IS 4923:2017 incl. Amendment 3 (manufacturer/secondary reference only)',
  sourceId,basis,...properties,
- aliases:[series+' '+h+'x'+w+'x'+t]
+ aliases:series==='CHS'?[series+' '+h+'x'+t,series+' '+h+'x'+w+'x'+t]:[series+' '+h+'x'+w+'x'+t]
 });
 const hollowRows=[
  hollow('tata-legacy-shs25x25x2','SHS',25,25,2,1.36,'tataLegacy','archived-manufacturer-only',{areaCm2:1.74,ixCm4:1.48,iyCm4:1.48}),
  hollow('tata-legacy-shs32x32x2','SHS',32,32,2,1.80,'tataLegacy','archived-manufacturer-only',{areaCm2:2.30,ixCm4:3.36,iyCm4:3.36}),
  hollow('tata-legacy-rhs50x25x2','RHS',50,25,2,2.15,'tataLegacy','archived-manufacturer-only',{areaCm2:2.74,ixCm4:8.38,iyCm4:2.81}),
  hollow('rhs-index-40x20x2','RHS',40,20,2,1.68,'rhsSecondary2024','secondary-amendment-unverified',{areaCm2:2.14,ixCm4:4.05,iyCm4:1.34}),
- hollow('tata-legacy-chs21.3x21.3x2','CHS',21.3,21.3,2,0.95,'tataLegacy','archived-manufacturer-only',{areaCm2:1.21,ixCm4:0.57,iyCm4:0.57}),
- hollow('tata-legacy-chs33.7x33.7x2.6','CHS',33.7,33.7,2.6,1.98,'tataLegacy','archived-manufacturer-only',{areaCm2:2.54,ixCm4:3.09,iyCm4:3.09})
+ // The 21.3 OD x 2.0 record was removed from this IS 1161 catalogue:
+ // the accessible current IS 1161:2014 nominal index begins at 21.3 OD x 2.6.
+ hollow('chs-2014-secondary-21.3x2.6','CHS',21.3,21.3,2.6,1.20,'chsSecondary2014','secondary-unverified',{areaCm2:1.53,ixCm4:0.68,iyCm4:0.68,sourceUrl:'https://quickboq.in/steel/chs-21.3x2.6/'}),
+ hollow('tata-legacy-chs33.7x33.7x2.6','CHS',33.7,33.7,2.6,1.98,'tataLegacy','archived-manufacturer-only',{areaCm2:2.54,ixCm4:3.09,iyCm4:3.09}),
+ hollow('chs-2014-secondary-33.7x2.6','CHS',33.7,33.7,2.6,1.99,'chsSecondary2014','secondary-unverified',{areaCm2:2.54,ixCm4:3.09,iyCm4:3.09,sourceUrl:'https://quickboq.in/steel/chs-33.7x2.6/'})
 ];
 // Source precedence retains current SAIL and original hand-reviewed hollow
 // entries, then adds the attributed Osdag data (not BIS-certified). Duplicate
