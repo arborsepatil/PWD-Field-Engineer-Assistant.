@@ -5,20 +5,23 @@ import path from 'node:path';
 import vm from 'node:vm';
 const root=path.resolve(import.meta.dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
-function load(p){
+function load(p,extras={}){
  const code=read(p);new vm.Script(code,{filename:p});
- const context={module:{exports:{}}};
+ const context={module:{exports:{}},...extras};
  vm.runInNewContext(code,context,{filename:p});
  return context.module.exports;
 }
-const catalog=load('pwd-steel-catalog.js'),math=load('pwd-steel-core.js');
+const osdag=load('pwd-steel-osdag.js');
+const catalog=load('pwd-steel-catalog.js',{PWDSteelOsdag:osdag}),math=load('pwd-steel-core.js');
 const ui=read('pwd_steel_table.html'),app=read('pwd-steel-app.js'),
  home=read('index.html'),cache=read('sw.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
-assert.equal(catalog.sections.length,33,'Curated reference rows must remain controlled');
-assert.equal(catalog.sections.filter(x=>x.family==='beam').length,11);
-assert.equal(catalog.sections.filter(x=>x.family==='channel').length,9);
-assert.equal(catalog.sections.filter(x=>x.family==='angle').length,10);
+assert.equal(osdag.count,640,'Osdag source-filtered dataset import count');
+assert.equal(catalog.openDataCount,640);
+assert.ok(catalog.sections.length>630,'Broad referenced section list must be loaded');
+assert.ok(catalog.sections.filter(x=>x.family==='beam').length>200);
+assert.ok(catalog.sections.filter(x=>x.family==='channel').length>=60);
+assert.ok(catalog.sections.filter(x=>x.family==='angle').length>=190);
 assert.equal(catalog.byId('ISMB300').kgPerM,46.02);
 assert.equal(catalog.byId('ISMC150').kgPerM,16.8);
 assert.equal(catalog.byId('ISA100x100x8').kgPerM,12.1);
@@ -28,22 +31,24 @@ assert.equal(catalog.byId('ISMB300').ixCm4,8990);
 assert.equal(catalog.byId('ISMB300').webMm,7.7);
 assert.equal(catalog.byId('ISMB150').zxCm3,95.7);
 assert.equal(catalog.search('ismb 300')[0].designation,'ISMB 300');
-assert.equal(catalog.search('ISMC','channel').length,6);
-assert.equal(catalog.search('ISA','angle').length,10);
+assert.ok(catalog.search('ISMC','channel').length>=20);
+assert.ok(catalog.search('ISMC','channel').every(x=>catalog.resolveSeries(x)==='MC'),'Do not mix ISMC and parallel MPC');
+assert.ok(catalog.search('ISA','angle').length>180);
 assert.equal(catalog.search('unknown designation').length,0);
 for(const s of catalog.sections){
  assert.ok(s.kgPerM>0&&Number.isFinite(s.kgPerM));
  assert.ok(s.depthMm>0&&s.widthMm>0);
  assert.ok(catalog.SOURCES[s.sourceId],'Every section needs actual manufacturer reference');
  assert.match(catalog.SOURCES[s.sourceId].url,/^https:\/\//);
- assert.ok(s.standard.includes('IS 808:2021'),'State scope/version, not direct BIS table certification');
+ assert.ok(s.standard.includes(s.family==='tube'?'IS 1161:2014':'IS 808:2021'),'State applicable standard without numeric BIS certification');
  if(s.basis==='archived-manufacturer-only')assert.equal(s.family,'angle');
- else assert.ok(['manufacturer-published','secondary-unverified'].includes(s.basis));
+ else assert.ok(['manufacturer-published','secondary-unverified','osdag-open-unverified'].includes(s.basis));
 }
 // IS 808:2021 CLASSIFICATION completeness; aliases must resolve against real
 // rows, never synthesized masses or phantom sizes.
 const names=['JB','LB','MB','WB','NPB','WPB','SC','HB','JC','LC','MC','MPC','EQ','UE','PBP'];
-assert.equal(catalog.SERIES.length,names.length);
+assert.equal(catalog.SERIES.length,names.length+1);
+assert.equal(catalog.availableSeries('tube').length,1);
 for(const series of names){
  assert.ok(catalog.SERIES.some(s=>s.id===series),'Section classification missing: '+series);
  assert.ok(catalog.sections.some(x=>catalog.resolveSeries(x)===series),'Missing attributed sample for '+series);
@@ -58,7 +63,7 @@ assert.equal(catalog.search('PBP 200','pile')[0].kgPerM,43.85);
 assert.ok(catalog.search('100x50x8','angle').length>=1,'Unequal angle must be searchable');
 assert.equal(catalog.search('HB 999','column').length,0,'Never invent missing weights');
 assert.equal(catalog.search('HB 200','column','SC').length,0,'Series filter must stay exact');
-assert.equal(catalog.search('HB 200','column','HB').length,1,'Heavy beam series filter');
+assert.ok(catalog.search('HB 200','column','HB').length>=1,'Heavy beam series filter');
 assert.equal(catalog.availableSeries('beam').length,6);
 assert.equal(catalog.availableSeries('column').length,2);
 assert.equal(catalog.availableSeries('channel').length,4);
@@ -72,6 +77,17 @@ for(const row of catalog.sections.filter(x=>x.basis==='secondary-unverified')){
 // Missing edition-level source verification must remain explicit.
 assert.match(app,/Secondary · needs BIS audit/);
 assert.match(ui,/id="steelSeries"/);
+assert.ok(catalog.sections.some(x=>x.family==='tube'&&x.series==='CHS'),'IS 1161 circular tube entries required');
+assert.equal(catalog.availableSeries('tube')[0].id,'CHS');
+assert.ok(osdag.sections.some(x=>x.qualityFlag==='mass-area-inconsistent'),'Mass-area source checks must flag data contradictions');
+assert.ok(osdag.sections.every(x=>x.sourceId==='osdag808'||x.sourceId==='osdagCHS'));
+assert.ok(!catalog.sections.some(x=>x.family==='tube'&&['SHS','RHS'].includes(x.series)),'Never ship obsolete IS 4923:1997 SHS/RHS rows as current');
+assert.match(app,/qualityFlag==='mass-area-inconsistent'/,'UI must block inconsistent source quantity');
+assert.match(app,/mass-area conflict/i);
+assert.ok(ui.includes('pwd-steel-osdag-license.html'),'Source license must remain accessible in-app');
+assert.ok(ui.indexOf('src="./pwd-steel-osdag.js"')<ui.indexOf('src="./pwd-steel-catalog.js"'),'Load source first');
+assert.ok(cache.includes("'./pwd-steel-osdag.js'"));
+assert.ok(cache.includes("'./pwd-steel-osdag-license.html'"));
 const q=math.quantity(catalog.byId('ISMB300'),6,8,70);
 assert.ok(Math.abs(q.totalMassKg-46.02*48)<1e-9);
 assert.ok(Math.abs(q.totalTonnes-2.20896)<1e-9);
@@ -108,4 +124,4 @@ assert.doesNotMatch(app,/barBending|cuttingLength|rccWallBBS|autoStructuralDesig
 assert.ok(!ui.includes('https://fonts.googleapis.com'),'No remote fonts needed for offline use');
 assert.ok(!ui.includes('<iframe'),'Do not load untrusted third party app frames');
 assert.ok(!ui.includes('Steel Table-1.4.3.apk'),'Never bundle user-provided third party APK');
-console.log('Steel Table V2 QA passed: 19 original records plus 14 source-attributed review rows, all IS 808 families, safe geometry/weights, offline APK and no BBS.');
+console.log('Steel Table V3 QA passed: 640 Osdag licensed records, current classification aliases, CHS, source flags and original calculators.');
