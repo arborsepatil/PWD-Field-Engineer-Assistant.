@@ -75,6 +75,7 @@ const newRows=[
  reference('PBP','PBP 200 · 43.85 kg/m',200,205,43.85,{areaCm2:55.8,webMm:9.3,flangeMm:9.3,ixCm4:3990,zxCm3:399},
   'https://quickboq.in/steel/tables/parallel-flange-bearing-piles/',['ISPBP 200'])
 ];
+const sections=Object.freeze([...rows,...newRows]);
 const SERIES=Object.freeze([
  {id:'JB',family:'beam',label:'JB · Junior',legacy:'ISJB'},
  {id:'LB',family:'beam',label:'LB · Light',legacy:'ISLB'},
@@ -100,7 +101,7 @@ const resolveSeries=row=>{
  return null;
 };
 
-const sections=Object.freeze([...rows,...newRows]);
+
 const categories=Object.freeze([
  Object.freeze({id:'beam',label:'Beams',description:'JB, LB, MB, WB, NPB, WPB'}),
  Object.freeze({id:'column',label:'Columns',description:'SC and HB'}),
@@ -126,7 +127,7 @@ function search(q,family='all',series='all'){
   const keys=[x.designation,x.id,x.family,resolveSeries(x),
    ...(x.aliases||[])];
   if(prefix){
-   keys.push(prefix.legacy,x.designation.replace(new RegExp('^'+prefix.id+'\\\\s*'),prefix.legacy+' '));
+   keys.push(prefix.legacy,prefix.legacy+' '+x.designation.replace(/^[A-Z]+\s*/, ''));
   }
   return keys.some(k=>normalized(k).includes(term));
  });
