@@ -45,6 +45,7 @@ function exportCsv(entry,result){
  ['Applicable Indian Standard',entry.standard||'Not applicable: user-entered geometry'],
  ['Manufacturer source URL',entry.sourceUrl||'Not applicable'],
  ['Source verification','Published manufacturer row; not independent BIS row certification'],
+ ['Section / ordering warning',entry.orderNote||'None'],
  ['Unit mass (kg/m)',result.unitMassKgM],
  ['Member length (m)',result.lengthM],['Pieces',result.count],
  ['Total length (m)',result.totalLengthM],['Total mass (kg)',result.totalMassKg],
