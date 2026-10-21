@@ -77,6 +77,8 @@ jobs:
           test -f android/app/src/main/assets/www/pwd_mix_batch_assistant.html
           test -f android/app/src/main/assets/www/pwd_steel_table.html
           test -f android/app/src/main/assets/www/pwd-steel-catalog.js
+          test -f android/app/src/main/assets/www/pwd-steel-osdag.js
+          test -f android/app/src/main/assets/www/pwd-steel-osdag-license.html
           test -f android/app/src/main/assets/www/pwd-steel-core.js
           test -f android/app/src/main/assets/www/pwd-steel-app.js
           ! grep -q 'navigator.serviceWorker.register' android/app/src/main/assets/www/index.html
