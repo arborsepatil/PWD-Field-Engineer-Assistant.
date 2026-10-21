@@ -2,6 +2,36 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table V2 — all IS 808 profile series indexed (21 October 2026)
+
+V2 adds **all fifteen hot-rolled IS 808:2021 profile classifications** to the
+simple Steel Table UI with a series picker: beams JB/LB/MB/WB/NPB/WPB; columns
+SC/HB; channels JC/LC/MC/MPC; equal and unequal angles; parallel flange bearing
+piles PBP. Legacy aliases ISJB/ISLB/ISMB/ISWB/ISNPB/ISWPB/ISSC/ISHB/
+ISJC/ISLC/ISMC/ISMPC or ISMCP/ISA/ISPBP are searchable. The 2021 abbreviated
+designations are displayed for newly selected reference entries. Duplicate
+parallel-flange nominal sizes must be distinguished by weight/real dimensions,
+not automatically collapsed into one name.
+
+**Truth-in-data boundary:** There are 33 recorded numerical examples (19
+preserved previously source-linked SAIL manufacturer records + 14 small
+individually sourced secondary-reference examples distributed across the
+remaining section classifications). The additional examples have direct
+[QuickBOQ steel table](https://quickboq.in/steel/) category source pages and
+are all explicitly labelled **Secondary · needs BIS audit**. They are NOT a
+complete import of all IS 808 sizes, a BIS certified numeric dataset, or
+confirmation of procurement availability. The legacy 2020 SAIL angles retain
+their historical warning. Missing sizes deliberately produce no calculated
+weight. Completing all nominal sizes, publication/amendment review and source
+numerical cross-checks remains the next dataset phase. The IS 808:2021
+classification is corroborated against the BIS fourth revision description
+and the Osdag documentation. The reference webpage is not treated as BIS.
+
+The UI/UX retains tabs, live quantities, rate and CSV/PDF, source drawer,
+theme-aware section sketches and the Android offline build. RCC BBS remains
+deferred. Tests guard required profile families, old/new alias search,
+source statuses and 0 fabricated missing dimensions.
+
 ## Steel Table test UX polish (20 October 2026)
 
 The installed Android steel screen now follows **Select → Length/Pieces → Total kg**. Selected manufacturer row defaults to the first available value; live changes recalculate instantly. Optional price appears only after rate entry. Long section drawings, dimensions, source statements and BIS caution details are behind two accessible collapsible sections. Uses system fonts, current app font scale/theme setting, and dynamic SVG colors in light/dark mode (contrast tests for readable text and buttons). The Steel Table's floating quick-calculator shortcut is suppressed only on this screen to keep the input/output clear. No engineering data or RCC BBS changes.
