@@ -24,6 +24,9 @@ function shapeSvg(type,data={}){
  }else if(type==='angle'){
   body='<path d="M164 45H205V209H340V250H164Z"/>';
   info='Equal leg '+n(data.depthMm)+' mm · nominal t '+n(data.thicknessMm)+' mm';
+ }else if(type==='tube'){
+  body='<path fill-rule="evenodd" d="M244 53 a93 93 0 1 0 0 186 a93 93 0 1 0 0 -186 M244 85 a61 61 0 1 1 0 122 a61 61 0 1 1 0 -122"/>';
+  info='Circular tube OD '+n(data.depthMm)+' mm · wall '+n(data.webMm)+' mm';
  }else if(type==='round'){
   body='<circle cx="244" cy="146" r="91"/>';
   info='Solid round · theoretical geometric estimate';
@@ -81,7 +84,7 @@ function updateSelectedSummary(){
  const custom=family==='calculated';
  $('steelPicked').hidden=!custom&&!selected;
  $('steelPickedName').textContent=custom?$('steelCustomShape').selectedOptions[0].textContent:selected?.designation||'';
- $('steelPickedStatus').textContent=custom?'Theoretical weight':selected?.basis==='archived-manufacturer-only'?'Archive · verify latest':selected?.basis==='secondary-unverified'?'Secondary · check BIS row':'SAIL 2023';
+ $('steelPickedStatus').textContent=custom?'Theoretical mass':selected?.qualityFlag==='mass-area-inconsistent'?'⚠ Check mass/area':selected?.basis==='osdag-open-unverified'?'Osdag · BIS check':selected?.basis==='archived-manufacturer-only'?'Archive · verify latest':selected?.basis==='secondary-unverified'?'Secondary · check BIS row':'SAIL 2023';
 }
 function makeFamilyButtons(){
  for(const cat of catalog.categories){
@@ -96,8 +99,8 @@ function renderRows(){
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
  const root=$('steelResults');root.replaceChildren();
  $('noResults').hidden=rows.length!==0;
- $('steelCount').textContent=rows.length+' reference entries · full IS 808 size audit pending';
- for(const row of rows){
+ $('steelCount').textContent=rows.length>60?'60 of '+rows.length+' sizes · Search to narrow':rows.length+' reference sizes';
+ for(const row of rows.slice(0,60)){
   const btn=document.createElement('button');btn.className='pick';btn.type='button';
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
   const name=document.createElement('b');name.textContent=row.designation;
@@ -112,10 +115,10 @@ function renderRows(){
 function propertyTable(row){
  const tbody=document.createElement('tbody');
  const entries=[
-  ['Nominal depth / leg (mm)',row.depthMm],
-  ['Nominal width / leg (mm)',row.widthMm],
+  [row.family==='tube'?'Outside diameter (mm)':'Nominal depth / leg (mm)',row.depthMm],
+  ...(row.family==='tube'?[]:[['Nominal width / leg (mm)',row.widthMm]]),
   ['Nominal thickness (mm)',row.thicknessMm],
-  ['Web thickness (mm)',row.webMm],
+  [row.family==='tube'?'Wall thickness (mm)':'Web thickness (mm)',row.webMm],
   ['Flange thickness (mm)',row.flangeMm],
   ['Area (cm²)',row.areaCm2],
   ['Izz / major axis (cm⁴)',row.ixCm4],
@@ -136,12 +139,14 @@ function renderDetail(){
  const src=source(selected.sourceId);
  $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
  $('steelTitle').textContent=selected.designation;
- $('steelStatus').textContent=selected.basis==='archived-manufacturer-only'?'Archive · 2020':selected.basis==='secondary-unverified'?'Secondary · needs BIS audit':'SAIL published · 2023';
+ $('steelStatus').textContent=selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area conflict':selected.basis==='osdag-open-unverified'?'Osdag · row not BIS-verified':selected.basis==='archived-manufacturer-only'?'Archive · 2020':selected.basis==='secondary-unverified'?'Secondary · needs BIS audit':'SAIL published · 2023';
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
  $('steelDataCaution').textContent=selected.basis==='archived-manufacturer-only'?
   'Archived 2020 data · verify against the latest standard before procurement.':
+  selected.qualityFlag==='mass-area-inconsistent'?'Mass and area disagree by '+selected.massAreaDeltaPct+'%. Weight calculation is blocked pending source verification.':
+  selected.basis==='osdag-open-unverified'?'Osdag open-source data: revision not independently verified against current BIS numeric table.':
   selected.basis==='secondary-unverified'?'Secondary 2021 reference, NOT independently checked against the authoritative BIS numeric row.':
   'SAIL 2023 · not independently checked against current BIS rows.';
  const a=$('steelSource');a.href=selected.sourceUrl||src.url;a.textContent=src.label;
@@ -168,6 +173,7 @@ function calculate(){
   return {q,entry:{type:shape,designation:shape+' (user dimensions)',sourceLabel:'User dimensions · theoretical',sourceStatus:'Calculated only'}};
  }
  if(!selected)throw Error('Choose a steel section from the search results.');
+ if(selected.qualityFlag==='mass-area-inconsistent')throw Error('Mass/area conflict in source row; quantity blocked until verified.');
  const q=math.quantity(selected,L,N,rate),src=source(selected.sourceId);
  return {q,entry:{...selected,sourceLabel:src.label+' · '+(selected.sourceUrl||src.url),sourceDate:src.date,sourceStatus:selected.basis}};
 }
