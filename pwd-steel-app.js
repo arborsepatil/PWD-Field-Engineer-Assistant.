@@ -33,10 +33,22 @@ function shapeSvg(type,data={}){
   label=dimension(left,54,right,54,'B '+n(B)+' mm',cx,46)+dimension(108,top,108,bottom,'D '+n(D)+' mm',73,169);
   help=data.flangeMm!=null?'Tapered flange shown; corner fillets schematic':'Flange/web gauges not published in this row';
  }else if(type==='channel'){
-  const web=Math.max(9,w*.13),flange=Math.max(11,171*.11),rise=Math.min(10,w*.075);
-  body='<path d="M'+left+' '+top+' H'+right+' V'+(top+flange-rise)+' L'+(left+web)+' '+(top+flange+rise)+' V'+(bottom-flange-rise)+' L'+right+' '+(bottom-flange+rise)+' V'+bottom+' H'+left+' Z"/>';
+  // Flange slope and root/toe radii come from the SAIL channel catalogue when provided;
+  // rolling fillets are deliberately not fabricated from missing radius coordinates.
+  const web=Math.max(3.5,Number(data.webMm)?data.webMm*scale:w*.13);
+  const flange=Math.max(4,Number(data.flangeMm)?data.flangeMm*scale:171*.095);
+  const rise=Number(data.flangeSlopeDeg)===96?Math.tan(6*Math.PI/180)*(w-web)/2:Math.min(6,w*.07);
+  const edge=Math.max(3.5,flange-rise),root=flange+rise;
+  body='<path d="M'+left+' '+top+' H'+right+' V'+(top+edge)+' L'+(left+web)+' '+(top+root)+' V'+(bottom-root)+' L'+right+' '+(bottom-edge)+' V'+bottom+' H'+left+' Z"/>';
   label=dimension(left,54,right,54,'B '+n(B)+' mm',cx,46)+dimension(108,top,108,bottom,'D '+n(D)+' mm',73,169);
-  help='Channel t / T / radii unavailable — diagram schematic';
+  if(data.webMm!=null){
+   legend='t '+data.webMm+' mm   T '+data.flangeMm+' mm   α '+data.flangeSlopeDeg+'°';
+   if(data.rootRadiusMm!=null)legend+='   R₁ '+data.rootRadiusMm+'   R₂ '+data.toeRadiusMm+' mm';
+   help='Sloping flange profile; roots/toes shown schematically';
+  }else{
+   legend='Web / flange thickness unavailable';
+   help='Only D, B and kg/m confirmed from SAIL range list';
+  }
  }else if(type==='angle'){
   const size=169,bar=Math.min(50,Math.max(7,Number(data.thicknessMm)/D*size));
   const x=cx-size/2,y=top;
@@ -52,7 +64,7 @@ function shapeSvg(type,data={}){
   body='<rect x="119" y="138" width="255" height="58"/>';
   help=type==='plate'?'Plate / strip · theoretical geometric weight':'Flat bar · theoretical geometric weight';
  }
- const axes=['beam','channel','angle'].includes(type)?
+ const axes=type==='beam'?
    '<g stroke="var(--diagram-ink)" stroke-width="1" stroke-dasharray="5 5" opacity=".5"><line x1="134" y1="164.5" x2="356" y2="164.5"/><line x1="245" y1="69" x2="245" y2="259"/></g><g fill="var(--diagram-sub)" font-size="11"><text x="360" y="161">z–z</text><text x="251" y="75">y–y</text></g>':'';
  return '<svg viewBox="0 0 488 345" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+escapeSvg(type)+' section diagram; dimensions from the cited SAIL source where available; illustrative radii">'+
   '<defs><marker id="dimArrow" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M8 0L0 4L8 8" fill="none" stroke="var(--diagram-ink)" stroke-width="1"/></marker></defs>'+
@@ -157,7 +169,8 @@ function renderDetail(){
  $('steelProperties').replaceChildren(propertyTable(selected));
  $('steelDataCaution').textContent=archived?
    'This 2020 row is not rechecked against IS 808:2021 or current mill availability.':
-   'SAIL manufacturer row reviewed against the cited edition; not an independent BIS table-row certification.';
+   ((selected.orderNote ? selected.orderNote+' ' : '')+
+   'SAIL manufacturer publication; not independent BIS row-by-row certification.');
  const a=$('steelSource');a.href=src.url;a.textContent=src.label;
  $('steelSourceDate').textContent='Published '+src.date+' · '+src.note;
  $('sourceLinks').hidden=false;
@@ -182,7 +195,7 @@ function calculate(){
  }
  if(!selected)throw Error('Choose a steel section from the search results.');
  const q=math.quantity(selected,L,N,rate),src=source(selected.sourceId);
- return {q,entry:{...selected,sourceLabel:src.label,sourceDate:src.date,sourceStatus:selected.basis,sourceUrl:src.url,standard:selected.standard}};
+ return {q,entry:{...selected,sourceLabel:src.label,sourceDate:src.date,sourceStatus:selected.basis,sourceUrl:src.url,standard:selected.standard,orderNote:selected.orderNote||''}};
 }
 function updateResult(){
  try{
