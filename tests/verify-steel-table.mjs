@@ -15,10 +15,10 @@ const catalog=load('pwd-steel-catalog.js'),math=load('pwd-steel-core.js');
 const ui=read('pwd_steel_table.html'),app=read('pwd-steel-app.js'),
  home=read('index.html'),cache=read('sw.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
-assert.equal(catalog.sections.length,49,'Curated reference rows must remain controlled');
+assert.equal(catalog.sections.length,57,'Curated manufacturer and secondary reference rows must remain controlled');
 assert.equal(catalog.sections.filter(x=>x.family==='beam').length,11);
 assert.equal(catalog.sections.filter(x=>x.family==='channel').length,11);
-assert.equal(catalog.sections.filter(x=>x.family==='angle').length,18);
+assert.equal(catalog.sections.filter(x=>x.family==='angle').length,26);
 assert.equal(catalog.byId('ISMB300').kgPerM,46.02);
 assert.equal(catalog.byId('ISMC150').kgPerM,16.8);
 assert.equal(catalog.byId('ISA100x100x8').kgPerM,12.1);
@@ -29,7 +29,7 @@ assert.equal(catalog.byId('ISMB300').webMm,7.7);
 assert.equal(catalog.byId('ISMB150').zxCm3,95.7);
 assert.equal(catalog.search('ismb 300')[0].designation,'ISMB 300');
 assert.equal(catalog.search('ISMC','channel').length,8);
-assert.equal(catalog.search('ISA','angle').length,18);
+assert.equal(catalog.search('ISA','angle').length,26);
 assert.equal(catalog.search('unknown designation').length,0);
 for(const s of catalog.sections){
  assert.ok(s.kgPerM>0&&Number.isFinite(s.kgPerM));
@@ -70,10 +70,20 @@ for(const row of catalog.sections.filter(x=>x.basis==='secondary-unverified')){
 }
 // Missing edition-level source verification must remain explicit.
 assert.match(app,/Secondary · BIS review/);
+assert.ok(app.includes('Nominal dimensions · illustrative · not to scale'),'Dimensioned diagrams must remain non-fabrication drawings');
+assert.ok(app.includes('Equal')&&app.includes('Unequal'),'Equal/unequal angle geometry labels required');
+assert.ok(app.includes("const dDims=()"),'Section diagrams must show B and D source dimensions');
 assert.match(ui,/id="steelSeries"/);
 // Manufacturer's later source and the older SAIL 2020 ISA 90×90×6
 // disagree; preserve BOTH editions visibly instead of erasing history.
 assert.equal(catalog.byId('sail23-ISA90x90x6').kgPerM,8.32);
+assert.equal(catalog.byId('sail23-ISA90x90x8').kgPerM,10.92);
+assert.equal(catalog.byId('sail23-ISA100x100x8').kgPerM,12.18);
+assert.equal(catalog.byId('sail23-ISA150x150x10').kgPerM,22.93);
+assert.equal(catalog.byId('sail23-ISA200x200x12').kgPerM,36.85);
+assert.equal(catalog.byId('sail23-ISA100x100x12').kgPerM,17.83);
+assert.equal(catalog.search('ISA 90x90x8','angle')[0].sourceId,'sailStruct2023','Prioritize dated manufacturer row before historical duplicates');
+assert.ok(catalog.search('ISA 90x90x8','angle').some(x=>x.basis==='archived-manufacturer-only'),'Keep older edition for comparison');
 assert.equal(catalog.byId('ISA90x90x6').kgPerM,8.2);
 assert.ok(catalog.collisionGroups().some(g=>g.some(x=>x.id==='sail23-ISA90x90x6')));
 assert.equal(catalog.search('ISMC 300','channel').length,1);
@@ -136,4 +146,4 @@ assert.doesNotMatch(app,/barBending|cuttingLength|rccWallBBS|autoStructuralDesig
 assert.ok(!ui.includes('https://fonts.googleapis.com'),'No remote fonts needed for offline use');
 assert.ok(!ui.includes('<iframe'),'Do not load untrusted third party app frames');
 assert.ok(!ui.includes('Steel Table-1.4.3.apk'),'Never bundle user-provided third party APK');
-console.log('Steel Table V3: 49 sourced rows, edition collisions, hollow nominal/theoretical controls, 18 section series, offline APK, no BBS passed');
+console.log('Steel Table V4: 57 curated rows, SAIL 2023 priority, dimensioned diagrams, edition conflicts and hollow nominal/theoretical controls, 18 section series, offline APK, no BBS passed');
