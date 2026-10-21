@@ -2,6 +2,51 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table V3 — additional manufacturer examples + hollow geometry (21 October 2026)
+
+**Expanded developer test build, NOT an exhaustive BIS catalogue.** V3 adds
+10 selected 2023 SAIL manufacturer records (two MC channels and eight ISA
+angles) and six hollow-section sample rows: SHS (2), RHS (2), CHS (2).
+There are **49 source-attributed section examples** total, searchable offline
+over the 15 hot-rolled families plus SHS/RHS/CHS. Current IS 808 numeric
+coverage and complete IS 4923/IS 1161 current-amendment coverage are **NOT
+finished** because a licensed authoritative numeric dataset is not available.
+
+Source governance:
+- SAIL 2023 product range:
+  https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf
+  is **manufacturer-published**. Historical SAIL 2020 angle differences are
+  retained alongside later 2023 figures, with a visible disagreement notice.
+- Historical manufacturer SHS/RHS/CHS entries use a dated Tata Steel Structura
+  brochure: https://www.tatasteel.com/media/23759/tata-steel-structura-brochure.pdf
+  and remain flagged **historical**. Do not treat any old RHS unit mass as
+  automatically compliant with IS 4923:2017 Amendment 3.
+- One separately sourced small RHS example from
+  https://quickboq.in/steel/tables/rectangular-hollow-sections/ is marked
+  **secondary-amendment-unverified**, NOT a BIS-certified row.
+- BIS Amendment 3 implementation guidance:
+  https://services.bis.gov.in/tmp/Circular_vpMS_2024-08-06.pdf
+  confirms correction of selected RHS weights. The app does not claim to
+  know which historical rows changed until each original standard row is
+  reviewed. Absent sizes must not be invented.
+- The optional **custom SHS/RHS/CHS quantity** mode is computed using an
+  assumed 7850 kg/m³. SHS/RHS sharp-corner geometry omits corner radii,
+  production tolerances and weld effects; CHS uses ideal annulus geometry.
+  These are theoretical estimates, **NOT nominal current BIS table masses**.
+  Hollow field thickness is constrained to less than half the minimum outer
+  dimension; invalid inputs are blocked.
+
+Regression checks cover source provenance, search aliases, historical vs
+newer duplicates, unit mass vs given area, theoretical geometry bounds,
+light/dark UX, offline pack, native Android CSV/print, existing RCC/PCC
+tools and exclusion of RCC BBS.
+
+**Next dataset task:** obtain authorized current IS 808:2021,
+IS 4923:2017+Amd.3 and IS 1161:2014 standard numeric tables or properly
+licensed publisher data; audit each row and record verified edition/amendment
+before marking it as compliant or releasing a complete standards table.
+Do not scrape and embed hundreds of rows from a paid BIS publication.
+
 ## Steel Table V2 — all IS 808 profile series indexed (21 October 2026)
 
 V2 adds **all fifteen hot-rolled IS 808:2021 profile classifications** to the

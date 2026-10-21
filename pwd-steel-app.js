@@ -23,7 +23,13 @@ function shapeSvg(type,data={}){
   info='Depth D = '+n(data.depthMm)+' mm · Flange B = '+n(data.widthMm)+' mm';
  }else if(type==='angle'){
   body='<path d="M164 45H205V209H340V250H164Z"/>';
-  info='Equal leg '+n(data.depthMm)+' mm · nominal t '+n(data.thicknessMm)+' mm';
+  info=(data.depthMm===data.widthMm?'Equal':'Unequal')+' angle · '+n(data.depthMm)+'×'+n(data.widthMm)+' mm';
+ }else if(type==='hollow'||type.startsWith('hollow-')){
+  const shape=type==='hollow'?(data.series==='CHS'?'hollow-chs':data.series==='SHS'?'hollow-shs':'hollow-rhs'):type;
+  body=shape==='hollow-chs'?'<circle cx="244" cy="147" r="92"/><circle cx="244" cy="147" r="68" class="cutout"/>':
+   '<rect x="138" y="66" width="212" height="155"/><rect x="161" y="89" width="166" height="109" class="cutout"/>';
+  info=shape==='hollow-chs'?'Circular hollow · outside diameter':
+    shape==='hollow-shs'?'Square hollow · outside dimensions':'Rectangular hollow · outside dimensions';
  }else if(type==='round'){
   body='<circle cx="244" cy="146" r="91"/>';
   info='Solid round · theoretical geometric estimate';
@@ -80,8 +86,12 @@ function updateSeries(){
 function updateSelectedSummary(){
  const custom=family==='calculated';
  $('steelPicked').hidden=!custom&&!selected;
+ const conflicts=selected?catalog.collisionGroups().some(group=>group.some(x=>x.id===selected.id)):false;
+ $('steelWeightConflict').hidden=!conflicts;
  $('steelPickedName').textContent=custom?$('steelCustomShape').selectedOptions[0].textContent:selected?.designation||'';
- $('steelPickedStatus').textContent=custom?'Theoretical weight':selected?.basis==='archived-manufacturer-only'?'Archive · verify latest':selected?.basis==='secondary-unverified'?'Secondary · check BIS row':'SAIL 2023';
+ $('steelPickedStatus').textContent=custom?'Theoretical weight':!selected?'':selected.basis==='archived-manufacturer-only'?'Historic · BIS recheck needed':
+  ['secondary-unverified','secondary-amendment-unverified'].includes(selected.basis)?'Secondary · BIS row not checked':
+  source(selected.sourceId)?.label+' · '+source(selected.sourceId)?.date;
 }
 function makeFamilyButtons(){
  for(const cat of catalog.categories){
@@ -96,13 +106,14 @@ function renderRows(){
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
  const root=$('steelResults');root.replaceChildren();
  $('noResults').hidden=rows.length!==0;
- $('steelCount').textContent=rows.length+' reference entries · full IS 808 size audit pending';
+ $('steelCount').textContent=rows.length+' sourced sizes · full standards audit pending';
  for(const row of rows){
   const btn=document.createElement('button');btn.className='pick';btn.type='button';
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
   const name=document.createElement('b');name.textContent=row.designation;
   const subtitle=document.createElement('span');
-  subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(row.basis==='archived-manufacturer-only'?' · Archive':row.basis==='secondary-unverified'?' · 2021 secondary':'');
+  subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(row.basis==='archived-manufacturer-only'?' · Archive':
+ ['secondary-unverified','secondary-amendment-unverified'].includes(row.basis)?' · Secondary':'');
   btn.append(name,subtitle);
   btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
   root.append(btn);
@@ -136,14 +147,14 @@ function renderDetail(){
  const src=source(selected.sourceId);
  $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
  $('steelTitle').textContent=selected.designation;
- $('steelStatus').textContent=selected.basis==='archived-manufacturer-only'?'Archive · 2020':selected.basis==='secondary-unverified'?'Secondary · needs BIS audit':'SAIL published · 2023';
+ $('steelStatus').textContent=selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
  $('steelDataCaution').textContent=selected.basis==='archived-manufacturer-only'?
-  'Archived 2020 data · verify against the latest standard before procurement.':
-  selected.basis==='secondary-unverified'?'Secondary 2021 reference, NOT independently checked against the authoritative BIS numeric row.':
-  'SAIL 2023 · not independently checked against current BIS rows.';
+  'Historical manufacturer data. For RHS verify IS 4923:2017 Amendment 3 (2024); for SHS/CHS check the latest applicable standard.':
+  selected.basis.startsWith('secondary-')?'Secondary reference, not independently checked against an authoritative BIS numeric row.':
+  'Manufacturer mass; project-standard and mill test certificate checks remain necessary.';
  const a=$('steelSource');a.href=selected.sourceUrl||src.url;a.textContent=src.label;
  $('steelSourceDate').textContent=src.date+' · Reference value; check the current official standard and MTC';
  $('sourceLinks').hidden=false;
@@ -151,8 +162,12 @@ function renderDetail(){
 function updateCustomInputs(){
  const type=$('steelCustomShape').value;
  const rectangle=type==='plate'||type==='flat';
- $('steelWidthField').hidden=!rectangle;$('steelThickField').hidden=!rectangle;
- $('steelDiameterField').hidden=type!=='round';$('steelSideField').hidden=type!=='square';
+ $('steelWidthField').hidden=!(rectangle||type==='hollow-rhs');
+ $('steelThickField').hidden=!(rectangle||type.startsWith('hollow-'));
+ $('steelDiameterField').hidden=!(type==='round'||type==='hollow-chs');
+ $('steelSideField').hidden=!(type==='square'||type==='hollow-shs');
+ $('steelHeightField').hidden=type!=='hollow-rhs';
+ $('steelCustomCaution').hidden=!type.startsWith('hollow-');
  $('steelSectionDiagram').innerHTML=shapeSvg(type);
  $('steelProperties').textContent='User-entered dimensions';
  updateSelectedSummary();
@@ -163,7 +178,7 @@ function calculate(){
  if(family==='calculated'){
   const shape=$('steelCustomShape').value;
   const dims={widthMm:$('steelWidth').value,thicknessMm:$('steelThickness').value,
-   diameterMm:$('steelDiameter').value,sideMm:$('steelSide').value};
+   diameterMm:$('steelDiameter').value,sideMm:$('steelSide').value,heightMm:$('steelHeight').value};
   const q=math.geometricMass(shape,dims,L,N,rate);
   return {q,entry:{type:shape,designation:shape+' (user dimensions)',sourceLabel:'User dimensions · theoretical',sourceStatus:'Calculated only'}};
  }
@@ -216,7 +231,7 @@ function showStandards(){
 makeFamilyButtons();showStandards();
 $('steelSearch').addEventListener('input',()=>{
  const input=$('steelSearch').value.trim().toUpperCase();
- const prefix=input.match(/^(?:IS)?(JB|LB|MB|WB|NPB|WPB|SC|HB|JC|LC|MC|MPC|MCP|PBP)\b/);
+ const prefix=input.match(/^(?:IS)?(JB|LB|MB|WB|NPB|WPB|SC|HB|JC|LC|MC|MPC|MCP|PBP|SHS|RHS|CHS)\b/);
  if(prefix){
   const canonical=prefix[1]==='MCP'?'MPC':prefix[1];
   const match=catalog.SERIES.find(s=>s.id===canonical);
@@ -229,7 +244,7 @@ $('steelSeries').addEventListener('change',()=>{
  selected=null;renderRows();renderDetail();updateSelectedSummary();updateResult();
 });
 $('steelCustomShape').addEventListener('change',updateCustomInputs);
-for(const id of ['steelLength','steelCountPieces','steelRate','steelWidth','steelThickness','steelDiameter','steelSide'])
+for(const id of ['steelLength','steelCountPieces','steelRate','steelWidth','steelThickness','steelDiameter','steelSide','steelHeight'])
  $(id).addEventListener('input',updateResult);
 $('steelCalculate').addEventListener('click',updateResult);
 $('steelExport').addEventListener('click',saveCsv);
