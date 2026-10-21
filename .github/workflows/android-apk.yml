@@ -38,10 +38,14 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install Android SDK
-        uses: android-actions/setup-android@v4
+      - name: Use preinstalled GitHub runner Android SDK
+        run: |
+          test -n "${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}" 
+          sdkmanager --version
       - name: Install compile tools
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+        run: |
+          sdkmanager --licenses < /dev/null >/dev/null 2>&1 || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
       - name: Set up Gradle 9.6
         uses: gradle/actions/setup-gradle@v4
         with:
