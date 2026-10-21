@@ -2,6 +2,32 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table V3 — licensed broad sections with mass/area quality controls
+
+Adds 640 open-source [Osdag](https://github.com/osdag-admin/Osdag) section
+records as a separately attributed offline catalogue. Original SAIL and
+updated secondary SHS/RHS/CHS entries remain intact. The original Osdag database
+uses `IS808_Rev`, which Osdag previously described as an upcoming revision:
+**that tag is not proof of current BIS IS 808:2021 equivalence**.
+Open records are labelled as reference-only; authoritative numeric row checking
+is still required. CHS entries cite IS 1161:2014. Obsolete Osdag SHS/RHS
+`IS 4923:1997` rows are excluded (newer independent SHS/RHS entries from
+the earlier V3 release remain). BIS confirms IS 4923:2017 Amendment 3 (2024)
+corrected some RHS masses and must be checked before declaring those current.
+
+The adapted `pwd-steel-osdag.js` is provided under original Osdag GNU LGPL v3,
+with upstream attribution and source text in
+`pwd-steel-osdag-license.html`. Published mass-vs-sectional-area conflicts
+are **flagged and cannot produce a quantity or price** until checked; the
+2.5% preflag threshold is purely a software-data-screen, not an IS tolerance.
+Steel Table lists up to 60 sizes at a time, with full offline search across
+its data. No structural-member design approval or RCC BBS has been introduced.
+
+**Outstanding:** licensed/current BIS IS 808:2021 complete table verification,
+IS 1161 checked publication/amendment parity and complete source-audited
+IS 4923:2017 Amendment 3 SHS/RHS catalogue. The app intentionally does not
+claim every currently standardized numerical value is certified.
+
 ## Steel Table V3 — additional manufacturer examples + hollow geometry (21 October 2026)
 
 **Expanded developer test build, NOT an exhaustive BIS catalogue.** V3 adds
