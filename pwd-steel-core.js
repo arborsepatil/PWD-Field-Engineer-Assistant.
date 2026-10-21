@@ -25,10 +25,22 @@ function geometricMass(type,dimensions,length,count,rate){
  if(type==='plate'||type==='flat')areaMm2=positive(d.widthMm,'Width (mm)',20000)*positive(d.thicknessMm,'Thickness (mm)',1000);
  else if(type==='round')areaMm2=Math.PI/4*positive(d.diameterMm,'Diameter (mm)',2000)**2;
  else if(type==='square')areaMm2=positive(d.sideMm,'Square side (mm)',2000)**2;
- else throw Error('Unsupported geometry.');
+ else if(type==='hollow-shs'||type==='hollow-rhs'||type==='hollow-chs'){
+  const t=positive(d.thicknessMm,'Wall thickness (mm)',1000);
+  if(type==='hollow-chs'){
+   const D=positive(d.diameterMm,'Outside diameter (mm)',2000);
+   if(2*t>=D)throw Error('Wall thickness must be less than half the outside diameter.');
+   areaMm2=Math.PI/4*(D**2-(D-2*t)**2);
+  }else{
+   const H=type==='hollow-shs'?positive(d.sideMm,'Outer square side (mm)',2000):positive(d.heightMm,'Outer depth (mm)',2000);
+   const W=type==='hollow-shs'?H:positive(d.widthMm,'Outer width (mm)',2000);
+   if(2*t>=Math.min(H,W))throw Error('Wall thickness must be less than half the smaller outside dimension.');
+   areaMm2=H*W-(H-2*t)*(W-2*t);
+  }
+ }else throw Error('Unsupported geometry.');
  const kgPerM=areaMm2/1e6*DENSITY_KG_M3;
  const result=quantity({kgPerM},length,count,rate);
- return Object.freeze({...result,type,areaMm2,basis:'Theoretical geometric mass; density assumed 7850 kg/m³; not nominal BIS table value'});
+ return Object.freeze({...result,type,areaMm2,basis:['hollow-shs','hollow-rhs','hollow-chs'].includes(type)?'Approximate sharp-corner/annular hollow geometry, density 7850 kg/m³. DOES NOT represent IS 4923 Amendment 3 or IS 1161 nominal table weight.':'Theoretical geometric mass; density assumed 7850 kg/m³; not nominal BIS table value'});
 }
 function csvCell(value){
  let s=String(value??'');
@@ -37,7 +49,7 @@ function csvCell(value){
 }
 function exportCsv(entry,result){
  const rows=[
- ['PWD FIELD ASSISTANT — STEEL TABLE V1 — DRAFT TAKEOFF'],
+ ['PWD FIELD ASSISTANT — STEEL TABLE V3 — DRAFT TAKEOFF'],
  ['Designation',entry.designation||entry.type||''],
  ['Published source',entry.sourceLabel||'User-entered geometry'],
  ['Source date',entry.sourceDate||'Not applicable'],
