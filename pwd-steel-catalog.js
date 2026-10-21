@@ -84,6 +84,8 @@ const newRows=[
 // Manufacturer-published nominal section weights. Keep historical disagreements
 // as DISTINCT records rather than silently replacing an older reference.
 // These are SHORT, reviewed product-range examples — not a reproduction of BIS.
+// This is the manufacturer-listed product range, not the complete IS 808:
+// unknown entries and ambiguous brochure cells are intentionally excluded.
 const sailExtra=[
  channel('ISMC 300',300,90,36.30),
  channel('ISMC 400',400,100,50.10),
@@ -104,7 +106,26 @@ const sailExtra=[
  {id:'sail23-ISA90x90x10',family:'angle',series:'EQ',designation:'ISA 90×90×10',depthMm:90,widthMm:90,thicknessMm:10,kgPerM:13.47},
  {id:'sail23-ISA90x90x12',family:'angle',series:'EQ',designation:'ISA 90×90×12',depthMm:90,widthMm:90,thicknessMm:12,kgPerM:15.95},
  {id:'sail23-ISA100x100x10',family:'angle',series:'EQ',designation:'ISA 100×100×10',depthMm:100,widthMm:100,thicknessMm:10,kgPerM:15.04},
- {id:'sail23-ISA100x100x12',family:'angle',series:'EQ',designation:'ISA 100×100×12',depthMm:100,widthMm:100,thicknessMm:12,kgPerM:17.83}
+ {id:'sail23-ISA100x100x12',family:'angle',series:'EQ',designation:'ISA 100×100×12',depthMm:100,widthMm:100,thicknessMm:12,kgPerM:17.83},
+ // Additional 2023 SAIL brochure product-range angle sizes. Exactly
+ // the published size/mass pairs; no inferred thickness or mass.
+ {id:'sail23-ISA50x50x5',family:'angle',series:'EQ',designation:'ISA 50×50×5',depthMm:50,widthMm:50,thicknessMm:5,kgPerM:3.79},
+ {id:'sail23-ISA60x60x5',family:'angle',series:'EQ',designation:'ISA 60×60×5',depthMm:60,widthMm:60,thicknessMm:5,kgPerM:4.50},
+ {id:'sail23-ISA60x60x8',family:'angle',series:'EQ',designation:'ISA 60×60×8',depthMm:60,widthMm:60,thicknessMm:8,kgPerM:7.00},
+ {id:'sail23-ISA65x65x5',family:'angle',series:'EQ',designation:'ISA 65×65×5',depthMm:65,widthMm:65,thicknessMm:5,kgPerM:4.98},
+ {id:'sail23-ISA65x65x6',family:'angle',series:'EQ',designation:'ISA 65×65×6',depthMm:65,widthMm:65,thicknessMm:6,kgPerM:5.91},
+ {id:'sail23-ISA65x65x8',family:'angle',series:'EQ',designation:'ISA 65×65×8',depthMm:65,widthMm:65,thicknessMm:8,kgPerM:7.73},
+ {id:'sail23-ISA65x65x10',family:'angle',series:'EQ',designation:'ISA 65×65×10',depthMm:65,widthMm:65,thicknessMm:10,kgPerM:9.49},
+ {id:'sail23-ISA70x70x5',family:'angle',series:'EQ',designation:'ISA 70×70×5',depthMm:70,widthMm:70,thicknessMm:5,kgPerM:5.30},
+ {id:'sail23-ISA70x70x6',family:'angle',series:'EQ',designation:'ISA 70×70×6',depthMm:70,widthMm:70,thicknessMm:6,kgPerM:6.30},
+ {id:'sail23-ISA75x75x5',family:'angle',series:'EQ',designation:'ISA 75×75×5',depthMm:75,widthMm:75,thicknessMm:5,kgPerM:5.77},
+ {id:'sail23-ISA75x75x6',family:'angle',series:'EQ',designation:'ISA 75×75×6',depthMm:75,widthMm:75,thicknessMm:6,kgPerM:6.86},
+ {id:'sail23-ISA75x75x10',family:'angle',series:'EQ',designation:'ISA 75×75×10',depthMm:75,widthMm:75,thicknessMm:10,kgPerM:11.07},
+ {id:'sail23-ISA80x80x6',family:'angle',series:'EQ',designation:'ISA 80×80×6',depthMm:80,widthMm:80,thicknessMm:6,kgPerM:7.36},
+ {id:'sail23-ISA80x80x10',family:'angle',series:'EQ',designation:'ISA 80×80×10',depthMm:80,widthMm:80,thicknessMm:10,kgPerM:11.88},
+ {id:'sail23-ISA200x200x18',family:'angle',series:'EQ',designation:'ISA 200×200×18',depthMm:200,widthMm:200,thicknessMm:18,kgPerM:54.30},
+ {id:'sail23-ISA200x200x20',family:'angle',series:'EQ',designation:'ISA 200×200×20',depthMm:200,widthMm:200,thicknessMm:20,kgPerM:59.96},
+ {id:'sail23-ISA200x200x25',family:'angle',series:'EQ',designation:'ISA 200×200×25',depthMm:200,widthMm:200,thicknessMm:25,kgPerM:73.90}
 ].map((x,i)=>Object.freeze({
  ...x,sourceId:'sailStruct2023',basis:'manufacturer-published',
  standard:'IS 808:2021 (SAIL manufacturer product range; BIS row not separately audited)',
