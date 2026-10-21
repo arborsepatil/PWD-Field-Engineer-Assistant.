@@ -9,11 +9,11 @@
 'use strict';
 const SOURCES=Object.freeze({
  sail2023:Object.freeze({label:'SAIL · Product Range brochure (2023)',date:'2023-09',url:'https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf',note:'Manufacturer-published mass/overall dimensions. Do not assume conformity of delivered material without inspection/MTC.'}),
- sailProps2023:Object.freeze({label:'SAIL · Structurals / Tapered Flange (2023)',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'Manufacturer-published section properties for specific MB sizes; 2023 product data, not a replacement for the current BIS text.'}),
+ sailProps2023:Object.freeze({label:'SAIL · Structurals / Tapered Flange (2023)',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'Manufacturer-published beam and channel section properties; inspect latest BIS edition and mill certificate before design or procurement.'}),
  sail2020:Object.freeze({label:'SAIL · Structural Steel Sections, DSP archive (2020)',date:'2020-03',url:'https://www.sail.co.in/sites/default/files/product-brochure/2020-03/Structurals.pdf',note:'Archived manufacturer reference; CURRENT IS 808:2021 row and procurement availability have NOT been cross-verified.'})
 });
 const beam=(designation,depthMm,widthMm,kgPerM,extra={})=>({id:designation.replaceAll(' ',''),family:'beam',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)',...extra});
-const channel=(designation,depthMm,widthMm,kgPerM)=>({id:designation.replaceAll(' ',''),family:'channel',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)'});
+const channel=(designation,depthMm,widthMm,kgPerM,extra={})=>({id:designation.replaceAll(' ',''),family:'channel',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)',...extra});
 const angle=(legMm,thickMm,kgPerM,sourceId='sail2020')=>({id:'ISA'+legMm+'x'+legMm+'x'+thickMm,family:'angle',designation:'ISA '+legMm+'×'+legMm+'×'+thickMm,depthMm:legMm,widthMm:legMm,thicknessMm:thickMm,kgPerM,sourceId,basis:sourceId==='sail2020'?'archived-manufacturer-only':'manufacturer-published',standard:'IS 808:2021 (standard applicability only)'});
 const rows=[
  beam('ISMB 100',100,50,8.95,{areaCm2:11.4,ixCm4:182,iyCm4:12.5,zxCm3:36.4,zyCm3:5.01,webMm:4.7,flangeMm:7,flangeSlopeDeg:98,rootRadiusMm:9,toeRadiusMm:4.5,sourceId:'sailProps2023'}),
@@ -22,11 +22,13 @@ const rows=[
  beam('ISMB 250',250,125,37.30,{areaCm2:47.5,ixCm4:5130,iyCm4:334,zxCm3:410,zyCm3:53.5,webMm:6.9,flangeMm:12.5,flangeSlopeDeg:98,rootRadiusMm:13,toeRadiusMm:6.5,sourceId:'sailProps2023'}),
  beam('ISMB 300',300,140,46.02,{areaCm2:58.6,ixCm4:8990,iyCm4:486,zxCm3:599,zyCm3:69.4,webMm:7.7,flangeMm:13.1,flangeSlopeDeg:98,rootRadiusMm:14,toeRadiusMm:7,sourceId:'sailProps2023'}),
  channel('ISMC 75',75,40,7.14),
- channel('ISMC 100',100,50,9.56),
- channel('ISMC 125',125,65,13.10),
- channel('ISMC 150',150,75,16.80),
- channel('ISMC 200',200,75,22.30),
- channel('ISMC 250',250,82,34.20),
+ channel('ISMC 100',100,50,9.56,{areaCm2:12.1,webMm:5,flangeMm:7.7,flangeSlopeDeg:96,rootRadiusMm:9,toeRadiusMm:2.4,ixCm4:191,iyCm4:26.3,zxCm3:38.4,zyCm3:7.6,sourceId:'sailProps2023'}),
+ channel('ISMC 125',125,65,13.10,{areaCm2:16.6,webMm:5.3,flangeMm:8.2,flangeSlopeDeg:96,rootRadiusMm:9.5,toeRadiusMm:2.4,ixCm4:424,iyCm4:60.3,zxCm3:67.9,zyCm3:13.3,sourceId:'sailProps2023'}),
+ channel('ISMC 150',150,75,16.80,{areaCm2:21.3,webMm:5.7,flangeMm:9,flangeSlopeDeg:96,rootRadiusMm:10,toeRadiusMm:2.4,ixCm4:786,iyCm4:102,zxCm3:104,zyCm3:19.3,sourceId:'sailProps2023'}),
+ channel('ISMC 200',200,75,22.30,{areaCm2:28.4,webMm:6.2,flangeMm:11.4,flangeSlopeDeg:96,rootRadiusMm:11,toeRadiusMm:3.2,ixCm4:1820,iyCm4:139,zxCm3:182,zyCm3:26.2,sourceId:'sailProps2023'}),
+ channel('ISMC 250* · heavy',250,82,34.20,{id:'ISMC250',areaCm2:43.4,webMm:9,flangeMm:14.1,flangeSlopeDeg:96,rootRadiusMm:12,toeRadiusMm:3.2,ixCm4:4060,iyCm4:242,zxCm3:325,zyCm3:40.7,sourceId:'sailProps2023',heavyVariant:true,orderNote:'SAIL MC 250×82 heavy / IS 808 MC 250* · 34.20 kg/m. Ordinary MC 250 is 80 mm wide and 30.60 kg/m; not interchangeable. Quote width and mass when ordering.'}),
+ channel('ISMC 300',300,90,36.30,{areaCm2:46.2,webMm:7.8,flangeMm:13.6,flangeSlopeDeg:96,rootRadiusMm:13,toeRadiusMm:3.2,ixCm4:6400,iyCm4:311,zxCm3:427,zyCm3:46.8,sourceId:'sailProps2023'}),
+ channel('ISMC 400',400,100,50.10,{areaCm2:63.7,webMm:8.8,flangeMm:15.3,flangeSlopeDeg:96,rootRadiusMm:15,toeRadiusMm:4.8,ixCm4:15100,iyCm4:504,zxCm3:758,zyCm3:66.5,sourceId:'sailProps2023'}),
  angle(90,6,8.32,'sail2023'),angle(90,8,10.92,'sail2023'),
  angle(100,6,9.26,'sail2023'),angle(100,8,12.18,'sail2023'),
  angle(110,8,13.4),angle(130,10,19.7),
