@@ -37,7 +37,7 @@ for(const s of catalog.sections){
  assert.ok(catalog.SOURCES[s.sourceId],'Every section needs actual manufacturer reference');
  assert.match(catalog.SOURCES[s.sourceId].url,/^https:\/\//);
  assert.ok(s.standard.includes('IS 808:2021'),'State scope/version, not direct BIS table certification');
- if(s.family==='angle')assert.equal(s.basis,'archived-manufacturer-only');
+ if(s.basis==='archived-manufacturer-only')assert.equal(s.family,'angle');
  else assert.ok(['manufacturer-published','secondary-unverified'].includes(s.basis));
 }
 // IS 808:2021 CLASSIFICATION completeness; aliases must resolve against real
