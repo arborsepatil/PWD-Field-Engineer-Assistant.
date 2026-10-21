@@ -2,6 +2,39 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table V5 — 2023 SAIL manufacturer angle range + full browse (21 October 2026)
+
+- Adds **17 individually listed SAIL 2023 nominal equal-angle size/mass pairs** to
+  the previous 57 curated entries, giving **74 curated source-attributed rows**
+  and **33 unambiguous SAIL 2023 ISA pairs** covering 50, 60, 65, 70, 75,
+  80, 90, 100, 150 and 200 mm equal-leg angles in the gauge combinations
+  actually documented by the SAIL product-range brochure.
+  Source: https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf
+- The ambiguous fourth listed 80×80 weight with no clear corresponding gauge
+  is intentionally **NOT imported**. All rows have their original mass retained,
+  are marked *manufacturer-published*, and are **NOT certified** against each
+  current BIS IS 808:2021 table row.
+- The existing **640 LGPL-3.0 open-source Osdag records** stay separately
+  attributed, with source-area contradictions blocked and the source license
+  bundled. Some Osdag records duplicate curated sizes; therefore the user
+  screen can show different source vintages for a nominal designation.
+- Previously the UI silently limited each browse to the first 60 entries.
+  Now the first 60 are shown, then a **Show next 60 sizes** control continues
+  through the full selected family/series. Filtering resets pagination, full
+  offline search operates across all rows, and the clean mobile UI is retained.
+- Engineering smoke tests now check **all 33 clear SAIL angle masses** against a
+  separate, manually transcribed SAIL product-range fixture, check the published
+  five medium beams and eight medium channels, and guard historical conflicts,
+  blocked missing gauges and the full offline browse.
+
+**Not complete/approved:** The current BIS IS 808:2021 tables, IS 4923:2017
+(with Amendment 3, June 2024) SHS/RHS numeric entries and IS 1161 CHS numeric
+entries have **not** been wholly independently certified row-by-row against
+authorized standard copies. Missing/ambiguous nominal BIS data are not
+manufactured. The manufacturer and Osdag tables are planning references only;
+check current drawings, source edition, MTC and applicable official BIS
+standards for design, procurement and acceptance.
+
 ## Steel Table V4 — SAIL angle edition audit and dimensioned diagrams (21 October 2026)
 
 - The curated test dataset expands from 49 to **57** source-attributed examples (not including 640 additional Osdag licensed-open rows loaded into the offline Android app).
