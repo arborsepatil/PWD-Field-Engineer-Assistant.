@@ -11,35 +11,69 @@ let family='beam',selected=null,last=null,lastEntry=null;
 const source=id=>catalog.SOURCES[id];
 const format=(x,d=2)=>Number(x).toLocaleString('en-IN',{maximumFractionDigits:d,minimumFractionDigits:d});
 function shapeSvg(type,data={}){
- const blue='var(--diagram-ink)',steel='var(--diagram-metal)',ink='var(--diagram-ink)';
- let body='',info='';
+ // Original vector illustration: D/B/t/T are proportioned where documented;
+ // tapered edges and rolled corner radii remain schematic (not a shop drawing).
  const n=v=>Number(v).toLocaleString('en-IN');
+ const escapeSvg=v=>String(v).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ const title=escapeSvg(data.designation||type.charAt(0).toUpperCase()+type.slice(1));
+ const D=Number(data.depthMm)||100,B=Number(data.widthMm)||50;
+ const top=79,bottom=250,cx=245,scale=171/D,w=Math.min(195,Math.max(42,B*scale));
+ const left=cx-w/2,right=cx+w/2;
+ let body='',legend='',label='',help='Illustrative section; not a fabrication drawing';
+ const dimension=(x1,y1,x2,y2,text,tx,ty)=>'<g fill="none" stroke="var(--diagram-ink)" stroke-width="1.4"><path d="M'+x1+' '+y1+'L'+x2+' '+y2+'" marker-start="url(#dimArrow)" marker-end="url(#dimArrow)"/></g><text x="'+tx+'" y="'+ty+'" fill="var(--diagram-ink)" font-size="14" text-anchor="middle" font-weight="650">'+escapeSvg(text)+'</text>';
  if(type==='beam'){
-  body='<path d="M138 42H342V77H261V210H342V245H138V210H219V77H138Z" />';
-  info='Depth D = '+n(data.depthMm)+' mm · Flange B = '+n(data.widthMm)+' mm';
+  const web=Math.min(w*.32,Math.max(7,Number(data.webMm)?data.webMm*scale:w*.075));
+  const flange=Math.max(10,Number(data.flangeMm)?data.flangeMm*scale:171*.075);
+  const taper=(Number(data.flangeSlopeDeg)===98)?Math.min(9,Math.tan(8*Math.PI/180)*(w-web)/2):Math.min(8,w*.05);
+  const edge=Math.max(7,flange-taper/2),root=flange+taper/2;
+  body='<path d="M'+left+' '+top+' H'+right+' V'+(top+edge)+' L'+(cx+web/2)+' '+(top+root)+' V'+(bottom-root)+' L'+right+' '+(bottom-edge)+' V'+bottom+' H'+left+' V'+(bottom-edge)+' L'+(cx-web/2)+' '+(bottom-root)+' V'+(top+root)+' L'+left+' '+(top+edge)+' Z"/>';
+  legend='t '+(data.webMm??'n/a')+' mm   T '+(data.flangeMm??'n/a')+' mm';
+  if(data.rootRadiusMm!=null)legend+='   R₁ '+data.rootRadiusMm+'   R₂ '+data.toeRadiusMm+' mm';
+  if(data.flangeSlopeDeg!=null)legend+='   α '+data.flangeSlopeDeg+'°';
+  label=dimension(left,54,right,54,'B '+n(B)+' mm',cx,46)+dimension(108,top,108,bottom,'D '+n(D)+' mm',73,169);
+  help=data.flangeMm!=null?'Tapered flange shown; corner fillets schematic':'Flange/web gauges not published in this row';
  }else if(type==='channel'){
-  body='<path d="M150 42H340V80H194V208H340V246H150Z"/>';
-  info='Depth D = '+n(data.depthMm)+' mm · Flange B = '+n(data.widthMm)+' mm';
+  // Flange slope and root/toe radii come from the SAIL channel catalogue when provided;
+  // rolling fillets are deliberately not fabricated from missing radius coordinates.
+  const web=Math.max(3.5,Number(data.webMm)?data.webMm*scale:w*.13);
+  const flange=Math.max(4,Number(data.flangeMm)?data.flangeMm*scale:171*.095);
+  const rise=Number(data.flangeSlopeDeg)===96?Math.tan(6*Math.PI/180)*(w-web)/2:Math.min(6,w*.07);
+  const edge=Math.max(3.5,flange-rise),root=flange+rise;
+  body='<path d="M'+left+' '+top+' H'+right+' V'+(top+edge)+' L'+(left+web)+' '+(top+root)+' V'+(bottom-root)+' L'+right+' '+(bottom-edge)+' V'+bottom+' H'+left+' Z"/>';
+  label=dimension(left,54,right,54,'B '+n(B)+' mm',cx,46)+dimension(108,top,108,bottom,'D '+n(D)+' mm',73,169);
+  if(data.webMm!=null){
+   legend='t '+data.webMm+' mm   T '+data.flangeMm+' mm   α '+data.flangeSlopeDeg+'°';
+   if(data.rootRadiusMm!=null)legend+='   R₁ '+data.rootRadiusMm+'   R₂ '+data.toeRadiusMm+' mm';
+   help='Sloping flange profile; roots/toes shown schematically';
+  }else{
+   legend='Web / flange thickness unavailable';
+   help='Only D, B and kg/m confirmed from SAIL range list';
+  }
  }else if(type==='angle'){
-  body='<path d="M164 45H205V209H340V250H164Z"/>';
-  info='Equal leg '+n(data.depthMm)+' mm · nominal t '+n(data.thicknessMm)+' mm';
+  const size=169,bar=Math.min(50,Math.max(7,Number(data.thicknessMm)/D*size));
+  const x=cx-size/2,y=top;
+  body='<path d="M'+x+' '+y+' H'+(x+bar)+' V'+(bottom-bar)+' H'+(x+size)+' V'+bottom+' H'+x+' Z"/>';
+  label=dimension(x,54,x+size,54,'B '+n(B)+' mm',cx,46)+dimension(108,top,108,bottom,'D '+n(D)+' mm',73,169);
+  legend='Nominal leg thickness '+(data.thicknessMm??'—')+' mm';
+  help='Rolled toe/root radii schematic; verify mill dimensions';
  }else if(type==='round'){
-  body='<circle cx="244" cy="146" r="91"/>';
-  info='Solid round · theoretical geometric estimate';
+  body='<circle cx="245" cy="165" r="78"/>';label=dimension(167,165,323,165,'',245,155);help='Solid round · theoretical geometric weight';
  }else if(type==='square'){
-  body='<rect x="151" y="53" width="186" height="186"/>';
-  info='Solid square · theoretical geometric estimate';
+  body='<rect x="163" y="83" width="164" height="164"/>';help='Solid square · theoretical geometric weight';
  }else{
-  body='<rect x="105" y="115" width="275" height="70"/>';
-  info=type==='plate'?'Plate / strip · rectangular section':'Flat bar · rectangular section';
+  body='<rect x="119" y="138" width="255" height="58"/>';
+  help=type==='plate'?'Plate / strip · theoretical geometric weight':'Flat bar · theoretical geometric weight';
  }
- const label=data.designation||type.charAt(0).toUpperCase()+type.slice(1);
- // All text originates in app-authored names; SVG only has known static shapes.
- return '<svg viewBox="0 0 488 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative '+type+' cross-section, not a fabrication drawing">'+
-  '<rect width="488" height="310" fill="var(--diagram-bg)"/><g fill="'+steel+'" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round">'+body+'</g>'+
-  '<text x="244" y="25" fill="'+blue+'" text-anchor="middle" font-size="15" font-weight="700">'+label.replace(/&/g,'&amp;')+'</text>'+
-  '<text x="244" y="286" fill="'+ink+'" text-anchor="middle" font-size="12">'+info+'</text>'+
-  '<text x="244" y="304" fill="var(--diagram-sub)" text-anchor="middle" font-size="10">Schematic only · not to scale</text></svg>';
+ const axes=type==='beam'?
+   '<g stroke="var(--diagram-ink)" stroke-width="1" stroke-dasharray="5 5" opacity=".5"><line x1="134" y1="164.5" x2="356" y2="164.5"/><line x1="245" y1="69" x2="245" y2="259"/></g><g fill="var(--diagram-sub)" font-size="11"><text x="360" y="161">z–z</text><text x="251" y="75">y–y</text></g>':'';
+ return '<svg viewBox="0 0 488 345" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+escapeSvg(type)+' section diagram; dimensions from the cited SAIL source where available; illustrative radii">'+
+  '<defs><marker id="dimArrow" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M8 0L0 4L8 8" fill="none" stroke="var(--diagram-ink)" stroke-width="1"/></marker></defs>'+
+  '<rect width="488" height="345" fill="var(--diagram-bg)"/>'+
+  '<text x="245" y="25" fill="var(--diagram-ink)" text-anchor="middle" font-size="17" font-weight="750">'+title+'</text>'+
+  '<g fill="var(--diagram-metal)" stroke="var(--diagram-ink)" stroke-width="2.7" stroke-linejoin="round">'+body+'</g>'+axes+label+
+  '<text x="245" y="289" fill="var(--diagram-ink)" text-anchor="middle" font-size="12.5" font-weight="650">'+escapeSvg(legend)+'</text>'+
+  '<text x="245" y="313" fill="var(--diagram-sub)" text-anchor="middle" font-size="12">'+escapeSvg(help)+'</text>'+
+  '<text x="245" y="331" fill="var(--diagram-sub)" text-anchor="middle" font-size="11">Catalogue dimensions are nominal · original schematic</text></svg>';
 }
 function setFamily(next){
  family=next;selected=null;last=null;lastEntry=null;
@@ -102,7 +136,10 @@ function propertyTable(row){
   ['Nominal width / leg (mm)',row.widthMm],
   ['Nominal thickness (mm)',row.thicknessMm],
   ['Web thickness (mm)',row.webMm],
-  ['Flange thickness (mm)',row.flangeMm],
+  ['Flange thickness T (mm)',row.flangeMm],
+  ['Flange slope α (degrees)',row.flangeSlopeDeg],
+  ['Root radius R₁ (mm)',row.rootRadiusMm],
+  ['Toe radius R₂ (mm)',row.toeRadiusMm],
   ['Area (cm²)',row.areaCm2],
   ['Izz / major axis (cm⁴)',row.ixCm4],
   ['Iyy / minor axis (cm⁴)',row.iyCm4],
@@ -123,16 +160,18 @@ function renderDetail(){
  const archived=selected.basis==='archived-manufacturer-only';
  $('steelDetail').hidden=false;
  $('steelTitle').textContent=selected.designation;
- $('steelStatus').textContent=archived?'Archive · 2020':'SAIL · 2023';
- $('steelStatus').classList.toggle('archive',archived);
+ $('steelStatus').textContent=archived?'SAIL · archived 2020':(selected.heavyVariant?'SAIL · HEAVY SECTION · '+src.date:'SAIL · published '+src.date);
+ $('steelStatus').classList.toggle('archive',archived||Boolean(selected.heavyVariant));
  $('steelArchiveNote').hidden=!archived;
  $('steelMassCaption').textContent='Published mass per metre';
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
+ $('steelDataCaution').classList.toggle('variant-note',Boolean(selected.heavyVariant));
  $('steelDataCaution').textContent=archived?
    'This 2020 row is not rechecked against IS 808:2021 or current mill availability.':
-   'Manufacturer data (2023), not independently verified against each row of IS 808:2021.';
+   ((selected.orderNote ? selected.orderNote+' ' : '')+
+   'SAIL manufacturer publication; not independent BIS row-by-row certification.');
  const a=$('steelSource');a.href=src.url;a.textContent=src.label;
  $('steelSourceDate').textContent='Published '+src.date+' · '+src.note;
  $('sourceLinks').hidden=false;
@@ -157,7 +196,7 @@ function calculate(){
  }
  if(!selected)throw Error('Choose a steel section from the search results.');
  const q=math.quantity(selected,L,N,rate),src=source(selected.sourceId);
- return {q,entry:{...selected,sourceLabel:src.label,sourceDate:src.date,sourceStatus:selected.basis}};
+ return {q,entry:{...selected,sourceLabel:src.label,sourceDate:src.date,sourceStatus:selected.basis,sourceUrl:src.url,standard:selected.standard,orderNote:selected.orderNote||''}};
 }
 function updateResult(){
  try{
