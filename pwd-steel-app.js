@@ -160,13 +160,14 @@ function renderDetail(){
  const archived=selected.basis==='archived-manufacturer-only';
  $('steelDetail').hidden=false;
  $('steelTitle').textContent=selected.designation;
- $('steelStatus').textContent=archived?'SAIL · archived 2020':'SAIL · published '+src.date;
- $('steelStatus').classList.toggle('archive',archived);
+ $('steelStatus').textContent=archived?'SAIL · archived 2020':(selected.heavyVariant?'SAIL · HEAVY SECTION · '+src.date:'SAIL · published '+src.date);
+ $('steelStatus').classList.toggle('archive',archived||Boolean(selected.heavyVariant));
  $('steelArchiveNote').hidden=!archived;
  $('steelMassCaption').textContent='Published mass per metre';
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
+ $('steelDataCaution').classList.toggle('variant-note',Boolean(selected.heavyVariant));
  $('steelDataCaution').textContent=archived?
    'This 2020 row is not rechecked against IS 808:2021 or current mill availability.':
    ((selected.orderNote ? selected.orderNote+' ' : '')+
