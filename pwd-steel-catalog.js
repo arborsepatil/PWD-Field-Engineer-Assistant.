@@ -117,7 +117,12 @@ const codeReferences=Object.freeze([
 function normalized(q){return String(q||'').toUpperCase().replace(/×/g,'X').replace(/[^A-Z0-9]/g,'');}
 function search(q,family='all',series='all'){
  const term=normalized(q);
+ // Prefix-only search must not confuse ISMC with the historical ISMCP
+ // parallel-channel alias. ISA intentionally maps to both angle subseries.
+ const prefixMatches=SERIES.filter(s=>normalized(s.legacy)===term||normalized(s.id)===term);
+ const exactPrefix=prefixMatches.length===1?prefixMatches[0].id:null;
  return sections.filter(x=>{
+  if(exactPrefix&&resolveSeries(x)!==exactPrefix)return false;
   if(family!=='all'&&x.family!==family)return false;
   if(series!=='all'&&resolveSeries(x)!==series)return false;
   if(!term)return true;
