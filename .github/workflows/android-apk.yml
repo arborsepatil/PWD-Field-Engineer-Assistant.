@@ -58,6 +58,8 @@ jobs:
         run: node tests/verify-steel-table.mjs
       - name: Check Steel Table compact UI and light/dark contrast
         run: node tests/verify-steel-ux.mjs
+      - name: Verify Osdag licensed open steel data and contradiction blocking
+        run: node tests/verify-steel-osdag.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
