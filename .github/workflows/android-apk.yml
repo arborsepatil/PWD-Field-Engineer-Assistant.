@@ -79,6 +79,8 @@ jobs:
         run: node tests/verify-steel-table.mjs
       - name: Check Steel Table compact UI and light/dark contrast
         run: node tests/verify-steel-ux.mjs
+      - name: Validate Osdag source records and mass-area safety
+        run: node tests/verify-steel-osdag.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
@@ -98,6 +100,8 @@ jobs:
           test -f android/app/src/main/assets/www/pwd_mix_batch_assistant.html
           test -f android/app/src/main/assets/www/pwd_steel_table.html
           test -f android/app/src/main/assets/www/pwd-steel-catalog.js
+          test -f android/app/src/main/assets/www/pwd-steel-osdag.js
+          test -f android/app/src/main/assets/www/pwd-steel-osdag-license.html
           test -f android/app/src/main/assets/www/pwd-steel-core.js
           test -f android/app/src/main/assets/www/pwd-steel-app.js
           ! grep -q 'navigator.serviceWorker.register' android/app/src/main/assets/www/index.html
