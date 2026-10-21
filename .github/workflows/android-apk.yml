@@ -38,10 +38,31 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install Android SDK
-        uses: android-actions/setup-android@v4
-      - name: Install compile tools
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Locate GitHub runner Android SDK tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+          test -n "$SDK_ROOT"
+          echo "Detected Android SDK: $SDK_ROOT"
+          test -d "$SDK_ROOT"
+          MANAGER="$(find "$SDK_ROOT" -type f -name sdkmanager -print -quit)"
+          if [ -n "$MANAGER" ]; then
+            echo "$(dirname "$MANAGER")" >> "$GITHUB_PATH"
+            "$MANAGER" --version
+          else
+            echo "sdkmanager missing; only preinstalled Android platforms can be used"
+          fi
+      - name: Prepare compile tools from installed SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+          if [ ! -d "$SDK_ROOT/platforms/android-36" ] || [ ! -x "$SDK_ROOT/build-tools/36.0.0/apksigner" ]; then
+            sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          fi
+          test -d "$SDK_ROOT/platforms/android-36"
+          test -x "$SDK_ROOT/build-tools/36.0.0/apksigner"
       - name: Set up Gradle 9.6
         uses: gradle/actions/setup-gradle@v4
         with:
