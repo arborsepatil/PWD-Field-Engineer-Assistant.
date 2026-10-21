@@ -11,6 +11,8 @@ const SOURCES=Object.freeze({
  sail2023:Object.freeze({label:'SAIL · Product Range brochure (2023)',date:'2023-09',url:'https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf',note:'Manufacturer-published mass/overall dimensions. Do not assume conformity of delivered material without inspection/MTC.'}),
  sailProps2023:Object.freeze({label:'SAIL · Structurals / Tapered Flange (2023)',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'Manufacturer-published section properties for specific MB sizes; 2023 product data, not a replacement for the current BIS text.'}),
  secondary808:Object.freeze({label:'2021 steel section table · secondary index',date:'IS 808:2021 (secondary website)',url:'https://quickboq.in/steel/',note:'Selected numbers independently transcribed from a public secondary index. Not independently certified against a current authorized BIS publication; verify before design/acceptance.'}),
+ osdag808:Object.freeze({label:'Osdag open section database (LGPL-3.0)',date:'Open source · revision not BIS-verified',url:'https://github.com/osdag-admin/Osdag/blob/master/src/osdag/data/ResourceFiles/Database/Intg_osdag.sql',note:'Adapted from Osdag IS808_Rev data (original source describes upcoming revision). BIS IS 808:2021 row verification still required.'}),
+ osdagCHS:Object.freeze({label:'Osdag circular hollow section records (LGPL-3.0)',date:'IS 1161:2014 in Osdag data',url:'https://github.com/osdag-admin/Osdag/blob/master/src/osdag/data/ResourceFiles/Database/Intg_osdag.sql',note:'Osdag CHS sourced to IS 1161:2014. Confirm individual values and current amendments before procurement.'}),
  sail2020:Object.freeze({label:'SAIL · Structural Steel Sections, DSP archive (2020)',date:'2020-03',url:'https://www.sail.co.in/sites/default/files/product-brochure/2020-03/Structurals.pdf',note:'Archived manufacturer reference; CURRENT IS 808:2021 row and procurement availability have NOT been cross-verified.'})
 });
 const beam=(designation,depthMm,widthMm,kgPerM,extra={})=>({id:designation.replaceAll(' ',''),family:'beam',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)',...extra});
@@ -75,7 +77,16 @@ const newRows=[
  reference('PBP','PBP 200 · 43.85 kg/m',200,205,43.85,{areaCm2:55.8,webMm:9.3,flangeMm:9.3,ixCm4:3990,zxCm3:399},
   'https://quickboq.in/steel/tables/parallel-flange-bearing-piles/',['ISPBP 200'])
 ];
-const sections=Object.freeze([...rows,...newRows]);
+// Source priority: SAIL cited manufacturer > hand-reviewed secondary reference >
+// Osdag LGPL reference. Same designation and kg/m is not a second product.
+const distinct=new Map();
+function normalizedKey(s){return String(s).toUpperCase().replace(/[×ⅹ]/g,'X').replace(/^IS(?=[A-Z])/,'').replace(/[^A-Z0-9]/g,'');}
+for(const r of [...rows,...newRows,...((root.PWDSteelOsdag||{}).sections||[])]){
+ const key=r.family+':'+normalizedKey(r.designation)+':'+Number(r.kgPerM).toFixed(3);
+ if(!distinct.has(key))distinct.set(key,Object.freeze(r));
+}
+const sections=Object.freeze([...distinct.values()]);
+
 const SERIES=Object.freeze([
  {id:'JB',family:'beam',label:'JB · Junior',legacy:'ISJB'},
  {id:'LB',family:'beam',label:'LB · Light',legacy:'ISLB'},
@@ -91,7 +102,8 @@ const SERIES=Object.freeze([
  {id:'MPC',family:'channel',label:'MPC · Parallel',legacy:'ISMPC / ISMCP'},
  {id:'EQ',family:'angle',label:'Equal angle · ISA',legacy:'ISA'},
  {id:'UE',family:'angle',label:'Unequal angle · ISA',legacy:'ISA'},
- {id:'PBP',family:'pile',label:'PBP · Bearing pile',legacy:'ISPBP'}
+ {id:'PBP',family:'pile',label:'PBP · Bearing pile',legacy:'ISPBP'},
+ {id:'CHS',family:'tube',label:'CHS · Circular tubes',legacy:'CHS'}
 ].map(x=>Object.freeze(x)));
 const resolveSeries=row=>{
  if(row.series)return row.series;
@@ -108,13 +120,16 @@ const categories=Object.freeze([
  Object.freeze({id:'channel',label:'Channels',description:'JC, LC, MC, MPC'}),
  Object.freeze({id:'angle',label:'Angles',description:'Equal and unequal legs'}),
  Object.freeze({id:'pile',label:'Bearing piles',description:'PBP profiles'}),
+ Object.freeze({id:'tube',label:'Circular tubes',description:'CHS under IS 1161:2014; SHS/RHS pending amended IS 4923 row audit'}),
  Object.freeze({id:'calculated',label:'Plates & bars',description:'User-input theoretical mass only'})
 ]);
 const codeReferences=Object.freeze([
  Object.freeze({standard:'IS 808:2021',title:'Hot-rolled beams, columns, channels and angles — dimensions and properties',uri:'https://services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',scope:'Standard exists and applies to section types; manufacturer rows require source/date check.'}),
+ Object.freeze({standard:'IS 4923:2017 + Amd.3 (2024)',title:'Rectangular & square hollow sections — 2024 weight corrections',uri:'https://services.bis.gov.in/tmp/Circular_vpMS_2024-08-06.pdf',scope:'BIS confirms corrected weights for some RHS sizes. SHS/RHS source import pending current amendment review.'}),
+ Object.freeze({standard:'IS 1161:2014',title:'Circular structural tubes — dimensional/weight reference',uri:'https://standards.bis.gov.in/',scope:'Osdag CHS records are not independently certified against current authorized table rows.'}),
  Object.freeze({standard:'IS 2062 (Part 1):2025',title:'Structural steel material specification',uri:'https://standards.bis.gov.in/',scope:'Material grade control (not used as an IS 808 geometric properties table).'})
 ]);
-function normalized(q){return String(q||'').toUpperCase().replace(/×/g,'X').replace(/[^A-Z0-9]/g,'');}
+function normalized(q){return String(q||'').toUpperCase().replace(/[×ⅹ]/g,'X').replace(/[^A-Z0-9]/g,'');}
 function search(q,family='all',series='all'){
  const term=normalized(q);
  // Prefix-only search must not confuse ISMC with the historical ISMCP
@@ -139,7 +154,7 @@ function search(q,family='all',series='all'){
 }
 function availableSeries(family){return SERIES.filter(s=>s.family===family);}
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,search,byId});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,search,byId,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
