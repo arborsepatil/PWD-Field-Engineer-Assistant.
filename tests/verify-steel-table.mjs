@@ -15,7 +15,7 @@ const catalog=load('pwd-steel-catalog.js'),math=load('pwd-steel-core.js');
 const ui=read('pwd_steel_table.html'),app=read('pwd-steel-app.js'),
  home=read('index.html'),cache=read('sw.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
-assert.equal(catalog.sections.length,57,'Curated manufacturer and secondary reference rows must remain controlled');
+assert.equal(catalog.sections.length,58,'Curated manufacturer and secondary reference rows must remain controlled');
 assert.equal(catalog.sections.filter(x=>x.family==='beam').length,11);
 assert.equal(catalog.sections.filter(x=>x.family==='channel').length,11);
 assert.equal(catalog.sections.filter(x=>x.family==='angle').length,26);
@@ -89,11 +89,19 @@ assert.ok(catalog.collisionGroups().some(g=>g.some(x=>x.id==='sail23-ISA90x90x6'
 assert.equal(catalog.search('ISMC 300','channel').length,1);
 assert.equal(catalog.byId('sail23-ISMC300').kgPerM,36.3);
 for(const row of catalog.sections)assert.deepEqual([...catalog.auditRow(row)],[],'Incomplete nominal geometry/source: '+row.id);
-assert.equal(catalog.sections.filter(x=>x.family==='hollow').length,6);
+assert.equal(catalog.sections.filter(x=>x.family==='hollow').length,7);
 assert.equal(catalog.availableSeries('hollow').length,3);
 assert.equal(catalog.search('SHS 25x25x2','hollow')[0].kgPerM,1.36);
 assert.equal(catalog.search('RHS 40x20x2','hollow')[0].basis,'secondary-amendment-unverified');
-assert.equal(catalog.search('CHS 21.3x21.3x2','hollow')[0].kgPerM,0.95);
+assert.equal(catalog.search('CHS 21.3x2.6','hollow')[0].kgPerM,1.2);
+assert.equal(catalog.search('CHS 21.3x2','hollow').length,0,'Never imply 21.3 x 2.0 belongs to cited IS 1161 table');
+assert.equal(catalog.byId('chs-2014-secondary-21.3x2.6').areaCm2,1.53);
+assert.equal(catalog.byId('chs-2014-secondary-33.7x2.6').kgPerM,1.99);
+assert.equal(catalog.byId('tata-legacy-chs33.7x33.7x2.6').kgPerM,1.98);
+assert.ok(catalog.collisionGroups().some(group=>group.some(x=>x.id==='chs-2014-secondary-33.7x2.6')),
+  'Archive/current-reference CHS mass disagreement must stay visible');
+assert.ok(catalog.byId('chs-2014-secondary-33.7x2.6').sourceUrl.includes('chs-33.7x2.6/'));
+assert.equal(catalog.search('CHS 33.7x33.7x2.6','hollow').length,2,'Legacy full-depth aliases kept for tube sizes');
 assert.equal(catalog.search('RHS 100x100x6','hollow').length,0);
 assert.match(ui,/id="steelCustomCaution"/);
 assert.match(ui,/id="steelHeight"/);
@@ -146,4 +154,4 @@ assert.doesNotMatch(app,/barBending|cuttingLength|rccWallBBS|autoStructuralDesig
 assert.ok(!ui.includes('https://fonts.googleapis.com'),'No remote fonts needed for offline use');
 assert.ok(!ui.includes('<iframe'),'Do not load untrusted third party app frames');
 assert.ok(!ui.includes('Steel Table-1.4.3.apk'),'Never bundle user-provided third party APK');
-console.log('Steel Table V4: 57 curated rows, SAIL 2023 priority, dimensioned diagrams, edition conflicts and hollow nominal/theoretical controls, 18 section series, offline APK, no BBS passed');
+console.log('Steel Table V4.1: 58 curated rows, SAIL 2023 priority, dimensioned diagrams, edition conflicts and hollow nominal/theoretical controls, 18 section series, offline APK, no BBS passed');
