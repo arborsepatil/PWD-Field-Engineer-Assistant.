@@ -35,3 +35,4 @@ jobs:
           node tests/verify-steel-is808-v14.mjs
           node tests/verify-steel-is808-v15-geometry.mjs
           node tests/verify-steel-is808-v16.mjs
+          node tests/verify-steel-is808-v17.mjs
