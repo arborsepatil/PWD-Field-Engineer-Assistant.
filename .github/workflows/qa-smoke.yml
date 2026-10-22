@@ -27,3 +27,4 @@ jobs:
           node tests/verify-steel-sail-range.mjs
           node tests/verify-steel-bis-chs.mjs
           node tests/verify-steel-bis-4923.mjs
+          node tests/verify-steel-rhs-bis-audit.mjs
