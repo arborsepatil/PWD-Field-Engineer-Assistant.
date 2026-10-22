@@ -29,3 +29,4 @@ jobs:
           node tests/verify-steel-bis-4923.mjs
           node tests/verify-steel-rhs-bis-audit.mjs
           node tests/verify-steel-bis-4923-v10.mjs
+          node tests/verify-steel-bis-4923-v11.mjs
