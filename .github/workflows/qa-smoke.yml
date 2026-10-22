@@ -25,3 +25,4 @@ jobs:
           node tests/verify-steel-ux.mjs
           node tests/verify-steel-osdag.mjs
           node tests/verify-steel-sail-range.mjs
+          node tests/verify-steel-bis-chs.mjs

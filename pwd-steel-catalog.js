@@ -200,7 +200,7 @@ const categories=Object.freeze([
 const codeReferences=Object.freeze([
  Object.freeze({standard:'IS 808:2021',title:'Hot-rolled beams, columns, channels and angles — dimensions and properties',uri:'https://services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',scope:'Standard exists and applies to section types; manufacturer rows require source/date check.'}),
  Object.freeze({standard:'IS 4923:2017 Amd.3 (June 2024)',title:'Structural square and rectangular hollow sections — selected RHS weights corrected',uri:'https://services.bis.gov.in/tmp/Circular_vpMS_2024-08-06.pdf',scope:'BIS circular confirms amendments. Historical catalogues are not a replacement for amended masses.'}),
- Object.freeze({standard:'IS 1161:2014',title:'Circular structural tubes — specification',uri:'https://standards.bis.gov.in/',scope:'Circular tube data require latest amendment review and MTC.'}),
+ Object.freeze({standard:'IS 1161:2014 + Amd.1 (Mar 2019) + Amd.2 (Aug 2023)',title:'Circular structural tubes — revised Table 1',uri:'https://standards.bis.gov.in/',scope:'Amendment 2 replaces 2014 Table 1, including tube sizes and properties. Selected app rows are now independently checked; the full CHS catalogue remains under review.'}),
  Object.freeze({standard:'IS 2062 (Part 1):2025',title:'Structural steel material specification',uri:'https://standards.bis.gov.in/',scope:'Material grade control (not used as an IS 808 geometric properties table).'})
 ]);
 function normalized(q){return String(q||'').toUpperCase().replace(/[×ⅹ]/g,'X').replace(/[^A-Z0-9]/g,'');}
@@ -254,8 +254,40 @@ function collisionGroups(){
  return [...groups.values()].filter(g=>g.length>1&&new Set(g.map(x=>x.kgPerM)).size>1);
 }
 
+// Explicit, SMALL hand-reviewed CHS comparison against the user's private
+// IS 1161:2014 + Amendment 2 (Aug 2023), revised Table 1, pp. 3-10.
+// This is an audit ledger, NOT a copy of the copyrighted BIS table.
+// A sample match does not certify all properties or a supplier's MTC.
+const CHS_BIS_SPOT_CHECKS=Object.freeze([
+ Object.freeze({od:21.3,t:2,mass:0.95,area:1.21}),
+ Object.freeze({od:33.7,t:2,mass:1.56,area:1.99}),
+ Object.freeze({od:42.4,t:4,mass:3.79,area:4.83}),
+ Object.freeze({od:114.3,t:4,mass:10.88,area:13.86})
+]);
+const CHS_WITHDRAWN_SAMPLE=Object.freeze([
+ Object.freeze({od:21.3,t:2.6}),
+ Object.freeze({od:33.7,t:2.6})
+]);
+// 'not-listed' only for the TWO manually checked historic thicknesses; all
+// other unknown sizes are 'not-checked', not assumed invalid or current.
+function standardAudit(row){
+ const source='IS 1161:2014, Amendment 2 (Aug 2023), replacement Table 1';
+ if(!row||row.series!=='CHS')return {status:'not-checked',source:null};
+ const od=Number(row.diameterMm??row.depthMm),t=Number(row.thicknessMm??row.webMm);
+ if(CHS_WITHDRAWN_SAMPLE.some(x=>x.od===od&&x.t===t))
+  return {status:'not-listed-in-replacement',source,
+   note:'Historical size not listed in the 2023 replacement Table 1. Do not present its published mass as a current standard size.'};
+ const match=CHS_BIS_SPOT_CHECKS.find(x=>x.od===od&&x.t===t);
+ if(!match)return {status:'not-checked',source};
+ const m=Math.abs(row.kgPerM-match.mass)<=0.015;
+ const a=row.areaCm2===undefined||Math.abs(row.areaCm2-match.area)<=0.02;
+ if(m&&a)return {status:'spot-checked-match',source,
+  note:'OD, thickness, mass and available area agree within source rounding. Other properties, amendments and MTC still require checks.'};
+ return {status:'spot-checked-conflict',source,
+  note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
+}
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,collisionGroups,search,byId,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
