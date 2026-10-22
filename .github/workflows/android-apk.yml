@@ -119,6 +119,8 @@ jobs:
         run: node tests/verify-v21-final-navigation.mjs
       - name: Verify simplified PDF/source-reader entry UI
         run: node tests/verify-v23-reference-entry-ux.mjs
+      - name: Check tap-to-content navigation in three reference readers
+        run: node tests/verify-v24-mobile-reader.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
