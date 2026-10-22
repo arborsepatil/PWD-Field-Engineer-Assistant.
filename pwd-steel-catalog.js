@@ -10,7 +10,7 @@
 const SOURCES=Object.freeze({
  sail2023:Object.freeze({label:'SAIL · Product Range brochure (2023)',date:'2023-09',url:'https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf',note:'Manufacturer-published mass/overall dimensions. Do not assume conformity of delivered material without inspection/MTC.'}),
  sailProps2023:Object.freeze({label:'SAIL · Structurals / Tapered Flange (2023)',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'Manufacturer-published section properties for specific MB sizes; 2023 product data, not a replacement for the current BIS text.'}),
- is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; audited 2026-10-22',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Twenty-three selected hot-rolled reference variants, with 22 appearing as curated catalogue entries, compared directly with the owner-held IS 808:2021, Tables 1, 2, 5, 6 and 9. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
+ is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; audited 2026-10-22',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Thirty selected hot-rolled reference variants, with 29 appearing as curated catalogue entries, compared directly with the owner-held IS 808:2021, Tables 1, 2, 5, 6 and 9. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
  secondary808:Object.freeze({label:'2021 steel section table · secondary index',date:'IS 808:2021 (secondary website)',url:'https://quickboq.in/steel/',note:'Selected numbers independently transcribed from a public secondary index. Not independently certified against a current authorized BIS publication; verify before design/acceptance.'}),
  sailStruct2023:Object.freeze({label:'SAIL · Structural Product Range',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'SAIL manufacturer range; nominal stock availability and latest BIS row require separate confirmation.'}),
  tataLegacy:Object.freeze({label:'Tata Structura · Archived manufacturer brochure',date:'2015-era',url:'https://www.tatasteel.com/media/23759/tata-steel-structura-brochure.pdf',note:'Historical manufacturer section weight. Published BEFORE Amendment 3 (June 2024) to IS 4923:2017; NOT certified as current amended value.'}),
@@ -62,27 +62,35 @@ const newRows=[
   'https://quickboq.in/steel/tables/light-and-junior-beams/',['ISLB 200']),
  reference('WB','WB 150',150,100,17,{areaCm2:21.6,webMm:5.4,flangeMm:7,ixCm4:839,zxCm3:111},
   'https://quickboq.in/steel/tables/medium-and-wide-flange-beams/',['ISWB 150']),
- reference('NPB','NPB 100 × 55',100,55,8.1,{areaCm2:10.3,webMm:4.1,flangeMm:5.7,ixCm4:171,zxCm3:34.2},
+ reference('NPB','NPB 100 × 55',100,55,8.1,{areaCm2:10.3,webMm:4.1,flangeMm:5.7,ixCm4:171,iyCm4:15.9,zxCm3:34.2},
   'https://quickboq.in/steel/tables/narrow-parallel-flange-beams/',['ISNPB 100x55']),
- reference('WPB','WPB 100 × 100 · 12.24 kg/m',91,100,12.24,{areaCm2:15.5,webMm:4.2,flangeMm:5.5,ixCm4:236,zxCm3:51.9},
+ reference('WPB','WPB 100 × 100 · 12.24 kg/m',91,100,12.24,{areaCm2:15.5,webMm:4.2,flangeMm:5.5,ixCm4:236,iyCm4:92.0,zxCm3:51.9},
   'https://quickboq.in/steel/tables/wide-parallel-flange-beams/',['ISWPB 100x100']),
  reference('SC','SC 100',100,100,19.97,{areaCm2:25.4,webMm:6,flangeMm:10,ixCm4:434,zxCm3:87},
   'https://quickboq.in/steel/tables/column-and-heavy-beams/',['ISSC 100']),
  reference('HB','HB 200',200,200,37.31,{areaCm2:47.5,webMm:6.1,flangeMm:9,ixCm4:3600,zxCm3:360},
   'https://quickboq.in/steel/tables/column-and-heavy-beams/',['ISHB 200']),
- reference('JC','JC 100',100,45,5.8,{areaCm2:7.41,webMm:3,flangeMm:5.1,ixCm4:123,zxCm3:24.8},
+ reference('JC','JC 100',100,45,5.8,{areaCm2:7.41,webMm:3,flangeMm:5.1,ixCm4:123,iyCm4:14.6,zxCm3:24.8},
   'https://quickboq.in/steel/tables/sloping-flange-channels-lc-jc/',['ISJC 100']),
- reference('LC','LC 150',150,75,14.4,{areaCm2:18.3,webMm:4.8,flangeMm:7.8,ixCm4:697,zxCm3:93.1},
+ reference('LC','LC 150',150,75,14.4,{areaCm2:18.3,webMm:4.8,flangeMm:7.8,ixCm4:697,iyCm4:101,zxCm3:93.1},
   'https://quickboq.in/steel/tables/sloping-flange-channels-lc-jc/',['ISLC 150']),
- reference('MPC','MPC 150',150,75,16.8,{areaCm2:21.3,webMm:5.7,flangeMm:9,ixCm4:792,zxCm3:105},
+ reference('MPC','MPC 150',150,75,16.8,{areaCm2:21.3,webMm:5.7,flangeMm:9,ixCm4:792,iyCm4:120,zxCm3:105},
   'https://quickboq.in/steel/tables/parallel-flange-channels/',['ISMPC 150','ISMCP 150']),
  reference('EQ','∠ 50 × 50 × 5',50,50,3.79,{areaCm2:4.83,thicknessMm:5},
   'https://quickboq.in/steel/tables/equal-leg-angles/',['ISA 50x50x5','ISA 50×50×5']),
- reference('UE','∠ 100 × 50 × 8',100,50,9.05,{areaCm2:11.5,thicknessMm:8},
+ reference('UE','∠ 100 × 50 × 8',100,50,9.05,{areaCm2:11.5,thicknessMm:8,ixCm4:118,iyCm4:20.2},
   'https://quickboq.in/steel/tables/supplementary-unequal-leg-angles/',['ISA 100x50x8','ISA 100×50×8']),
- reference('PBP','PBP 200 · 43.85 kg/m',200,205,43.85,{areaCm2:55.8,webMm:9.3,flangeMm:9.3,ixCm4:3990,zxCm3:399},
+ reference('PBP','PBP 200 · 43.85 kg/m',200,205,43.85,{areaCm2:55.8,webMm:9.3,flangeMm:9.3,ixCm4:3990,iyCm4:1330,zxCm3:399},
   'https://quickboq.in/steel/tables/parallel-flange-bearing-piles/',['ISPBP 200'])
-];
+].map(row=>{
+ // Seven previously secondary-only families directly checked with BIS Tables
+ // 3/4/7/8/11/13. Keep the old secondary URL as attribution history.
+ const checked=new Set(['NPB','WPB','JC','LC','MPC','UE','PBP']);
+ return checked.has(row.series)?Object.freeze({...row,sourceId:'is808Spot2021',
+  sourceUrl:SOURCES.is808Spot2021.url,secondaryIndexUrl:row.sourceUrl,
+  basis:'bis-table-spot-audited',
+  standard:'IS 808:2021 (selected BIS mass/area/Izz/Iyy compared; not product certified)'}):row;
+});
 
 // Manufacturer-published nominal section weights. Keep historical disagreements
 // as DISTINCT records rather than silently replacing an older reference.
@@ -354,7 +362,14 @@ const IS808_BIS_SPOT_CHECKS=Object.freeze([
  Object.freeze({series:'EQ',d:200,b:200,t:12,mass:36.85,area:46.9,ix:1820,iy:1820,table:9,pdfPage:31}),
  Object.freeze({series:'WB',d:150,b:100,mass:17,area:21.6,ix:839,iy:94.7,table:1,pdfPage:7}),
  Object.freeze({series:'HB',d:200,b:200,mass:37.31,area:47.5,ix:3600,iy:967,table:5,pdfPage:20}),
- Object.freeze({series:'LB',d:200,b:100,mass:19.83,area:25.2,ix:1690,iy:115,table:2,pdfPage:9})
+ Object.freeze({series:'LB',d:200,b:100,mass:19.83,area:25.2,ix:1690,iy:115,table:2,pdfPage:9}),
+ Object.freeze({series:'NPB',d:100,b:55,mass:8.10,area:10.3,ix:171,iy:15.9,web:4.1,flange:5.7,table:3,pdfPage:11}),
+ Object.freeze({series:'WPB',d:91,b:100,mass:12.24,area:15.5,ix:236,iy:92,web:4.2,flange:5.5,table:4,pdfPage:15}),
+ Object.freeze({series:'JC',d:100,b:45,mass:5.8,area:7.41,ix:123,iy:14.6,web:3,flange:5.1,table:7,pdfPage:25}),
+ Object.freeze({series:'LC',d:150,b:75,mass:14.4,area:18.3,ix:697,iy:101,web:4.8,flange:7.8,table:7,pdfPage:26}),
+ Object.freeze({series:'MPC',d:150,b:75,mass:16.8,area:21.3,ix:792,iy:120,web:5.7,flange:9,table:8,pdfPage:27}),
+ Object.freeze({series:'UE',d:100,b:50,t:8,mass:9.05,area:11.5,ix:118,iy:20.2,table:11,pdfPage:37}),
+ Object.freeze({series:'PBP',d:200,b:205,mass:43.85,area:55.8,ix:3990,iy:1330,web:9.3,flange:9.3,table:13,pdfPage:40})
 ]);
 // Source-published nominal figures use listed rounding; 0.01 kg/m mismatch
 // is NOT a numerical match. A missing optional dimension/property must not
@@ -374,7 +389,10 @@ function auditIS808(row){
  const propPairs=[['areaCm2','area'],['ixCm4','ix'],['iyCm4','iy']];
  const available=propPairs.filter(([key])=>row[key]!==undefined&&row[key]!==null);
  const propsOK=available.every(([key,src])=>equivalent(row[key],found[src]));
- if(!massOK||!propsOK)return {status:'is808-numeric-conflict',source,
+ // Distinct parallel/tapered profiles may have similar nominal designations.
+ const webOK=found.web===undefined||row.webMm===undefined||equivalent(row.webMm,found.web);
+ const flangeOK=found.flange===undefined||row.flangeMm===undefined||equivalent(row.flangeMm,found.flange);
+ if(!massOK||!propsOK||!webOK||!flangeOK)return {status:'is808-numeric-conflict',source,
    note:'Mass or available section property disagrees with the selected BIS IS 808:2021 row. Calculation blocked for this record. Preserve source and variant identity.'};
  const complete=available.length===3;
  return {status:complete?'is808-mass-area-inertia-checked':'is808-mass-checked',source,
