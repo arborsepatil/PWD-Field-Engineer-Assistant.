@@ -13,7 +13,7 @@ vm.runInNewContext(read('pwd-steel-catalog.js'),context);
 const cat=context.module.exports;
 const app=read('pwd-steel-app.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
-assert.equal(cat.sections.length,127,'Curated sizes must be preserved');
+assert.equal(cat.sections.length,130,'Curated sizes must be preserved');
 const rhs=cat.byId('rhs-index-40x20x2');
 assert.ok(rhs);
 assert.equal(cat.standardAudit(rhs).status,'rhs-weight-checked');

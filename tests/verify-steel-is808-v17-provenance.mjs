@@ -18,8 +18,8 @@ const finish=code.indexOf(']);',begin);
 assert.ok(begin>=0&&finish>begin,'IS 808 independent sample ledger exists');
 const text=code.slice(begin,finish);
 const rows=text.split('\n').filter(x=>x.includes('Object.freeze({series:')&&x.includes('pdfPage:'));
-assert.equal(rows.length,30,'All thirty selected numerical records retain page citations');
-assert.equal(cat.is808AuditSampleCount,30);
+assert.equal(rows.length,42,'All thirty selected numerical records retain page citations');
+assert.equal(cat.is808AuditSampleCount,42);
 let checked=0;
 for(const line of rows){
  const textVal=k=>line.match(new RegExp(k+":'([^']+)'"))?.[1];
@@ -37,7 +37,7 @@ for(const line of rows){
  else if(series==='JC'){expectedPage=25;expectedTable=7;}
  else if(series==='LC'){expectedPage=26;expectedTable=7;}
  else if(series==='MPC'){expectedPage=27;expectedTable=8;}
- else if(series==='EQ'){expectedPage=d<150?31:32;expectedTable=9;}
+ else if(series==='EQ'){expectedPage=d<75?30:d<150?31:32;expectedTable=9;}
  else if(series==='UE'){expectedPage=39;expectedTable=12;}
  else if(series==='PBP'){expectedPage=40;expectedTable=13;}
  else assert.fail('Unmapped audited family: '+series);
@@ -55,7 +55,7 @@ for(const line of rows){
  assert.equal(result.status,'is808-mass-checked','mass-only record is not geometry certified');
  checked++;
 }
-assert.equal(checked,30);
+assert.equal(checked,42);
 const mb=cat.standardAudit(cat.byId('ISMB300'));
 assert.equal(mb.sourceTable,1);
 assert.equal(mb.sourcePdfPage,7);

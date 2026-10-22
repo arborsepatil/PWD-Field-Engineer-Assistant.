@@ -119,3 +119,19 @@ A new independent automated test checks every one of the 30 sample locators,
 including the different **MC 250 30.6 vs 34.2 kg/m flange-width variants**.
 The licensed non-commercial owner PDF remains private and **is not bundled in
 the public repository or Android APK**. No UI or other PWD module was changed.
+
+
+## V18 — Twelve further Table 9 angle checks and three source-conflict corrections (23 October 2026)
+
+**Source:** User-held 60-page IS 808:2021 Fourth Revision, Table 9 (equal-leg angles), physical PDF pages 30–32, **not distributed**. Its copy carries a non-commercial-use notice. Audit compared twelve selected nominal mass, area, Izz and Iyy values; the source table is *not* recopied wholesale.
+
+Samples: equal-leg **50×50×5/6; 60×60×5/6/8; 65×65×5; 75×75×8; 80×80×8; 90×90×10; 100×100×10; 150×150×12; 200×200×16**, all dimensions in mm.
+
+Three SAIL 2023 catalogue weights differ from IS 808 Table 9:
+- **ISA 60×60×5:** SAIL 4.50 kg/m, IS 808 4.58 kg/m.
+- **ISA 60×60×6:** SAIL 5.40 kg/m, IS 808 5.44 kg/m.
+- **ISA 60×60×8:** SAIL 7.00 kg/m, IS 808 7.10 kg/m.
+
+The original manufacturer records are **preserved** for revision traceability and now yield source-numeric-conflict under the limited IS 808 comparison, which **blocks their calculator quantities**. Three separate **source-checked current nominal mass/area/Izz/Iyy** records are provided so the engineer may calculate current *nominal steel quantity* without silently changing historical SAIL data. The checked records rank first in a matching section search. This check is not a judgement on rolling tolerances, actual dispatched material, IS 2062 grade, MTC quality or structural capacity.
+
+**V18 sample count:** 42 individually compared IS 808 variants, corresponding to 41 curated source-checked catalogue records; total curated entries **130**, including 22 SHS and 35 RHS samples. The additional 640 Osdag data entries remain outside BIS-certified scope. V17 physical-PDF source-page corrections and the independent all-30 provenance check are **preserved and extended to all 42**. No owned original BIS PDF is included in the APK, and no UI/UX redesign was made.

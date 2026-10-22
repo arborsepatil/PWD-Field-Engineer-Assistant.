@@ -15,10 +15,10 @@ const catalog=load('pwd-steel-catalog.js'),math=load('pwd-steel-core.js');
 const ui=read('pwd_steel_table.html'),app=read('pwd-steel-app.js'),
  home=read('index.html'),cache=read('sw.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
-assert.equal(catalog.sections.length,127,'Curated manufacturer and secondary reference rows must remain controlled');
+assert.equal(catalog.sections.length,130,'Curated manufacturer and secondary reference rows must remain controlled');
 assert.equal(catalog.sections.filter(x=>x.family==='beam').length,11);
 assert.equal(catalog.sections.filter(x=>x.family==='channel').length,11);
-assert.equal(catalog.sections.filter(x=>x.family==='angle').length,43);
+assert.equal(catalog.sections.filter(x=>x.family==='angle').length,46);
 assert.equal(catalog.byId('ISMB300').kgPerM,46.02);
 assert.equal(catalog.byId('ISMC150').kgPerM,16.8);
 assert.equal(catalog.byId('ISA100x100x8').kgPerM,12.1);
@@ -30,7 +30,7 @@ assert.equal(catalog.byId('ISMB300').webMm,7.7);
 assert.equal(catalog.byId('ISMB150').zxCm3,95.7);
 assert.equal(catalog.search('ismb 300')[0].designation,'ISMB 300');
 assert.equal(catalog.search('ISMC','channel').length,8);
-assert.equal(catalog.search('ISA','angle').length,43);
+assert.equal(catalog.search('ISA','angle').length,46);
 assert.equal(catalog.search('unknown designation').length,0);
 for(const s of catalog.sections){
  assert.ok(s.kgPerM>0&&Number.isFinite(s.kgPerM));

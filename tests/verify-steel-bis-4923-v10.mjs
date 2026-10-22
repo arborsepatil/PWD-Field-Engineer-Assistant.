@@ -29,7 +29,7 @@ const RHS=[
 ];
 assert.equal(cat.shsAuditSampleCount,22);
 assert.equal(cat.rhsAuditSampleCount,35,'14 V9 samples + 5 non-corrected RHS Table 2 checks');
-assert.equal(cat.sections.length,127);
+assert.equal(cat.sections.length,130);
 assert.equal(cat.sections.filter(x=>x.family==='hollow').length,59);
 assert.equal(cat.sections.filter(x=>x.series==='SHS').length,22);
 assert.equal(cat.sections.filter(x=>x.series==='RHS').length,35);
