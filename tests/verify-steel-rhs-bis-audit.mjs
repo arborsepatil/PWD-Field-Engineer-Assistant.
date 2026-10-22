@@ -73,7 +73,7 @@ for(const [id,h,w,t,mass] of corrected){
   'Nominal weight differs by 0.01 kg/m for '+id);
 }
 assert.equal(cat.standardAudit({series:'RHS',depthMm:150,widthMm:100,thicknessMm:4,kgPerM:14.88,areaCm2:25}).status,'mass-area-conflict','Self-inconsistent supplied area must fail even when amended nominal mass is checked');
-assert.equal(cat.standardAudit({series:'RHS',depthMm:40,widthMm:20,thicknessMm:2,kgPerM:1.68,areaCm2:2.5}).status,'rhs-weight-conflict','Sampled Amendment 2 area must agree');
+assert.equal(cat.standardAudit({series:'RHS',depthMm:40,widthMm:20,thicknessMm:2,kgPerM:1.68,areaCm2:2.5}).status,'mass-area-conflict','Sampled Amendment 2 area inconsistency must be blocked');
 assert.equal(cat.standardAudit({series:'RHS',depthMm:150,widthMm:100,thicknessMm:4.5,kgPerM:17}).status,'amendment3-review','Do not certify non-audited sizes');
 assert.equal(cat.standardAudit({series:'RHS',depthMm:100,widthMm:50,thicknessMm:2,kgPerM:5}).status,'amendment3-review');
 assert.equal(cat.standardAudit({series:'RHS',depthMm:50,widthMm:25,thicknessMm:1.6,kgPerM:1.8}).status,'outside-current-scope');
