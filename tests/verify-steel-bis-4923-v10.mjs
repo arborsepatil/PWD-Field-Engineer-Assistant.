@@ -27,12 +27,12 @@ const RHS=[
  ['bis22-rhs100x50x4',100,50,4,8.59,10.95,134.14,44.95],
  ['bis22-rhs200x100x6',200,100,6,26.40,33.63,1703,577],
 ];
-assert.equal(cat.shsAuditSampleCount,6);
-assert.equal(cat.rhsAuditSampleCount,19,'14 V9 samples + 5 non-corrected RHS Table 2 checks');
-assert.equal(cat.sections.length,95);
-assert.equal(cat.sections.filter(x=>x.family==='hollow').length,27);
-assert.equal(cat.sections.filter(x=>x.series==='SHS').length,6);
-assert.equal(cat.sections.filter(x=>x.series==='RHS').length,19);
+assert.equal(cat.shsAuditSampleCount,16);
+assert.equal(cat.rhsAuditSampleCount,29,'14 V9 samples + 5 non-corrected RHS Table 2 checks');
+assert.equal(cat.sections.length,115);
+assert.equal(cat.sections.filter(x=>x.family==='hollow').length,47);
+assert.equal(cat.sections.filter(x=>x.series==='SHS').length,16);
+assert.equal(cat.sections.filter(x=>x.series==='RHS').length,29);
 for(const [id,size,t,kg,area,ix] of SHS){
  const row=cat.byId(id);
  assert.ok(row,'Missing SHS audit record '+id);
@@ -66,7 +66,7 @@ assert.equal(cat.standardAudit({series:'SHS',depthMm:50,widthMm:50,thicknessMm:2
 assert.equal(cat.standardAudit({series:'RHS',depthMm:100,widthMm:50,thicknessMm:4,kgPerM:8.59,ixCm4:134.15}).status,'rhs-weight-conflict');
 assert.equal(cat.standardAudit({series:'RHS',depthMm:100,widthMm:50,thicknessMm:4,kgPerM:8.60}).status,'rhs-weight-conflict');
 assert.equal(cat.standardAudit({series:'SHS',depthMm:120,widthMm:120,thicknessMm:5,kgPerM:20}).status,'not-checked','Other SHS must remain unverified');
-assert.equal(cat.standardAudit({series:'RHS',depthMm:120,widthMm:80,thicknessMm:4,kgPerM:15}).status,'amendment3-review','Other RHS remain unverified');
+assert.equal(cat.standardAudit({series:'RHS',depthMm:120,widthMm:80,thicknessMm:5,kgPerM:15}).status,'amendment3-review','Other RHS remain unverified');
 assert.equal(cat.standardAudit({series:'SHS',depthMm:30,widthMm:30,thicknessMm:1.9,kgPerM:2}).status,'outside-current-scope');
 const app=text('pwd-steel-app.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
