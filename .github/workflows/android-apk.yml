@@ -117,6 +117,8 @@ jobs:
         run: node tests/verify-v21-batch-guidance.mjs
       - name: Verify final V21 simplified navigation and JE Profile
         run: node tests/verify-v21-final-navigation.mjs
+      - name: Verify mobile source-reader selection and scrolling
+        run: node tests/verify-v23-mobile-reader.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
