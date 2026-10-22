@@ -37,3 +37,4 @@ jobs:
           node tests/verify-steel-is808-v16.mjs
           node tests/verify-steel-is808-v17-provenance.mjs
           node tests/verify-steel-is808-v18-angles.mjs
+          node tests/verify-steel-v19-provenance.mjs
