@@ -56,7 +56,7 @@ for(const [h,w,t,kg,area,ix,iy] of rhs){
 // Do not silently revise or certify any questionable physical table row.
 assert.equal(cat.sections.filter(x=>x.series==='RHS'&&x.depthMm===120&&x.widthMm===80&&x.thicknessMm===6).length,0,
  '120x80x6 must remain excluded until authoritative source area correction');
-assert.equal(cat.standardAudit({series:'RHS',depthMm:120,widthMm:80,thicknessMm:6,kgPerM:16.98,areaCm2:2.63}).status,'amendment3-review');
+assert.equal(cat.standardAudit({series:'RHS',depthMm:120,widthMm:80,thicknessMm:6,kgPerM:16.98,areaCm2:2.63}).status,'source-numeric-hold');
 assert.equal(cat.standardAudit({series:'RHS',depthMm:120,widthMm:80,thicknessMm:4,kgPerM:11.74,areaCm2:14.95,ixCm4:294.59,iyCm4:157.29}).status,'rhs-weight-conflict');
 assert.equal(cat.standardAudit({series:'SHS',depthMm:80,widthMm:80,thicknessMm:4,kgPerM:9.22}).status,'shs-row-conflict',
  'Mass only must not masquerade as complete SHS area/inertia verification');
