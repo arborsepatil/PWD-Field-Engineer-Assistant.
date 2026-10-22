@@ -2,6 +2,40 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Steel Table V6 — private IS 1161 Amendment 2 cross-check (22 October 2026)
+
+After receiving the authorized **IS 1161:2014 base, Amendment 1 (March 2019),
+and Amendment 2 (August 2023)**, the CHS catalogue gained a limited, explicit
+source-level BIS spot-check. Amendment 2 **replaces Table 1**; an older 2014
+row must not automatically be called a current listed size.
+
+- Verified spot samples of **OD/thickness, mass and published area** only:
+  21.3 OD × 2.0 wall, 33.7 × 2.0, 42.4 × 4.0, 114.3 × 4.0.
+  All match the 2023 replacement Table 1 to published rounding in the
+  regression fixture. Source: private user-provided amended BIS copy.
+  A sample match is not certification of all the section properties,
+  vendor stock, tolerances, quality tests or MTC.
+- Historical **21.3 × 2.6** and **33.7 × 2.6** CHS are **not listed** at
+  those thicknesses in the replacement table. These two checked sizes
+  cannot be used by the built-in source-based quantity calculator and carry
+  an explicit warning; all other UNCHECKED CHS sizes remain *not checked*,
+  not automatically unlisted.
+- A mismatch to a sample mass or cross-sectional area is marked
+  `spot-checked-conflict` and blocked from source-based quantity/cost
+  calculations, rather than silently substituted.
+- Maintains **74 manufacturer/secondary records**, **640 attributed open
+  Osdag rows**, and all prior lightweight UI/Android features. Existing
+  section status and source provenance remain separate from material-grade
+  acceptance, inspection and MTC.
+- The private, noncommercial copyrighted BIS PDF was **not committed or
+  embedded in the APK**, nor was the complete numerical BIS table copied.
+  Only these small, individually checked comparison facts and metadata
+  are used to flag already-available values.
+- The full **IS 1161 current-amendment row-by-row CHS audit**, complete
+  IS 4923:2017+Amd.3 SHS/RHS check, and full IS 808:2021
+  hot-rolled audit remain distinct work; this patch does not claim
+  those are finished.
+
 ## Steel Table V5 — 2023 SAIL manufacturer angle range + full browse (21 October 2026)
 
 - Adds **17 individually listed SAIL 2023 nominal equal-angle size/mass pairs** to
