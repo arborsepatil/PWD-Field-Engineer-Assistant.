@@ -83,6 +83,8 @@ jobs:
         run: node tests/verify-steel-osdag.mjs
       - name: Verify SAIL 2023 range and full catalogue paging
         run: node tests/verify-steel-sail-range.mjs
+      - name: Verify 2023 BIS CHS replacement-table sample and unlisted-size gate
+        run: node tests/verify-steel-bis-chs.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
