@@ -16,7 +16,7 @@
 @media(max-width:560px){.private-pdf-bar{top:6px;left:6px;right:6px;padding:6px 8px}.private-pdf-bar .import-label,.private-pdf-bar button{min-height:35px;padding:6px 8px;font-size:12px}.private-status{font-size:11px}}
 .canvas-layer{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;pointer-events:none;background:#101720}
 .canvas-layer[hidden]{display:none}.canvas-layer canvas{display:block;max-width:none;max-height:none;image-rendering:auto}
-</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" target="_blank" rel="noopener">Open in Drive</a></header><main class="viewer" id="viewer"><div id="privateBar" class="private-pdf-bar" aria-label="Private source PDF"><label class="import-label" for="privatePdfFile">Use PDF on this device<input id="privatePdfFile" type="file" accept=".pdf,application/pdf" aria-label="Select original PDF for offline viewing"></label><button id="forgetPrivatePdf" type="button" hidden>Forget PDF</button><span class="private-status" id="privatePdfStatus" role="status" aria-live="polite">This source stays on your device.</span></div><div id="pdfPageIndicator" class="sheet-count" role="status" aria-live="polite"></div><div class="gesture-surface" id="gestureSurface"><div class="canvas-layer" id="canvasLayer" hidden><canvas id="drawingCanvas" aria-label="Rendered original PDF drawing"></canvas></div><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This source remains private in Google Drive. On some mobile browsers, Drive blocks embedded sign-in or third-party cookies.</p><a id="fallbackBtn" class="primary" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open PDF in Drive</a></div></div></main><script src="./library-drive-catalog.js"></script><script src="./bridge-local-source.js"></script><script src="./library-private-pdf.js"></script><script src="./bridge-pdf-canvas.js"></script><script>
+</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" rel="noopener">Open in Drive</a></header><main class="viewer" id="viewer"><div id="privateBar" class="private-pdf-bar" aria-label="Private source PDF"><label class="import-label" for="privatePdfFile">Use PDF on this device<input id="privatePdfFile" type="file" accept=".pdf,application/pdf" aria-label="Select original PDF for offline viewing"></label><button id="forgetPrivatePdf" type="button" hidden>Forget PDF</button><span class="private-status" id="privatePdfStatus" role="status" aria-live="polite">This source stays on your device.</span></div><div id="pdfPageIndicator" class="sheet-count" role="status" aria-live="polite"></div><div class="gesture-surface" id="gestureSurface"><div class="canvas-layer" id="canvasLayer" hidden><canvas id="drawingCanvas" aria-label="Rendered original PDF drawing"></canvas></div><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>Choose how to open this PDF</h2><p><b>Online:</b> Open the original PDF in Google Drive using your phone browser or Drive app. <b>Offline:</b> first download the correct PDF, then choose “Use PDF on this device” above. Drive sign-in is not supported inside this embedded reader.</p><a id="fallbackBtn" class="primary" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open in Drive (internet)</a></div></div></main><script src="./library-drive-catalog.js"></script><script src="./bridge-local-source.js"></script><script src="./library-private-pdf.js"></script><script src="./bridge-pdf-canvas.js"></script><script>
 const DOCS={
 morth:{title:'MoRTH Specifications · 5th Revision 2013',id:'1pVTcUdNoUcmSpfhVhnM2Ld-3gXiJPpFe',meta:'Road & Bridge Works'},
 rulebook:{title:'PWD Rule Book · Marathi 6th Edition 1984',id:'1g1bLZJtVyYDB5RLTjqoDxZUyEpvdkGaZ',meta:'Maharashtra Public Works Rule Book'},
@@ -164,14 +164,15 @@ function changeMode(useCanvas){
 function display(){
  if(!d)return;
  bridgeGestures?.reset();
- const nativeUrl=localURL?localURL+'#page='+page:drivePreview();
- if(canvasController?.ready){
+ const nativeUrl=localURL?localURL+'#page='+page:null;
+ if(canvasController?.ready&&localURL){
    canvasController.showPage(page);
  }else{
    changeMode(false);
-   element('frame').src=nativeUrl;
+   if(nativeUrl)element('frame').src=nativeUrl;
+   else element('frame').removeAttribute('src');
  }
- element('fallback').classList.remove('show');
+ element('fallback').classList.toggle('show',!localURL);
  element('driveBtn').href=driveView();
  element('fallbackBtn').href=driveView();
  setPageStatus();
@@ -213,7 +214,8 @@ if(!d){
          changeMode(true);
        }else if(status==='error'){
          changeMode(false);
-         element('frame').src=localURL?localURL+'#page='+page:drivePreview();
+         if(localURL)element('frame').src=localURL+'#page='+page;
+         else {element('frame').removeAttribute('src');element('fallback').classList.add('show');}
          element('docMeta').textContent='Native PDF fallback · '+message;
          element('pdfPageIndicator').textContent='Requested p.'+page+' / '+maxPage+' · native viewer may ignore page jump';
        }else if(status==='loading'){
@@ -248,7 +250,8 @@ if(!d){
    if(catalogRecord?.section){
      document.querySelector('.top a').href='./library.html?section='+encodeURIComponent(catalogRecord.section);
    }
-   element('frame').src=drivePreview();
+   element('frame').removeAttribute('src');
+   element('fallback').classList.add('show');
    bridgeGestures=enableBridgeFingerGestures(pageSwipe,scale=>{
      if(canvasActive&&canvasController?.ready&&scale>1.8)
        canvasController.rerenderForZoom(scale);
@@ -264,7 +267,8 @@ if(!d){
          setPageStatus();
        }else if(status==='error'){
          changeMode(false);
-         element('frame').src=localURL?localURL+'#page='+page:drivePreview();
+         if(localURL)element('frame').src=localURL+'#page='+page;
+         else {element('frame').removeAttribute('src');element('fallback').classList.add('show');}
          element('docMeta').textContent='Native local preview · '+message;
        }else if(status==='loading'){
          element('docMeta').textContent=message;
@@ -292,7 +296,7 @@ if(!d){
    });
  }
  let loaded=false;
- element('frame').addEventListener('load',()=>{loaded=true;element('fallback').classList.remove('show')});
- setTimeout(()=>{if(!loaded&&!localURL)element('fallback').classList.add('show')},12000);
+ element('frame').addEventListener('load',()=>{if(localURL){loaded=true;element('fallback').classList.remove('show')}});
+ if(!localURL)element('fallback').classList.add('show');
 }
 </script><script src="./app-shell.js"></script></body></html>
