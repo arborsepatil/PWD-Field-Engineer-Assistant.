@@ -37,7 +37,7 @@ for(const s of catalog.sections){
  assert.ok(catalog.SOURCES[s.sourceId],'Every section needs actual manufacturer reference');
  assert.match(catalog.SOURCES[s.sourceId].url,/^https:\/\//);
  assert.ok(s.standard.includes(s.family==='hollow'?(s.series==='CHS'?'IS 1161':'IS 4923'):'IS 808:2021'),'Correct standard attribution');
- assert.ok(['manufacturer-published','secondary-unverified','secondary-amendment-unverified','archived-manufacturer-only','bis-spot-audited-mass'].includes(s.basis));
+ assert.ok(['manufacturer-published','secondary-unverified','secondary-amendment-unverified','archived-manufacturer-only','bis-spot-audited-mass','bis-table-spot-audited'].includes(s.basis));
 }
 // IS 808:2021 CLASSIFICATION completeness; aliases must resolve against real
 // rows, never synthesized masses or phantom sizes.
