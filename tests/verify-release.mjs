@@ -816,7 +816,7 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
    'Unified viewer must load curated Drive IDs and private attachment handler');
  assert.ok(lib.includes("'./pdf_viewer.html?file='+encodeURIComponent(record.id)"),
    'Library PDFs still leave the app instead of opening the in-app reader');
- assert.ok(lib.includes('Google Drive ↗'),'Explicit external Drive fallback must be retained');
+ assert.ok(lib.includes('Open in Drive ↗'),'Explicit external Drive fallback must be retained');
  assert.ok(!shell.some(path=>/\.pdf$/i.test(path)),'Public app must not precache copyrighted original PDFs');
  assert.ok(!home.includes('Game-changer module deliberately held'),'Old SSR placeholder must stay removed');
  assert.ok(home.includes('SSR Master'),'User-retained SSR Master must be visible in app navigation');
