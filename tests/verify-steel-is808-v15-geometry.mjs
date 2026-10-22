@@ -27,8 +27,8 @@ const geometries=[
  ['ISMC150','channel',5.7,9.0,96,10,2.4,23,21.3,786,102],
  ['ISMC200','channel',6.2,11.4,96,11,3.2,23,28.4,1820,139],
  ['ISMC250','channel',9,14.1,96,12,3.2,24,43.4,4060,242],
- ['ISMC300','channel',7.8,13.6,96,13,3.2,24,46.2,6400,311],
- ['ISMC400','channel',8.8,15.3,96,15,4.8,24,63.7,15100,504]
+ ['sail23-ISMC300','channel',7.8,13.6,96,13,3.2,24,46.2,6400,311],
+ ['sail23-ISMC400','channel',8.8,15.3,96,15,4.8,24,63.7,15100,504]
 ];
 assert.equal(geometries.length,13);
 assert.equal(new Set(geometries.map(x=>x[0])).size,13);
