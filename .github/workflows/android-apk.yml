@@ -105,6 +105,8 @@ jobs:
         run: node tests/verify-steel-is808-v16.mjs
       - name: Audit IS 808 printed reference page mapping
         run: node tests/verify-steel-is808-v17-provenance.mjs
+      - name: Check source-corrected IS 808 equal-angle masses against manufacturer conflicts
+        run: node tests/verify-steel-is808-v18-angles.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
