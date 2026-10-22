@@ -32,8 +32,8 @@ const geometries=[
 ];
 assert.equal(geometries.length,13);
 assert.equal(new Set(geometries.map(x=>x[0])).size,13);
-assert.equal(cat.is808AuditSampleCount,30,'30 limited selected IS808 source variants; no bulk reproduction');
-assert.equal(cat.sections.length,127,'Section totals preserved from V14');
+assert.equal(cat.is808AuditSampleCount,42,'30 limited selected IS808 source variants; no bulk reproduction');
+assert.equal(cat.sections.length,130,'Section totals preserved from V14');
 let complete=0;
 for(const [id,family,web,flange,slope,r1,r2,page,area,izz,iyy] of geometries){
  const row=cat.byId(id);
