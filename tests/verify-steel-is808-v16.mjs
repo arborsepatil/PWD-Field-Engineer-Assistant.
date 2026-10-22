@@ -69,7 +69,7 @@ const parallel=cat.search('MPC 150','channel','MPC').find(x=>x.sourceId==='is808
 assert.ok(channel&&parallel,'Both MC and MPC 150 must be separately searchable');
 assert.equal(channel.kgPerM,parallel.kgPerM,'Same nominal weight for two different channel shapes');
 assert.notEqual(channel.ixCm4,parallel.ixCm4,'Sloping vs parallel flanges have different Iz');
-assert.equal(cat.standardAudit(channel).status,'is808-mass-checked');
+assert.equal(cat.standardAudit(channel).status,'is808-mass-area-inertia-checked','Existing V15 MC150 geometry and inertia checks must remain intact');
 assert.equal(cat.standardAudit(parallel).status,'is808-mass-area-inertia-checked');
 const legacy=cat.byId('ISA100x100x8');
 assert.equal(legacy.kgPerM,12.1);
