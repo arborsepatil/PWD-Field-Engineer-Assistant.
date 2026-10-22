@@ -40,3 +40,26 @@ IS 808:2021 Table 6 separately records **MC 250, B = 80 mm, 30.6 kg/m** and a **
 - The Android catalogue and CSV weight calculations block known conflicting historic masses while allowing matching nominal records.
 - Engineering CI now invokes the V14 independent source ledger and **actual** app calculation path. Earlier V12 calculator fix and V13 hollow tables stay isolated.
 - No UI/UX redesign. This is an engineering data, verification and audit provenance update only.
+
+
+## Steel V15 follow-on: previously unverified IS 808 families
+
+User-held IS 808:2021 Fourth Revision, PDF source tables independently reviewed (not republished). **Seven additional selected catalogued sizes** now have nominal mass, area, Izz and Iyy checked, plus sourced web/flange thickness where applicable. Current total **30 independently sampled source variants**, of which **29 are represented as curated app entries**; the separate MC 250 B=80 sample remains an audit-only variant.
+
+| Sample group | Nominal designation (physical D x B mm) | Table | PDF page | Checked nominal mass |
+|---|---|---|---|---|
+| Narrow parallel beam | NPB 100 × 55 | 3 | 11 | 8.10 kg/m |
+| Wide parallel beam | WPB 100 × 100, physical D=91 × B=100 | 4 | 15 | 12.24 kg/m |
+| Junior channel | JC 100 × 45 | 7 | 25 | 5.80 kg/m |
+| Light channel | LC 150 × 75 | 7 | 26 | 14.40 kg/m |
+| Parallel channel | MPC 150 × 75 | 8 | 27 | 16.80 kg/m |
+| Supplementary unequal angle | 100 × 50 × 8 | **12** | **39** | 9.05 kg/m |
+| Parallel bearing pile | PBP 200 variant, physical D=200 × B=205 | 13 | 40 | 43.85 kg/m |
+
+**Engineering critical:** MC 150 (sloping flange) and MPC 150 (parallel flange) can have the **same** nominal 16.80 kg/m but different published moments of inertia; a weight-only lookup must not combine them. Also WPB 100×100 at 12.24 kg/m has physical depth **91 mm**, not 100 mm. Supplementary unequal 100×50×8 belongs to **Table 12**, not Table 11, and is explicitly checked under its correct table.
+
+These seven rows retain their previous secondary-index URLs for audit trace, but app source labels now point to the direct owner-held BIS sample comparison. The public BIS informational link establishes the standard identity, **not an unauthorised re-publication of the private table**. Original copyrighted PDF and personal source-watermark information are excluded from GitHub and APK.
+
+An exact 0.01 kg/m or 0.01 cm⁴ source discrepancy triggers a numeric conflict. When source-published web/flange thickness is present in the app, it is also checked for these samples. This is reference-data checking, not a manufacturing acceptance tolerance. Material grade, MTC, supply, member strength and full structural suitability require project-specific engineering review.
+
+BIS currently lists [IS 808:2021](https://standards.bis.gov.in/) as the hot-rolled section dimensions/properties reference. No UI/UX redesign; the previous hollow-section and calculator safeguards remain in place.
