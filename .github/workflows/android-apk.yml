@@ -111,6 +111,8 @@ jobs:
         run: node tests/verify-steel-v19-provenance.mjs
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
+      - name: Verify final V21 simplified navigation and JE Profile
+        run: node tests/verify-v21-final-navigation.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK

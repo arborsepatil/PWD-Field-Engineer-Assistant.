@@ -840,7 +840,7 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(!app.includes('pwdCalcFab'),'Floating overlay must be removed from shared shell');
  assert.ok(!profile.includes('Foundation for quick access'),'Empty favorites placeholder still visible');
  assert.ok(!profile.includes('Downloaded books/drawings will appear'),'Inactive download placeholder still visible');
- assert.ok(profile.includes('SSR Master'),'Profile should acknowledge retained SSR Master');
+ assert.ok(!profile.includes('Recent tools')&&!profile.includes('SSR Master'),'Profile should not duplicate the Home tool list or abandoned recents');
  assert.ok(!home.includes('recentGrid'),'No recent shortcuts on simplified Home');
  assert.equal((home.match(/class="tool-row"/g)||[]).length,8,'Exactly eight kept tools on Home');
 
