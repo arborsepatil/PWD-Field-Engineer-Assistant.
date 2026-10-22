@@ -53,3 +53,16 @@ Reference context:
 - [BIS Amd 2 circular](https://www.services.bis.gov.in/tmp/Circular_slZj_2024-06-05.pdf)
 - [BIS Amd 3 implementation](https://services.bis.gov.in/tmp/Circular_vpMS_2024-08-06.pdf)
 - [Government Gazette establishing Amendment 3](https://egazette.gov.in/WriteReadData/2024/255500.pdf)
+
+
+## V12 — Whole-table *internal* numerical consistency review and calculator fix
+
+Scope of the internal PDF-text audit: **190 square** + **216 rectangular** = **406 Amendment 2 size rows** in the owner-held consolidated IS 4923:2017 PDF. For each row, compare nominal weight (kg/m) against the expected value from area (cm²) using 7 850 kg/m³ or **0.785 kg/m per cm²**.
+
+Two original Table 2 rows exceeded an exploratory 2% internal mass/area alarm: **120×60×5**, original mass 12.48 kg/m against 16.36 cm², for which Amendment 3 corrects the mass to **12.84 kg/m**; and **120×80×6**, printed mass 16.98 kg/m against printed area 2.63 cm², which implies ~21.63 cm² at nominal density. The inferred area is **NOT an authoritative BIS corrigendum**; the size remains quarantined. The 2% alarm is **software QA, NOT an IS code limit or acceptance criterion**. Source rounding is permitted.
+
+All **45 curated SHS/RHS rows** already in the app were checked for available area: the **33 with sourced area** passed this 2% internal alarm. The 12 Amendment 3 corrected-weight records intentionally have no invented area/inertia, so are excluded from this specific calculation.
+
+**Software correction:** The app's selected-section calculator contained an erroneous assignment to the outside-current-scope status where strict equality comparison was required. This could erroneously block otherwise valid selected steel-section weight calculations. V12 corrects it and adds an executable calculator regression for beam, SHS, RHS, sub-2-mm current structural scope, 120×80×6 source quarantine and mass/area conflicts.
+
+The private BIS PDF remains out of GitHub and the APK. The 406 source rows were analyzed, NOT republished as a comprehensive app catalogue. UI/UX redesign remains out of scope.
