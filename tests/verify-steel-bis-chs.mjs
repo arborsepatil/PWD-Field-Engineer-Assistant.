@@ -35,7 +35,7 @@ assert.equal(cat.standardAudit({series:'MB',depthMm:300,kgPerM:46.02}).status,'n
 assert.equal(full.openDataCount,640);
 assert.equal(full.standardAudit(full.byId('tata-legacy-chs33.7x33.7x2.6')).status,'not-listed-in-replacement');
 assert.match(app,/IS 1161 Amendment 2 review: not an approved current table weight/);
-assert.match(app,/IS 1161:2023 · sample checked/);
+assert.match(app,/IS 1161:2014 Amd.2 · sample checked/);
 assert.match(app,/not-listed-in-replacement/);
 assert.match(app,/2023 spot-check/);
 assert.match(app,/spot-checked-conflict/);
