@@ -606,8 +606,8 @@ const driveCatalog=(()=>{
  surfaceListeners.pointerdown(p(9,220,200));
  surfaceListeners.pointermove(p(9,70,200));
  surfaceListeners.pointerup(p(9,70,200));
- assert.notEqual(target.src,beforeSwipe,'Unzoomed single-finger swipe must advance the PDF page');
- assert.ok(target.src.includes('#page=18'),'Page swipe should request next 2023 original PDF page');
+ assert.equal(target.src,'about:blank','Bridge must not auto-embed Google sign-in');
+ assert.ok(els.pdfPageIndicator.textContent.includes('18 / 221'),'Page swipe must update drawing page status');
  assert.ok(replacedPath.includes('page=18'),'Page navigation should update shareable deep link');
  await localControls.onSource('blob:https://example.org/private-bridge-pdf',{size:500,arrayBuffer:async()=>new ArrayBuffer(500)});
  assert.equal(renderedPage,18,'Local renderer must open real PDF page 18 (not rely on #page fragment)');
@@ -615,13 +615,18 @@ const driveCatalog=(()=>{
  assert.equal(target.style.display,'none','Native iframe should not overlay real canvas drawing');
  assert.ok(els.pdfPageIndicator.textContent.includes('rendered locally'),'Canvas state must be disclosed in page status');
  await localControls.onSource(null);
- assert.ok(target.src.includes('drive.google.com/file/d/'),
-           'Forgetting local original must restore private Google Drive fallback');
+ assert.equal(target.src,'about:blank','Forgetting local original must show device chooser, not signed-in Drive iframe');
  assert.ok(canvasLayer.hidden,'Forget PDF should hide local canvas');
  assert.ok(pdf.includes('bridge-pdf-canvas.js'),'Local page renderer not loaded');
+ assert.ok(pdf.includes('id="sourceChooser"')&&pdf.includes('id="chooseDevicePdf"'),
+           'Android PDF must show on-device import instead of failed Drive embed');
+ assert.ok(!pdf.includes('/preview#page='),'Authenticated Google Drive cannot be embedded as default');
+
  assert.ok(shell.includes('./bridge-pdf-canvas.js'),'Offline PWA must cache page renderer controller');
  const source=load('bridge-pdf-canvas.js');
  new vm.Script(source,{filename:'bridge-pdf-canvas.js'});
+ assert.ok(source.includes('cachedAsset(LIB)')&&source.includes('cachedAsset(WORKER)'),
+           'Offline renderer must explicitly read its cached scripts in Android WebView');
  const fakeCanvas={width:0,height:0,style:{},getContext(){return {}}};
  const fakeLayer={hidden:true,getBoundingClientRect(){return {width:300,height:500}}};
  let pageRequested=[],viewportWidth=[],states=[];
@@ -895,7 +900,7 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  const begin=viewer.indexOf('<script>'),inline=viewer.slice(begin+8,viewer.indexOf('</script>',begin));
  vm.runInNewContext(inline,mock,{filename:'standard-pdf-viewer'});
  assert.equal(elements.docTitle.textContent,entry.name,'In-app viewer did not find the chosen Drive entry');
- assert.ok(pdfFrame.src.includes(entry.id+'/preview'),'Original Drive PDF is not embedded');
+ assert.equal(pdfFrame.src,'about:blank','Do not embed authenticated Google Drive previews in Android');
  assert.ok(elements.driveBtn.href.includes(entry.id+'/view'),'Original Drive fallback missing');
  assert.equal(privateConfig?.key,'drive-'+entry.id,'Local copies must be segregated by Drive document ID');
  assert.ok(!viewerModes.has('gesture-mode'),'Online Drive iframe must keep its own touch interactions');
@@ -911,7 +916,7 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(changedUrl.includes('page=2'),'Book page swipe must update the reader URL');
  await privateConfig.onSource(null,null);
  assert.ok(!viewerModes.has('gesture-mode'),'Native Drive fallback should restore touch interaction');
- assert.ok(pdfFrame.src.includes(entry.id+'/preview'),'Forgetting device PDF did not return to Drive');
+ assert.equal(pdfFrame.src,'about:blank','Forgetting device PDF must return to device chooser');
 
  // A private device attachment is never treated as source identity verification.
  const fakeFile=new Blob(['%PDF-1.7','x'.repeat(300)],{type:'application/pdf'});
