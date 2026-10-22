@@ -10,6 +10,21 @@ function positive(value,label,max){
  const n=Number(value);if(!Number.isFinite(n)||n<=0||n>max)throw Error(label+' is invalid.');
  return n;
 }
+// Distinguish how a listed kg/m value was obtained. Quantity arithmetic is
+// unchanged; these labels document reference provenance, NOT steel certification.
+function nominalMassMethod(entry){
+ const labels=Object.freeze({
+  'bis-table-spot-audited':'Selected BIS table nominal mass (limited source-row comparison; not product/MTC certification)',
+  'bis-spot-audited-mass':'Selected BIS nominal mass checked only (geometry/material not certified)',
+  'manufacturer-published':'Manufacturer-published nominal mass (current source version not independently certified)',
+  'archived-manufacturer-only':'Historical manufacturer nominal mass (current BIS row not certified)',
+  'secondary-unverified':'Secondary published nominal mass (BIS row not independently verified)',
+  'secondary-amendment-unverified':'Secondary amendment reference nominal mass (not independently BIS verified)',
+  'osdag-open-unverified':'Osdag open reference nominal mass (current BIS row not independently verified)'
+ });
+ const label=labels[entry?.basis]||'Provided reference nominal mass (source verification not established)';
+ return label+' × member length × number of pieces';
+}
 function quantity(entry,length,count,rate){
  if(!entry||!Number.isFinite(entry.kgPerM)||entry.kgPerM<=0)throw Error('Select a source record.');
  const L=positive(length,'Length in m',10000),N=positive(count,'Pieces',100000);
@@ -17,7 +32,7 @@ function quantity(entry,length,count,rate){
  const r=rate===''||rate===null||rate===undefined?null:Number(rate);
  if(r!==null&&(!Number.isFinite(r)||r<0||r>1e8))throw Error('Rate must be non-negative.');
  const totalKg=L*N*entry.kgPerM;
- return Object.freeze({lengthM:L,count:N,unitMassKgM:entry.kgPerM,totalLengthM:L*N,totalMassKg:totalKg,totalTonnes:totalKg/1000,ratePerKg:r,totalPrice:r===null?null:r*totalKg,basis:'Manufacturer published kg/m × length × count'});
+ return Object.freeze({lengthM:L,count:N,unitMassKgM:entry.kgPerM,totalLengthM:L*N,totalMassKg:totalKg,totalTonnes:totalKg/1000,ratePerKg:r,totalPrice:r===null?null:r*totalKg,basis:nominalMassMethod(entry)});
 }
 function geometricMass(type,dimensions,length,count,rate){
  const d=dimensions||{};
