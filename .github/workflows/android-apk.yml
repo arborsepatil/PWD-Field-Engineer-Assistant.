@@ -95,6 +95,8 @@ jobs:
         run: node tests/verify-steel-bis-4923-v11.mjs
       - name: Verify IS 4923 source numeric hold and real steel calculator status comparisons
         run: node tests/verify-steel-v12-calculator.mjs
+      - name: Verify additional source-checked IS 4923 sections and current BIS certification scope
+        run: node tests/verify-steel-bis-4923-v13.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK

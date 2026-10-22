@@ -55,12 +55,12 @@ assert.doesNotMatch(app,/if\(chsAudit\.status='outside-current-scope'\)/,
  'Assignment instead of comparison would block EVERY catalogue section');
 const hollowRows=catalog.sections.filter(x=>x.series==='SHS'||x.series==='RHS');
 const withAreas=hollowRows.filter(x=>Number.isFinite(x.areaCm2)&&x.areaCm2>0);
-assert.equal(hollowRows.length,45);
-assert.equal(withAreas.length,33);
+assert.equal(hollowRows.length,57);
+assert.equal(withAreas.length,45);
 for(const x of withAreas){
  const delta=Math.abs(x.kgPerM-0.785*x.areaCm2)/x.kgPerM;
  assert.ok(delta<=.02,x.designation+' exceeds the 2% internal consistency alarm');
 }
 assert.equal(catalog.sections.filter(x=>x.series==='RHS'&&x.depthMm===120&&x.widthMm===80&&x.thicknessMm===6).length,0,
  'Unresolved original source anomaly must stay out of curated catalogue');
-console.log('Steel V12 PASS: real non-custom calculator computes beam, RHS and SHS; 33 area consistency checks; source discrepancy holds; no status-assignment regression.');
+console.log('Steel V12 PASS: real non-custom calculator computes beam, RHS and SHS; 45 area consistency checks; source discrepancy holds; no status-assignment regression.');

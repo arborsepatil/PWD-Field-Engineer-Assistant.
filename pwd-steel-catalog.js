@@ -197,6 +197,21 @@ const hollowRows=[
  hollow('bis22-rhs90x50x3','RHS',90,50,3,6.13,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:7.81,ixCm4:81.85,iyCm4:32.74}),
  hollow('bis22-rhs100x60x4','RHS',100,60,4,9.22,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:11.75,ixCm4:152.58,iyCm4:68.68}),
  hollow('bis22-rhs120x80x4','RHS',120,80,4,11.73,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:14.95,ixCm4:294.59,iyCm4:157.29}),
+ // V13: further independent selected SHS/RHS samples across small to large
+ // section ranges in the privately held BIS consolidated Amendment 2 tables.
+ // See docs/steel-is4923-v10-audit.md for exact PDF source pages.
+ hollow('bis22-shs20x20x2','SHS',20,20,2,1.05,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:1.34,ixCm4:0.69,iyCm4:0.69}),
+ hollow('bis22-shs25x25x2.5','SHS',25,25,2.5,1.64,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:2.09,ixCm4:1.69,iyCm4:1.69}),
+ hollow('bis22-shs45x45x4','SHS',45,45,4,4.83,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:6.15,ixCm4:16.61,iyCm4:16.61}),
+ hollow('bis22-shs150x150x6','SHS',150,150,6,26.40,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:33.63,ixCm4:1146.00,iyCm4:1146.00}),
+ hollow('bis22-shs250x250x12','SHS',250,250,12,86.77,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:110.54,ixCm4:10254.00,iyCm4:10254.00}),
+ hollow('bis22-shs400x400x16','SHS',400,400,16,187.75,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:239.18,ixCm4:57946.00,iyCm4:57946.00}),
+ hollow('bis22-rhs80x50x2','RHS',80,50,2,3.88,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:4.94,ixCm4:43.44,iyCm4:21.06}),
+ hollow('bis22-rhs120x80x3','RHS',120,80,3,8.96,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:11.41,ixCm4:230.20,iyCm4:123.43}),
+ hollow('bis22-rhs180x100x6','RHS',180,100,6,24.52,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:31.23,ixCm4:1309.61,iyCm4:523.83}),
+ hollow('bis22-rhs300x100x6','RHS',300,100,6,35.82,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:45.63,ixCm4:4777.00,iyCm4:842.00}),
+ hollow('bis22-rhs500x300x10','RHS',500,300,10,120.44,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:153.43,ixCm4:52867.00,iyCm4:24127.00}),
+ hollow('bis22-rhs500x300x12','RHS',500,300,12,143.29,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:182.54,ixCm4:62169.00,iyCm4:28294.00}),
  hollow('tata-legacy-chs21.3x21.3x2','CHS',21.3,21.3,2,0.95,'tataLegacy','archived-manufacturer-only',{areaCm2:1.21,ixCm4:0.57,iyCm4:0.57}),
  hollow('tata-legacy-chs33.7x33.7x2.6','CHS',33.7,33.7,2.6,1.98,'tataLegacy','archived-manufacturer-only',{areaCm2:2.54,ixCm4:3.09,iyCm4:3.09})
 ];
@@ -253,6 +268,8 @@ const codeReferences=Object.freeze([
  Object.freeze({standard:'IS 808:2021',title:'Hot-rolled beams, columns, channels and angles — dimensions and properties',uri:'https://services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',scope:'Standard exists and applies to section types; manufacturer rows require source/date check.'}),
  Object.freeze({standard:'IS 4923:2017 Amd.2 (2022)',title:'Structural hollow sections — thickness below 2 mm outside amended IS 4923 scope',uri:'https://www.services.bis.gov.in/tmp/Circular_slZj_2024-06-05.pdf',scope:'BIS 4 June 2024 circular requires deletion of thicknesses below 2 mm from IS 4923 licences by 17 October 2024. IS 18573:2024 covers general/decorative applications; do not infer structural suitability.'}),
  Object.freeze({standard:'IS 4923:2017 Amd.3 (June 2024)',title:'Structural square and rectangular hollow sections — selected RHS weights corrected',uri:'https://services.bis.gov.in/tmp/Circular_vpMS_2024-08-06.pdf',scope:'BIS circular confirms amendments. Historical catalogues are not a replacement for amended masses.'}),
+ Object.freeze({standard:'IS 4923:2017 · BIS Product Manual (Aug 2024)',title:'Product certification and test requirements — nominal mass is not structural-grade approval',uri:'https://www.bis.gov.in/wp-content/uploads/2024/08/Revised-PM-template-4923.pdf',scope:'BIS manual documents 3 amendments, material source requirements and certification/test controls. Weight-only checks cannot certify grade, weld integrity, properties, supply or MTC.'}),
+ Object.freeze({standard:'IS 18573:2024 (separate application)',title:'Cold-formed welded square/rectangular sections for general engineering and decorative purposes',uri:'https://www.services.bis.gov.in/tmp/Circular_slZj_2024-06-05.pdf',scope:'BIS identifies this as a separate standard for non-structural/general/decorative applications. A matching size or mass does not authorize structural use to IS 4923.'}),
  Object.freeze({standard:'IS 1161:2014 + Amd.1 (Mar 2019) + Amd.2 (Aug 2023)',title:'Circular structural tubes — revised Table 1',uri:'https://standards.bis.gov.in/',scope:'Amendment 2 replaces 2014 Table 1, including tube sizes and properties. Selected app rows are now independently checked; the full CHS catalogue remains under review.'}),
  Object.freeze({standard:'IS 2062 (Part 1):2025',title:'Structural steel material specification',uri:'https://standards.bis.gov.in/',scope:'Material grade control (not used as an IS 808 geometric properties table).'})
 ]);
@@ -358,7 +375,13 @@ const RHS_BIS_ADDITIONAL=Object.freeze([
  Object.freeze({h:80,w:40,t:4,mass:6.71,area:8.55,ix:64.79,iy:21.49}),
  Object.freeze({h:90,w:50,t:3,mass:6.13,area:7.81,ix:81.85,iy:32.74}),
  Object.freeze({h:100,w:60,t:4,mass:9.22,area:11.75,ix:152.58,iy:68.68}),
- Object.freeze({h:120,w:80,t:4,mass:11.73,area:14.95,ix:294.59,iy:157.29})
+ Object.freeze({h:120,w:80,t:4,mass:11.73,area:14.95,ix:294.59,iy:157.29}),
+ Object.freeze({h:80,w:50,t:2,mass:3.88,area:4.94,ix:43.44,iy:21.06}),
+ Object.freeze({h:120,w:80,t:3,mass:8.96,area:11.41,ix:230.20,iy:123.43}),
+ Object.freeze({h:180,w:100,t:6,mass:24.52,area:31.23,ix:1309.61,iy:523.83}),
+ Object.freeze({h:300,w:100,t:6,mass:35.82,area:45.63,ix:4777.00,iy:842.00}),
+ Object.freeze({h:500,w:300,t:10,mass:120.44,area:153.43,ix:52867.00,iy:24127.00}),
+ Object.freeze({h:500,w:300,t:12,mass:143.29,area:182.54,ix:62169.00,iy:28294.00})
 ]);
 const SHS_BIS_SAMPLES=Object.freeze([
  Object.freeze({s:25,t:2,mass:1.36,area:1.74,ix:1.48}),
@@ -376,7 +399,13 @@ const SHS_BIS_SAMPLES=Object.freeze([
  Object.freeze({s:75,t:4.5,mass:9.55,area:12.17,ix:98.55}),
  Object.freeze({s:80,t:4,mass:9.22,area:11.75,ix:111.04}),
  Object.freeze({s:90,t:5,mass:12.84,area:16.36,ix:192.93}),
- Object.freeze({s:100,t:6,mass:16.98,area:21.63,ix:311.47})
+ Object.freeze({s:100,t:6,mass:16.98,area:21.63,ix:311.47}),
+ Object.freeze({s:20,t:2,mass:1.05,area:1.34,ix:0.69}),
+ Object.freeze({s:25,t:2.5,mass:1.64,area:2.09,ix:1.69}),
+ Object.freeze({s:45,t:4,mass:4.83,area:6.15,ix:16.61}),
+ Object.freeze({s:150,t:6,mass:26.40,area:33.63,ix:1146.00}),
+ Object.freeze({s:250,t:12,mass:86.77,area:110.54,ix:10254.00}),
+ Object.freeze({s:400,t:16,mass:187.75,area:239.18,ix:57946.00})
 ]);
 // Reject any 0.01 discrepancy where the BIS table specifies 2 decimals.
 const agrees=(got,expected)=>got!==undefined&&got!==null&&Math.abs(Number(got)-expected)<0.005;
