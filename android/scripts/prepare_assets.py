@@ -22,15 +22,15 @@ for file in ROOT.iterdir():
 
 index_path = OUTPUT / "index.html"
 page = index_path.read_text(encoding="utf-8")
-# Strip PWA installation help from the Android version (website remains an optional demo).
-assert 'id="installHelp"' in page, "Expected web installation copy changed"
-page = page.replace('</head>', '<style>#install,#installHelp{display:none!important}</style></head>', 1)
-start = page.find("if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register")
-end_marker = "else status.textContent='Offline unsupported';"
+# Android bundles public assets within the APK: no browser installation prompt
+# or service worker should run inside native WebView.
+assert 'id="installHelp"' not in page, "V20 Home must not show PWA/browser install copy"
+start = page.find("if('serviceWorker' in navigator){")
+end_marker = "}else offlineStatus.textContent='Online only';"
 end = page.find(end_marker, start)
 if start < 0 or end < 0:
-    raise RuntimeError("Unexpected install/service-worker script; review Android asset packaging.")
-page = page[:start] + "status.textContent='✓ Android app assets offline';" + page[end + len(end_marker):]
+    raise RuntimeError("Unexpected V20 Home service-worker script; inspect before Android packaging.")
+page = page[:start] + "offlineStatus.textContent='● Ready offline';" + page[end + len(end_marker):]
 index_path.write_text(page, encoding="utf-8")
 assert "navigator.serviceWorker.register" not in page
 assert len(list(OUTPUT.glob("*.html"))) >= 10

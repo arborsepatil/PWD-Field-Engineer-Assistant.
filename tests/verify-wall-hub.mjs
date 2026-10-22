@@ -16,7 +16,7 @@ const pack=read('android/scripts/prepare_assets.py');
 
 assert.match(home,/href="\.\/pwd_retaining_walls\.html" data-tool-id="wall"/);
 assert.match(home,/PCC calculator · RCC 2023 type plans/);
-assert.match(home,/name:'Retaining Walls',href:'pwd_retaining_walls\.html'/);
+assert.ok(!home.includes('recentGrid'),'Recent tool shortcuts are intentionally removed from Home');
 assert.match(hub,/<h2>⬛ PCC Retaining Wall<\/h2>/);
 assert.match(hub,/<h2>🏗️ RCC Retaining Wall<\/h2>/);
 assert.equal((hub.match(/<article class="card">/g)||[]).length,2,'Only PCC and RCC should be top-level options');
@@ -24,12 +24,12 @@ assert.match(hub,/href="\.\/pwd_retaining_wall_section_quantity\.html"/);
 assert.match(hub,/href="\.\/pwd_rcc_wall_reference\.html"/);
 assert.doesNotMatch(hub,/Masonry|masonry|href="\.\/pwd_pcc_wall_reference\.html"/);
 
-assert.match(pccCalc,/<h1>PCC Retaining Wall Calculator<\/h1>/);
+assert.match(pccCalc,/<div class="title">PCC Retaining Wall/,'Header still identifies PCC calculator');
 assert.match(pccCalc,/<script src="\.\/pwd-retaining-wall-core\.js"><\/script>/);
 assert.match(pccCalc,/<script src="\.\/pwd-wall-diagrams\.js"><\/script>/);
 assert.match(pccCalc,/href="\.\/pwd_retaining_walls\.html"/);
 assert.match(pccCalc,/href="\.\/pwd_pcc_wall_reference\.html"/);
-assert.match(pccCalc,/existing calculator section/);
+assert.match(pccCalc,/Bridge return-wall plans use different profiles/,'The unrelated bridge source must stay separate');
 assert.match(core,/Wall concrete \('/);
 assert.match(core,/PCC \/ footing/);
 assert.match(core,/Rubble soling/);

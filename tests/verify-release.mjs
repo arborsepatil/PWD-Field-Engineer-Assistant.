@@ -77,7 +77,7 @@ process.stdout.write('Service-worker navigation/static fallback isolation passed
 const home=load('index.html');
 assert.ok(home.includes('rel="manifest"'),'App manifest not linked from home');
 assert.ok(home.includes('serviceWorker.register'),'App service worker not registered');
-assert.ok(home.includes('id="installHelp"'),'Android installation instructions missing from app');
+assert.ok(!home.includes('id="installHelp"'),'Native Android home must not show browser/PWA installation instructions');
 
 const manifest=JSON.parse(load('manifest.json'));
 assert.equal(manifest.display,'standalone');
@@ -93,7 +93,7 @@ for(const sec of ['2500','2600','2611-2612','2613-2615','2700','2800','2900','30
 // MoRTH app-shell extension loader: failure of one source script cannot hide later clauses.
 {
  const start=app.indexOf('  // Resilient MoRTH extensions:');
- const end=app.indexOf("  document.getElementById('pwdCalcFab')",start);
+ const end=app.indexOf("  document.addEventListener('keydown'",start);
  assert.ok(start>=0&&end>start,'MoRTH extension loader not found');
  const loader=app.slice(start,end);
  const execute=(pathname,failedFilename)=>{
@@ -420,7 +420,7 @@ const driveCatalog=(()=>{
  for(const body of [gateway,library,home,guide,y2023,load('README.md')]){
    assert.ok(!body.includes('Bridge Hydro')&&!body.includes('bridge_hydraulic_calculator.html'),'Bridge Hydro still discoverable');
  }
- assert.ok(home.includes('removedToolIds')&&home.includes('bridgehydro'),'Recent tools can revive retired modules');
+ assert.ok(!home.includes('recentGrid')&&!home.includes('bridge_hydraulic_calculator.html'),'Retired Recent shortcuts and Bridge Hydro must not return to Home');
  const pdf=load('pdf_viewer.html');
  assert.ok(pdf.includes('enableBridgeFingerGestures(onPageSwipe,onGestureIdle)'),'Finger gestures missing in PDF viewer');
  assert.ok(pdf.includes("key==='bridge2002'||key==='bridge2023'"),'Gestures not limited to bridge books');
@@ -825,25 +825,24 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(!shell.some(path=>/\.pdf$/i.test(path)),'Public app must not precache copyrighted original PDFs');
  assert.ok(!home.includes('Game-changer module deliberately held'),'Old SSR placeholder must stay removed');
  assert.ok(home.includes('SSR Master'),'User-retained SSR Master must be visible in app navigation');
- assert.ok(home.includes('Rate engine pending'),'SSR Master must not claim unverified rate/analysis functionality');
+ assert.ok(!home.includes('Rate engine pending'),'The Home tool list must not display unfinished development statuses');
  assert.ok(home.includes('library.html?section=ssr'),'SSR source PDFs must be reachable from home');
- assert.equal((home.match(/class="module-card"/g)||[]).length,5,
-   'Home must expose five kept navigation sections including SSR Master');
+ assert.equal((home.match(/class="module-card"/g)||[]).length,0,
+   'Duplicated large module cards must be removed; tools remain in one list');
  assert.ok(manifest.shortcuts.some(x=>x.name==='Library'),'Android shortcut missing the Library');
  // Simple-feature polish: inactive preferences removed and controls wired.
  const settings=load('settings.html'), profile=load('profile.html');
  for(const retired of ['guideToggle','offlineToggle','wifiToggle','GPS Cam']){
    assert.ok(!settings.includes(retired),'Inactive or removed Setting still visible: '+retired);
  }
- assert.ok(settings.includes('bindCalculatorToggle()'),'Calculator setting does not initialize');
- assert.ok(settings.includes('PWDUI.syncCalculatorVisibility'),'Settings must update calculator visibility');
- assert.ok(app.includes('function syncCalculatorVisibility()'),'Shared calculator switch missing');
- assert.ok(app.includes("store.getItem('pwd_calc_fab')"),'Floating calculator ignores saved setting');
+ assert.ok(!settings.includes('bindCalculatorToggle()'),'Retired floating calculator setting must be removed');
+ assert.ok(!settings.includes('calcToggle'),'Retired calculator switch must not be shown');
+ assert.ok(!app.includes('pwdCalcFab'),'Floating overlay must be removed from shared shell');
  assert.ok(!profile.includes('Foundation for quick access'),'Empty favorites placeholder still visible');
  assert.ok(!profile.includes('Downloaded books/drawings will appear'),'Inactive download placeholder still visible');
  assert.ok(profile.includes('SSR Master'),'Profile should acknowledge retained SSR Master');
- assert.ok(home.includes('approvedMap'),'Recent shortcuts should be constrained to approved tools');
- assert.ok(home.includes('toolSearchEmpty'),'Home search lacks an empty-results state');
+ assert.ok(!home.includes('recentGrid'),'No recent shortcuts on simplified Home');
+ assert.equal((home.match(/class="tool-row"/g)||[]).length,8,'Exactly eight kept tools on Home');
 
 
  // Simulate opening a standard that was not hardcoded in the old PDF viewer.

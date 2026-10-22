@@ -109,6 +109,8 @@ jobs:
         run: node tests/verify-steel-is808-v18-angles.mjs
       - name: Verify steel quantity and CSV method source attribution
         run: node tests/verify-steel-v19-provenance.mjs
+      - name: Verify V20 simplified Home and module screens
+        run: node tests/verify-v20-simple-ux.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
