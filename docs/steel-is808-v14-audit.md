@@ -8,9 +8,9 @@ Audit performed 22 October 2026 against the **user-held IS 808:2021 Fourth Revis
 
 - Table 1: Indian Standard medium and wide flange beams — PDF pp. 7–8
 - Table 2: junior and light beams — PDF pp. 9–10
-- Table 5: columns/heavy sections — PDF pp. 20–21
+- Table 5: columns/heavy sections — PDF pp. 21–22
 - Table 6: sloping flange medium channels — PDF pp. 23–24
-- Table 9: equal angles — PDF pp. 28–31
+- Table 9: equal angles — PDF pp. 29–32
 
 The audit ledger contains **23 specific standard variants**. Exactly **22 match curated app section entries**. The extra row is the **MC 250 normal variant**, needed to distinguish the starred section. Matching here means matching the selected nominal **kg/m** and outside nominal dimensions; where the app also has area / Izz / Iyy, compare each present value independently. **Only four MB records** in this sample contain all three app properties (mass, area, Izz and Iyy), and the app reports their stronger check separately.
 
@@ -86,3 +86,36 @@ Each was independently reconciled for nominal mass, cross-sectional area, Izz, I
 The earlier secondary web references are retained in row provenance, while checked selected rows now receive a source-limited BIS audit label. Numerical agreement does **not** certify manufactured steel, material grade, BIS licence, MTC, structural strength or design acceptance. A source discrepancy of 0.01 kg/m or a supplied source property discrepancy is blocked; this is exact-reference data validation, **not** an IS manufacturing tolerance. No complete licensed BIS standard PDF or watermark data is published in repository or APK.
 
 **Important variant distinction:** sloping **MC 150** and parallel **MPC 150** both weigh 16.80 kg/m, but have different published Izz and Iyy. They must not share geometry or a single catalogue record. Existing Android app layout, bridge books, retaining-wall modules, removed Bridge Hydraulics and the separate PWD apps remain unchanged.
+
+
+## V17 — Independent page-locator reconciliation (23 October 2026)
+
+The actual owner copy is **60 physical PDF pages**. Its printed Indian Standard
+folios begin two PDF pages later because the cover and preliminary matter are
+part of the file. **pdfPage refers to the one-based viewer page**, not the
+printed standard folio. A previous source ledger mixed these conventions.
+
+We independently opened/parsed the source PDF pages for each audited sample
+designation, identified the table and the physical page of that row, and
+corrected **23 of the 30 source-locator fields**. The other seven were already
+correct. Critical verified locators include:
+
+- **MB 100–300:** Table 1, physical PDF **page 7**.
+- **WB 150:** Table 1, page **8**; **LB 200:** Table 2, page **10**.
+- **HB 200:** Table 5, page **22**.
+- **MC 75–250 standard flange-width variants:** Table 6, page **23**;
+  **MC 250 B=82 / 34.2**, MC 300 and MC 400: Table 6, page **24**.
+- **Equal angles 90/100 mm:** Table 9, page **31**; 150/200 mm: page **32**.
+- Source references from V16 for NPB/WPB/JC/LC/MPC/UE/PBP already matched
+  the private PDF and were left intact.
+
+This is **provenance correction**, not a claim that all 13 complete IS 808
+tables are numerically certified. The earlier sampled mass, area, moment of
+inertia, sourced geometry and conflict protections are unchanged. Application
+audit results now carry the source **table number and physical PDF page** for
+the verified variant and any checked numerical conflict.
+
+A new independent automated test checks every one of the 30 sample locators,
+including the different **MC 250 30.6 vs 34.2 kg/m flange-width variants**.
+The licensed non-commercial owner PDF remains private and **is not bundled in
+the public repository or Android APK**. No UI or other PWD module was changed.
