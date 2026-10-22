@@ -17,7 +17,7 @@ assert.ok(viewer.includes('Open in Drive (internet)'));
 assert.ok(viewer.includes('element(\'fallback\').classList.toggle(\'show\',!localURL)'));
 assert.ok(!viewer.includes('element(\'frame\').src=drivePreview()'));
 assert.ok(!viewer.includes("element('frame').src=localURL?localURL+'#page='+page:drivePreview()"));
-assert.ok(viewer.includes('element(\'frame\').removeAttribute(\'src\')'));
+assert.ok(viewer.includes('element(\'frame\').src=\'about:blank\''));
 assert.ok(viewer.includes('if(localURL)'));
 assert.ok(!viewer.includes('id="driveBtn" class="primary" target="_blank"'));
 assert.ok(viewer.includes('Open in Drive (internet)'));
