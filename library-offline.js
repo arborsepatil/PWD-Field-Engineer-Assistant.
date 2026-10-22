@@ -1,4 +1,4 @@
-/* Private offline PDF Library for the installed mobile PWA.
+/* Private offline PDF Library for the installable Android app and browser preview.
  * PDF bytes only in this browser's IndexedDB; never in the GitHub Pages bundle.
  * Uses the same store as the existing per-publication PDF viewer.
  */

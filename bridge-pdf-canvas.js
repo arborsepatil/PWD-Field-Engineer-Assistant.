@@ -7,21 +7,43 @@
 'use strict';
 const LIB='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
 const WORKER='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const OFFLINE_CACHE='pwd-public-pdfjs-offline-v1';
 let loader=null;
+async function cachedAsset(url){
+ // The Library's "Prepare offline reader" stores BOTH pdf.js files here.
+ // For an Android WebView we must consume CacheStorage explicitly: unlike
+ // a PWA, a bundled page cannot assume a service worker controls the origin.
+ try{
+  if(!window.caches||!window.URL?.createObjectURL)return null;
+  const cache=await window.caches.open(OFFLINE_CACHE);
+  const entry=await cache.match(url);
+  if(!entry||!entry.ok)return null;
+  return window.URL.createObjectURL(await entry.blob());
+ }catch{return null}
+}
 function pdfJs(){
  if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
  if(loader)return loader;
- loader=new Promise((resolve,reject)=>{
-  const tag=document.createElement('script');
-  tag.async=true;tag.src=LIB;tag.crossOrigin='anonymous';
-  tag.onload=()=>{
+ loader=(async()=>{
+  const [savedLib,savedWorker]=await Promise.all([cachedAsset(LIB),cachedAsset(WORKER)]);
+  return new Promise((resolve,reject)=>{
+   const tag=document.createElement('script');
+   tag.async=true;tag.src=savedLib||LIB;
+   if(!savedLib)tag.crossOrigin='anonymous';
+   tag.onload=()=>{
+    if(savedLib)window.URL.revokeObjectURL(savedLib);
     if(!window.pdfjsLib){reject(new Error('PDF renderer did not initialize'));return}
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc=WORKER;
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc=savedWorker||WORKER;
     resolve(window.pdfjsLib);
-  };
-  tag.onerror=()=>reject(new Error('The PDF rendering library could not load. Internet may be required.'));
-  document.head.appendChild(tag);
- }).catch(e=>{loader=null;throw e});
+   };
+   tag.onerror=()=>{
+    if(savedLib)window.URL.revokeObjectURL(savedLib);
+    if(savedWorker)window.URL.revokeObjectURL(savedWorker);
+    reject(new Error('PDF rendering library unavailable. Open Library and use Prepare offline reader once while online.'));
+   };
+   document.head.appendChild(tag);
+  });
+ })().catch(e=>{loader=null;throw e});
  return loader;
 }
 window.PWDBridgeCanvas={

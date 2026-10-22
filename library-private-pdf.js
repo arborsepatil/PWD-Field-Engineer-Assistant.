@@ -61,9 +61,9 @@ window.PWDLibraryPrivatePDF={
     if(v!==version||disposed)return;
     if(saved&&saved.blob instanceof Blob){
       await present(saved.blob,saved.name||'Private PDF',true,v);
-    }else message('Drive preview active','Select your PDF for offline use on this device');
+    }else message('Choose PDF from Files','Select your downloaded original for private on-device reading.');
    }catch{
-    if(v===version&&!disposed)message('Drive preview active','On-device storage unavailable; use Drive or select a PDF');
+    if(v===version&&!disposed)message('Choose PDF from Files','Device storage unavailable; use a PDF for this session or open Drive separately.');
    }
   }
   input.addEventListener('change',async()=>{
@@ -93,7 +93,7 @@ window.PWDLibraryPrivatePDF={
    try{await onSource(null,null)}catch{}
    try{
      await record('readwrite',store=>store.delete(key));
-     if(v===version&&!disposed)message('On-device PDF removed','Drive preview active for this publication');
+     if(v===version&&!disposed)message('On-device PDF removed','Choose an original PDF again or open Google Drive separately.');
    }catch{
      if(v===version&&!disposed)message('Removal could not be confirmed','Current view cleared; check browser site storage');
    }

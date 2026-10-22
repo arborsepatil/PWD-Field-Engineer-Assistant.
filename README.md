@@ -2,6 +2,33 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Android PDF access fix — Bridge Plans & Technical Library (22 October 2026)
+
+- The **embedded Google Drive preview is disabled** for private original
+  PDFs, because Google sign-in/cookies fail inside Android's WebView. The
+  document index remains built into the native APK. A clean, on-device
+  PDF chooser is the default, and **Open in Drive** explicitly launches
+  the external browser or Google Drive handler (internet required unless
+  the Drive app has independently cached the original).
+- Users can download/locate the correct PDF and select it through Android
+  **Files**. The chosen document is saved privately in IndexedDB; Bridge
+  Plans use independent 2002/2023 page count checks and finger gestures.
+  The original PDF is not included in the APK or uploaded to the repo.
+- **Prepare offline reader** in Library, while online, downloads pinned
+  PDF.js and worker assets into private CacheStorage. The Android WebView
+  now consumes those cached assets directly on subsequent offline
+  readings even without PWA/service-worker control. On-device file and
+  PDF renderer preparation are BOTH required; the first installation is
+  not claimed to open every arbitrary PDF fully offline by itself.
+- Both Bridge Plans books stay separate. Digitization, original drawing
+  number/title/DWG matching, verified page-level search and complete
+  reference/library content remain future tasks. A static index is
+  **not** an engineering-certified drawing nor a scanned PDF.
+- The existing Steel Table V6, 74 curated manufacturer/secondary values,
+  640 separately attributed Osdag rows, CHS amendment spot checks and
+  RCC/PCC modules are preserved. No additional BIS/IRC/PWD PDF bytes
+  have been redistributed or made public.
+
 ## Steel Table V6 — private IS 1161 Amendment 2 cross-check (22 October 2026)
 
 After receiving the authorized **IS 1161:2014 base, Amendment 1 (March 2019),
