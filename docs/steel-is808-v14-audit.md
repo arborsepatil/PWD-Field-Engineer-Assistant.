@@ -63,3 +63,26 @@ The following properties were individually compared: web thickness **t**, flange
 - No change to APK/PWA selection policy: deliverable is a genuine Android test APK. No UI redesign or modifications to other project modules.
 
 Sources: owner-held licensed BIS standard, Tables 1 and 6 as noted (private PDF **not** distributed); [BIS standard directory](https://services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf) documents IS 808:2021 as a current structural section standard.
+
+
+## V16 — Seven more IS 808 section families verified (preserving V15 geometry)
+
+Follow-on review of the private, user-held **IS 808:2021 Fourth Revision**. The earlier V15 checks on hot-rolled beams/channels (web and flange thickness, printed flange slope and radii) remain part of the main app; V16 adds **seven distinct previously secondary-only sample designs**.
+
+| Distinct selected designation | Original table | Private PDF page | Checked weight |
+|---|---:|---:|---:|
+| NPB 100 × 55 | 3 | 11 | 8.10 kg/m |
+| WPB nominal 100 × 100; physical D=91, B=100 | 4 | 15 | 12.24 kg/m |
+| JC 100 × 45 | 7 | 25 | 5.80 kg/m |
+| LC 150 × 75 | 7 | 26 | 14.40 kg/m |
+| MPC 150 × 75 | 8 | 27 | 16.80 kg/m |
+| Supplementary unequal angle 100 × 50 × 8 | **12** | **39** | 9.05 kg/m |
+| PBP 200, physical D=200, B=205 | 13 | 40 | 43.85 kg/m |
+
+Each was independently reconciled for nominal mass, cross-sectional area, Izz, Iyy and applicable web/flange thickness. For NPB, WPB, JC, LC, MPC and PBP, the source flange slope and nominal radii R1/R2 were also compared and recorded as source-specific geometry, never derived from approximations. The angle is from **Table 12 (supplementary unequal)**, not Table 11.
+
+**Total selected source comparisons now: 30 variants, representing 29 curated app records.** One MC250 B=80 width, 30.6 kg/m variant is maintained in the reference comparisons only; the distinct stocked-style MC250 B=82 width, 34.2 kg/m record remains separate.
+
+The earlier secondary web references are retained in row provenance, while checked selected rows now receive a source-limited BIS audit label. Numerical agreement does **not** certify manufactured steel, material grade, BIS licence, MTC, structural strength or design acceptance. A source discrepancy of 0.01 kg/m or a supplied source property discrepancy is blocked; this is exact-reference data validation, **not** an IS manufacturing tolerance. No complete licensed BIS standard PDF or watermark data is published in repository or APK.
+
+**Important variant distinction:** sloping **MC 150** and parallel **MPC 150** both weigh 16.80 kg/m, but have different published Izz and Iyy. They must not share geometry or a single catalogue record. Existing Android app layout, bridge books, retaining-wall modules, removed Bridge Hydraulics and the separate PWD apps remain unchanged.
