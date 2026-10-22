@@ -77,7 +77,7 @@ assert.equal(cat.standardAudit(legacy).status,'is808-numeric-conflict','Do not r
 const mc250=cat.byId('ISMC250');
 assert.equal(mc250.widthMm,82);
 assert.equal(mc250.kgPerM,34.2);
-assert.equal(cat.standardAudit(mc250).status,'is808-mass-checked');
+assert.equal(cat.standardAudit(mc250).status,'is808-mass-area-inertia-checked','Existing V15 geometry audit enriched MC250');
 const last=cat.standardAudit({family:'column',series:'HB',depthMm:300,widthMm:250,kgPerM:57});
 assert.equal(last.status,'not-checked','Unsampled standard sections remain unverified');
 const app=read('pwd-steel-app.js');
