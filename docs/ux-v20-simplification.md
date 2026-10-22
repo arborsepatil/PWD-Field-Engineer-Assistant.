@@ -37,3 +37,24 @@ The user's marked screen recording uses **X = remove** and **✓ = keep**. Prese
 Open V20 on Android. Confirm eight Home rows are directly tappable; no float obstructs an input; Batch Assistant inputs appear first and Show input guidance works; Mix Design retains visible concrete scope and revealable help; Civil Quick all-unit results expand; retaining wall reference links stay reachable; both bridge books show original PDF links and filters; Steel Table still blocks reviewed numeric conflicts; Library can search and choose private saved PDFs.
 
 Use the old screen recording as the baseline for further marks. Differences involving incomplete source data should be **verified**, not simply hidden.
+
+## V21 — Batch help usable from every tab (23 October 2026)
+
+A follow-up review of the packaged V20 HTML uncovered one usability
+regression: the **Show input guidance** control was inside the Material
+Order panel, so it could not be accessed while working in the AJAX Batch
+or Nominal Mix tabs. The same CSS controlled guidance across all panels.
+
+Moved the single button above the three tab panels (but below the tab bar).
+No new task section is added, and it remains a compact secondary action.
+The existing handler shows and hides contextual `effect` notes reversibly;
+the three material/batching workflows, calculations and source warnings are
+unchanged. New executable regression:
+`tests/verify-v21-batch-shared-help.mjs`. It is run by both the general
+release and native Android packaging CI.
+
+**QA limitation:** CI checks the source and underlying engineering code.
+A separate browser-driven test against a locally served extraction of the
+APK could not run because this execution environment denied browser
+navigation. Actual tapping and usability on a physical Android phone
+remain an acceptance step, not a completed test.
