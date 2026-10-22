@@ -199,6 +199,7 @@ const categories=Object.freeze([
 ]);
 const codeReferences=Object.freeze([
  Object.freeze({standard:'IS 808:2021',title:'Hot-rolled beams, columns, channels and angles — dimensions and properties',uri:'https://services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',scope:'Standard exists and applies to section types; manufacturer rows require source/date check.'}),
+ Object.freeze({standard:'IS 4923:2017 Amd.2 (2022)',title:'Structural hollow sections — thickness below 2 mm outside amended IS 4923 scope',uri:'https://www.services.bis.gov.in/tmp/Circular_slZj_2024-06-05.pdf',scope:'BIS 4 June 2024 circular requires deletion of thicknesses below 2 mm from IS 4923 licences by 17 October 2024. IS 18573:2024 covers general/decorative applications; do not infer structural suitability.'}),
  Object.freeze({standard:'IS 4923:2017 Amd.3 (June 2024)',title:'Structural square and rectangular hollow sections — selected RHS weights corrected',uri:'https://services.bis.gov.in/tmp/Circular_vpMS_2024-08-06.pdf',scope:'BIS circular confirms amendments. Historical catalogues are not a replacement for amended masses.'}),
  Object.freeze({standard:'IS 1161:2014 + Amd.1 (Mar 2019) + Amd.2 (Aug 2023)',title:'Circular structural tubes — revised Table 1',uri:'https://standards.bis.gov.in/',scope:'Amendment 2 replaces 2014 Table 1, including tube sizes and properties. Selected app rows are now independently checked; the full CHS catalogue remains under review.'}),
  Object.freeze({standard:'IS 2062 (Part 1):2025',title:'Structural steel material specification',uri:'https://standards.bis.gov.in/',scope:'Material grade control (not used as an IS 808 geometric properties table).'})
@@ -271,8 +272,20 @@ const CHS_WITHDRAWN_SAMPLE=Object.freeze([
 // 'not-listed' only for the TWO manually checked historic thicknesses; all
 // other unknown sizes are 'not-checked', not assumed invalid or current.
 function standardAudit(row){
+ if(!row)return {status:'not-checked',source:null};
+ if(row.series==='SHS'||row.series==='RHS'){
+  const source='IS 4923:2017, Amendment 2 (2022) and Amendment 3 (June 2024)';
+  const t=Number(row.thicknessMm);
+  if(Number.isFinite(t)&&t>0&&t<2)return {
+   status:'outside-current-scope',source,
+   note:'Wall thickness below 2 mm is outside amended IS 4923 structural-section licensing scope (BIS circular 4 June 2024). Do not treat this as a current structural IS 4923 section; check the relevant product specification.'};
+  if(row.series==='RHS')return {
+   status:'amendment3-review',source,
+   note:'BIS Amendment 3 corrected the mass of some rectangular hollow sections. This particular RHS mass has not been compared with the amended BIS Table 2; the displayed value is indicative source data, NOT BIS verified.'};
+  return {status:'not-checked',source};
+ }
  const source='IS 1161:2014, Amendment 2 (Aug 2023), replacement Table 1';
- if(!row||row.series!=='CHS')return {status:'not-checked',source:null};
+ if(row.series!=='CHS')return {status:'not-checked',source:null};
  const od=Number(row.diameterMm??row.depthMm),t=Number(row.thicknessMm??row.webMm);
  if(CHS_WITHDRAWN_SAMPLE.some(x=>x.od===od&&x.t===t))
   return {status:'not-listed-in-replacement',source,
