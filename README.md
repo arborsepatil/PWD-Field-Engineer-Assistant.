@@ -2,6 +2,30 @@
 
 Maharashtra PWD field engineering application under development as an **installable Android APK**, with its previous browser edition retained only as a development preview: practical calculations, site tools, standard bridge drawing indexes, and a source-linked engineering PDF Library.
 
+## Bridge Plan & Technical Library — Android preview fix (22 October 2026)
+
+Android WebView embedded Google Drive private PDFs showed a Google
+authentication/cookie error. The private source PDFs have **not** been made
+public. Instead, the original Drive link opens in the external browser or Drive
+app (requires internet and the appropriate signed-in Google account). The
+embedded authentication iframe is no longer loaded by default. The in-app
+original file chooser and private IndexedDB storage remain available.
+
+**Important offline limitation:** The current on-device PDF canvas renderer
+still loads PDF.js from an online CDN; the installed APK does NOT yet bundle
+the renderer. Therefore full offline PDF viewing/navigation/gesture rendering
+is **not guaranteed** on Android, even when the user has selected the original
+PDF locally. This remains an explicit blocking task for a dependable offline
+library. All digital books should preserve an unmodified original source,
+separate edition/source metadata, and no copyrighted original PDFs in public
+APK packages without distribution rights.
+
+Screenshot/field acceptance needed: Online Drive must launch the external
+Drive app or mobile browser; local PDF selection should work in supported
+viewers; when offline or signed out, the app must not show an embedded Google
+login error. Bridge 2002 and 2023 remain fully separate original documents and
+drawing reference indexes; there is no Bridge Hydraulics module.
+
 ## Steel Table V6 — private IS 1161 Amendment 2 cross-check (22 October 2026)
 
 After receiving the authorized **IS 1161:2014 base, Amendment 1 (March 2019),
