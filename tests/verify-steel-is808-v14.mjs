@@ -39,9 +39,9 @@ const audited=[
  ['ref-LB-LB-200-19.83',2,19.83,false]
 ];
 // Explicitly selected values, not an exact reproduction of full IS 808.
-assert.equal(cat.is808AuditSampleCount,30,'29 app sizes plus alternate MC 250 B80 reference');
+assert.equal(cat.is808AuditSampleCount,42,'42 selected PDF variants, 41 curated');
 assert.equal(audited.length,22);
-assert.equal(cat.sections.length,127,'No other catalogue size changed');
+assert.equal(cat.sections.length,130,'Three new BIS-correct angle alternatives, prior rows retained');
 assert.equal(cat.sections.filter(x=>x.series==='RHS').length,35);
 assert.equal(cat.sections.filter(x=>x.series==='SHS').length,22);
 let bothInertias=0;
