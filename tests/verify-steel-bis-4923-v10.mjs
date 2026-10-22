@@ -27,12 +27,12 @@ const RHS=[
  ['bis22-rhs100x50x4',100,50,4,8.59,10.95,134.14,44.95],
  ['bis22-rhs200x100x6',200,100,6,26.40,33.63,1703,577],
 ];
-assert.equal(cat.shsAuditSampleCount,6);
-assert.equal(cat.rhsAuditSampleCount,19,'14 V9 samples + 5 non-corrected RHS Table 2 checks');
-assert.equal(cat.sections.length,95);
-assert.equal(cat.sections.filter(x=>x.family==='hollow').length,27);
-assert.equal(cat.sections.filter(x=>x.series==='SHS').length,6);
-assert.equal(cat.sections.filter(x=>x.series==='RHS').length,19);
+assert.equal(cat.shsAuditSampleCount,16);
+assert.equal(cat.rhsAuditSampleCount,29,'14 V9 samples + 5 non-corrected RHS Table 2 checks');
+assert.equal(cat.sections.length,115);
+assert.equal(cat.sections.filter(x=>x.family==='hollow').length,47);
+assert.equal(cat.sections.filter(x=>x.series==='SHS').length,16);
+assert.equal(cat.sections.filter(x=>x.series==='RHS').length,29);
 for(const [id,size,t,kg,area,ix] of SHS){
  const row=cat.byId(id);
  assert.ok(row,'Missing SHS audit record '+id);
