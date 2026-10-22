@@ -15,7 +15,7 @@ const catalog=load('pwd-steel-catalog.js'),math=load('pwd-steel-core.js');
 const ui=read('pwd_steel_table.html'),app=read('pwd-steel-app.js'),
  home=read('index.html'),cache=read('sw.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
-assert.equal(catalog.sections.length,78,'Curated manufacturer and secondary reference rows must remain controlled');
+assert.equal(catalog.sections.length,86,'Curated manufacturer and secondary reference rows must remain controlled');
 assert.equal(catalog.sections.filter(x=>x.family==='beam').length,11);
 assert.equal(catalog.sections.filter(x=>x.family==='channel').length,11);
 assert.equal(catalog.sections.filter(x=>x.family==='angle').length,43);
@@ -89,7 +89,7 @@ assert.ok(catalog.collisionGroups().some(g=>g.some(x=>x.id==='sail23-ISA90x90x6'
 assert.equal(catalog.search('ISMC 300','channel').length,1);
 assert.equal(catalog.byId('sail23-ISMC300').kgPerM,36.3);
 for(const row of catalog.sections)assert.deepEqual([...catalog.auditRow(row)],[],'Incomplete nominal geometry/source: '+row.id);
-assert.equal(catalog.sections.filter(x=>x.family==='hollow').length,10);
+assert.equal(catalog.sections.filter(x=>x.family==='hollow').length,18);
 assert.equal(catalog.availableSeries('hollow').length,3);
 assert.equal(catalog.search('SHS 25x25x2','hollow')[0].kgPerM,1.36);
 assert.equal(catalog.search('RHS 40x20x2','hollow')[0].basis,'secondary-amendment-unverified');
