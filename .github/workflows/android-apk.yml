@@ -111,6 +111,8 @@ jobs:
         run: node tests/verify-steel-v19-provenance.mjs
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
+      - name: Test simplified reference readers and preserve source checks
+        run: node tests/verify-v21-reader-ux.mjs
       - name: Verify Batch Assistant contextual help on Material and AJAX tabs
         run: node tests/verify-v21-batch-guidance.mjs
       - name: Verify final V21 simplified navigation and JE Profile
