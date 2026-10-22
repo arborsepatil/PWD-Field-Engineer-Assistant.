@@ -23,12 +23,12 @@ const rhs=[
  [100,60,4,9.22,11.75,152.58,68.68],[120,80,4,11.73,14.95,294.59,157.29]
 ];
 const close=(a,b)=>Math.abs(a-b)<1e-9;
-assert.equal(cat.sections.length,115);
-assert.equal(cat.sections.filter(x=>x.family==='hollow').length,47);
-assert.equal(cat.sections.filter(x=>x.series==='SHS').length,16);
-assert.equal(cat.sections.filter(x=>x.series==='RHS').length,29);
-assert.equal(cat.shsAuditSampleCount,16);
-assert.equal(cat.rhsAuditSampleCount,29);
+assert.equal(cat.sections.length,127);
+assert.equal(cat.sections.filter(x=>x.family==='hollow').length,59);
+assert.equal(cat.sections.filter(x=>x.series==='SHS').length,22);
+assert.equal(cat.sections.filter(x=>x.series==='RHS').length,35);
+assert.equal(cat.shsAuditSampleCount,22);
+assert.equal(cat.rhsAuditSampleCount,35);
 for(const [size,t,kg,area,ix] of shs){
  const id='bis22-shs'+size+'x'+size+'x'+t;
  const row=cat.byId(id);
