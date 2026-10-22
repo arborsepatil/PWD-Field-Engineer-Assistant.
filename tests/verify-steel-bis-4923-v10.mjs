@@ -66,7 +66,7 @@ assert.equal(cat.standardAudit({series:'SHS',depthMm:50,widthMm:50,thicknessMm:2
 assert.equal(cat.standardAudit({series:'RHS',depthMm:100,widthMm:50,thicknessMm:4,kgPerM:8.59,ixCm4:134.15}).status,'rhs-weight-conflict');
 assert.equal(cat.standardAudit({series:'RHS',depthMm:100,widthMm:50,thicknessMm:4,kgPerM:8.60}).status,'rhs-weight-conflict');
 assert.equal(cat.standardAudit({series:'SHS',depthMm:120,widthMm:120,thicknessMm:5,kgPerM:20}).status,'not-checked','Other SHS must remain unverified');
-assert.equal(cat.standardAudit({series:'RHS',depthMm:120,widthMm:80,thicknessMm:4,kgPerM:15}).status,'amendment3-review','Other RHS remain unverified');
+assert.equal(cat.standardAudit({series:'RHS',depthMm:120,widthMm:80,thicknessMm:5,kgPerM:15}).status,'amendment3-review','Other RHS remain unverified');
 assert.equal(cat.standardAudit({series:'SHS',depthMm:30,widthMm:30,thicknessMm:1.9,kgPerM:2}).status,'outside-current-scope');
 const app=text('pwd-steel-app.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
