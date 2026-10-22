@@ -91,6 +91,8 @@ jobs:
         run: node tests/verify-steel-rhs-bis-audit.mjs
       - name: Audit amended BIS IS 4923 SHS and remaining RHS spot-checks
         run: node tests/verify-steel-bis-4923-v10.mjs
+      - name: Audit 20 additional BIS 4923 SHS and RHS weights and source anomaly hold
+        run: node tests/verify-steel-bis-4923-v11.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
