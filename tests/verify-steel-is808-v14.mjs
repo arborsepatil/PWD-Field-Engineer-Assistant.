@@ -39,7 +39,7 @@ const audited=[
  ['ref-LB-LB-200-19.83',2,19.83,false]
 ];
 // Explicitly selected values, not an exact reproduction of full IS 808.
-assert.equal(cat.is808AuditSampleCount,23,'22 app sizes plus alternate MC 250 B80 reference');
+assert.equal(cat.is808AuditSampleCount,30,'29 app sizes plus alternate MC 250 B80 reference');
 assert.equal(audited.length,22);
 assert.equal(cat.sections.length,127,'No other catalogue size changed');
 assert.equal(cat.sections.filter(x=>x.series==='RHS').length,35);
@@ -97,7 +97,7 @@ assert.equal(cat.standardAudit({...alternate,widthMm:82}).status,'is808-numeric-
 assert.equal(cat.standardAudit({family:'beam',series:'MB',depthMm:350,widthMm:140,kgPerM:52.33}).status,
  'not-checked','Unsampled IS808 sizes stay unverified despite plausible weights');
 assert.equal(cat.standardAudit({family:'angle',series:'UE',depthMm:100,widthMm:50,thicknessMm:8,kgPerM:9.05}).status,
- 'not-checked','Do not claim current unequal-angle BIS verification yet');
+ 'is808-mass-checked','Supplementary unequal angle 100x50x8 mass is checked under IS 808 Table 12');
 const app=read('pwd-steel-app.js');
 new vm.Script(app,{filename:'pwd-steel-app.js'});
 for(const status of ['is808-mass-checked','is808-mass-area-inertia-checked','is808-numeric-conflict'])
