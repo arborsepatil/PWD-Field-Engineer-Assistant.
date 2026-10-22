@@ -22,12 +22,19 @@
 .source-chooser small{font-size:12px;color:var(--muted)}
 .canvas-layer{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;pointer-events:none;background:#101720}
 .canvas-layer[hidden]{display:none}.canvas-layer canvas{display:block;max-width:none;max-height:none;image-rendering:auto}
-</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" rel="noopener">Open in Drive ↗</a></header><main class="viewer" id="viewer"><div id="privateBar" class="private-pdf-bar" aria-label="Private source PDF"><label class="import-label" for="privatePdfFile">Use PDF on this device<input id="privatePdfFile" type="file" accept=".pdf,application/pdf" aria-label="Select original PDF for offline viewing"></label><button id="forgetPrivatePdf" type="button" hidden>Forget PDF</button><span class="private-status" id="privatePdfStatus" role="status" aria-live="polite">This source stays on your device.</span></div><div id="pdfPageIndicator" class="sheet-count" role="status" aria-live="polite"></div>
+
+/* V23: when an original PDF is missing, present one clear open action,
+   not two overlapping device-file buttons on a phone screen. */
+.viewer:has(.source-chooser:not([hidden])) .private-pdf-bar{display:none}
+.source-chooser{gap:10px;padding:86px 24px 30px}
+.source-chooser strong{font-size:18px}
+.source-chooser p{max-width:330px;font-size:13px;line-height:1.45}
+@media(max-width:560px){.source-chooser button{width:min(280px,100%)}}
+</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" rel="noopener">Open in Drive ↗</a></header><main class="viewer" id="viewer"><div id="privateBar" class="private-pdf-bar" aria-label="Private source PDF"><label class="import-label" for="privatePdfFile">Change PDF<input id="privatePdfFile" type="file" accept=".pdf,application/pdf" aria-label="Select original PDF for offline viewing"></label><button id="forgetPrivatePdf" type="button" hidden>Forget PDF</button><span class="private-status" id="privatePdfStatus" role="status" aria-live="polite">This source stays on your device.</span></div><div id="pdfPageIndicator" class="sheet-count" role="status" aria-live="polite"></div>
 <div id="sourceChooser" class="source-chooser" role="status" aria-live="polite">
-<strong>Original PDF not saved on this device</strong>
-<p>Choose a downloaded PDF to read it here. Google Drive needs internet and opens outside this app.</p>
-<button id="chooseDevicePdf" type="button">Choose PDF from Files</button>
-<small>The drawing index works offline · the original PDF remains private</small>
+<strong>Open original PDF</strong>
+<p>Choose a PDF saved on your phone. Drive requires Internet.</p>
+<button id="chooseDevicePdf" type="button">Choose PDF</button>
 </div><div class="gesture-surface" id="gestureSurface"><div class="canvas-layer" id="canvasLayer" hidden><canvas id="drawingCanvas" aria-label="Rendered original PDF drawing"></canvas></div><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This source remains private in Google Drive. On some mobile browsers, Drive blocks embedded sign-in or third-party cookies.</p><a id="fallbackBtn" class="primary" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open PDF in Drive</a></div></div></main><script src="./library-drive-catalog.js"></script><script src="./bridge-local-source.js"></script><script src="./library-private-pdf.js"></script><script src="./bridge-pdf-canvas.js"></script><script>
 const DOCS={
 morth:{title:'MoRTH Specifications · 5th Revision 2013',id:'1pVTcUdNoUcmSpfhVhnM2Ld-3gXiJPpFe',meta:'Road & Bridge Works'},
