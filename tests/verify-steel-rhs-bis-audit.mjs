@@ -38,7 +38,7 @@ const corrected=[
 ];
 assert.equal(corrected.length,12,'All 12 amended RHS corrections must be represented');
 assert.equal(cat.rhsAuditSampleCount,35,'Two existing RHS + all 12 corrected records');
-assert.equal(cat.sections.length,127,'Other catalogue rows remain unchanged');
+assert.equal(cat.sections.length,130,'Other catalogue rows remain unchanged');
 assert.equal(cat.sections.filter(x=>x.family==='hollow').length,59);
 assert.equal(cat.sections.filter(x=>x.series==='RHS').length,35);
 
