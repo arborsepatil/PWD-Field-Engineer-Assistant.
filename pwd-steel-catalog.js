@@ -388,6 +388,21 @@ function standardAudit(row){
  if(row.series==='SHS'||row.series==='RHS'){
   const source='IS 4923:2017, Amendment 2 (2022) and Amendment 3 (June 2024)';
   const t=Number(row.thicknessMm);
+  // Source-wide numerical QA scan, not a BIS acceptance tolerance:
+  // 190 SHS + 216 RHS published Amendment 2 rows checked internally.
+  // RHS 120x80x6.0 in Table 2 prints 16.98 kg/m but 2.63 cm²; mass
+  // implies about 21.63 cm² at nominal density. No invented corrigendum.
+  // Quarantine this exact designation even if later imported from another
+  // catalogue source until its amended properties are authoritatively fixed.
+  if(row.series==='RHS'&&Number(row.depthMm)===120&&
+     Number(row.widthMm)===80&&t===6)return {
+    status:'source-numeric-hold',source,
+    note:'RHS 120×80×6: amended Table 2 prints 16.98 kg/m and 2.63 cm²; these disagree. This designation is on hold pending an authoritative correction. Do not treat the implied area as a BIS-approved replacement.'};
+  if(Number.isFinite(row.areaCm2)&&Number(row.areaCm2)>0&&
+     Number.isFinite(row.kgPerM)&&Number(row.kgPerM)>0&&
+     Math.abs(Number(row.kgPerM)-Number(row.areaCm2)*0.785)/Number(row.kgPerM)>0.02)
+   return {status:'mass-area-conflict',source,
+    note:'Nominal mass and section area fail the app internal density consistency check (>2% discrepancy). This threshold is an audit alarm, NOT a BIS acceptance tolerance. Quantity is blocked pending source review.'};
   if(Number.isFinite(t)&&t>0&&t<2)return {
    status:'outside-current-scope',source,
    note:'Wall thickness below 2 mm is outside amended IS 4923 structural-section licensing scope (BIS circular 4 June 2024). Do not treat this as a current structural IS 4923 section; check the relevant product specification.'};
