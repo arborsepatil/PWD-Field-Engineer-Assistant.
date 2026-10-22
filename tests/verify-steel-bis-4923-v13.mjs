@@ -35,7 +35,7 @@ const samples=[
 ];
 assert.equal(samples.length,12);
 assert.equal(new Set(samples.map(x=>x[0])).size,12,'No repeated audit sizes');
-assert.equal(cat.sections.length,127,'All previously checked catalog sections preserved');
+assert.equal(cat.sections.length,130,'All previously checked catalog sections preserved');
 assert.equal(cat.sections.filter(x=>x.family==='hollow').length,59);
 assert.equal(cat.sections.filter(x=>x.series==='SHS').length,22);
 assert.equal(cat.sections.filter(x=>x.series==='RHS').length,35);
