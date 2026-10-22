@@ -175,6 +175,28 @@ const hollowRows=[
  hollow('bis22-rhs80x40x3','RHS',80,40,3,5.19,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:6.61,ixCm4:52.25,iyCm4:17.56}),
  hollow('bis22-rhs100x50x4','RHS',100,50,4,8.59,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:10.95,ixCm4:134.14,iyCm4:44.95}),
  hollow('bis22-rhs200x100x6','RHS',200,100,6,26.40,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:33.63,ixCm4:1703,iyCm4:577}),
+ // V11: 20 more independently compared Amendment 2 nominal Table 1/2 rows.
+ // Known source anomaly RHS 120x80x6.0 is deliberately excluded.
+ hollow('bis22-shs30x30x2','SHS',30,30,2,1.68,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:2.14,ixCm4:2.72,iyCm4:2.72}),
+ hollow('bis22-shs40x40x3','SHS',40,40,3,3.30,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:4.21,ixCm4:9.32,iyCm4:9.32}),
+ hollow('bis22-shs50x50x2.5','SHS',50,50,2.5,3.60,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:4.59,ixCm4:16.94,iyCm4:16.94}),
+ hollow('bis22-shs50x50x4','SHS',50,50,4,5.45,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:6.95,ixCm4:23.74,iyCm4:23.74}),
+ hollow('bis22-shs60x60x4','SHS',60,60,4,6.71,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:8.55,ixCm4:43.55,iyCm4:43.55}),
+ hollow('bis22-shs70x70x3','SHS',70,70,3,6.13,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:7.81,ixCm4:57.53,iyCm4:57.53}),
+ hollow('bis22-shs75x75x4.5','SHS',75,75,4.5,9.55,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:12.17,ixCm4:98.55,iyCm4:98.55}),
+ hollow('bis22-shs80x80x4','SHS',80,80,4,9.22,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:11.75,ixCm4:111.04,iyCm4:111.04}),
+ hollow('bis22-shs90x90x5','SHS',90,90,5,12.84,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:16.36,ixCm4:192.93,iyCm4:192.93}),
+ hollow('bis22-shs100x100x6','SHS',100,100,6,16.98,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:21.63,ixCm4:311.47,iyCm4:311.47}),
+ hollow('bis22-rhs40x20x3','RHS',40,20,3,2.36,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:3.01,ixCm4:5.21,iyCm4:1.68}),
+ hollow('bis22-rhs50x25x2.9','RHS',50,25,2.9,2.98,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:3.80,ixCm4:10.93,iyCm4:3.60}),
+ hollow('bis22-rhs50x30x3','RHS',50,30,3,3.30,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:4.21,ixCm4:12.83,iyCm4:5.70}),
+ hollow('bis22-rhs60x40x2.5','RHS',60,40,2.5,3.60,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:4.59,ixCm4:22.07,iyCm4:11.74}),
+ hollow('bis22-rhs60x40x4','RHS',60,40,4,5.45,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:6.95,ixCm4:30.99,iyCm4:16.28}),
+ hollow('bis22-rhs70x30x4','RHS',70,30,4,5.45,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:6.95,ixCm4:37.23,iyCm4:9.42}),
+ hollow('bis22-rhs80x40x4','RHS',80,40,4,6.71,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:8.55,ixCm4:64.79,iyCm4:21.49}),
+ hollow('bis22-rhs90x50x3','RHS',90,50,3,6.13,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:7.81,ixCm4:81.85,iyCm4:32.74}),
+ hollow('bis22-rhs100x60x4','RHS',100,60,4,9.22,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:11.75,ixCm4:152.58,iyCm4:68.68}),
+ hollow('bis22-rhs120x80x4','RHS',120,80,4,11.73,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:14.95,ixCm4:294.59,iyCm4:157.29}),
  hollow('tata-legacy-chs21.3x21.3x2','CHS',21.3,21.3,2,0.95,'tataLegacy','archived-manufacturer-only',{areaCm2:1.21,ixCm4:0.57,iyCm4:0.57}),
  hollow('tata-legacy-chs33.7x33.7x2.6','CHS',33.7,33.7,2.6,1.98,'tataLegacy','archived-manufacturer-only',{areaCm2:2.54,ixCm4:3.09,iyCm4:3.09})
 ];
@@ -326,7 +348,17 @@ const RHS_BIS_ADDITIONAL=Object.freeze([
  Object.freeze({h:50,w:25,t:2.5,mass:2.62,area:3.34,ix:9.89,iy:3.28}),
  Object.freeze({h:80,w:40,t:3,mass:5.19,area:6.61,ix:52.25,iy:17.56}),
  Object.freeze({h:100,w:50,t:4,mass:8.59,area:10.95,ix:134.14,iy:44.95}),
- Object.freeze({h:200,w:100,t:6,mass:26.40,area:33.63,ix:1703,iy:577})
+ Object.freeze({h:200,w:100,t:6,mass:26.40,area:33.63,ix:1703,iy:577}),
+ Object.freeze({h:40,w:20,t:3,mass:2.36,area:3.01,ix:5.21,iy:1.68}),
+ Object.freeze({h:50,w:25,t:2.9,mass:2.98,area:3.80,ix:10.93,iy:3.60}),
+ Object.freeze({h:50,w:30,t:3,mass:3.30,area:4.21,ix:12.83,iy:5.70}),
+ Object.freeze({h:60,w:40,t:2.5,mass:3.60,area:4.59,ix:22.07,iy:11.74}),
+ Object.freeze({h:60,w:40,t:4,mass:5.45,area:6.95,ix:30.99,iy:16.28}),
+ Object.freeze({h:70,w:30,t:4,mass:5.45,area:6.95,ix:37.23,iy:9.42}),
+ Object.freeze({h:80,w:40,t:4,mass:6.71,area:8.55,ix:64.79,iy:21.49}),
+ Object.freeze({h:90,w:50,t:3,mass:6.13,area:7.81,ix:81.85,iy:32.74}),
+ Object.freeze({h:100,w:60,t:4,mass:9.22,area:11.75,ix:152.58,iy:68.68}),
+ Object.freeze({h:120,w:80,t:4,mass:11.73,area:14.95,ix:294.59,iy:157.29})
 ]);
 const SHS_BIS_SAMPLES=Object.freeze([
  Object.freeze({s:25,t:2,mass:1.36,area:1.74,ix:1.48}),
@@ -334,11 +366,21 @@ const SHS_BIS_SAMPLES=Object.freeze([
  Object.freeze({s:40,t:2,mass:2.31,area:2.94,ix:6.94}),
  Object.freeze({s:50,t:2,mass:2.93,area:3.74,ix:14.15}),
  Object.freeze({s:60,t:3,mass:5.19,area:6.61,ix:35.13}),
- Object.freeze({s:100,t:4,mass:11.73,area:14.95,ix:226.35})
+ Object.freeze({s:100,t:4,mass:11.73,area:14.95,ix:226.35}),
+ Object.freeze({s:30,t:2,mass:1.68,area:2.14,ix:2.72}),
+ Object.freeze({s:40,t:3,mass:3.30,area:4.21,ix:9.32}),
+ Object.freeze({s:50,t:2.5,mass:3.60,area:4.59,ix:16.94}),
+ Object.freeze({s:50,t:4,mass:5.45,area:6.95,ix:23.74}),
+ Object.freeze({s:60,t:4,mass:6.71,area:8.55,ix:43.55}),
+ Object.freeze({s:70,t:3,mass:6.13,area:7.81,ix:57.53}),
+ Object.freeze({s:75,t:4.5,mass:9.55,area:12.17,ix:98.55}),
+ Object.freeze({s:80,t:4,mass:9.22,area:11.75,ix:111.04}),
+ Object.freeze({s:90,t:5,mass:12.84,area:16.36,ix:192.93}),
+ Object.freeze({s:100,t:6,mass:16.98,area:21.63,ix:311.47})
 ]);
 // Reject any 0.01 discrepancy where the BIS table specifies 2 decimals.
-const agrees=(got,expected)=>got===undefined||Math.abs(Number(got)-expected)<0.005;
-const massAgrees=(got,expected)=>Math.abs(Number(got)-expected)<0.005;
+const agrees=(got,expected)=>got!==undefined&&got!==null&&Math.abs(Number(got)-expected)<0.005;
+const massAgrees=(got,expected)=>got!==undefined&&got!==null&&Math.abs(Number(got)-expected)<0.005;
 // 'not-listed' only for the TWO manually checked historic thicknesses; all
 // other unknown sizes are 'not-checked', not assumed invalid or current.
 function standardAudit(row){
@@ -359,7 +401,7 @@ function standardAudit(row){
     return {status:'shs-row-checked',source,
      note:'SHS nominal mass and available area/inertia values agree with IS 4923:2017 Amendment 2 Table 1. Other properties, delivered material, MTC and design acceptance not certified.'};
    return {status:'shs-row-conflict',source,
-    note:'SHS nominal mass, area or inertia disagrees with the manually checked BIS Table 1 record. Quantity calculation is blocked.'};
+    note:'SHS nominal mass, area or inertia disagrees with the manually checked BIS Table 1 record, or a required value is missing. Quantity calculation is blocked.'};
   }
   if(row.series==='RHS'){
    const h=Number(row.depthMm),w=Number(row.widthMm);
@@ -372,10 +414,11 @@ function standardAudit(row){
     const ixOK=bis.ix===undefined||agrees(row.ixCm4,bis.ix);
     const iyOK=bis.iy===undefined||agrees(row.iyCm4,bis.iy);
     if(massOK&&areaOK&&ixOK&&iyOK)return {status:'rhs-weight-checked',source,
-     note:'RHS nominal kg/m checked against '+(bis.edition||'Amendment 2 Table 2; unchanged by Amendment 3')+
-     ' in IS 4923:2017. Other section properties, delivered material and MTC NOT certified.'};
+     note:bis.area===undefined?
+      'RHS nominal kg/m only checked against Amendment 3, June 2024. Area, inertia, delivered material and MTC are not certified.':
+      'RHS nominal mass, area, Ix and Iy compared with Amendment 2 Table 2 (unchanged by Amendment 3). Other properties, delivered material and MTC not certified.'};
     return {status:'rhs-weight-conflict',source,
-     note:'Source mass/area disagrees with the checked BIS amended RHS record. Quantity calculation is blocked.'};
+     note:'Source mass, area or inertia disagrees with the checked BIS amended RHS record, or a required value is missing. Quantity calculation is blocked.'};
    }
    return {status:'amendment3-review',source,
     note:'BIS Amendment 3 corrected some RHS nominal weights; this particular size is NOT manually reconciled with amended BIS Table 2.'};
