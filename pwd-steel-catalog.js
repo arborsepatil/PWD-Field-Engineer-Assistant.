@@ -10,7 +10,7 @@
 const SOURCES=Object.freeze({
  sail2023:Object.freeze({label:'SAIL · Product Range brochure (2023)',date:'2023-09',url:'https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf',note:'Manufacturer-published mass/overall dimensions. Do not assume conformity of delivered material without inspection/MTC.'}),
  sailProps2023:Object.freeze({label:'SAIL · Structurals / Tapered Flange (2023)',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'Manufacturer-published section properties for specific MB sizes; 2023 product data, not a replacement for the current BIS text.'}),
- is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; audited 2026-10-22',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Thirty selected hot-rolled reference variants, with 29 appearing as curated catalogue entries, compared directly with the owner-held IS 808:2021, Tables 1, 2, 5, 6 and 9. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
+ is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; audited 2026-10-22',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Thirty selected hot-rolled reference variants, with 29 appearing as curated catalogue entries, compared directly with the owner-held IS 808:2021, Tables 1–9, 12 and 13. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
  secondary808:Object.freeze({label:'2021 steel section table · secondary index',date:'IS 808:2021 (secondary website)',url:'https://quickboq.in/steel/',note:'Selected numbers independently transcribed from a public secondary index. Not independently certified against a current authorized BIS publication; verify before design/acceptance.'}),
  sailStruct2023:Object.freeze({label:'SAIL · Structural Product Range',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'SAIL manufacturer range; nominal stock availability and latest BIS row require separate confirmation.'}),
  tataLegacy:Object.freeze({label:'Tata Structura · Archived manufacturer brochure',date:'2015-era',url:'https://www.tatasteel.com/media/23759/tata-steel-structura-brochure.pdf',note:'Historical manufacturer section weight. Published BEFORE Amendment 3 (June 2024) to IS 4923:2017; NOT certified as current amended value.'}),
@@ -84,7 +84,7 @@ const newRows=[
   'https://quickboq.in/steel/tables/parallel-flange-bearing-piles/',['ISPBP 200'])
 ].map(row=>{
  // Seven previously secondary-only families directly checked with BIS Tables
- // 3/4/7/8/11/13. Keep the old secondary URL as attribution history.
+ // 3/4/7/8/12/13. Keep the old secondary URL as attribution history.
  const checked=new Set(['NPB','WPB','JC','LC','MPC','UE','PBP']);
  return checked.has(row.series)?Object.freeze({...row,sourceId:'is808Spot2021',
   sourceUrl:SOURCES.is808Spot2021.url,secondaryIndexUrl:row.sourceUrl,
@@ -368,14 +368,14 @@ const IS808_BIS_SPOT_CHECKS=Object.freeze([
  Object.freeze({series:'JC',d:100,b:45,mass:5.8,area:7.41,ix:123,iy:14.6,web:3,flange:5.1,table:7,pdfPage:25}),
  Object.freeze({series:'LC',d:150,b:75,mass:14.4,area:18.3,ix:697,iy:101,web:4.8,flange:7.8,table:7,pdfPage:26}),
  Object.freeze({series:'MPC',d:150,b:75,mass:16.8,area:21.3,ix:792,iy:120,web:5.7,flange:9,table:8,pdfPage:27}),
- Object.freeze({series:'UE',d:100,b:50,t:8,mass:9.05,area:11.5,ix:118,iy:20.2,table:11,pdfPage:37}),
+ Object.freeze({series:'UE',d:100,b:50,t:8,mass:9.05,area:11.5,ix:118,iy:20.2,table:12,pdfPage:39}),
  Object.freeze({series:'PBP',d:200,b:205,mass:43.85,area:55.8,ix:3990,iy:1330,web:9.3,flange:9.3,table:13,pdfPage:40})
 ]);
 // Source-published nominal figures use listed rounding; 0.01 kg/m mismatch
 // is NOT a numerical match. A missing optional dimension/property must not
 // be invented. Incomplete app rows can earn kg/m-only verification.
 function auditIS808(row){
- const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Table 1/2/5/6/9 checks';
+ const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–9, 12 and 13 checks';
  if(!row||!['beam','channel','column','angle','pile'].includes(row.family))
   return {status:'not-checked',source:null};
  const series=resolveSeries(row),d=Number(row.depthMm),b=Number(row.widthMm);
