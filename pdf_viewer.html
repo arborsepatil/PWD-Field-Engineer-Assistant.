@@ -172,7 +172,8 @@ function display(){
    if(nativeUrl)element('frame').src=nativeUrl;
    else element('frame').src='about:blank';
  }
- element('fallback').classList.toggle('show',!localURL);
+ if(localURL)element('fallback').classList.remove('show');
+ else element('fallback').classList.add('show');
  element('driveBtn').href=driveView();
  element('fallbackBtn').href=driveView();
  setPageStatus();
