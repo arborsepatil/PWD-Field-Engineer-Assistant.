@@ -40,3 +40,26 @@ IS 808:2021 Table 6 separately records **MC 250, B = 80 mm, 30.6 kg/m** and a **
 - The Android catalogue and CSV weight calculations block known conflicting historic masses while allowing matching nominal records.
 - Engineering CI now invokes the V14 independent source ledger and **actual** app calculation path. Earlier V12 calculator fix and V13 hollow tables stay isolated.
 - No UI/UX redesign. This is an engineering data, verification and audit provenance update only.
+
+
+## V15 — engineering geometry verification (22 October 2026)
+
+**Purpose:** Correct dimensional input used by the app's existing section diagrams, not implement a new UI or perform structural design.
+
+A limited set of **thirteen already-listed hot-rolled samples** were further compared with the owner-held **IS 808:2021 Fourth Revision**; this follows V14's independent nominal-mass spot checks and retains its separate source/variant ledger.
+
+- **Five medium beams**: MB 100, 150, 200, 250, 300 — Table 1, user PDF page 7.
+- **Eight medium channels**: MC 75, 100, 125, 150, 200 — Table 6, page 23; MC 250 (B=82 mm, 34.2 kg/m), 300, 400 — Table 6, page 24.
+
+The following properties were individually compared: web thickness **t**, flange thickness **T**, listed flange angle **α** (98° for these MB samples, 96° for these MC samples), fillet/root radii **R1/R2**, cross-sectional area and the listed second moments Izz/Iyy. Previously audited nominal mass and outside dimensions remain checked. No full BIS table is copied into the application.
+
+**Engineering boundaries:**
+- The app now stores the five additional sourced geometric parameters and compares *every available* parameter with the corresponding selected IS 808 row. Any stated 0.1 mm / 0.1° corruption in those sources blocks the corresponding numerical catalogue entry.
+- Only when all five values are present and agree does the app report **geometryChecked**. Nominal mass/area/inertia checks remain separately identified. Missing geometry is never called verified.
+- The existing drawing approximates flange faces using the **listed angle**, but corner fillets remain **schematic**: storing R1/R2 does not imply that the SVG renders a production profile or precise radius curve. Drawing use for fabrication/design requires independently checked CAD geometry.
+- **MC 250 B=82 mm / 34.2 kg/m remains distinct from MC 250 B=80 mm / 30.6 kg/m**, including the different web dimensions. No cross-selection or auto-substitution is permitted.
+- The 2020 nominal-angle discrepancies flagged in V14 remain blocked, and all uncross-checked Osdag/reference entries remain unverified.
+- **No design capacity, actual grade, fabrication tolerance, or MTC certification is asserted.** These are nominal source properties only.
+- No change to APK/PWA selection policy: deliverable is a genuine Android test APK. No UI redesign or modifications to other project modules.
+
+Sources: owner-held licensed BIS standard, Tables 1 and 6 as noted (private PDF **not** distributed); [BIS standard directory](https://services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf) documents IS 808:2021 as a current structural section standard.
