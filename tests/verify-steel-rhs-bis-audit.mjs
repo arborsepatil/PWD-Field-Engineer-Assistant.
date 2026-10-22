@@ -37,10 +37,10 @@ const corrected=[
  ['bis24-rhs260x180x12',260,180,12,75.47]
 ];
 assert.equal(corrected.length,12,'All 12 amended RHS corrections must be represented');
-assert.equal(cat.rhsAuditSampleCount,29,'Two existing RHS + all 12 corrected records');
-assert.equal(cat.sections.length,115,'Other catalogue rows remain unchanged');
-assert.equal(cat.sections.filter(x=>x.family==='hollow').length,47);
-assert.equal(cat.sections.filter(x=>x.series==='RHS').length,29);
+assert.equal(cat.rhsAuditSampleCount,35,'Two existing RHS + all 12 corrected records');
+assert.equal(cat.sections.length,127,'Other catalogue rows remain unchanged');
+assert.equal(cat.sections.filter(x=>x.family==='hollow').length,59);
+assert.equal(cat.sections.filter(x=>x.series==='RHS').length,35);
 
 const signatures=new Set();
 for(const [id,h,w,t,mass] of [...unchanged,...corrected]){
