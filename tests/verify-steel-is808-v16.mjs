@@ -21,10 +21,10 @@ const cases=[
  ['UE',12,100,50,9.05,11.5,118,20.2,null,null],
  ['PBP',13,200,205,43.85,55.8,3990,1330,9.3,9.3]
 ];
-assert.equal(cat.sections.length,127,'Preserve all 127 curated steel records');
-assert.equal(cat.is808AuditSampleCount,30,'23 previous variants + 7 directly checked classes');
+assert.equal(cat.sections.length,130,'130 curated rows including three V18 standard-correct angles');
+assert.equal(cat.is808AuditSampleCount,42,'42 limited selected source comparisons');
 const direct=cat.sections.filter(x=>x.sourceId==='is808Spot2021');
-assert.equal(direct.length,7,'Promote exactly seven section records into explicitly checked BIS attribution');
+assert.equal(direct.length,10,'Seven V16 direct rows and three V18 corrected angle rows');
 for(const [series,table,d,b,mass,area,ix,iy,web,flange] of cases){
  const rows=direct.filter(x=>x.series===series);
  assert.equal(rows.length,1,'One V16 selected direct BIS record required for '+series);
