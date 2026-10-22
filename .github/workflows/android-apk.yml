@@ -103,6 +103,8 @@ jobs:
         run: node tests/verify-steel-is808-v15-geometry.mjs
       - name: Check seven additional IS808 section family sample rows, with original BIS geometry
         run: node tests/verify-steel-is808-v16.mjs
+      - name: Verify IS 808 angle source conflicts and physical PDF page provenance
+        run: node tests/verify-steel-is808-v17.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
