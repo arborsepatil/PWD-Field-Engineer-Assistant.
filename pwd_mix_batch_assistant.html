@@ -32,9 +32,16 @@ footer{margin-top:18px;color:var(--mut);font-size:.76rem;line-height:1.4}
 .nomPick[aria-pressed="true"]{border:2px solid var(--c-accent,#0f4c5c)!important;background:var(--c-soft,#eef6fa)!important}
 .nomPick{min-height:90px}
 @media(max-width:600px){.tab{font-size:.78rem!important;padding:9px 5px!important}.tab span{font-size:.60rem!important}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style><style>
+/* V20: hide repeated explanatory footnotes unless the engineer requests help. */
+.effect{display:none}
+body.show-batch-input-guidance .effect{display:block}
+.input-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.input-head h2{margin:0}
+#batchInputHelp{cursor:pointer;background:#fff;color:var(--p);border:1px solid var(--line);border-radius:9px;padding:8px 10px;font:inherit;font-size:12px;font-weight:700}
 </style></head>
 <body><div class="module-shellbar noPrint"><a class="home" href="./index.html">‹ PWD Tools</a><span class="crumb">Concrete · Batch Assistant</span><span class="spacer"></span><a href="./settings.html" aria-label="Settings">⚙ Settings</a></div><div class="wrap">
-<header><h1>Concrete Batch Assistant</h1><div class="sub">Material calculation & order · AJAX site batching · nominal mix ratio · existing PWD source rows</div></header>
+<header><h1>Concrete Batch Assistant</h1><div class="sub">Material order · AJAX batching · nominal mix</div></header>
 
 <nav class="tabs noPrint" aria-label="Batch Assistant workflows">
 <button type="button" class="tab active" data-tab="qty" aria-selected="true">Material Order<span>Quantity → materials</span></button>
@@ -43,7 +50,7 @@ footer{margin-top:18px;color:var(--mut);font-size:.76rem;line-height:1.4}
 </nav>
 
 <section id="qty" class="panel">
-<div class="card"><h2>1 · Calculate materials / place order</h2><p class="small">Enter the proposed concrete quantity, select the correct source row, and copy the resulting material order. Quantities are theoretical—not purchase approvals.</p>
+<div class="card"><div class="input-head"><h2>Material order</h2><button id="batchInputHelp" type="button" aria-pressed="false">Show input guidance</button></div><p class="small">Enter the proposed concrete quantity, select the correct source row, and copy the resulting material order. Quantities are theoretical—not purchase approvals.</p>
 <div class="grid">
 <div class="field"><label>Source family</label><select id="qCat"></select><div class="effect">Keeps Building, Bridge/C.D. and Pile consumption separate.</div></div>
 <div class="field"><label>Concrete / source row</label><select id="qItem"></select><div class="effect">Exact verified source row; no family substitution.</div></div>
@@ -57,7 +64,7 @@ footer{margin-top:18px;color:var(--mut);font-size:.76rem;line-height:1.4}
 </section>
 
 <section id="ajax" class="panel hidden">
-<div class="card"><h2>2 · AJAX / site batching</h2>
+<div class="card"><h2>AJAX batching</h2>
 <div class="grid">
 <div class="field"><label>Source family</label><select id="aCat"></select></div>
 <div class="field"><label>Concrete / source row</label><select id="aItem"></select></div>
@@ -81,7 +88,7 @@ footer{margin-top:18px;color:var(--mut);font-size:.76rem;line-height:1.4}
 </section>
 
 <section id="nominal" class="panel hidden">
-<div class="card"><h2>3 · Nominal mix ratio reference & measuring guide</h2>
+<div class="card"><h2>Nominal mix reference</h2>
 <div class="warn"><b>Volume proportions only:</b> cement : fine aggregate : coarse aggregate. This is NOT a concrete yield, SSR consumption, or approved design mix. Use only where the project specification permits nominal mixing.</div>
 <div class="grid3" id="nomGrid"></div>
 <div class="grid">
@@ -325,4 +332,11 @@ $('nomGrid').addEventListener('click',e=>{
 $('nomGrade').onchange=renderNominal;
 $('nomMeasures').oninput=renderNominal;
 toggleABasis();calcQty();calcAjax();renderNominal();renderNotes();
-</script><script src="./app-shell.js"></script></body></html>
+</script><script src="./app-shell.js"></script><script>
+const batchInputHelp=document.getElementById('batchInputHelp');
+batchInputHelp?.addEventListener('click',()=>{
+ const show=document.body.classList.toggle('show-batch-input-guidance');
+ batchInputHelp.textContent=show?'Hide input guidance':'Show input guidance';
+ batchInputHelp.setAttribute('aria-pressed',String(show));
+});
+</script></body></html>
