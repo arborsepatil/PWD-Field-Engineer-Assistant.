@@ -33,3 +33,4 @@ jobs:
           node tests/verify-steel-v12-calculator.mjs
           node tests/verify-steel-bis-4923-v13.mjs
           node tests/verify-steel-is808-v14.mjs
+          node tests/verify-steel-is808-v15-geometry.mjs
