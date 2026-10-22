@@ -14,6 +14,7 @@ const SOURCES=Object.freeze({
  sailStruct2023:Object.freeze({label:'SAIL · Structural Product Range',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'SAIL manufacturer range; nominal stock availability and latest BIS row require separate confirmation.'}),
  tataLegacy:Object.freeze({label:'Tata Structura · Archived manufacturer brochure',date:'2015-era',url:'https://www.tatasteel.com/media/23759/tata-steel-structura-brochure.pdf',note:'Historical manufacturer section weight. Published BEFORE Amendment 3 (June 2024) to IS 4923:2017; NOT certified as current amended value.'}),
  rhsSecondary2024:Object.freeze({label:'RHS 2024 amended-table index (secondary)',date:'2024 secondary publication',url:'https://quickboq.in/steel/tables/rectangular-hollow-sections/',note:'Secondary index only; specific app row may have a separate manual BIS comparison.'}),
+ bis4923Spot2022:Object.freeze({label:'BIS IS 4923:2017 Amendment 2 · selected Table 1/2 comparisons',date:'Amendment 2 Aug 2022; checked 2026-10-22',url:'https://www.services.bis.gov.in/tmp/MTD4013093_26082022_1.pdf',note:'Selected SHS and unchanged RHS nominal masses and available area/inertia values manually checked against the BIS amended table. This is not a full standard transcription, product or structural certification.'}),
  rhsBisSpot2024:Object.freeze({label:'BIS IS 4923:2017 Amendment 3 · corrected RHS nominal weights',date:'June 2024 (audited 2026-10-22)',url:'https://services.bis.gov.in/tmp/Circular_vpMS_2024-08-06.pdf',note:'Twelve named nominal kg/m corrections checked against the owner-held consolidated BIS amendment, document page 33. The linked BIS circular confirms the update but is not the numerical source. Other section properties and material certificates not audited. No BIS PDF distributed with the app.'}),
  osdag808:Object.freeze({label:'Osdag open section data · LGPL-3.0',date:'IS808_Rev · revision unverified',url:'https://github.com/osdag-admin/Osdag/blob/master/src/osdag/data/ResourceFiles/Database/Intg_osdag.sql',note:'Historic IS808_Rev open data; row-by-row alignment with current IS 808:2021 is not established.'}),
  osdagCHS:Object.freeze({label:'Osdag circular tubes · LGPL-3.0',date:'Source refers to IS 1161:2014',url:'https://github.com/osdag-admin/Osdag/blob/master/src/osdag/data/ResourceFiles/Database/Intg_osdag.sql',note:'Open database CHS. Mass and area must be checked against authorized IS 1161 rows.'}),
@@ -138,6 +139,7 @@ const hollow=(id,series,h,w,t,kg,sourceId,basis,properties={})=>Object.freeze({
  depthMm:h,widthMm:w,thicknessMm:t,kgPerM:kg,
  standard:series==='CHS'?'IS 1161:2014 (manufacturer reference only)':
  sourceId==='rhsBisSpot2024'?'IS 4923:2017 incl. Amendment 3 (nominal kg/m audited only)':
+ sourceId==='bis4923Spot2022'?'IS 4923:2017 Amd.2 tables, selected nominal figures checked only':
  'IS 4923:2017 incl. Amendment 3 (manufacturer/secondary reference only)',
  sourceId,basis,...properties,
  aliases:[series+' '+h+'x'+w+'x'+t]
@@ -162,6 +164,17 @@ const hollowRows=[
  hollow('bis24-rhs150x100x10','RHS',150,100,10,34.09,'rhsBisSpot2024','bis-spot-audited-mass'),
  hollow('bis24-rhs150x100x12','RHS',150,100,12,39.67,'rhsBisSpot2024','bis-spot-audited-mass'),
  hollow('bis24-rhs150x100x12.5','RHS',150,100,12.5,41.00,'rhsBisSpot2024','bis-spot-audited-mass'),
+ // Four additional SHS samples; mass, area, Ix (and Iy by symmetry) checked.
+ hollow('bis22-shs40x40x2','SHS',40,40,2,2.31,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:2.94,ixCm4:6.94,iyCm4:6.94}),
+ hollow('bis22-shs50x50x2','SHS',50,50,2,2.93,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:3.74,ixCm4:14.15,iyCm4:14.15}),
+ hollow('bis22-shs60x60x3','SHS',60,60,3,5.19,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:6.61,ixCm4:35.13,iyCm4:35.13}),
+ hollow('bis22-shs100x100x4','SHS',100,100,4,11.73,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:14.95,ixCm4:226.35,iyCm4:226.35}),
+ // Five RHS samples unchanged by Amendment 3: mass, area and moments of inertia.
+ hollow('bis22-rhs40x20x2.5','RHS',40,20,2.5,2.03,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:2.59,ixCm4:4.69,iyCm4:1.54}),
+ hollow('bis22-rhs50x25x2.5','RHS',50,25,2.5,2.62,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:3.34,ixCm4:9.89,iyCm4:3.28}),
+ hollow('bis22-rhs80x40x3','RHS',80,40,3,5.19,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:6.61,ixCm4:52.25,iyCm4:17.56}),
+ hollow('bis22-rhs100x50x4','RHS',100,50,4,8.59,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:10.95,ixCm4:134.14,iyCm4:44.95}),
+ hollow('bis22-rhs200x100x6','RHS',200,100,6,26.40,'bis4923Spot2022','bis-table-spot-audited',{areaCm2:33.63,ixCm4:1703,iyCm4:577}),
  hollow('tata-legacy-chs21.3x21.3x2','CHS',21.3,21.3,2,0.95,'tataLegacy','archived-manufacturer-only',{areaCm2:1.21,ixCm4:0.57,iyCm4:0.57}),
  hollow('tata-legacy-chs33.7x33.7x2.6','CHS',33.7,33.7,2.6,1.98,'tataLegacy','archived-manufacturer-only',{areaCm2:2.54,ixCm4:3.09,iyCm4:3.09})
 ];
@@ -292,8 +305,8 @@ const CHS_WITHDRAWN_SAMPLE=Object.freeze([
 // Do not bundle/copy the BIS PDF or treat other Table 2 rows, mechanical
 // properties, or physical dimensions as verified.
 const RHS_BIS_SPOT_CHECKS=Object.freeze([
- Object.freeze({h:40,w:20,t:2,mass:1.68,area:2.14,edition:'Amendment 2 Table 2; unchanged by Amendment 3'}),
- Object.freeze({h:50,w:25,t:2,mass:2.15,area:2.74,edition:'Amendment 2 Table 2; unchanged by Amendment 3'}),
+ Object.freeze({h:40,w:20,t:2,mass:1.68,area:2.14,ix:4.05,iy:1.34,edition:'Amendment 2 Table 2; unchanged by Amendment 3'}),
+ Object.freeze({h:50,w:25,t:2,mass:2.15,area:2.74,ix:8.38,iy:2.81,edition:'Amendment 2 Table 2; unchanged by Amendment 3'}),
  Object.freeze({h:120,w:60,t:5,mass:12.84,edition:'Amendment 3 correction, June 2024'}),
  Object.freeze({h:127,w:50,t:3.6,mass:9.34,edition:'Amendment 3 correction, June 2024'}),
  Object.freeze({h:150,w:100,t:4,mass:14.88,edition:'Amendment 3 correction, June 2024'}),
@@ -307,6 +320,25 @@ const RHS_BIS_SPOT_CHECKS=Object.freeze([
  Object.freeze({h:150,w:100,t:12,mass:39.67,edition:'Amendment 3 correction, June 2024'}),
  Object.freeze({h:150,w:100,t:12.5,mass:41.00,edition:'Amendment 3 correction, June 2024'})
 ]);
+// Additional non-corrected RHS Table 2 nominal values.
+const RHS_BIS_ADDITIONAL=Object.freeze([
+ Object.freeze({h:40,w:20,t:2.5,mass:2.03,area:2.59,ix:4.69,iy:1.54}),
+ Object.freeze({h:50,w:25,t:2.5,mass:2.62,area:3.34,ix:9.89,iy:3.28}),
+ Object.freeze({h:80,w:40,t:3,mass:5.19,area:6.61,ix:52.25,iy:17.56}),
+ Object.freeze({h:100,w:50,t:4,mass:8.59,area:10.95,ix:134.14,iy:44.95}),
+ Object.freeze({h:200,w:100,t:6,mass:26.40,area:33.63,ix:1703,iy:577})
+]);
+const SHS_BIS_SAMPLES=Object.freeze([
+ Object.freeze({s:25,t:2,mass:1.36,area:1.74,ix:1.48}),
+ Object.freeze({s:32,t:2,mass:1.80,area:2.30,ix:3.36}),
+ Object.freeze({s:40,t:2,mass:2.31,area:2.94,ix:6.94}),
+ Object.freeze({s:50,t:2,mass:2.93,area:3.74,ix:14.15}),
+ Object.freeze({s:60,t:3,mass:5.19,area:6.61,ix:35.13}),
+ Object.freeze({s:100,t:4,mass:11.73,area:14.95,ix:226.35})
+]);
+// Reject any 0.01 discrepancy where the BIS table specifies 2 decimals.
+const agrees=(got,expected)=>got===undefined||Math.abs(Number(got)-expected)<0.005;
+const massAgrees=(got,expected)=>Math.abs(Number(got)-expected)<0.005;
 // 'not-listed' only for the TWO manually checked historic thicknesses; all
 // other unknown sizes are 'not-checked', not assumed invalid or current.
 function standardAudit(row){
@@ -317,16 +349,30 @@ function standardAudit(row){
   if(Number.isFinite(t)&&t>0&&t<2)return {
    status:'outside-current-scope',source,
    note:'Wall thickness below 2 mm is outside amended IS 4923 structural-section licensing scope (BIS circular 4 June 2024). Do not treat this as a current structural IS 4923 section; check the relevant product specification.'};
+  if(row.series==='SHS'){
+   const size=Number(row.depthMm),width=Number(row.widthMm);
+   const shs=SHS_BIS_SAMPLES.find(x=>x.s===size&&x.s===width&&x.t===t);
+   if(!shs)return {status:'not-checked',source,
+    note:'This SHS size has not been manually compared with amended BIS Table 1.'};
+   if(massAgrees(row.kgPerM,shs.mass)&&agrees(row.areaCm2,shs.area)&&
+      agrees(row.ixCm4,shs.ix)&&agrees(row.iyCm4,shs.ix))
+    return {status:'shs-row-checked',source,
+     note:'SHS nominal mass and available area/inertia values agree with IS 4923:2017 Amendment 2 Table 1. Other properties, delivered material, MTC and design acceptance not certified.'};
+   return {status:'shs-row-conflict',source,
+    note:'SHS nominal mass, area or inertia disagrees with the manually checked BIS Table 1 record. Quantity calculation is blocked.'};
+  }
   if(row.series==='RHS'){
    const h=Number(row.depthMm),w=Number(row.widthMm);
-   const bis=RHS_BIS_SPOT_CHECKS.find(x=>x.h===h&&x.w===w&&x.t===t);
+   const bis=RHS_BIS_SPOT_CHECKS.find(x=>x.h===h&&x.w===w&&x.t===t)||
+    RHS_BIS_ADDITIONAL.find(x=>x.h===h&&x.w===w&&x.t===t);
    if(bis){
     // Table values have two decimal digits. A 0.01 kg/m mismatch is a conflict.
-    const massOK=Math.abs(Number(row.kgPerM)-bis.mass)<0.005;
-    const areaOK=bis.area===undefined||row.areaCm2===undefined||
-     Math.abs(Number(row.areaCm2)-bis.area)<=0.02;
-    if(massOK&&areaOK)return {status:'rhs-weight-checked',source,
-     note:'RHS nominal kg/m checked against '+bis.edition+
+    const massOK=massAgrees(row.kgPerM,bis.mass);
+    const areaOK=bis.area===undefined||agrees(row.areaCm2,bis.area);
+    const ixOK=bis.ix===undefined||agrees(row.ixCm4,bis.ix);
+    const iyOK=bis.iy===undefined||agrees(row.iyCm4,bis.iy);
+    if(massOK&&areaOK&&ixOK&&iyOK)return {status:'rhs-weight-checked',source,
+     note:'RHS nominal kg/m checked against '+(bis.edition||'Amendment 2 Table 2; unchanged by Amendment 3')+
      ' in IS 4923:2017. Other section properties, delivered material and MTC NOT certified.'};
     return {status:'rhs-weight-conflict',source,
      note:'Source mass/area disagrees with the checked BIS amended RHS record. Quantity calculation is blocked.'};
@@ -352,7 +398,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
