@@ -50,16 +50,25 @@ function shapeSvg(type,data={}){
   info=(D===B?'Equal':'Unequal')+' leg angle · root/toe fillets schematic';
  }else if(type==='hollow'||type.startsWith('hollow-')){
   const kind=type==='hollow'?(data.series==='CHS'?'hollow-chs':data.series==='SHS'?'hollow-shs':'hollow-rhs'):type;
+  const t=Number(data.thicknessMm),hasWall=Number.isFinite(t)&&t>0;
   if(kind==='hollow-chs'){
-   body='<circle cx="'+cx+'" cy="171" r="86"/><circle class="cutout" cx="'+cx+'" cy="171" r="66"/>';
-   info='Circular hollow · annular sketch';
+   const OD=Number(data.diameterMm??data.depthMm);
+   const radius=86;
+   // Wall is proportional to nominal t/OD where both are sourced.
+   const wall=hasWall&&OD>0?Math.max(3,Math.min(radius*.4,2*radius*t/OD)):20;
+   body='<circle cx="'+cx+'" cy="171" r="'+radius+'"/><circle class="cutout" cx="'+cx+'" cy="171" r="'+(radius-wall)+'"/>';
+   if(OD>0)marks=dim(cx-radius,60,cx+radius,60,'OD '+fmt(OD)+' mm',cx,50);
+   legend=hasWall?'t '+fmt(t)+' mm · nominal outside diameter':'Wall thickness not sourced';
+   info='Circular hollow · wall shown approximately';
   }else{
-   const r=kind==='hollow-shs'?178:width;
-   const outerLeft=cx-r/2,outerTop=top,inner=18;
-   body='<rect x="'+outerLeft+'" y="'+outerTop+'" width="'+r+'" height="'+height+'"/><rect class="cutout" x="'+(outerLeft+inner)+'" y="'+(outerTop+inner)+'" width="'+(r-2*inner)+'" height="'+(height-2*inner)+'"/>';
-   info='Hollow section · radii/wall depiction schematic';
+   const outerW=kind==='hollow-shs'?174:width,outerLeft=cx-outerW/2,outerTop=top;
+   const wall=hasWall&&D>0?Math.max(3,Math.min(outerW*.3,height*.3,height*t/D)):18;
+   body='<rect x="'+outerLeft+'" y="'+outerTop+'" width="'+outerW+'" height="'+height+'"/><rect class="cutout" x="'+(outerLeft+wall)+'" y="'+(outerTop+wall)+'" width="'+(outerW-2*wall)+'" height="'+(height-2*wall)+'"/>';
+   if(Number(data.depthMm)>0&&Number(data.widthMm)>0)
+    marks=dim(outerLeft,60,outerLeft+outerW,60,'B '+fmt(B)+' mm',cx,50)+dim(112,top,112,bottom,'D '+fmt(D)+' mm',74,174);
+   legend=hasWall?'t '+fmt(t)+' mm · nominal dimensions':'Wall thickness not sourced';
+   info='Square / rectangular hollow · corner radii schematic';
   }
-  legend='Nominal mass from labelled source, if selected';
  }else if(type==='round'){
   body='<circle cx="'+cx+'" cy="171" r="85"/>';info='Solid round · theoretical geometry';
  }else if(type==='square'){
@@ -118,7 +127,7 @@ function updateSelectedSummary(){
  $('steelWeightConflict').hidden=!conflicts;
  $('steelPickedName').textContent=custom?$('steelCustomShape').selectedOptions[0].textContent:selected?.designation||'';
  const bisAudit=selected?catalog.standardAudit(selected):{status:'not-checked'};
- $('steelPickedStatus').textContent=custom?'Theoretical weight':!selected?'':bisAudit.status==='spot-checked-match'?'BIS 2023 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ BIS value conflict':bisAudit.status==='not-listed-in-replacement'?'⚠ Historical size · not current listed':selected.basis==='archived-manufacturer-only'?'Historic · BIS recheck needed':
+ $('steelPickedStatus').textContent=custom?'Theoretical weight':!selected?'':bisAudit.status==='spot-checked-match'?'BIS 2023 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ BIS value conflict':bisAudit.status==='outside-current-scope'?'⚠ Below IS 4923 minimum':bisAudit.status==='amendment3-review'?'RHS · BIS Amd.3 review pending':bisAudit.status==='not-listed-in-replacement'?'⚠ Historical size · not current listed':selected.basis==='archived-manufacturer-only'?'Historic · BIS recheck needed':
   ['secondary-unverified','secondary-amendment-unverified'].includes(selected.basis)?'Secondary · BIS row not checked':
   selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area conflict':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':source(selected.sourceId)?.label+' · '+source(selected.sourceId)?.date;
 }
@@ -146,7 +155,7 @@ function renderRows(){
   const name=document.createElement('b');name.textContent=row.designation;
   const subtitle=document.createElement('span');
   const status=catalog.standardAudit(row).status;
-  subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(status==='spot-checked-match'?' · 2023 spot-check':status==='not-listed-in-replacement'?' · Historical / unlisted':status==='spot-checked-conflict'?' · BIS conflict':row.basis==='archived-manufacturer-only'?' · Archive':
+  subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(status==='spot-checked-match'?' · 2023 spot-check':status==='not-listed-in-replacement'?' · Historical / unlisted':status==='spot-checked-conflict'?' · BIS conflict':status==='outside-current-scope'?' · Outside IS 4923 scope':status==='amendment3-review'?' · Amd.3 not verified':row.basis==='archived-manufacturer-only'?' · Archive':
  row.basis==='osdag-open-unverified'?' · Open source':['secondary-unverified','secondary-amendment-unverified'].includes(row.basis)?' · Secondary':'');
   btn.append(name,subtitle);
   btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
@@ -185,7 +194,7 @@ function renderDetail(){
  $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
  $('steelTitle').textContent=selected.designation;
  const bisAudit=catalog.standardAudit(selected);
- $('steelStatus').textContent=bisAudit.status==='spot-checked-match'?'IS 1161:2023 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ Conflicts with BIS':bisAudit.status==='not-listed-in-replacement'?'⚠ Not listed in 2023 Table 1':selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area check':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
+ $('steelStatus').textContent=bisAudit.status==='spot-checked-match'?'IS 1161:2023 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ Conflicts with BIS':bisAudit.status==='outside-current-scope'?'⚠ Below IS 4923 minimum':bisAudit.status==='amendment3-review'?'RHS · BIS Amd.3 not verified':bisAudit.status==='not-listed-in-replacement'?'⚠ Not listed in 2023 Table 1':selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area check':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
@@ -224,6 +233,7 @@ function calculate(){
  }
  if(!selected)throw Error('Choose a steel section from the search results.');
  const chsAudit=catalog.standardAudit(selected);
+ if(chsAudit.status==='outside-current-scope')throw Error('IS 4923 Amendment 2: steel hollow sections below 2 mm are outside amended structural section scope. Do not use this record for structural quantity calculations.');
  if(['not-listed-in-replacement','spot-checked-conflict'].includes(chsAudit.status))
   throw Error('IS 1161 Amendment 2 review: not an approved current table weight for this size. Choose a listed section.');
  if(selected.qualityFlag==='mass-area-inconsistent'||catalog.auditRow(selected).includes('mass-vs-area'))throw Error('Mass/area conflict in source row — quantity blocked pending review.');
