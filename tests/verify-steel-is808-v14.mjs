@@ -86,7 +86,8 @@ for(const [id,mass] of historical){
 const mc250=cat.byId('ISMC250');
 assert.equal(mc250.widthMm,82);
 assert.equal(mc250.kgPerM,34.2);
-assert.equal(cat.standardAudit(mc250).status,'is808-mass-checked');
+assert.equal(cat.standardAudit(mc250).status,'is808-mass-area-inertia-checked');
+assert.equal(cat.standardAudit(mc250).geometryChecked,true,'MC250 B82 geometry now audited against BIS Table 6');
 const alternate={...mc250,widthMm:80,kgPerM:30.6,areaCm2:38.9,ixCm4:3820,iyCm4:218};
 assert.equal(cat.standardAudit(alternate).status,'is808-mass-area-inertia-checked');
 assert.equal(cat.standardAudit({...mc250,widthMm:80}).status,'is808-numeric-conflict',

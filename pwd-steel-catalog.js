@@ -22,20 +22,20 @@ const SOURCES=Object.freeze({
  sail2020:Object.freeze({label:'SAIL · Structural Steel Sections, DSP archive (2020)',date:'2020-03',url:'https://www.sail.co.in/sites/default/files/product-brochure/2020-03/Structurals.pdf',note:'Archived manufacturer reference; CURRENT IS 808:2021 row and procurement availability have NOT been cross-verified.'})
 });
 const beam=(designation,depthMm,widthMm,kgPerM,extra={})=>({id:designation.replaceAll(' ',''),family:'beam',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)',...extra});
-const channel=(designation,depthMm,widthMm,kgPerM)=>({id:designation.replaceAll(' ',''),family:'channel',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)'});
+const channel=(designation,depthMm,widthMm,kgPerM,extra={})=>({id:designation.replaceAll(' ',''),family:'channel',designation,depthMm,widthMm,kgPerM,sourceId:'sail2023',basis:'manufacturer-published',standard:'IS 808:2021 (standard applicability only)',...extra});
 const angle=(legMm,thickMm,kgPerM)=>({id:'ISA'+legMm+'x'+legMm+'x'+thickMm,family:'angle',designation:'ISA '+legMm+'×'+legMm+'×'+thickMm,depthMm:legMm,widthMm:legMm,thicknessMm:thickMm,kgPerM,sourceId:'sail2020',basis:'archived-manufacturer-only',standard:'IS 808:2021 row not yet cross-checked'});
 const rows=[
- beam('ISMB 100',100,50,8.95,{areaCm2:11.4,ixCm4:182,iyCm4:12.5,zxCm3:36.4,zyCm3:5.01,webMm:4.7,flangeMm:7,sourceId:'sailProps2023'}),
- beam('ISMB 150',150,75,14.96,{areaCm2:19.0,ixCm4:718,iyCm4:46.7,zxCm3:95.7,zyCm3:12.4,webMm:5,flangeMm:8,sourceId:'sailProps2023'}),
- beam('ISMB 200',200,100,24.17),
- beam('ISMB 250',250,125,37.30,{areaCm2:47.5,ixCm4:5130,iyCm4:334,zxCm3:410,zyCm3:53.5,webMm:6.9,flangeMm:12.5,sourceId:'sailProps2023'}),
- beam('ISMB 300',300,140,46.02,{areaCm2:58.6,ixCm4:8990,iyCm4:486,zxCm3:599,zyCm3:69.4,webMm:7.7,flangeMm:13.1,sourceId:'sailProps2023'}),
- channel('ISMC 75',75,40,7.14),
- channel('ISMC 100',100,50,9.56),
- channel('ISMC 125',125,65,13.10),
- channel('ISMC 150',150,75,16.80),
- channel('ISMC 200',200,75,22.30),
- channel('ISMC 250',250,82,34.20),
+ beam('ISMB 100',100,50,8.95,{areaCm2:11.4,ixCm4:182,iyCm4:12.5,zxCm3:36.4,zyCm3:5.01,webMm:4.7,flangeMm:7,sourceId:'sailProps2023',flangeSlopeDeg:98,r1Mm:9,r2Mm:4.5}),
+ beam('ISMB 150',150,75,14.96,{areaCm2:19.0,ixCm4:718,iyCm4:46.7,zxCm3:95.7,zyCm3:12.4,webMm:5,flangeMm:8,sourceId:'sailProps2023',flangeSlopeDeg:98,r1Mm:9,r2Mm:4.5}),
+ beam('ISMB 200',200,100,24.17,{areaCm2:30.8,ixCm4:2110,iyCm4:136,webMm:5.7,flangeMm:10,flangeSlopeDeg:98,r1Mm:11,r2Mm:5.5}),
+ beam('ISMB 250',250,125,37.30,{areaCm2:47.5,ixCm4:5130,iyCm4:334,zxCm3:410,zyCm3:53.5,webMm:6.9,flangeMm:12.5,sourceId:'sailProps2023',flangeSlopeDeg:98,r1Mm:13,r2Mm:6.5}),
+ beam('ISMB 300',300,140,46.02,{areaCm2:58.6,ixCm4:8990,iyCm4:486,zxCm3:599,zyCm3:69.4,webMm:7.7,flangeMm:13.1,sourceId:'sailProps2023',flangeSlopeDeg:98,r1Mm:14,r2Mm:7}),
+ channel('ISMC 75',75,40,7.14,{areaCm2:9.08,ixCm4:78.2,iyCm4:12.7,webMm:4.8,flangeMm:7.5,flangeSlopeDeg:96,r1Mm:8.5,r2Mm:2.4}),
+ channel('ISMC 100',100,50,9.56,{areaCm2:12.1,ixCm4:191,iyCm4:26.3,webMm:5,flangeMm:7.7,flangeSlopeDeg:96,r1Mm:9,r2Mm:2.4}),
+ channel('ISMC 125',125,65,13.10,{areaCm2:16.6,ixCm4:424,iyCm4:60.3,webMm:5.3,flangeMm:8.2,flangeSlopeDeg:96,r1Mm:9.5,r2Mm:2.4}),
+ channel('ISMC 150',150,75,16.80,{areaCm2:21.3,ixCm4:786,iyCm4:102,webMm:5.7,flangeMm:9,flangeSlopeDeg:96,r1Mm:10,r2Mm:2.4}),
+ channel('ISMC 200',200,75,22.30,{areaCm2:28.4,ixCm4:1820,iyCm4:139,webMm:6.2,flangeMm:11.4,flangeSlopeDeg:96,r1Mm:11,r2Mm:3.2}),
+ channel('ISMC 250',250,82,34.20,{areaCm2:43.4,ixCm4:4060,iyCm4:242,webMm:9,flangeMm:14.1,flangeSlopeDeg:96,r1Mm:12,r2Mm:3.2}),
  angle(90,6,8.2),angle(90,8,10.8),
  angle(100,6,9.2),angle(100,8,12.1),
  angle(110,8,13.4),angle(130,10,19.7),
@@ -90,8 +90,8 @@ const newRows=[
 // This is the manufacturer-listed product range, not the complete IS 808:
 // unknown entries and ambiguous brochure cells are intentionally excluded.
 const sailExtra=[
- channel('ISMC 300',300,90,36.30),
- channel('ISMC 400',400,100,50.10),
+ channel('ISMC 300',300,90,36.30,{areaCm2:46.2,ixCm4:6400,iyCm4:311,webMm:7.8,flangeMm:13.6,flangeSlopeDeg:96,r1Mm:13,r2Mm:3.2}),
+ channel('ISMC 400',400,100,50.10,{areaCm2:63.7,ixCm4:15100,iyCm4:504,webMm:8.8,flangeMm:15.3,flangeSlopeDeg:96,r1Mm:15,r2Mm:4.8}),
  {id:'sail23-ISA50x50x6',family:'angle',series:'EQ',designation:'ISA 50×50×6',depthMm:50,widthMm:50,thicknessMm:6,kgPerM:4.49},
  {id:'sail23-ISA60x60x6',family:'angle',series:'EQ',designation:'ISA 60×60×6',depthMm:60,widthMm:60,thicknessMm:6,kgPerM:5.40},
  {id:'sail23-ISA75x75x8',family:'angle',series:'EQ',designation:'ISA 75×75×8',depthMm:75,widthMm:75,thicknessMm:8,kgPerM:9.00},
@@ -332,21 +332,21 @@ function collisionGroups(){
 // IS 808 angle values 90x90x6=8.32 and 100x100x8=12.18 differ from
 // legacy manufacturer entries 8.20 and 12.10, respectively.
 const IS808_BIS_SPOT_CHECKS=Object.freeze([
- Object.freeze({series:'MB',d:100,b:50,mass:8.95,area:11.4,ix:182,iy:12.5,table:1,pdfPage:6}),
+ Object.freeze({series:'MB',d:100,b:50,mass:8.95,area:11.4,ix:182,iy:12.5,table:1,pdfPage:6,geom:Object.freeze({web:4.7,flange:7,slope:98,r1:9,r2:4.5})}),
  Object.freeze({series:'MB',d:125,b:70,mass:13.35,area:17,ix:445,iy:38.4,table:1,pdfPage:6}),
- Object.freeze({series:'MB',d:150,b:75,mass:14.96,area:19,ix:718,iy:46.7,table:1,pdfPage:6}),
- Object.freeze({series:'MB',d:200,b:100,mass:24.17,area:30.8,ix:2110,iy:136,table:1,pdfPage:6}),
- Object.freeze({series:'MB',d:250,b:125,mass:37.3,area:47.5,ix:5130,iy:334,table:1,pdfPage:6}),
- Object.freeze({series:'MB',d:300,b:140,mass:46.02,area:58.6,ix:8990,iy:486,table:1,pdfPage:6}),
- Object.freeze({series:'MC',d:75,b:40,mass:7.14,area:9.08,ix:78.2,iy:12.7,table:6,pdfPage:22}),
- Object.freeze({series:'MC',d:100,b:50,mass:9.56,area:12.1,ix:191,iy:26.3,table:6,pdfPage:22}),
- Object.freeze({series:'MC',d:125,b:65,mass:13.1,area:16.6,ix:424,iy:60.3,table:6,pdfPage:22}),
- Object.freeze({series:'MC',d:150,b:75,mass:16.8,area:21.3,ix:786,iy:102,table:6,pdfPage:22}),
- Object.freeze({series:'MC',d:200,b:75,mass:22.3,area:28.4,ix:1820,iy:139,table:6,pdfPage:22}),
+ Object.freeze({series:'MB',d:150,b:75,mass:14.96,area:19,ix:718,iy:46.7,table:1,pdfPage:6,geom:Object.freeze({web:5,flange:8,slope:98,r1:9,r2:4.5})}),
+ Object.freeze({series:'MB',d:200,b:100,mass:24.17,area:30.8,ix:2110,iy:136,table:1,pdfPage:6,geom:Object.freeze({web:5.7,flange:10,slope:98,r1:11,r2:5.5})}),
+ Object.freeze({series:'MB',d:250,b:125,mass:37.3,area:47.5,ix:5130,iy:334,table:1,pdfPage:6,geom:Object.freeze({web:6.9,flange:12.5,slope:98,r1:13,r2:6.5})}),
+ Object.freeze({series:'MB',d:300,b:140,mass:46.02,area:58.6,ix:8990,iy:486,table:1,pdfPage:6,geom:Object.freeze({web:7.7,flange:13.1,slope:98,r1:14,r2:7})}),
+ Object.freeze({series:'MC',d:75,b:40,mass:7.14,area:9.08,ix:78.2,iy:12.7,table:6,pdfPage:22,geom:Object.freeze({web:4.8,flange:7.5,slope:96,r1:8.5,r2:2.4})}),
+ Object.freeze({series:'MC',d:100,b:50,mass:9.56,area:12.1,ix:191,iy:26.3,table:6,pdfPage:22,geom:Object.freeze({web:5,flange:7.7,slope:96,r1:9,r2:2.4})}),
+ Object.freeze({series:'MC',d:125,b:65,mass:13.1,area:16.6,ix:424,iy:60.3,table:6,pdfPage:22,geom:Object.freeze({web:5.3,flange:8.2,slope:96,r1:9.5,r2:2.4})}),
+ Object.freeze({series:'MC',d:150,b:75,mass:16.8,area:21.3,ix:786,iy:102,table:6,pdfPage:22,geom:Object.freeze({web:5.7,flange:9,slope:96,r1:10,r2:2.4})}),
+ Object.freeze({series:'MC',d:200,b:75,mass:22.3,area:28.4,ix:1820,iy:139,table:6,pdfPage:22,geom:Object.freeze({web:6.2,flange:11.4,slope:96,r1:11,r2:3.2})}),
  Object.freeze({series:'MC',d:250,b:80,mass:30.6,area:38.9,ix:3820,iy:218,table:6,pdfPage:22}),
- Object.freeze({series:'MC',d:250,b:82,mass:34.2,area:43.4,ix:4060,iy:242,table:6,pdfPage:23}),
- Object.freeze({series:'MC',d:300,b:90,mass:36.3,area:46.2,ix:6400,iy:311,table:6,pdfPage:23}),
- Object.freeze({series:'MC',d:400,b:100,mass:50.1,area:63.7,ix:15100,iy:504,table:6,pdfPage:23}),
+ Object.freeze({series:'MC',d:250,b:82,mass:34.2,area:43.4,ix:4060,iy:242,table:6,pdfPage:23,geom:Object.freeze({web:9,flange:14.1,slope:96,r1:12,r2:3.2})}),
+ Object.freeze({series:'MC',d:300,b:90,mass:36.3,area:46.2,ix:6400,iy:311,table:6,pdfPage:23,geom:Object.freeze({web:7.8,flange:13.6,slope:96,r1:13,r2:3.2})}),
+ Object.freeze({series:'MC',d:400,b:100,mass:50.1,area:63.7,ix:15100,iy:504,table:6,pdfPage:23,geom:Object.freeze({web:8.8,flange:15.3,slope:96,r1:15,r2:4.8})}),
  Object.freeze({series:'EQ',d:90,b:90,t:6,mass:8.32,area:10.6,ix:83,iy:83,table:9,pdfPage:30}),
  Object.freeze({series:'EQ',d:90,b:90,t:8,mass:10.92,area:13.9,ix:107,iy:107,table:9,pdfPage:30}),
  Object.freeze({series:'EQ',d:100,b:100,t:8,mass:12.18,area:15.5,ix:148,iy:148,table:9,pdfPage:30}),
@@ -374,13 +374,25 @@ function auditIS808(row){
  const propPairs=[['areaCm2','area'],['ixCm4','ix'],['iyCm4','iy']];
  const available=propPairs.filter(([key])=>row[key]!==undefined&&row[key]!==null);
  const propsOK=available.every(([key,src])=>equivalent(row[key],found[src]));
- if(!massOK||!propsOK)return {status:'is808-numeric-conflict',source,
-   note:'Mass or available section property disagrees with the selected BIS IS 808:2021 row. Calculation blocked for this record. Preserve source and variant identity.'};
+ // The original BIS geometry record must be checked independently of mass.
+ // Web/flange thickness, printed flange angle and fillet radii have separate
+ // provenance; full geometry is never inferred from section designation.
+ const geometryPairs=[['webMm','web'],['flangeMm','flange'],
+  ['flangeSlopeDeg','slope'],['r1Mm','r1'],['r2Mm','r2']];
+ const geometryAvailable=found.geom?geometryPairs.filter(([key])=>row[key]!==undefined&&row[key]!==null):[];
+ const geometryOK=!found.geom||geometryAvailable.every(([key,src])=>equivalent(row[key],found.geom[src]));
+ if(!massOK||!propsOK||!geometryOK)return {status:'is808-numeric-conflict',source,geometryChecked:false,
+   note:'Nominal mass, available section property or available geometric dimension disagrees with checked BIS IS 808:2021 row. Quantity calculation blocked for this record.'};
  const complete=available.length===3;
- return {status:complete?'is808-mass-area-inertia-checked':'is808-mass-checked',source,
+ const geometryChecked=Boolean(found.geom)&&geometryAvailable.length===geometryPairs.length;
+ return {status:complete?'is808-mass-area-inertia-checked':'is808-mass-checked',source,geometryChecked,
   note:complete?
-   'Nominal mass, area, Izz and Iyy checked against the stated IS 808:2021 table row. Other properties, steel grade, MTC and stock not certified.':
-   'Nominal kg/m and outside dimensions checked against the stated IS 808:2021 table row; any available section properties also compared. Missing properties, grade, MTC and actual material are not certified.'};
+   'Nominal mass, area, Izz and Iyy checked against the stated IS 808:2021 table row. '+
+    (geometryChecked?'Web/flange thickness, flange slope and both listed radii separately checked. ':'')+
+    'Other properties, steel grade, MTC and stock not certified.':
+   'Nominal kg/m and outside dimensions checked against the stated IS 808:2021 table row; any available section properties also compared. '+
+    (geometryChecked?'Web/flange thickness, flange slope and radii checked. ':'Missing geometry is NOT asserted checked. ')+
+    'Grade, MTC and actual material are not certified.'};
 }
 
 // Explicit, SMALL hand-reviewed CHS comparison against the user's private
