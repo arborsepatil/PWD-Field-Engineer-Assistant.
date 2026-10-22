@@ -374,13 +374,25 @@ function auditIS808(row){
  const propPairs=[['areaCm2','area'],['ixCm4','ix'],['iyCm4','iy']];
  const available=propPairs.filter(([key])=>row[key]!==undefined&&row[key]!==null);
  const propsOK=available.every(([key,src])=>equivalent(row[key],found[src]));
- if(!massOK||!propsOK)return {status:'is808-numeric-conflict',source,
-   note:'Mass or available section property disagrees with the selected BIS IS 808:2021 row. Calculation blocked for this record. Preserve source and variant identity.'};
+ // The original BIS geometry record must be checked independently of mass.
+ // Web/flange thickness, printed flange angle and fillet radii have separate
+ // provenance; full geometry is never inferred from section designation.
+ const geometryPairs=[['webMm','web'],['flangeMm','flange'],
+  ['flangeSlopeDeg','slope'],['r1Mm','r1'],['r2Mm','r2']];
+ const geometryAvailable=found.geom?geometryPairs.filter(([key])=>row[key]!==undefined&&row[key]!==null):[];
+ const geometryOK=!found.geom||geometryAvailable.every(([key,src])=>equivalent(row[key],found.geom[src]));
+ if(!massOK||!propsOK||!geometryOK)return {status:'is808-numeric-conflict',source,geometryChecked:false,
+   note:'Nominal mass, available section property or available geometric dimension disagrees with checked BIS IS 808:2021 row. Quantity calculation blocked for this record.'};
  const complete=available.length===3;
- return {status:complete?'is808-mass-area-inertia-checked':'is808-mass-checked',source,
+ const geometryChecked=Boolean(found.geom)&&geometryAvailable.length===geometryPairs.length;
+ return {status:complete?'is808-mass-area-inertia-checked':'is808-mass-checked',source,geometryChecked,
   note:complete?
-   'Nominal mass, area, Izz and Iyy checked against the stated IS 808:2021 table row. Other properties, steel grade, MTC and stock not certified.':
-   'Nominal kg/m and outside dimensions checked against the stated IS 808:2021 table row; any available section properties also compared. Missing properties, grade, MTC and actual material are not certified.'};
+   'Nominal mass, area, Izz and Iyy checked against the stated IS 808:2021 table row. '+
+    (geometryChecked?'Web/flange thickness, flange slope and both listed radii separately checked. ':'')+
+    'Other properties, steel grade, MTC and stock not certified.':
+   'Nominal kg/m and outside dimensions checked against the stated IS 808:2021 table row; any available section properties also compared. '+
+    (geometryChecked?'Web/flange thickness, flange slope and radii checked. ':'Missing geometry is NOT asserted checked. ')+
+    'Grade, MTC and actual material are not certified.'};
 }
 
 // Explicit, SMALL hand-reviewed CHS comparison against the user's private
