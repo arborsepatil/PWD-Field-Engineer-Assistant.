@@ -42,7 +42,7 @@ for(const [leg,pairs] of grades){
 }
 assert.equal(tally,33,'Manufacturer subset should cover 33 unambiguous ISA records');
 assert.equal(cat.byId('sail23-ISA80x80x12'),null,'Ambiguous brochure datum must not be fabricated');
-assert.equal(cat.sections.length,95,'Curated dataset changed without updating the independent source audit');
+assert.equal(cat.sections.length,115,'Curated dataset changed without updating the independent source audit');
 const channelMasses=[[75,7.14],[100,9.56],[125,13.10],[150,16.8],[200,22.3],[250,34.2],[300,36.3],[400,50.1]];
 for(const [depth,kg] of channelMasses){
  const id=depth<=250?'ISMC'+depth:'sail23-ISMC'+depth;
