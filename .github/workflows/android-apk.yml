@@ -99,6 +99,8 @@ jobs:
         run: node tests/verify-steel-bis-4923-v13.mjs
       - name: Verify Indian Standard 808 hot-rolled section weights and prevent archive conflicts
         run: node tests/verify-steel-is808-v14.mjs
+      - name: Audit seven remaining IS 808 hot-rolled section classes
+        run: node tests/verify-steel-is808-v15.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
