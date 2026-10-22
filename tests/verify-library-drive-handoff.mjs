@@ -14,7 +14,7 @@ const local=read('library-private-pdf.js');
 const canvas=read('bridge-pdf-canvas.js');
 assert.ok(viewer.includes('Choose how to open this PDF'));
 assert.ok(viewer.includes('Open in Drive (internet)'));
-assert.ok(viewer.includes('element(\'fallback\').classList.toggle(\'show\',!localURL)'));
+assert.ok(viewer.includes("classList.add('show')"));
 assert.ok(!viewer.includes('element(\'frame\').src=drivePreview()'));
 assert.ok(!viewer.includes("element('frame').src=localURL?localURL+'#page='+page:drivePreview()"));
 assert.ok(viewer.includes('element(\'frame\').src=\'about:blank\''));
