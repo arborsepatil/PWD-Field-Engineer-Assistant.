@@ -77,7 +77,7 @@ process.stdout.write('Service-worker navigation/static fallback isolation passed
 const home=load('index.html');
 assert.ok(home.includes('rel="manifest"'),'App manifest not linked from home');
 assert.ok(home.includes('serviceWorker.register'),'App service worker not registered');
-assert.ok(home.includes('id="installHelp"'),'Android installation instructions missing from app');
+assert.ok(!home.includes('id="installHelp"'),'Native Android home must not show browser/PWA installation instructions');
 
 const manifest=JSON.parse(load('manifest.json'));
 assert.equal(manifest.display,'standalone');
@@ -93,7 +93,7 @@ for(const sec of ['2500','2600','2611-2612','2613-2615','2700','2800','2900','30
 // MoRTH app-shell extension loader: failure of one source script cannot hide later clauses.
 {
  const start=app.indexOf('  // Resilient MoRTH extensions:');
- const end=app.indexOf("  document.getElementById('pwdCalcFab')",start);
+ const end=app.indexOf("  document.addEventListener('keydown'",start);
  assert.ok(start>=0&&end>start,'MoRTH extension loader not found');
  const loader=app.slice(start,end);
  const execute=(pathname,failedFilename)=>{
@@ -825,7 +825,7 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(!shell.some(path=>/\.pdf$/i.test(path)),'Public app must not precache copyrighted original PDFs');
  assert.ok(!home.includes('Game-changer module deliberately held'),'Old SSR placeholder must stay removed');
  assert.ok(home.includes('SSR Master'),'User-retained SSR Master must be visible in app navigation');
- assert.ok(home.includes('Rate engine pending'),'SSR Master must not claim unverified rate/analysis functionality');
+ assert.ok(!home.includes('Rate engine pending'),'The Home tool list must not display unfinished development statuses');
  assert.ok(home.includes('library.html?section=ssr'),'SSR source PDFs must be reachable from home');
  assert.equal((home.match(/class="module-card"/g)||[]).length,5,
    'Home must expose five kept navigation sections including SSR Master');
