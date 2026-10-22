@@ -416,7 +416,7 @@ function standardAudit(row){
     if(massOK&&areaOK&&ixOK&&iyOK)return {status:'rhs-weight-checked',source,
      note:bis.area===undefined?
       'RHS nominal kg/m only checked against Amendment 3, June 2024. Other section properties (including area/inertia), delivered material and MTC are not certified.':
-      'RHS nominal kg/m checked, along with area, Ix and Iy, against Amendment 2 Table 2 (unchanged by Amendment 3). Other properties, delivered material and MTC not certified.'};
+      'RHS nominal kg/m checked, along with area, Ix and Iy, against Amendment 2 Table 2 (unchanged by Amendment 3). Other section properties beyond sampled mass/area/inertia, delivered material and MTC are not certified.'};
     return {status:'rhs-weight-conflict',source,
      note:'Source mass, area or inertia disagrees with the checked BIS amended RHS record, or a required value is missing. Quantity calculation is blocked.'};
    }
