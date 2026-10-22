@@ -38,7 +38,7 @@
 <body class="app-page"><main class="lib-wrap">
 <header class="lib-head"><a class="icon-btn" href="./index.html" aria-label="Back to home">‹</a><div><div class="brand-title" style="font-size:25px">Library</div><div class="brand-sub">Original PDF references from your Google Drive</div></div></header>
 <section class="lib-hero"><div class="eyebrow">PWD Engineering Reference Library</div><h1>Books in the right section</h1>
-<p>Codes, specifications, SSR, bridge plans, guidelines and rules are grouped by publication. Open the original PDF inside the app when Drive preview allows it, or open Drive directly. For offline viewing, select a private on-device copy. No book PDFs are published with the app.</p>
+<p>Codes, specifications, SSR, bridge plans, guidelines and rules are grouped by publication. Open the original online in the Drive app or phone browser. For on-device viewing, select a downloaded original PDF; the embedded Drive sign-in screen has been removed. No book PDFs are published with the app.</p>
 <div class="lib-note"><b>Drive catalog snapshot · 18 October 2026.</b> Only PDFs found during the connected Drive scan are listed. This list is a snapshot, not automatic Drive synchronization. Older editions may be superseded; always verify the applicable revision, amendments and project specification before engineering use.</div></section>
 <div class="offline-tools" aria-label="Offline PDF Library"><div class="offline-actions"><button type="button" id="bulkImport">Save multiple PDFs</button><button type="button" id="prepareOfflineReader">Prepare offline reader</button><label class="offline-filter"><input type="checkbox" id="showOfflineOnly"> Offline books only</label></div><input type="file" id="offlineOne" accept=".pdf,application/pdf" hidden><input type="file" id="offlineMany" accept=".pdf,application/pdf" multiple hidden><p id="offlineProgress" class="offline-notice" role="status" aria-live="polite">Checking saved books on this device…</p><p class="offline-notice">Offline setup: while online, prepare the PDF reader once. Then select PDFs stored in your phone using Save PDF or Save multiple PDFs. Each book is private to this browser and phone; sign-in to Drive is not needed after saving. An original PDF is not automatically downloaded from Drive.</p></div><div class="library-search"><span aria-hidden="true">🔎</span><input id="libSearch" type="search" autocomplete="off" placeholder="Search IS 456, IRC 78, SSR, Code, bridge…" aria-label="Search Drive PDF titles"></div>
 <nav class="categories" id="libraryTabs" aria-label="Library sections"></nav>
@@ -90,8 +90,8 @@
   const drive='https://drive.google.com/file/d/'+encodeURIComponent(record.id)+'/view?usp=drivesdk';
   const primary=record.reader?'<a class="primary" href="'+esc(record.reader)+'">Open digital reader</a>':'';
   const local=record.viewer||'./pdf_viewer.html?file='+encodeURIComponent(record.id);
-  const native='<a href="'+esc(local)+'">Read PDF in app</a>';
-  const external='<a href="'+esc(drive)+'" target="_blank" rel="noopener noreferrer">Google Drive ↗</a>';
+  const native='<a href="'+esc(local)+'">Open / select PDF</a>';
+  const external='<a href="'+esc(drive)+'" rel="noopener noreferrer">Open in Drive ↗</a>';
   const isSaved=!!saved[record.id];
   const offline='<button type="button" data-offline-save="'+esc(record.id)+'">'+(isSaved?'Replace saved PDF':'Save PDF on device')+'</button>'+(isSaved?'<button type="button" data-offline-export="'+esc(record.id)+'">Export copy</button><button type="button" data-offline-remove="'+esc(record.id)+'">Remove offline</button>':'');
   const info=isBridge?'Drawing index is separate from the original private PDF. Detailed drawing QA and DWG checks are pending.':
