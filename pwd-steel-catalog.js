@@ -332,35 +332,37 @@ function collisionGroups(){
 }
 
 // Owner-held IS 808:2021 (Fourth Revision): small, separately reviewed
+// pdfPage is the physical 1-based page of the specific 60-page owner PDF,
+// NOT the internally printed BIS folio (physical page = printed + 2).
 // sample ledger, NOT a transcription of the complete proprietary BIS tables.
 // IMPORTANT: MC 250 with B=82 mm is the 34.2 kg/m starred variant; MC 250
 // B=80 mm is a DIFFERENT 30.6 kg/m section. Do not merge by depth alone.
 // IS 808 angle values 90x90x6=8.32 and 100x100x8=12.18 differ from
 // legacy manufacturer entries 8.20 and 12.10, respectively.
 const IS808_BIS_SPOT_CHECKS=Object.freeze([
- Object.freeze({series:'MB',d:100,b:50,mass:8.95,area:11.4,ix:182,iy:12.5,table:1,pdfPage:6,geom:Object.freeze({web:4.7,flange:7,slope:98,r1:9,r2:4.5})}),
- Object.freeze({series:'MB',d:125,b:70,mass:13.35,area:17,ix:445,iy:38.4,table:1,pdfPage:6}),
- Object.freeze({series:'MB',d:150,b:75,mass:14.96,area:19,ix:718,iy:46.7,table:1,pdfPage:6,geom:Object.freeze({web:5,flange:8,slope:98,r1:9,r2:4.5})}),
- Object.freeze({series:'MB',d:200,b:100,mass:24.17,area:30.8,ix:2110,iy:136,table:1,pdfPage:6,geom:Object.freeze({web:5.7,flange:10,slope:98,r1:11,r2:5.5})}),
- Object.freeze({series:'MB',d:250,b:125,mass:37.3,area:47.5,ix:5130,iy:334,table:1,pdfPage:6,geom:Object.freeze({web:6.9,flange:12.5,slope:98,r1:13,r2:6.5})}),
- Object.freeze({series:'MB',d:300,b:140,mass:46.02,area:58.6,ix:8990,iy:486,table:1,pdfPage:6,geom:Object.freeze({web:7.7,flange:13.1,slope:98,r1:14,r2:7})}),
- Object.freeze({series:'MC',d:75,b:40,mass:7.14,area:9.08,ix:78.2,iy:12.7,table:6,pdfPage:22,geom:Object.freeze({web:4.8,flange:7.5,slope:96,r1:8.5,r2:2.4})}),
- Object.freeze({series:'MC',d:100,b:50,mass:9.56,area:12.1,ix:191,iy:26.3,table:6,pdfPage:22,geom:Object.freeze({web:5,flange:7.7,slope:96,r1:9,r2:2.4})}),
- Object.freeze({series:'MC',d:125,b:65,mass:13.1,area:16.6,ix:424,iy:60.3,table:6,pdfPage:22,geom:Object.freeze({web:5.3,flange:8.2,slope:96,r1:9.5,r2:2.4})}),
- Object.freeze({series:'MC',d:150,b:75,mass:16.8,area:21.3,ix:786,iy:102,table:6,pdfPage:22,geom:Object.freeze({web:5.7,flange:9,slope:96,r1:10,r2:2.4})}),
- Object.freeze({series:'MC',d:200,b:75,mass:22.3,area:28.4,ix:1820,iy:139,table:6,pdfPage:22,geom:Object.freeze({web:6.2,flange:11.4,slope:96,r1:11,r2:3.2})}),
- Object.freeze({series:'MC',d:250,b:80,mass:30.6,area:38.9,ix:3820,iy:218,table:6,pdfPage:22}),
- Object.freeze({series:'MC',d:250,b:82,mass:34.2,area:43.4,ix:4060,iy:242,table:6,pdfPage:23,geom:Object.freeze({web:9,flange:14.1,slope:96,r1:12,r2:3.2})}),
- Object.freeze({series:'MC',d:300,b:90,mass:36.3,area:46.2,ix:6400,iy:311,table:6,pdfPage:23,geom:Object.freeze({web:7.8,flange:13.6,slope:96,r1:13,r2:3.2})}),
- Object.freeze({series:'MC',d:400,b:100,mass:50.1,area:63.7,ix:15100,iy:504,table:6,pdfPage:23,geom:Object.freeze({web:8.8,flange:15.3,slope:96,r1:15,r2:4.8})}),
- Object.freeze({series:'EQ',d:90,b:90,t:6,mass:8.32,area:10.6,ix:83,iy:83,table:9,pdfPage:30}),
- Object.freeze({series:'EQ',d:90,b:90,t:8,mass:10.92,area:13.9,ix:107,iy:107,table:9,pdfPage:30}),
- Object.freeze({series:'EQ',d:100,b:100,t:8,mass:12.18,area:15.5,ix:148,iy:148,table:9,pdfPage:30}),
- Object.freeze({series:'EQ',d:150,b:150,t:10,mass:22.93,area:29.2,ix:633,iy:633,table:9,pdfPage:31}),
- Object.freeze({series:'EQ',d:200,b:200,t:12,mass:36.85,area:46.9,ix:1820,iy:1820,table:9,pdfPage:31}),
- Object.freeze({series:'WB',d:150,b:100,mass:17,area:21.6,ix:839,iy:94.7,table:1,pdfPage:7}),
- Object.freeze({series:'HB',d:200,b:200,mass:37.31,area:47.5,ix:3600,iy:967,table:5,pdfPage:20}),
- Object.freeze({series:'LB',d:200,b:100,mass:19.83,area:25.2,ix:1690,iy:115,table:2,pdfPage:9}),
+ Object.freeze({series:'MB',d:100,b:50,mass:8.95,area:11.4,ix:182,iy:12.5,table:1,pdfPage:7,geom:Object.freeze({web:4.7,flange:7,slope:98,r1:9,r2:4.5})}),
+ Object.freeze({series:'MB',d:125,b:70,mass:13.35,area:17,ix:445,iy:38.4,table:1,pdfPage:7}),
+ Object.freeze({series:'MB',d:150,b:75,mass:14.96,area:19,ix:718,iy:46.7,table:1,pdfPage:7,geom:Object.freeze({web:5,flange:8,slope:98,r1:9,r2:4.5})}),
+ Object.freeze({series:'MB',d:200,b:100,mass:24.17,area:30.8,ix:2110,iy:136,table:1,pdfPage:7,geom:Object.freeze({web:5.7,flange:10,slope:98,r1:11,r2:5.5})}),
+ Object.freeze({series:'MB',d:250,b:125,mass:37.3,area:47.5,ix:5130,iy:334,table:1,pdfPage:7,geom:Object.freeze({web:6.9,flange:12.5,slope:98,r1:13,r2:6.5})}),
+ Object.freeze({series:'MB',d:300,b:140,mass:46.02,area:58.6,ix:8990,iy:486,table:1,pdfPage:7,geom:Object.freeze({web:7.7,flange:13.1,slope:98,r1:14,r2:7})}),
+ Object.freeze({series:'MC',d:75,b:40,mass:7.14,area:9.08,ix:78.2,iy:12.7,table:6,pdfPage:23,geom:Object.freeze({web:4.8,flange:7.5,slope:96,r1:8.5,r2:2.4})}),
+ Object.freeze({series:'MC',d:100,b:50,mass:9.56,area:12.1,ix:191,iy:26.3,table:6,pdfPage:23,geom:Object.freeze({web:5,flange:7.7,slope:96,r1:9,r2:2.4})}),
+ Object.freeze({series:'MC',d:125,b:65,mass:13.1,area:16.6,ix:424,iy:60.3,table:6,pdfPage:23,geom:Object.freeze({web:5.3,flange:8.2,slope:96,r1:9.5,r2:2.4})}),
+ Object.freeze({series:'MC',d:150,b:75,mass:16.8,area:21.3,ix:786,iy:102,table:6,pdfPage:23,geom:Object.freeze({web:5.7,flange:9,slope:96,r1:10,r2:2.4})}),
+ Object.freeze({series:'MC',d:200,b:75,mass:22.3,area:28.4,ix:1820,iy:139,table:6,pdfPage:23,geom:Object.freeze({web:6.2,flange:11.4,slope:96,r1:11,r2:3.2})}),
+ Object.freeze({series:'MC',d:250,b:80,mass:30.6,area:38.9,ix:3820,iy:218,table:6,pdfPage:23}),
+ Object.freeze({series:'MC',d:250,b:82,mass:34.2,area:43.4,ix:4060,iy:242,table:6,pdfPage:24,geom:Object.freeze({web:9,flange:14.1,slope:96,r1:12,r2:3.2})}),
+ Object.freeze({series:'MC',d:300,b:90,mass:36.3,area:46.2,ix:6400,iy:311,table:6,pdfPage:24,geom:Object.freeze({web:7.8,flange:13.6,slope:96,r1:13,r2:3.2})}),
+ Object.freeze({series:'MC',d:400,b:100,mass:50.1,area:63.7,ix:15100,iy:504,table:6,pdfPage:24,geom:Object.freeze({web:8.8,flange:15.3,slope:96,r1:15,r2:4.8})}),
+ Object.freeze({series:'EQ',d:90,b:90,t:6,mass:8.32,area:10.6,ix:83,iy:83,table:9,pdfPage:31}),
+ Object.freeze({series:'EQ',d:90,b:90,t:8,mass:10.92,area:13.9,ix:107,iy:107,table:9,pdfPage:31}),
+ Object.freeze({series:'EQ',d:100,b:100,t:8,mass:12.18,area:15.5,ix:148,iy:148,table:9,pdfPage:31}),
+ Object.freeze({series:'EQ',d:150,b:150,t:10,mass:22.93,area:29.2,ix:633,iy:633,table:9,pdfPage:32}),
+ Object.freeze({series:'EQ',d:200,b:200,t:12,mass:36.85,area:46.9,ix:1820,iy:1820,table:9,pdfPage:32}),
+ Object.freeze({series:'WB',d:150,b:100,mass:17,area:21.6,ix:839,iy:94.7,table:1,pdfPage:8}),
+ Object.freeze({series:'HB',d:200,b:200,mass:37.31,area:47.5,ix:3600,iy:967,table:5,pdfPage:22}),
+ Object.freeze({series:'LB',d:200,b:100,mass:19.83,area:25.2,ix:1690,iy:115,table:2,pdfPage:10}),
  Object.freeze({series:'NPB',d:100,b:55,mass:8.10,area:10.3,ix:171,iy:15.9,table:3,pdfPage:11,geom:Object.freeze({web:4.1,flange:5.7,slope:90,r1:7,r2:0})}),
  Object.freeze({series:'WPB',d:91,b:100,mass:12.24,area:15.5,ix:236,iy:92,table:4,pdfPage:15,geom:Object.freeze({web:4.2,flange:5.5,slope:90,r1:12,r2:0})}),
  Object.freeze({series:'JC',d:100,b:45,mass:5.8,area:7.41,ix:123,iy:14.6,table:7,pdfPage:25,geom:Object.freeze({web:3,flange:5.1,slope:91.5,r1:6,r2:2})}),
@@ -394,11 +396,11 @@ function auditIS808(row){
   ['flangeSlopeDeg','slope'],['r1Mm','r1'],['r2Mm','r2']];
  const geometryAvailable=found.geom?geometryPairs.filter(([key])=>row[key]!==undefined&&row[key]!==null):[];
  const geometryOK=!found.geom||geometryAvailable.every(([key,src])=>equivalent(row[key],found.geom[src]));
- if(!massOK||!propsOK||!geometryOK)return {status:'is808-numeric-conflict',source,geometryChecked:false,
+ if(!massOK||!propsOK||!geometryOK)return {status:'is808-numeric-conflict',source,sourceTable:found.table,sourcePdfPage:found.pdfPage,geometryChecked:false,
    note:'Nominal mass, available section property or available geometric dimension disagrees with checked BIS IS 808:2021 row. Quantity calculation blocked for this record.'};
  const complete=available.length===3;
  const geometryChecked=Boolean(found.geom)&&geometryAvailable.length===geometryPairs.length;
- return {status:complete?'is808-mass-area-inertia-checked':'is808-mass-checked',source,geometryChecked,
+ return {status:complete?'is808-mass-area-inertia-checked':'is808-mass-checked',source,sourceTable:found.table,sourcePdfPage:found.pdfPage,geometryChecked,
   note:complete?
    'Nominal mass, area, Izz and Iyy checked against the stated IS 808:2021 table row. '+
     (geometryChecked?'Web/flange thickness, flange slope and both listed radii separately checked. ':'')+
