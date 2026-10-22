@@ -8,9 +8,9 @@ Audit performed 22 October 2026 against the **user-held IS 808:2021 Fourth Revis
 
 - Table 1: Indian Standard medium and wide flange beams — PDF pp. 7–8
 - Table 2: junior and light beams — PDF pp. 9–10
-- Table 5: columns/heavy sections — PDF pp. 20–21
+- Table 5: columns/heavy sections — PDF pp. 21–22
 - Table 6: sloping flange medium channels — PDF pp. 23–24
-- Table 9: equal angles — PDF pp. 28–31
+- Table 9: equal angles — PDF pp. 29–32
 
 The audit ledger contains **23 specific standard variants**. Exactly **22 match curated app section entries**. The extra row is the **MC 250 normal variant**, needed to distinguish the starred section. Matching here means matching the selected nominal **kg/m** and outside nominal dimensions; where the app also has area / Izz / Iyy, compare each present value independently. **Only four MB records** in this sample contain all three app properties (mass, area, Izz and Iyy), and the app reports their stronger check separately.
 
@@ -86,3 +86,28 @@ Each was independently reconciled for nominal mass, cross-sectional area, Izz, I
 The earlier secondary web references are retained in row provenance, while checked selected rows now receive a source-limited BIS audit label. Numerical agreement does **not** certify manufactured steel, material grade, BIS licence, MTC, structural strength or design acceptance. A source discrepancy of 0.01 kg/m or a supplied source property discrepancy is blocked; this is exact-reference data validation, **not** an IS manufacturing tolerance. No complete licensed BIS standard PDF or watermark data is published in repository or APK.
 
 **Important variant distinction:** sloping **MC 150** and parallel **MPC 150** both weigh 16.80 kg/m, but have different published Izz and Iyy. They must not share geometry or a single catalogue record. Existing Android app layout, bridge books, retaining-wall modules, removed Bridge Hydraulics and the separate PWD apps remain unchanged.
+
+
+## V17 — Twelve more IS 808:2021 angle samples, three corrections, source page audit (23 October 2026)
+
+Source: the user's private 60-page **IS 808:2021 Fourth Revision**, **Table 9 (equal-leg angles)**, physical PDF pp. **30–32**. This copy is marked non-commercial and is **not published in code, documentation attachments or APK**. The following comparisons are a *limited source-data audit*, not manufacturing acceptance or a full standard transcription.
+
+Twelve more selected angle variants were independently compared for nominal mass, area and both in-plane moments of inertia: 50×50×5, 50×50×6, 60×60×5/6/8, 65×65×5, 75×75×8, 80×80×8, 90×90×10, 100×100×10, 150×150×12 and 200×200×16. These were chosen to cover small and medium field steel profiles alongside heavier structural angles.
+
+### Confirmed discrepancies and safer app choice
+
+| Equal-leg angle | SAIL 2023 catalogue kg/m | BIS IS 808:2021 Table 9 kg/m | V17 action |
+| --- | ---: | ---: | --- |
+| 60×60×5 | 4.50 | 4.58 | Preserve SAIL history, block conflict, add explicitly checked BIS alternative |
+| 60×60×6 | 5.40 | 5.44 | Preserve SAIL history, block conflict, add explicitly checked BIS alternative |
+| 60×60×8 | 7.00 | 7.10 | Preserve SAIL history, block conflict, add explicitly checked BIS alternative |
+
+The new source-checked BIS alternatives include the published cross-sectional area and moments of inertia; the old SAIL values remain separately searchable as dated manufacturer data but do not pass IS 808 numeric matching. A verified sample is shown first in the matching size search. Calculation for a conflicting SAIL row is **blocked**, while the BIS source-correct alternative calculates nominal material mass. No assertion is made about on-site delivery, steel grade, precise fillet CAD curves, bill acceptance, or MTC.
+
+### Audit provenance repair
+
+Earlier V14–V16 ledger cells contained mixed-up *PDF physical page indices* versus printed internal standard page numbers. **Twenty-three older sample pointers were corrected**, including MB, MC, WB, LB, HB, and selected EQ angles, while unchanged NPB, WPB, JC, LC, MPC, UE and PBP references were retained. Example: MB 100 appears on physical PDF p.7, MC 75 on p.23, and HB 200 on p.22. This is reference metadata correction; previously checked numerical data is unchanged.
+
+**IS 808 limited audit total now: 42 selected standard variants, corresponding to 41 distinct catalogue records**, plus separately preserved alternate manufactured vintages. Curated catalogue total becomes **130 sections**. The 640 Osdag supplementary section entries are not thereby promoted to verified BIS rows.
+
+Current genuine Android APK builds and engineering tests gate these source-corrected choices and numerical conflicts. Bridge/Masonry modules, removed Bridge Hydro topic and separate PWD projects remain unchanged. **UI/UX redesign is still deferred.**
