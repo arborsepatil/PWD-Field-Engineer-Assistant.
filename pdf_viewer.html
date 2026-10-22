@@ -170,7 +170,7 @@ function display(){
  }else{
    changeMode(false);
    if(nativeUrl)element('frame').src=nativeUrl;
-   else element('frame').removeAttribute('src');
+   else element('frame').src='about:blank';
  }
  element('fallback').classList.toggle('show',!localURL);
  element('driveBtn').href=driveView();
@@ -215,7 +215,7 @@ if(!d){
        }else if(status==='error'){
          changeMode(false);
          if(localURL)element('frame').src=localURL+'#page='+page;
-         else {element('frame').removeAttribute('src');element('fallback').classList.add('show');}
+         else {element('frame').src='about:blank';element('fallback').classList.add('show');}
          element('docMeta').textContent='Native PDF fallback · '+message;
          element('pdfPageIndicator').textContent='Requested p.'+page+' / '+maxPage+' · native viewer may ignore page jump';
        }else if(status==='loading'){
@@ -250,7 +250,7 @@ if(!d){
    if(catalogRecord?.section){
      document.querySelector('.top a').href='./library.html?section='+encodeURIComponent(catalogRecord.section);
    }
-   element('frame').removeAttribute('src');
+   element('frame').src='about:blank';
    element('fallback').classList.add('show');
    bridgeGestures=enableBridgeFingerGestures(pageSwipe,scale=>{
      if(canvasActive&&canvasController?.ready&&scale>1.8)
@@ -268,7 +268,7 @@ if(!d){
        }else if(status==='error'){
          changeMode(false);
          if(localURL)element('frame').src=localURL+'#page='+page;
-         else {element('frame').removeAttribute('src');element('fallback').classList.add('show');}
+         else {element('frame').src='about:blank';element('fallback').classList.add('show');}
          element('docMeta').textContent='Native local preview · '+message;
        }else if(status==='loading'){
          element('docMeta').textContent=message;
