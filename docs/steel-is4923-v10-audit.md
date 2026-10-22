@@ -66,3 +66,28 @@ All **45 curated SHS/RHS rows** already in the app were checked for available ar
 **Software correction:** The app's selected-section calculator contained an erroneous assignment to the outside-current-scope status where strict equality comparison was required. This could erroneously block otherwise valid selected steel-section weight calculations. V12 corrects it and adds an executable calculator regression for beam, SHS, RHS, sub-2-mm current structural scope, 120×80×6 source quarantine and mass/area conflicts.
 
 The private BIS PDF remains out of GitHub and the APK. The 406 source rows were analyzed, NOT republished as a comprehensive app catalogue. UI/UX redesign remains out of scope.
+
+
+## V13 — Source sample expansion and compliance reference review
+
+Audit date: 22 October 2026. Independently compared **twelve additional rows** from the owner's private IS 4923:2017 consolidated PDF, **Amendment 2 Tables 1/2** (unchanged where not corrected by Amendment 3). Measurements reviewed per row: nominal dimension, thickness, mass (kg/m), cross-sectional area (cm²), Ix and Iy (cm⁴). Internal mass/area plausibility at 7,850 kg/m³ is **software QA only**, not an IS steel acceptance limit.
+
+**Added six SHS:**
+- 20×20×2, 25×25×2.5 and 45×45×4 (PDF p.21).
+- 150×150×6 (PDF p.24).
+- 250×250×12 and 400×400×16 (PDF p.25).
+
+**Added six RHS:**
+- 80×50×2 (PDF p.27); 120×80×3 (PDF p.28).
+- 180×100×6, 300×100×6 (PDF p.29).
+- 500×300×10 and 500×300×12 (PDF p.30).
+
+**Current limited reference coverage: 22 SHS and 35 RHS** sampled app entries. Included among the 35 RHS are the **12 corrected masses** individually listed in Amendment 3; their independent verification is **nominal kg/m only**, unlike the additional unchanged rows with area and inertia comparisons. Unsampled BIS table rows and separate Osdag historical data remain unverified.
+
+### Separate material-compliance boundary
+
+BIS August 2024 [product manual for IS 4923:2017](https://www.bis.gov.in/wp-content/uploads/2024/08/Revised-PM-template-4923.pdf) records three amendments, material/manufacturing references, inspection and testing/certification requirements. Section weight and geometry **never alone prove grade, weld quality, a BIS licence, material traceability, load capacity, or project acceptance**. Supplier MTC, product marking and the current approved project specification remain distinct engineering checks.
+
+BIS [June 2024 circular](https://www.services.bis.gov.in/tmp/Circular_slZj_2024-06-05.pdf) identifies **IS 18573:2024** as a separate reference for cold-formed welded hollow sections intended for general engineering/decorative applications, including thin products outside amended IS 4923 structural section licensing scope. A matching dimension/weight **does not convert** such a product into IS 4923 structural material. The main app retains this boundary in its reference information.
+
+No licensed full standard PDF or replicated whole BIS table is distributed. No new UI layout or changes to unrelated PWD modules.
