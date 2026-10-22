@@ -602,12 +602,12 @@ const driveCatalog=(()=>{
  assert.notEqual(target.style.transform,transformAfterPinch,'Finger drag must pan zoomed source preview');
  surfaceListeners.pointerup(p(1,60,60));
  surfaceListeners.dblclick({preventDefault(){}});
- const beforeSwipe=target.src;
+ const beforeSwipe=els.pdfPageIndicator.textContent;
  surfaceListeners.pointerdown(p(9,220,200));
  surfaceListeners.pointermove(p(9,70,200));
  surfaceListeners.pointerup(p(9,70,200));
- assert.notEqual(target.src,beforeSwipe,'Unzoomed single-finger swipe must advance the PDF page');
- assert.ok(target.src.includes('#page=18'),'Page swipe should request next 2023 original PDF page');
+ assert.notEqual(els.pdfPageIndicator.textContent,beforeSwipe,'Unzoomed single-finger swipe must advance the displayed PDF page');
+ assert.ok(els.pdfPageIndicator.textContent.includes('18 / 221'),'Page swipe should advance 2023 original PDF page');
  assert.ok(replacedPath.includes('page=18'),'Page navigation should update shareable deep link');
  await localControls.onSource('blob:https://example.org/private-bridge-pdf',{size:500,arrayBuffer:async()=>new ArrayBuffer(500)});
  assert.equal(renderedPage,18,'Local renderer must open real PDF page 18 (not rely on #page fragment)');
@@ -615,8 +615,8 @@ const driveCatalog=(()=>{
  assert.equal(target.style.display,'none','Native iframe should not overlay real canvas drawing');
  assert.ok(els.pdfPageIndicator.textContent.includes('rendered locally'),'Canvas state must be disclosed in page status');
  await localControls.onSource(null);
- assert.ok(target.src.includes('drive.google.com/file/d/'),
-           'Forgetting local original must restore private Google Drive fallback');
+ assert.equal(target.src,'about:blank',
+           'Forgetting local original must not reopen authenticated Drive iframe');
  assert.ok(canvasLayer.hidden,'Forget PDF should hide local canvas');
  assert.ok(pdf.includes('bridge-pdf-canvas.js'),'Local page renderer not loaded');
  assert.ok(shell.includes('./bridge-pdf-canvas.js'),'Offline PWA must cache page renderer controller');
