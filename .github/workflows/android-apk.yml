@@ -87,6 +87,8 @@ jobs:
         run: node tests/verify-steel-bis-chs.mjs
       - name: Verify BIS 4923 Amd 2 current wall minimum, Amd 3 RHS warnings and hollow diagrams
         run: node tests/verify-steel-bis-4923.mjs
+      - name: Verify BIS 4923 corrected RHS nominal masses before APK release
+        run: node tests/verify-steel-rhs-bis-audit.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
