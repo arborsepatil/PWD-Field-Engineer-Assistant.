@@ -111,11 +111,11 @@ window.PWDBridgeLocalSource={
            }catch{setStatus('Previous private PDF restored', 'Could not migrate storage; keep a backup in Files')}
          }
        }else{
-         setStatus('Drive preview active','Choose the correct original PDF to view it on this device');
+         setStatus('Choose PDF from Files','The bridge index is offline. Import the matching original drawing PDF to view pages.');
        }
      }catch{
        if(!disposed&&version===generation)
-         setStatus('Drive preview active','On-device storage unavailable; choose a PDF for this session');
+         setStatus('Choose PDF from Files','Device storage unavailable; a PDF can still be used for this session.');
      }
    }
    input.addEventListener('change',async()=>{
@@ -153,7 +153,7 @@ window.PWDBridgeLocalSource={
        await storage('readwrite',store=>store.delete(deviceKey));
      try{await storage('readwrite',store=>store.delete(key),true)}catch{}
        if(version===generation&&!disposed)
-         setStatus('Private PDF cleared','Drive preview active; this book’s copy was removed from this browser');
+         setStatus('Private PDF cleared','Use PDF on this device to reopen the original; Drive opens separately.');
      }catch{
        if(version===generation&&!disposed)
          setStatus('Device removal could not be confirmed','Current view cleared; check device storage settings');
