@@ -117,7 +117,8 @@ function updateSelectedSummary(){
  const conflicts=selected?catalog.collisionGroups().some(group=>group.some(x=>x.id===selected.id)):false;
  $('steelWeightConflict').hidden=!conflicts;
  $('steelPickedName').textContent=custom?$('steelCustomShape').selectedOptions[0].textContent:selected?.designation||'';
- $('steelPickedStatus').textContent=custom?'Theoretical weight':!selected?'':selected.basis==='archived-manufacturer-only'?'Historic · BIS recheck needed':
+ const bisAudit=selected?catalog.standardAudit(selected):{status:'not-checked'};
+ $('steelPickedStatus').textContent=custom?'Theoretical weight':!selected?'':bisAudit.status==='spot-checked-match'?'BIS 2023 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ BIS value conflict':bisAudit.status==='not-listed-in-replacement'?'⚠ Historical size · not current listed':selected.basis==='archived-manufacturer-only'?'Historic · BIS recheck needed':
   ['secondary-unverified','secondary-amendment-unverified'].includes(selected.basis)?'Secondary · BIS row not checked':
   selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area conflict':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':source(selected.sourceId)?.label+' · '+source(selected.sourceId)?.date;
 }
@@ -144,7 +145,8 @@ function renderRows(){
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
   const name=document.createElement('b');name.textContent=row.designation;
   const subtitle=document.createElement('span');
-  subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(row.basis==='archived-manufacturer-only'?' · Archive':
+  const status=catalog.standardAudit(row).status;
+  subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(status==='spot-checked-match'?' · 2023 spot-check':status==='not-listed-in-replacement'?' · Historical / unlisted':status==='spot-checked-conflict'?' · BIS conflict':row.basis==='archived-manufacturer-only'?' · Archive':
  row.basis==='osdag-open-unverified'?' · Open source':['secondary-unverified','secondary-amendment-unverified'].includes(row.basis)?' · Secondary':'');
   btn.append(name,subtitle);
   btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
@@ -182,11 +184,12 @@ function renderDetail(){
  const src=source(selected.sourceId);
  $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
  $('steelTitle').textContent=selected.designation;
- $('steelStatus').textContent=selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area check':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
+ const bisAudit=catalog.standardAudit(selected);
+ $('steelStatus').textContent=bisAudit.status==='spot-checked-match'?'IS 1161:2023 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ Conflicts with BIS':bisAudit.status==='not-listed-in-replacement'?'⚠ Not listed in 2023 Table 1':selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area check':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
  $('steelMass').textContent=format(selected.kgPerM);
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
- $('steelDataCaution').textContent=selected.basis==='archived-manufacturer-only'?
+ $('steelDataCaution').textContent=bisAudit.status!=='not-checked'?bisAudit.note:selected.basis==='archived-manufacturer-only'?
   'Historical manufacturer data. For RHS verify IS 4923:2017 Amendment 3 (2024); for SHS/CHS check the latest applicable standard.':
   selected.qualityFlag==='mass-area-inconsistent'?'Mass and section area disagree by '+selected.massAreaDeltaPct+'%. Weight calculation is blocked until the row is verified.':
   selected.basis==='osdag-open-unverified'?'Licensed open-source Osdag values; not independently checked against IS 808:2021 or current IS 1161.':
@@ -220,6 +223,9 @@ function calculate(){
   return {q,entry:{type:shape,designation:shape+' (user dimensions)',sourceLabel:'User dimensions · theoretical',sourceStatus:'Calculated only'}};
  }
  if(!selected)throw Error('Choose a steel section from the search results.');
+ const chsAudit=catalog.standardAudit(selected);
+ if(['not-listed-in-replacement','spot-checked-conflict'].includes(chsAudit.status))
+  throw Error('IS 1161 Amendment 2 review: not an approved current table weight for this size. Choose a listed section.');
  if(selected.qualityFlag==='mass-area-inconsistent'||catalog.auditRow(selected).includes('mass-vs-area'))throw Error('Mass/area conflict in source row — quantity blocked pending review.');
  const q=math.quantity(selected,L,N,rate),src=source(selected.sourceId);
  return {q,entry:{...selected,sourceLabel:src.label+' · '+(selected.sourceUrl||src.url),sourceDate:src.date,sourceStatus:selected.basis}};
