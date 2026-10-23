@@ -12,6 +12,9 @@ const code=read('pwd-steel-catalog.js');
 const ctx={module:{exports:{}}};
 vm.runInNewContext(code,ctx,{filename:'pwd-steel-catalog.js'});
 const cat=ctx.module.exports;
+ctx.module={exports:{}};
+vm.runInNewContext(read('pwd-steel-compare.js'),ctx,{filename:'pwd-steel-compare.js'});
+const comparison=ctx.module.exports;
 const samples=[
  // Equal-angle leg(mm), t(mm), Table 9 kg/m, area(cm2), Izz/Iyy(cm4), physical PDF page
  [50,5,3.79,4.83,11.3,30],
@@ -63,10 +66,10 @@ const differences=[[5,4.50,4.58],[6,5.40,5.44],[8,7.00,7.10]];
 const app=read('pwd-steel-app.js');
 const start=app.indexOf('function calculate(){'),end=app.indexOf('function updateResult(){',start);
 assert.ok(start>=0&&end>start);
-const run=new Function('selected','catalog','math','$','source','family',app.slice(start,end)+'\nreturn calculate();');
+const run=new Function('selected','catalog','math','$','source','family','comparison',app.slice(start,end)+'\nreturn calculate();');
 const $=id=>({value:id==='steelLength'?'6':id==='steelCountPieces'?'2':'0'});
 const math={quantity:(row,L,N)=>({unitMassKgM:row.kgPerM,totalMassKg:row.kgPerM*L*N,totalTonnes:row.kgPerM*L*N/1000,basis:'Nominal mass, NOT structural design',totalPrice:null})};
-const calc=row=>run(row,cat,math,$,id=>cat.SOURCES[id],'angle');
+const calc=row=>run(row,cat,math,$,id=>cat.SOURCES[id],'angle',comparison);
 for(const [t,oldMass,correctMass] of differences){
  const old=cat.byId(`sail23-ISA60x60x${t}`);
  const current=cat.byId(`bis21-ISA60x60x${t}`);
