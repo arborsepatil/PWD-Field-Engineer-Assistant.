@@ -68,7 +68,15 @@ async function readZip(buffer){
  }
  return {get};
 }
-function itemCode(v){return String(v||'').trim();}
+function itemCode(v){
+ const s=String(v||'').trim();
+ // Some Excel numeric rows are stored as 54.32999999999996; limit only these
+ // floating-point artifacts to three decimal places. Other printed IDs stay intact.
+ if(/^\d+\.\d{7,}$/.test(s)&&/(?:9{5}|0{5})/.test(s)){
+  return Number(s).toFixed(3).replace(/0+$/,'').replace(/\.$/,'');
+ }
+ return s;
+}
 function searchCode(v){
  const s=itemCode(v).toLowerCase();
  // Numeric Excel cells can omit a trailing zero (1.10 becomes 1.1).
@@ -80,24 +88,47 @@ function normalize(rows,name){
  if(!/exclu(?:ding|ded)\s*GST/i.test(header.cells.H||''))throw Error('SSR completed-rate column header differs; verify this edition before import.');
  const edition=(rows[0]?.cells.A||name||'').match(/\b20\d{2}[-–](?:20)?\d{2}\b/);
  const year=edition?edition[0].replace('–','-'):'Unknown edition';
- const records=[],cats=new Map(),dups=new Set();let section='';
+ const records=[],cats=new Map();let section='',subcategory='',parentCode='';
  for(const {number,cells:v} of rows){
   if(number<=header.number)continue;
-  if(v.B)section=v.B.replace(/\s+/g,' ').trim();
-  const code=itemCode(v.C),description=(v.E||'').replace(/\s+/g,' ').trim();
-  if(!code||!/^\d+(?:\.\d+)?[a-z]?(?:[-/][\w.]+)?$/i.test(code)||!description||!section)continue;
-  const key=section+'|'+code;
-  if(dups.has(key))throw Error('Duplicate SSR item '+code+' in '+section+'; import stopped for review.');
-  dups.add(key);
+  const a=String(v.A||'').trim();
+  const division=a.match(/^SSR\s*2022-23\s*:\s*-\s*(.*)$/i);
+  if(division){section=division[1].replace(/\s+/g,' ').trim();subcategory='';parentCode='';continue;}
+  if(!section&&a&&!/^\d+$/.test(a)){section=a.replace(/\s+/g,' ').trim();}
+  if(v.B)subcategory=v.B.replace(/\s+/g,' ').trim();
+  const raw=itemCode(v.C),description=(v.E||'').replace(/\s+/g,' ').trim();
+  const numbered=/^\d+$/.test(a);
+  if(!numbered){
+   // The official source uses no serial number for some parent descriptions,
+   // then A=192, C=a/b/c for their independently priced sub-items.
+   if(/^\d+(?:\.\d+)?(?:\.[a-z])?$/i.test(raw)&&description)parentCode=raw;
+   continue;
+  }
+  if(!raw||!description||!section)continue;
+  let code=raw;
+  if(/^[a-z]$/i.test(raw)){if(parentCode)code=parentCode+' ('+raw+')';}
+  else if(!/^\d/.test(raw)){code=raw;}
+  const valid=/^\d[\w\s.()/-]*$/i.test(code)||/^[a-z]$/i.test(code);
+  if(!valid)throw Error('Unrecognised SSR code at source row '+number);
   const numericRate=v.H!==''&&v.H!=null?Number(String(v.H).replace(/,/g,'')):null;
   const rate=Number.isFinite(numericRate)&&numericRate>=0?numericRate:null;
   const isDeleted=/^deleted\b/i.test(description);
-  const item={code,codeSearch:searchCode(code),chapter:section,description,unit:v.G||'',rate:isDeleted?null:rate,row:number,deleted:isDeleted};
+  const item={code,codeSearch:searchCode(code),rawCode:raw,chapter:section,subcategory,description,unit:v.G||'',rate:isDeleted?null:rate,row:number,serial:a,deleted:isDeleted};
   records.push(item);cats.set(section,(cats.get(section)||0)+1);
   if(records.length>MAX_ITEMS)throw Error('SSR item limit exceeded');
  }
  if(records.length===0)throw Error('No SSR items in the selected sheet.');
+ const frequency=new Map();
+ for(const x of records){const key=x.chapter+'|'+x.code;frequency.set(key,(frequency.get(key)||0)+1);}
+ for(const x of records)x.duplicateCode=(frequency.get(x.chapter+'|'+x.code)||0)>1;
  return {edition:year,sourceName:name||'Private workbook',sheet:'SSR 2022-23',records,categories:[...cats].map(([name,count])=>({name,count})),importedAt:new Date().toISOString(),rateBasis:'Completed rate excluding GST; historical source, not automatically current'};
+}
+function matching(items,query,chapter){
+ const q=(query||'').trim().toLocaleLowerCase();
+ const tokens=q.split(/\s+/).filter(Boolean);
+ return items.filter(x=>(!chapter||x.chapter===chapter)&&tokens.every(t=>
+  [x.code.toLowerCase(),x.codeSearch.toLowerCase(),x.description.toLocaleLowerCase(),x.chapter.toLocaleLowerCase(),(x.subcategory||'').toLocaleLowerCase(),x.unit.toLocaleLowerCase()]
+   .some(v=>v.includes(t))));
 }
 async function fromXlsx(file){
  if(!file||!/\.xlsx$/i.test(file.name||''))throw Error('Choose the original .xlsx SSR workbook');
