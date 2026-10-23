@@ -6,7 +6,7 @@
 <section class="ssr-box"><div class="ssr-import"><button id="importBtn" type="button" class="primary">Choose SSR Excel</button><a href="./library.html?section=ssr">Original SSR PDFs</a><button id="removeBtn" type="button" hidden>Remove imported index</button><input id="xlsxFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></div>
 <p id="status" class="ssr-status" role="status" aria-live="polite">Checking for a saved digital index on this device…</p>
 <details class="ssr-more"><summary>How private SSR search works</summary><p class="ssr-note">Select your authorised <b>SSR_2022-23.xlsx</b> once. This app reads and searches the spreadsheet entirely on this device and saves an offline index privately in app storage. It does not upload the workbook, publish it in the APK, or sync it to other devices. The PDF stays accessible separately through the Library.</p></details></section>
-<section class="ssr-box"><div class="ssr-search"><label>Search item number or description<input id="itemSearch" type="search" autocomplete="off" placeholder="Try 1.10, concrete, excavation…" disabled></label><label>SSR chapter<select id="chapterFilter" disabled><option value="">All chapters</option></select></label></div><div class="ssr-count" id="matchCount">Import an SSR workbook to search items.</div></section>
+<section class="ssr-box"><div class="ssr-search"><label>Search item number or description<input id="itemSearch" type="search" autocomplete="off" placeholder="Try 1.10, concrete, excavation…" disabled></label><label>SSR section<select id="chapterFilter" disabled><option value="">All sections</option></select></label></div><div class="ssr-count" id="matchCount">Import an SSR workbook to search items.</div></section>
 <div id="itemResults" aria-live="polite"></div><button class="ssr-action" id="showMore" type="button" hidden>Show more items</button>
 </main><script src="./app-shell.js"></script><script src="./ssr-local-core.js"></script><script>
 (function(){
@@ -37,23 +37,23 @@ async function privateAccess(mode,fn){
 function line(item){
  const unit=item.unit?' · '+html(item.unit):'';
  const rate=item.rate===null?'No usable rate':new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(item.rate)+' excl. GST';
- return '<article class="ssr-item"><h2>SSR '+html(item.code)+(item.deleted?' · Deleted':'')+'</h2><div class="ssr-meta"><span>'+html(item.chapter)+'</span><span>'+rate+unit+'</span></div><p>'+html(item.description)+'</p><p class="ssr-source">SSR '+html(dataset.edition)+' · Excel row '+item.row+' · Refer to original PDF for final verification</p></article>';
+ return '<article class="ssr-item"><h2>SSR '+html(item.code)+(item.deleted?' · Deleted':'')+'</h2><div class="ssr-meta"><span>'+html(item.chapter)+'</span>'+(item.subcategory&&item.subcategory!==item.chapter?'<span>'+html(item.subcategory)+'</span>':'')+'<span>'+rate+unit+'</span></div><p>'+html(item.description)+'</p>'+(item.duplicateCode?'<p class="ssr-note ssr-strong-warning">This code occurs more than once in this section. Confirm the specific item and Excel row against the original PDF.</p>':'')+'<p class="ssr-source">SSR '+html(dataset.edition)+' · Excel row '+item.row+' · Refer to original PDF for final verification</p></article>';
 }
 function render(){
  if(!dataset)return;
  matched=window.PWDSSR.matching(dataset.records,search.value,filter.value);
  const available=matched.length,count=Math.min(limit,available);
- el('matchCount').textContent=available+' matching item'+(available===1?'':'s')+' · '+dataset.categories.length+' chapters · '+dataset.edition;
- results.innerHTML=matched.slice(0,limit).map(line).join('')||(dataset.records.length?'<div class="ssr-empty">No matching item. Try another keyword or All chapters.</div>':'');
+ el('matchCount').textContent=available+' matching item'+(available===1?'':'s')+' · '+dataset.categories.length+' source sections · '+dataset.edition;
+ results.innerHTML=matched.slice(0,limit).map(line).join('')||(dataset.records.length?'<div class="ssr-empty">No matching item. Try another keyword or All sections.</div>':'');
  showMore.hidden=count>=available;showMore.textContent='Show next '+Math.min(60,available-count)+' items';
 }
 function loaded(data,stored=true){
  if(!data||!Array.isArray(data.records)||!Array.isArray(data.categories))throw Error('Saved index is invalid');
  dataset=data;
- filter.replaceChildren(new Option('All chapters',''));
+ filter.replaceChildren(new Option('All sections',''));
  for(const category of data.categories){filter.appendChild(new Option(category.name+' ('+category.count+')',category.name))}
  search.disabled=false;filter.disabled=false;remove.hidden=!stored;
- status.textContent=data.records.length+' SSR items in '+data.categories.length+' original chapters · '+data.edition+'. '+(stored?'Saved privately on this device.':'Loaded for this session; private storage unavailable.');
+ status.textContent=data.records.length+' SSR items in '+data.categories.length+' original sections · '+data.edition+'. '+(stored?'Saved privately on this device.':'Loaded for this session; private storage unavailable.');
  limit=60;render();
 }
 importBtn.addEventListener('click',()=>choose.click());
@@ -74,7 +74,7 @@ remove.addEventListener('click',async()=>{
  if(!confirm('Remove the local digital SSR index? Original Drive PDF and workbook are not deleted.'))return;
  try{await privateAccess('readwrite',store=>store.delete(KEY))}
  catch(err){status.textContent='Could not remove private index: '+err.message;return}
- dataset=null;search.value='';search.disabled=true;filter.disabled=true;filter.replaceChildren(new Option('All chapters',''));results.replaceChildren();el('matchCount').textContent='Choose SSR Excel to search items.';showMore.hidden=true;remove.hidden=true;status.textContent='Local SSR index removed; original Drive files are unchanged.';
+ dataset=null;search.value='';search.disabled=true;filter.disabled=true;filter.replaceChildren(new Option('All sections',''));results.replaceChildren();el('matchCount').textContent='Choose SSR Excel to search items.';showMore.hidden=true;remove.hidden=true;status.textContent='Local SSR index removed; original Drive files are unchanged.';
 });
 search.addEventListener('input',()=>{limit=60;render()});
 filter.addEventListener('change',()=>{limit=60;render()});
