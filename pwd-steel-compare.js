@@ -16,7 +16,7 @@ function audit(catalog,row){
  const a=catalog.standardAudit(row)||{status:'not-checked'};
  const issues=catalog.auditRow(row)||[];
  const blocked=HOLD.has(a.status)||row.qualityFlag==='mass-area-inconsistent'||issues.length>0;
- const checked=!blocked&&(CHECKED.has(a.status)||a.geometryChecked===true);
+ const checked=!blocked&&CHECKED.has(a.status); // Geometry-only flags never verify nominal mass.
  return Object.freeze({
   status:blocked?'hold':checked?'checked':'review',
   label:blocked?'On hold':checked?'Selected values checked':'Source only · verify',
@@ -26,6 +26,20 @@ function audit(catalog,row){
    (a.note||'This section has not been fully reconciled to the applicable BIS source.'),
   issues:[...issues]
  });
+}
+/* This gate is for nominal unit-weight arithmetic, not for structural design,
+ * delivered product acceptance or final estimate certification.
+ * Numeric mass has to have a *matching* selected authoritative source check.
+ */
+function quantityGate(catalog,row){
+ if(!row||!Number.isFinite(row.kgPerM)||row.kgPerM<=0)
+  return Object.freeze({allowed:false,category:'invalid',message:'No valid positive nominal kg/m in this source record.'});
+ const state=audit(catalog,row);
+ if(state.status==='hold')
+  return Object.freeze({allowed:false,category:'hold',message:'Quantity blocked: this section has a source discrepancy or is outside the checked standard scope. Resolve the source record before use.',sourceStatus:state.sourceStatus});
+ if(state.status!=='checked')
+  return Object.freeze({allowed:false,category:'pending',message:'Quantity blocked: nominal weight for this variant has not been checked against the applicable current BIS table. Reference-only value.',sourceStatus:state.sourceStatus});
+ return Object.freeze({allowed:true,category:'limited-check',message:'Provisional quantity arithmetic only: the selected nominal kg/m has a limited BIS source check. Reconfirm edition, amendments, member identity and MTC before engineering approval.',sourceStatus:state.sourceStatus});
 }
 function dimension(row){
  if(row.family==='hollow'&&row.series==='CHS'){
@@ -52,7 +66,7 @@ function build(catalog,items){
   });
  }));
 }
-const api=Object.freeze({audit,dimension,build,HOLD,CHECKED});
+const api=Object.freeze({audit,quantityGate,dimension,build,HOLD,CHECKED});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCompare=api;
 })(typeof window!=='undefined'?window:globalThis);
