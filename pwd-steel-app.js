@@ -5,9 +5,9 @@
  */
 (function(){
 'use strict';
-const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,$=id=>document.getElementById(id);
-if(!catalog||!math||!$('steelFamilies'))return;
-let family='beam',selected=null,last=null,lastEntry=null,shownLimit=60;
+const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,comparison=window.PWDSteelCompare,$=id=>document.getElementById(id);
+if(!catalog||!math||!comparison||!$('steelFamilies'))return;
+let family='beam',selected=null,last=null,lastEntry=null,shownLimit=60,compareIds=[];
 const source=id=>catalog.SOURCES[id];
 const format=(x,d=2)=>Number(x).toLocaleString('en-IN',{maximumFractionDigits:d,minimumFractionDigits:d});
 const text=(el,value)=>{el.textContent=String(value)};
@@ -86,7 +86,9 @@ function shapeSvg(type,data={}){
   '<text x="250" y="337" class="muted" font-size="10.5" text-anchor="middle">Nominal dimensions · illustrative · not to scale</text></svg>';
 }
 function setFamily(next){
+ if(next!==family)compareIds=[];
  family=next;selected=null;last=null;lastEntry=null;shownLimit=60;
+ $('steelCompareCard').hidden=next==='calculated';
  updateSeries();
  for(const button of $('steelFamilies').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.family===next));
  const custom=next==='calculated';
@@ -106,6 +108,7 @@ function setFamily(next){
  }
  updateSelectedSummary();
  updateResult();
+ renderComparison();
 }
 function updateSeries(){
  const select=$('steelSeries');
@@ -127,6 +130,8 @@ function updateSelectedSummary(){
  $('steelWeightConflict').hidden=!conflicts;
  $('steelPickedName').textContent=custom?$('steelCustomShape').selectedOptions[0].textContent:selected?.designation||'';
  const bisAudit=selected?catalog.standardAudit(selected):{status:'not-checked'};
+ $('steelCompareAdd').hidden=custom||!selected;
+ if(!custom&&selected)$('steelCompareAdd').textContent=compareIds.includes(selected.id)?'− Remove from comparison':'+ Add this size to comparison';
  $('steelPickedStatus').textContent=custom?'Theoretical weight':!selected?'':bisAudit.status==='is808-numeric-conflict'?'⚠ IS 808:2021 source mismatch':bisAudit.geometryChecked?'IS 808:2021 · geometric dimensions checked':bisAudit.status==='is808-mass-area-inertia-checked'?'IS 808:2021 · mass/area/inertia checked':bisAudit.status==='is808-mass-checked'?'IS 808:2021 · nominal kg/m checked':bisAudit.status==='spot-checked-match'?'BIS 2023 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ BIS value conflict':bisAudit.status==='outside-current-scope'?'⚠ Below IS 4923 minimum':bisAudit.status==='source-numeric-hold'?'⚠ Source row on hold':bisAudit.status==='mass-area-conflict'?'⚠ Mass/area conflict':bisAudit.status==='shs-row-checked'?'SHS · BIS nominal data checked':bisAudit.status==='shs-row-conflict'?'⚠ SHS BIS numeric conflict':bisAudit.status==='rhs-weight-checked'?'RHS · BIS amended kg/m checked':bisAudit.status==='rhs-weight-conflict'?'⚠ RHS BIS mass conflict':bisAudit.status==='amendment3-review'?'RHS · BIS Amd.3 review pending':bisAudit.status==='not-listed-in-replacement'?'⚠ Historical size · not current listed':selected.basis==='archived-manufacturer-only'?'Historic · BIS recheck needed':
   ['secondary-unverified','secondary-amendment-unverified'].includes(selected.basis)?'Secondary · BIS row not checked':
   selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area conflict':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':source(selected.sourceId)?.label+' · '+source(selected.sourceId)?.date;
@@ -159,7 +164,13 @@ function renderRows(){
  row.basis==='osdag-open-unverified'?' · Open source':['secondary-unverified','secondary-amendment-unverified'].includes(row.basis)?' · Secondary':'');
   btn.append(name,subtitle);
   btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
-  root.append(btn);
+  const holder=document.createElement('div');holder.className='size-row';
+  const add=document.createElement('button');add.type='button';add.className='size-compare';
+  add.textContent=compareIds.includes(row.id)?'✓ Added':'+ Compare';
+  add.setAttribute('aria-label',(compareIds.includes(row.id)?'Remove ':'Add ')+row.designation+(compareIds.includes(row.id)?' from':' to')+' comparison');
+  add.setAttribute('aria-pressed',String(compareIds.includes(row.id)));
+  add.addEventListener('click',()=>toggleCompare(row));
+  holder.append(btn,add);root.append(holder);
  }
  updateSelectedSummary();
 }
@@ -196,6 +207,13 @@ function renderDetail(){
  const bisAudit=catalog.standardAudit(selected);
  $('steelStatus').textContent=bisAudit.status==='is808-numeric-conflict'?'⚠ IS 808 numeric conflict':bisAudit.geometryChecked?'IS 808:2021 · dimensions and section properties checked':bisAudit.status==='is808-mass-area-inertia-checked'?'IS 808:2021 · mass/area/inertia checked':bisAudit.status==='is808-mass-checked'?'IS 808:2021 · nominal kg/m checked':bisAudit.status==='spot-checked-match'?'IS 1161:2014 Amd.2 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ Conflicts with BIS':bisAudit.status==='outside-current-scope'?'⚠ Below IS 4923 minimum':bisAudit.status==='source-numeric-hold'?'⚠ BIS source discrepancy · hold':bisAudit.status==='mass-area-conflict'?'⚠ Mass/area inconsistency':bisAudit.status==='shs-row-checked'?'IS 4923 · SHS checked sample':bisAudit.status==='shs-row-conflict'?'⚠ SHS BIS conflict':bisAudit.status==='rhs-weight-checked'?'IS 4923 · nominal mass checked':bisAudit.status==='rhs-weight-conflict'?'⚠ RHS BIS mass conflict':bisAudit.status==='amendment3-review'?'RHS · BIS Amd.3 not verified':bisAudit.status==='not-listed-in-replacement'?'⚠ Not listed in 2023 Table 1':selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area check':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
  $('steelMass').textContent=format(selected.kgPerM);
+ const dim=comparison.dimension(selected);
+ $('steelDepthLabel').textContent=dim.first;
+ $('steelWidthLabel').textContent=dim.second;
+ $('steelMainDepth').textContent=dim.depth===null?'—':format(dim.depth,2).replace(/\.00$/,'');
+ $('steelMainWidth').textContent=dim.width===null?'—':format(dim.width,2).replace(/\.00$/,'');
+ $('steelMainThicknessLabel').textContent=['beam','column','channel','pile'].includes(selected.family)?'Web thickness':selected.family==='hollow'?'Wall thickness':'Thickness';
+ $('steelMainThickness').textContent=dim.thickness===null?'—':format(dim.thickness,2).replace(/\.00$/,'');
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
  $('steelProperties').replaceChildren(propertyTable(selected));
  $('steelDataCaution').textContent=bisAudit.status!=='not-checked'?bisAudit.note:selected.basis==='archived-manufacturer-only'?
@@ -217,6 +235,12 @@ function updateCustomInputs(){
  $('steelSideField').hidden=!(type==='square'||type==='hollow-shs');
  $('steelHeightField').hidden=type!=='hollow-rhs';
  $('steelCustomCaution').hidden=!type.startsWith('hollow-');
+ $('steelDepthLabel').textContent='Nominal depth / size';
+ $('steelWidthLabel').textContent='Width';
+ $('steelMainThicknessLabel').textContent='Thickness';
+ $('steelMainDepth').textContent='User entered';
+ $('steelMainWidth').textContent='—';
+ $('steelMainThickness').textContent='—';
  $('steelSectionDiagram').innerHTML=shapeSvg(type);
  $('steelProperties').textContent='User-entered dimensions';
  updateSelectedSummary();
@@ -265,18 +289,65 @@ function updateResult(){
   $('steelError').textContent=missing?'':err.message;
  }
 }
-function saveCsv(){
- updateResult();
- if(!last||!lastEntry)return;
- const csv=math.exportCsv(lastEntry,last);
- const filename='PWD_Steel_Quantity_'+(lastEntry.id||lastEntry.type||'section').replace(/[^a-zA-Z0-9_-]/g,'_')+'.csv';
- if(location.host==='appassets.androidplatform.net'){
-  window.prompt('__PWD_ANDROID_CSV_EXPORT_V1__'+JSON.stringify({filename,content:csv}));return;
+function toggleCompare(row){
+ if(family==='calculated'||row.family!==family)return;
+ const idx=compareIds.indexOf(row.id);
+ if(idx>=0)compareIds.splice(idx,1);
+ else if(compareIds.length<8)compareIds.push(row.id);
+ else {$('steelCompareSummary').textContent='Up to 8 sizes can be shown together. Remove one before adding another.';return;}
+ renderRows();renderComparison();
+}
+function renderComparison(){
+ const chipBox=$('steelCompareChips'),result=$('steelCompareResults');
+ chipBox.replaceChildren();result.replaceChildren();
+ const items=compareIds.map(id=>catalog.byId(id)).filter(row=>row&&row.family===family);
+ compareIds=items.map(row=>row.id);
+ $('steelCompareEmpty').hidden=items.length!==0;
+ $('steelCompareClear').hidden=items.length===0;
+ $('steelCompareCard').hidden=family==='calculated';
+ const message=$('steelCompareSummary');
+ if(items.length===0){message.textContent='';result.hidden=true;return;}
+ for(const row of items){
+  const chip=document.createElement('div');chip.className='compare-chip';
+  const label=document.createElement('span');label.textContent=row.designation;
+  const button=document.createElement('button');button.type='button';button.textContent='×';
+  button.setAttribute('aria-label','Remove '+row.designation+' from comparison');
+  button.addEventListener('click',()=>toggleCompare(row));
+  chip.append(label,button);chipBox.append(chip);
  }
- const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
- const url=URL.createObjectURL(blob),a=document.createElement('a');
- a.download=filename;a.href=url;document.body.append(a);a.click();a.remove();
- setTimeout(()=>URL.revokeObjectURL(url),60000);
+ if(items.length<2){result.hidden=true;message.textContent='1 size added · select at least one more size of this member type.';return;}
+ const rows=comparison.build(catalog,items);
+ message.textContent=rows.length+' sizes compared · scroll sideways on mobile · not a design or load-capacity comparison.';
+ const table=document.createElement('table');
+ const heading=document.createElement('thead'),header=document.createElement('tr');
+ for(const label of ['Property',...rows.map(x=>x.designation)]){
+  const th=document.createElement('th');th.textContent=label;header.append(th);
+ }
+ heading.append(header);table.append(heading);
+ const tbody=document.createElement('tbody');
+ const v=x=>x===null||x===undefined||!Number.isFinite(Number(x))?'—':format(x,3).replace(/0+$/,'').replace(/\.$/,'');
+ const properties=[
+  ['Weight (kg/m)',x=>x.audit.status==='hold'?format(x.kgPerM,2)+' · HOLD':format(x.kgPerM,2)],
+  ['Depth / leg (mm)',x=>v(x.depthMm)],
+  ['Width / leg (mm)',x=>v(x.widthMm)],
+  ['Web/wall/leg thickness (mm)',x=>v(x.thicknessMm)],
+  ['Flange thickness (mm)',x=>v(x.flangeMm)],
+  ['Area (cm²)',x=>v(x.areaCm2)],
+  ['Izz (cm⁴)',x=>v(x.ixCm4)],
+  ['Iyy (cm⁴)',x=>v(x.iyCm4)],
+  ['Source audit',x=>x.audit.label],
+  ['Source reference',x=>x.designationSource]
+ ];
+ for(const [label,value] of properties){
+  if(['Flange thickness (mm)','Area (cm²)','Izz (cm⁴)','Iyy (cm⁴)'].includes(label)&&rows.every(x=>{
+   const key=label==='Flange thickness (mm)'?'flangeMm':label==='Area (cm²)'?'areaCm2':label==='Izz (cm⁴)'?'ixCm4':'iyCm4';
+   return x[key]===null;
+  }))continue;
+  const tr=document.createElement('tr'),th=document.createElement('td');th.textContent=label;tr.append(th);
+  for(const row of rows){const td=document.createElement('td');td.textContent=value(row);tr.append(td)}
+  tbody.append(tr);
+ }
+ table.append(tbody);result.append(table);result.hidden=false;
 }
 function showStandards(){
  const c=$('steelStandards');
@@ -308,7 +379,7 @@ $('steelCustomShape').addEventListener('change',updateCustomInputs);
 for(const id of ['steelLength','steelCountPieces','steelRate','steelWidth','steelThickness','steelDiameter','steelSide','steelHeight'])
  $(id).addEventListener('input',updateResult);
 $('steelCalculate').addEventListener('click',updateResult);
-$('steelExport').addEventListener('click',saveCsv);
-$('steelPrint').addEventListener('click',()=>window.print());
+$('steelCompareAdd').addEventListener('click',()=>{if(selected)toggleCompare(selected)});
+$('steelCompareClear').addEventListener('click',()=>{compareIds=[];renderRows();renderComparison();});
 setFamily('beam');
 })();
