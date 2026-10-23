@@ -55,8 +55,8 @@ const steel=read('pwd_steel_table.html');
 for(const id of ['steelFamilies','steelSeries','steelSearch','steelLength','steelCountPieces','steelRate','outKg','outMethod','steelStandardsDisclosure','steelDataCaution'])assert.ok(steel.includes('id="'+id+'"'),'Steel calculator/safety data intact: '+id);
 assert.equal((steel.match(/<h1>Steel Table<\/h1>/g)||[]).length,0,'No duplicate large steel title');
 const lib=read('library.html');
-for(const id of ['libSearch','bookGrid','libraryTabs','bulkImport','prepareOfflineReader','offlineOne','offlineMany','showOfflineOnly'])assert.ok(lib.includes('id="'+id+'"'),'Library browsing/storage intact: '+id);
-assert.ok(lib.includes('Source and edition information'),'Library source risks remain accessible');
+for(const id of ['libSearch','bookGrid','libraryTabs','sectionTitle','matchCount','emptyResults'])assert.ok(lib.includes('id="'+id+'"'),'Public Library browsing intact: '+id);
+assert.ok(lib.includes('Publicly accessible does not mean copyright-free'),'Public Library copyright and edition warning must remain visible');
 for(const file of ['pwd_bridge_plans.html','bridge_book_2002.html','bridge_book_2023.html']){
  const html=read(file);
  assert.ok(html.includes('<details'),'Source coverage instructions are discoverable: '+file);
