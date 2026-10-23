@@ -1,0 +1,48 @@
+/** V32 Steel: source gating of optional field quantities on all catalogue records. */
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+const root=path.resolve(import.meta.dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const ctx={module:{exports:{}}};
+vm.runInNewContext(read('pwd-steel-osdag.js'),ctx,{filename:'pwd-steel-osdag.js'});
+ctx.PWDSteelOsdag=ctx.module.exports;
+ctx.module={exports:{}};
+vm.runInNewContext(read('pwd-steel-catalog.js'),ctx,{filename:'pwd-steel-catalog.js'});
+const catalog=ctx.module.exports;
+ctx.module={exports:{}};
+vm.runInNewContext(read('pwd-steel-compare.js'),ctx,{filename:'pwd-steel-compare.js'});
+const compare=ctx.module.exports;
+const all={checked:[],review:[],hold:[]};
+for(const row of catalog.sections){
+ const state=compare.audit(catalog,row);
+ assert.ok(all[state.status],row.id+' unknown source state');
+ all[state.status].push(row);
+ const permit=compare.quantityEligibility(catalog,row);
+ assert.equal(permit.allowed,state.status==='checked','Incorrect source-mass eligibility: '+row.id);
+ if(!permit.allowed)assert.match(permit.reason,/blocked/i,'Blocked source must explain why');
+ if(state.status==='hold')assert.equal(permit.status,'hold');
+ if(state.status==='review')assert.equal(permit.status,'review');
+}
+assert.equal(catalog.sections.length,757,'Catalog changed: audit scope must be reviewed');
+assert.ok(all.checked.length>0&&all.review.length>0&&all.hold.length>0);
+assert.equal(compare.quantityEligibility(catalog,null).allowed,false);
+assert.equal(compare.quantityEligibility(catalog,catalog.byId('ISMB300')).allowed,true,'Source-checked beam is eligible');
+const pending=all.review[0],held=all.hold[0];
+assert.equal(compare.quantityEligibility(catalog,pending).allowed,false);
+assert.equal(compare.quantityEligibility(catalog,held).allowed,false);
+const corrupted={...catalog.byId('ISMB300'),id:'synthetic-incorrect-mass',kgPerM:52};
+assert.equal(compare.audit(catalog,corrupted).status,'hold');
+assert.equal(compare.quantityEligibility(catalog,corrupted).allowed,false);
+const missing={...catalog.byId('ISMB300'),id:'missing-source',sourceId:'unknown'};
+assert.equal(compare.quantityEligibility(catalog,missing).allowed,false);
+const app=read('pwd-steel-app.js'),html=read('pwd_steel_table.html');
+new vm.Script(app,{filename:'pwd-steel-app.js'});
+assert.ok(html.includes('id="steelQtyGate"')&&html.includes('id="steelCalculate"'),'No quantity eligibility disclosure');
+assert.ok(app.includes("comparison.quantityEligibility(catalog,selected)"),'Real calculator not gated by independent source check');
+assert.ok(app.includes("$('steelCalculate').disabled=!permission.allowed"),'Unsafe quantity button not disabled');
+assert.ok(app.includes("' · UNVERIFIED'")&&app.includes("' · HOLD'"),'Comparison must flag all questionable masses');
+assert.ok(app.includes("Source only · not verified")&&app.includes("HOLD · no quantity"),'Size list must label source limits');
+assert.ok(!html.includes('id="steelExport"')&&!html.includes('id="steelPrint"'),'No copy/export regression');
+console.log('Steel V32 quantity gate PASS: '+all.checked.length+' limited source checks, '+all.review.length+' reference-only, '+all.hold.length+' on hold; 757 records classified, only source-checked mass allowed in field quantity.');
