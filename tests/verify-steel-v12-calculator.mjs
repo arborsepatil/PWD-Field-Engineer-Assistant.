@@ -21,7 +21,7 @@ const start=app.indexOf('function calculate(){');
 const end=app.indexOf('function updateResult(){',start);
 assert.ok(start>=0&&end>start,'Calculator extraction boundaries must exist');
 const calculateSource=app.slice(start,end);
-const runner=new Function('selected','catalog','math','
+const runner=new Function('selected','catalog','math','$','source','family','comparison',
  calculateSource+'\nreturn calculate();');
 const $=id=>({value:id==='steelLength'?'6':id==='steelCountPieces'?'2':'0'});
 const math={quantity:(section,length,count)=>({
