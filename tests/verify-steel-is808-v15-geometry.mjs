@@ -14,7 +14,7 @@ const ctx={module:{exports:{}}};
 vm.runInNewContext(load('pwd-steel-catalog.js'),ctx,{filename:'pwd-steel-catalog.js'});
 const cat=ctx.module.exports;
 ctx.module={exports:{}};
-vm.runInNewContext(read('pwd-steel-compare.js'),ctx,{filename:'pwd-steel-compare.js'});
+vm.runInNewContext(load('pwd-steel-compare.js'),ctx,{filename:'pwd-steel-compare.js'});
 const comparison=ctx.module.exports;
 const geometries=[
  // id, family, web mm, flange mm, slope degrees, R1 mm, R2 mm,
