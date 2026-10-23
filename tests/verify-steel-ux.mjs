@@ -16,13 +16,13 @@ assert.match(html,/system-ui,-apple-system/,'Use available offline system font')
 assert.ok(!html.includes('https://fonts.googleapis.com'),'No remote font dependence');
 assert.match(html,/\[hidden\].*display:none!important/,'Hidden mobile fields must stay hidden');
 for(const id of ['steelFamilies','steelSearch','steelResults','steelPicked','steelPickedName','steelPickedStatus','steelDetail',
- 'steelDetailsDisclosure','steelStandardsDisclosure','steelCustomShape','steelLength','steelCountPieces','steelRate','output',
- 'outKg','outUnit','outTonne','steelCalculate','steelExport','steelPrint','steelError','steelEmpty','sourceLinks']){
+ 'steelDetailsDisclosure','steelStandardsDisclosure','steelCompareCard','steelCompareAdd','steelCompareResults','steelQuantityDisclosure','steelMainDepth','steelMainWidth','steelMainThickness','steelCustomShape','steelLength','steelCountPieces','steelRate','output',
+ 'outKg','outUnit','outTonne','steelCalculate','steelError','steelEmpty','sourceLinks']){
  assert.ok(html.includes('id="'+id+'"'),'Missing compact screen control '+id);
 }
 assert.ok(html.indexOf('id="steelSearch"')<html.indexOf('id="steelLength"'),'Selection should precede calculation inputs');
-assert.ok(html.indexOf('id="steelLength"')<html.indexOf('id="steelDetailsDisclosure"'),'Result should precede deep section specifications');
-assert.match(html,/<details class="details" id="steelDetailsDisclosure">/);
+assert.ok(html.indexOf('id="steelDetailsDisclosure"')<html.indexOf('id="steelLength"'),'Selected section and dimensions must precede secondary calculator');
+assert.match(html,/<section class="card steel-selected-card" id="steelDetailsDisclosure"/);
 assert.match(html,/<details class="details" id="steelStandardsDisclosure">/);
 assert.match(js,/selected=rows\[0\]\|\|null/,'Automatically select an available entry');
 assert.match(js,/updateSelectedSummary\(\)/);
@@ -51,4 +51,4 @@ for(const [name,fg,bg] of [
  assert.ok(contrast(fg,bg)>=4.5,name+' failed 4.5:1 contrast: '+contrast(fg,bg).toFixed(2));
 }
 assert.ok(!html.includes('id="rccBbsSection"')&&!js.includes('cuttingLength'),'RCC BBS must stay deferred');
-console.log('Steel Table polished UI passed: selection → quantity → output, disclosures, offline font, light/dark text/action ≥4.5:1, dark SVG palette and no RCC BBS.');
+console.log('Steel V28 polished UI passed: member → size → diagram/weight/dimensions → comparison → optional quantity, offline font/contrast and no BBS.');

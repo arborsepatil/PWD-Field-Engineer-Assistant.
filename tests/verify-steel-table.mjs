@@ -132,16 +132,16 @@ assert.ok(csv.includes("'=FORMULA()"),'Spreadsheet formula content must be escap
 assert.ok(csv.startsWith('\ufeff'));
 assert.ok(csv.includes('PWD FIELD ASSISTANT'));
 assert.ok(csv.includes('Not a design'));
-for(const id of ['steelFamilies','steelSearch','steelResults','steelDetail','steelSectionDiagram','steelProperties','steelLength','steelCountPieces','steelRate','steelCalculate','steelExport','steelPrint','steelCustomShape','steelWidth','steelThickness','steelDiameter','steelSide'])
+for(const id of ['steelFamilies','steelSearch','steelResults','steelDetail','steelSectionDiagram','steelProperties','steelLength','steelCountPieces','steelRate','steelCalculate','steelCompareCard','steelCompareAdd','steelQuantityDisclosure','steelCustomShape','steelWidth','steelThickness','steelDiameter','steelSide'])
  assert.ok(ui.includes('id="'+id+'"'),'Missing steel module control '+id);
-for(const asset of ['pwd-steel-catalog.js','pwd-steel-core.js','pwd-steel-app.js']){
+for(const asset of ['pwd-steel-catalog.js','pwd-steel-core.js','pwd-steel-compare.js','pwd-steel-app.js']){
  assert.ok(ui.includes('src="./'+asset+'"'));
  assert.ok(cache.includes("'./"+asset+"'"),'Offline caching missing '+asset);
 }
 assert.ok(cache.includes("'./pwd_steel_table.html'"));
 assert.ok(home.includes('href="./pwd_steel_table.html"'),'Steel module missing from app home');
-assert.match(app,/__PWD_ANDROID_CSV_EXPORT_V1__/);
-assert.match(app,/window\.print\(\)/);
+assert.ok(!ui.includes('id="steelExport"')&&!ui.includes('id="steelPrint"'),'No export controls in V28');
+assert.ok(!app.includes('__PWD_ANDROID_CSV_EXPORT_V1__')&&!app.includes('window.print()'),'UI no longer exports/prints');
 assert.match(app,/PWDSteelMath/);
 assert.doesNotMatch(app,/barBending|cuttingLength|rccWallBBS|autoStructuralDesign/i);
 assert.ok(!ui.includes('https://fonts.googleapis.com'),'No remote fonts needed for offline use');

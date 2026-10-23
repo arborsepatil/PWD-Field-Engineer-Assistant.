@@ -28,16 +28,43 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 @media(min-width:680px){.three{grid-template-columns:repeat(3,minmax(0,1fr))}.field.rate{grid-column:auto}.results{max-height:230px}}
 @media(max-width:480px){main{padding:11px 10px 112px}.card{padding:13px}.results{grid-template-columns:1fr}.stat{padding:10px 7px}.stat b{font-size:1.04rem}.stat:first-child b{font-size:1.37rem}}
 @media print{.top,.tabs,.results,#steelSearch,#steelSearchLabel,.actions,.hide-print,details.details:not([open]){display:none!important}body{background:white;color:#111}main{padding:0;max-width:none}.card,details.details{border:1px solid #ccc;break-inside:avoid}.figure svg{max-height:215px}details.details .inside{display:block}}
+
+/* V28 — weight and dimensions first, information-only comparison, quantity secondary. */
+#steelPicked{display:none!important}
+.steel-key-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:11px 0}
+.steel-key{display:flex;flex-direction:column;gap:3px;border:1px solid var(--line);border-radius:12px;padding:10px 9px;min-width:0}
+.steel-key span{font-size:.74rem;color:var(--muted)}.steel-key strong{font-size:1.06rem;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.steel-key strong small{font-size:.72rem;font-weight:500;color:var(--muted)}.steel-key>small{font-size:.7rem;color:var(--muted)}
+.steel-key.steel-mass{grid-column:1/-1;background:var(--soft);padding:12px}
+.steel-key.steel-mass strong{font-size:1.85rem}
+#steelDetailsDisclosure{margin-top:0}
+.steel-tech{margin:10px 0}.steel-tech>summary{min-height:44px;cursor:pointer;color:var(--accent);font-size:.85rem;font-weight:750;display:flex;align-items:center}
+.compare-head{display:flex;align-items:center;justify-content:space-between;gap:7px}.compare-head h2{margin:0}
+.compare-clear{border:1px solid var(--line);border-radius:9px;background:var(--soft);color:var(--ink);padding:9px 12px;min-height:44px;cursor:pointer}
+.compare-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.compare-chip{display:inline-flex;gap:5px;align-items:center;border:1px solid var(--line);background:var(--soft);border-radius:10px;padding:5px 8px;max-width:100%}.compare-chip span{font-size:.79rem;font-weight:650;overflow-wrap:anywhere}.compare-chip button{border:0;background:none;color:var(--ink);cursor:pointer;min-width:32px;min-height:32px;font-size:1rem}
+.compare-scroll{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:12px;margin-top:10px;scrollbar-width:thin}
+.compare-scroll table{width:100%;border-collapse:separate;border-spacing:0;min-width:480px;font-variant-numeric:tabular-nums}
+.compare-scroll td,.compare-scroll th{padding:10px;white-space:normal;min-width:120px;max-width:240px;text-align:left;vertical-align:top;font-size:.77rem;border-bottom:1px solid var(--line)}
+.compare-scroll th:first-child{position:sticky;left:0;min-width:112px;max-width:150px;background:var(--soft);z-index:1}
+.compare-scroll td:first-child{position:sticky;left:0;min-width:112px;max-width:150px;background:var(--card);font-weight:700}
+.compare-scroll thead th{background:var(--soft)}
+.size-row{display:flex;gap:5px;align-items:stretch;min-width:0}.size-row .pick{flex:1;min-width:0}
+.size-compare{width:82px;min-width:82px;border:1px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink);font-size:.72rem;font-weight:730;cursor:pointer}
+.size-compare[aria-pressed=true]{background:var(--btn);color:var(--btnText)}
+.compare-add-main{margin:3px 0 10px;width:100%}
+.steel-qty-inside .three{margin-top:10px}.steel-qty-inside .actions{grid-template-columns:1fr}
+@media(max-width:480px){.size-compare{width:76px;min-width:76px}.steel-key.steel-mass strong{font-size:1.65rem}}
 </style><link rel="stylesheet" href="./app-global.css"></head>
 <body data-pwd-shell="off"><header class="top"><a class="back" href="./index.html">‹ Home</a><b>Steel Table</b></header>
 <main>
 <section class="card" id="searchCard">
  
- <div class="tabs" id="steelFamilies" aria-label="Section types"></div>
- <div class="field" id="steelSeriesField"><label for="steelSeries">Section series</label><select id="steelSeries" aria-label="Choose Indian steel section series"></select></div>
+ <div class="eyebrow" style="margin-bottom:8px">1 · Select member type</div>
+ <div class="tabs" id="steelFamilies" aria-label="Member types"></div>
+ <div class="field" id="steelSeriesField"><label for="steelSeries">Member series</label><select id="steelSeries" aria-label="Choose Indian steel section series"></select></div>
  <div id="catalogDetails">
-  <label id="steelSearchLabel" for="steelSearch">Find section</label>
-  <input id="steelSearch" type="search" placeholder="Search ISMB, ISMC, ISA…" autocomplete="off">
+  <label id="steelSearchLabel" for="steelSearch">2 · Find member size</label>
+  <input id="steelSearch" type="search" placeholder="Search size: ISMB 300, ISMC 150…" autocomplete="off">
   <p class="small hide-print" id="steelCount" aria-live="polite"></p>
   <div class="results" id="steelResults" aria-label="Select steel section"></div>
   <button id="steelMoreSizes" class="more-sizes" type="button" hidden>Show more sizes</button>
@@ -56,8 +83,38 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
  </div>
  <div id="steelPicked" class="selected" hidden aria-live="polite"><strong id="steelPickedName"></strong><span id="steelPickedStatus"></span></div><p id="steelWeightConflict" class="warning" hidden>Different source editions report different masses for this nominal size. The newer manufacturer value is listed first; select the required approved edition and verify the MTC.</p>
 </section>
-<section class="card" aria-label="Steel quantity calculator">
- <h2>Quantity</h2>
+<section class="card steel-selected-card" id="steelDetailsDisclosure" aria-label="Selected steel section details">
+ <div class="eyebrow">3 · Selected section</div>
+ <div class="inside">
+  <section id="steelDetail" hidden aria-live="polite">
+   <div class="titlebar"><h2 id="steelTitle">Section</h2><span class="tag" id="steelStatus">SAIL source</span></div>
+   <div class="steel-key-metrics" aria-label="Most-used section properties">
+    <div class="steel-key steel-mass"><span>Unit weight</span><strong><b id="steelMass">—</b> <small>kg/m</small></strong></div>
+    <div class="steel-key"><span id="steelDepthLabel">Depth / leg</span><strong id="steelMainDepth">—</strong><small>mm</small></div>
+    <div class="steel-key"><span id="steelWidthLabel">Width / leg</span><strong id="steelMainWidth">—</strong><small>mm</small></div>
+    <div class="steel-key"><span id="steelMainThicknessLabel">Thickness</span><strong id="steelMainThickness">—</strong><small>mm</small></div>
+   </div>
+   <div id="steelSectionDiagram" class="figure" aria-label="Illustrative steel section"></div>
+   <details class="steel-tech"><summary>More section properties</summary><div id="steelProperties"></div></details>
+   <div class="warning" id="steelDataCaution"></div>
+   <button type="button" class="action secondary compare-add-main" id="steelCompareAdd">+ Add this size to comparison</button>
+   <div class="source-block" id="sourceLinks"><a id="steelSource" class="sourceLink" href="#" rel="noopener noreferrer">View manufacturer source</a><div id="steelSourceDate"></div></div>
+  </section>
+  <div class="subline" id="steelDetailsEmpty">Choose a section to see its dimensions.</div>
+ </div>
+</section>
+<section class="card steel-comparison" id="steelCompareCard" aria-label="Compare similar steel members">
+ <div class="compare-head"><h2>Compare similar members</h2><button type="button" id="steelCompareClear" class="compare-clear" hidden>Clear</button></div>
+ <p class="small">Add any 2, 3 or more sizes of the same member type. Compare dimensions and source-listed properties — not load capacity.</p>
+ <div id="steelCompareChips" class="compare-chips" aria-label="Selected comparison members"></div>
+ <div id="steelCompareEmpty" class="subline">Tap <strong>+ Compare</strong> beside a size, or add the selected section above.</div>
+ <div id="steelCompareSummary" class="small" role="status" aria-live="polite"></div>
+ <div id="steelCompareResults" class="compare-scroll" hidden></div>
+</section>
+<details class="details" id="steelQuantityDisclosure">
+ <summary>Quantity calculator · optional</summary>
+ <div class="inside"><section class="steel-qty-inside" aria-label="Steel quantity calculator">
+ <p class="small">Optional: length × number of pieces × listed kg/m. Not a structural design check.</p>
  <div class="three">
   <div class="field"><label for="steelLength">Length / piece (m)</label><input id="steelLength" type="number" min="0.001" step="any" inputmode="decimal" value="6"></div>
   <div class="field"><label for="steelCountPieces">Pieces</label><input id="steelCountPieces" type="number" min="1" step="1" inputmode="numeric" value="1"></div>
@@ -74,25 +131,12 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
   <div class="price" id="outPrice" hidden></div>
   <p class="small" id="outMethod" hidden></p>
  </div>
- <div class="actions"><button class="action" type="button" id="steelCalculate">Calculate</button><button class="action secondary" type="button" id="steelExport">Export CSV</button><button class="action secondary" type="button" id="steelPrint">Print / PDF</button></div>
-</section>
-<details class="details" id="steelDetailsDisclosure">
- <summary>Section diagram & details</summary>
- <div class="inside">
-  <section id="steelDetail" hidden aria-live="polite">
-   <div class="titlebar"><h2 id="steelTitle">Section</h2><span class="tag" id="steelStatus">SAIL source</span></div>
-   <div class="subline">Unit mass: <b id="steelMass">—</b> kg/m</div>
-   <div id="steelSectionDiagram" class="figure" aria-label="Illustrative steel section"></div>
-   <div id="steelProperties"></div>
-   <div class="warning" id="steelDataCaution"></div>
-   <div class="source-block" id="sourceLinks"><a id="steelSource" class="sourceLink" href="#" rel="noopener noreferrer">View manufacturer source</a><div id="steelSourceDate"></div></div>
-  </section>
-  <div class="subline" id="steelDetailsEmpty">Choose a section to see its dimensions.</div>
- </div>
+ <div class="actions"><button class="action" type="button" id="steelCalculate">Calculate weight</button></div>
+</section></div>
 </details>
 <details class="details" id="steelStandardsDisclosure">
  <summary>Data sources & limitations</summary>
  <div class="inside"><p class="small">IS 808:2021 section types; limited SAIL 2023 and secondary examples. Hollow weights use archived Tata or secondary data, NOT a fully BIS-amended table. Verify current approved tables and MTC for site use.</p><div id="steelStandards"></div><p class="small"><a href="./pwd-steel-osdag-license.html">Osdag open-source data &amp; LGPL license</a></p><p class="small">Custom hollow mass is theoretical only; rectangular corners are simplified. No structural design or RCC BBS.</p></div>
 </details>
 <footer>Reference nominal weights only · check current standards and MTC</footer>
-</main><script src="./pwd-steel-osdag.js"></script><script src="./pwd-steel-catalog.js"></script><script src="./pwd-steel-core.js"></script><script src="./pwd-steel-app.js"></script><script src="./app-shell.js"></script></body></html>
+</main><script src="./pwd-steel-osdag.js"></script><script src="./pwd-steel-catalog.js"></script><script src="./pwd-steel-core.js"></script><script src="./pwd-steel-compare.js"></script><script src="./pwd-steel-app.js"></script><script src="./app-shell.js"></script></body></html>
