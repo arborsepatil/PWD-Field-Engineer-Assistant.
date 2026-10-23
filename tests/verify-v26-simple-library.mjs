@@ -17,8 +17,8 @@ assert.ok(library.includes("get('digitalSSR').hidden=section!=='ssr'"),'Offline 
 assert.ok(home.includes('href="./library.html?section=ssr"')&&home.includes('href="./library.html"'),'Home SSR and Library gateways preserved');
 assert.ok(!sw.includes("'./pdf_viewer.html'"),'Retired private PDF chooser must not be distributed in offline app');
 assert.ok(!viewer.includes('drive.google.com/file/d/'),'Archived viewer must not embed private Drive URLs');
-assert.ok(/pwd-tools-public-library-v34-2026-10-23/.test(sw),'Offline app cache must invalidate retired private Library');
+assert.ok(/pwd-tools-public-library-v35-2026-10-23/.test(sw),'Offline app cache must invalidate old private Library and update publisher accessibility labels');
 const inline=library.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(inline,'Active Library filter/view script missing');
 new vm.Script(inline[1],{filename:'library-v33.inline.js'});
-console.log('V26→V34 compatibility PASS: public-only Library, categories, local SSR tool, no packaged private PDF reader, valid publisher-view script.');
+console.log('V26→V35 compatibility PASS: public-only Library, categories, local SSR tool, no packaged private PDF reader, valid publisher-view script.');
