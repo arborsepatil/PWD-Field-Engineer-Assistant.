@@ -4,7 +4,7 @@
 'use strict';
 const DB='pwd-private-library-pdfs-v1',STORE='files',MAX=160*1024*1024;
 const LEGACY_DB='pwd-private-bridge-sources-v1',LEGACY_STORE='originals';
-const BOOK_IDS={bridge2002:'13hCYBiVR-XWToOtVpbS2ZnjvQFz5wWcr',bridge2023:'1juIQ-FJLpBsJzh2dKJlFxkixRbsrmEOv'};
+// Shared app uses opaque device-local reader keys, never private Drive file IDs.
 function storage(mode,action,legacy=false){
  if(typeof indexedDB==='undefined')return Promise.reject(new Error('On-device storage unavailable'));
  return new Promise((resolve,reject)=>{
@@ -46,7 +46,7 @@ window.PWDBridgeLocalSource={
    if(!['bridge2002','bridge2023'].includes(key))throw new Error('Unrecognized publication');
    const input=document.getElementById('privatePdfFile'),clear=document.getElementById('forgetPrivatePdf');
    document.getElementById('privateBar').classList.add('visible');
-   let localURL=null,localBlob=null,sourceName=null,generation=0,disposed=false;const deviceKey='drive-'+BOOK_IDS[key];
+   let localURL=null,localBlob=null,sourceName=null,generation=0,disposed=false;const deviceKey='local-'+key;
    async function activate(blob,name,persisted,version){
      if(disposed||version!==generation)return 'cancelled';
      const candidate=URL.createObjectURL(blob);
