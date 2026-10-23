@@ -56,6 +56,10 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 .size-compare{width:82px;min-width:82px;border:1px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink);font-size:.72rem;font-weight:730;cursor:pointer}
 .size-compare[aria-pressed=true]{background:var(--btn);color:var(--btnText)}
 .compare-add-main{margin:3px 0 10px;width:100%}
+.steel-qty-gate{padding:9px 10px;margin:8px 0 11px;border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:9px;background:var(--soft);font-size:.77rem;line-height:1.5}
+.steel-qty-gate[data-status="limited-check"]{border-left-color:var(--accent)}
+.steel-qty-gate[data-status="hold"]{background:var(--warnBg);color:var(--warn)}
+#steelCalculate:disabled{opacity:.5;cursor:not-allowed}
 .steel-qty-inside .three{margin-top:10px}.steel-qty-inside .actions{grid-template-columns:1fr}
 @media(max-width:480px){.size-compare{width:76px;min-width:76px}.steel-key.steel-mass strong{font-size:1.65rem}}
 </style><link rel="stylesheet" href="./app-global.css"></head>
@@ -120,7 +124,8 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 <details class="details" id="steelQuantityDisclosure">
  <summary>Quantity calculator · optional</summary>
  <div class="inside"><section class="steel-qty-inside" aria-label="Steel quantity calculator">
- <p class="small">Optional: length × number of pieces × listed kg/m. Not a structural design check.</p>
+ <p class="small">Optional: length × number of pieces × verified nominal kg/m. Not a structural design check.</p>
+ <p id="steelQuantitySourceGate" class="steel-qty-gate" role="status" aria-live="polite">Choose a member to check quantity eligibility.</p>
  <div class="three">
   <div class="field"><label for="steelLength">Length / piece (m)</label><input id="steelLength" type="number" min="0.001" step="any" inputmode="decimal" value="6"></div>
   <div class="field"><label for="steelCountPieces">Pieces</label><input id="steelCountPieces" type="number" min="1" step="1" inputmode="numeric" value="1"></div>
