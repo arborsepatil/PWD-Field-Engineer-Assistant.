@@ -77,19 +77,11 @@ window.PWDPublicBookCatalogue=Object.freeze([
   },
   {
     "section": "spec",
-    "title": "CPWD Specifications — Civil Volume I (2009)",
-    "publisher": "Central Public Works Department",
-    "url": "https://cpwd.gov.in/Publication/speci_vol1.pdf",
-    "kind": "book",
-    "note": "Official CPWD PDF link; publisher sometimes rejects direct viewing. See the CPWD Publications entry if access fails. Free page access does not grant permission to redistribute."
-  },
-  {
-    "section": "spec",
     "title": "CPWD Publications and Specifications",
     "publisher": "Central Public Works Department",
     "url": "https://cpwd.gov.in/Documents/cpwd_publication.aspx",
     "kind": "index",
-    "note": "Publisher's document listing; some official services may reject access temporarily."
+    "note": "Official listing for specifications and publications. Direct Civil Volume I PDF was inaccessible during the 23 October 2026 audit; no in-app direct-PDF shortcut is offered."
   },
   {
     "section": "code",
