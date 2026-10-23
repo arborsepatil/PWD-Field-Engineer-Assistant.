@@ -112,6 +112,7 @@ jobs:
           node tests/verify-steel-v28-compare.mjs
           node tests/verify-steel-v29-bis-batch.mjs
           node tests/verify-steel-v29b-bis-batch.mjs
+          node tests/verify-steel-v30-diagram.mjs
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
       - name: Test simplified reference readers and preserve source checks
@@ -152,6 +153,7 @@ jobs:
           test -f android/app/src/main/assets/www/pwd-steel-osdag.js
           test -f android/app/src/main/assets/www/pwd-steel-osdag-license.html
           test -f android/app/src/main/assets/www/pwd-steel-core.js
+          test -f android/app/src/main/assets/www/pwd-steel-diagram.js
           test -f android/app/src/main/assets/www/pwd-steel-app.js
           ! grep -q 'navigator.serviceWorker.register' android/app/src/main/assets/www/index.html
           ! find android/app/src/main/assets/www -iname '*.pdf' | grep -q .
