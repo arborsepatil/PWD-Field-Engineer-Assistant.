@@ -31,10 +31,10 @@ assert.ok(!gr.includes('DRIVE AVAILABLE'),'No suggestion that everyone can brows
 const publicCatalog=read('library-public-catalog.js');
 const scope={window:{}};vm.runInNewContext(publicCatalog,scope);
 const pages=Array.from(scope.window.PWDPublicBookCatalogue);
-assert.equal(pages.length,15,'All 15 official publisher destinations must remain traceable');
+assert.equal(pages.length,14,'Only official publisher destinations with verified access status remain listed');
 assert.ok(pages.every(x=>!x.id&&x.url?.startsWith('https://')));
-assert.ok(pages.find(x=>x.title.startsWith('CPWD Specifications')).note.includes('sometimes rejects direct viewing'),
- 'External access limits must not be hidden from users');
+assert.ok(!pages.some(x=>x.url.includes('/Publication/speci_vol1.pdf')),'Rejected direct CPWD PDF should not be offered');
+assert.ok(pages.find(x=>x.title==='CPWD Publications and Specifications').note.includes('inaccessible'),'Access limitation must be disclosed');
 const library=read('library.html');
 assert.ok(!library.includes('library-offline.js'),'Private-book importer/exporter must not be reachable from public Library');
 assert.ok(!library.includes('exportCopy'),'No export in public Library');
