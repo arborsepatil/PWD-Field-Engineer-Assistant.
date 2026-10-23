@@ -38,7 +38,7 @@ const swTestContext={
   caches:{
     match:async (target,options)=>{
       if(target==='./index.html')return offlineShell;
-      if(options?.ignoreSearch&&/\/(?:library|pdf_viewer)\.html\?/.test(target.url||''))return {kind:'cached-offline-reader'};
+      if(options?.ignoreSearch&&/\/library\.html\?/.test(target.url||''))return {kind:'cached-offline-reader'};
       return undefined;
     },
     open:async()=>({put:async()=>{}})
@@ -62,7 +62,7 @@ assert.equal(navFallback.kind,'offline-page','Offline navigation must return cac
 const libraryOffline=await exercise('navigate','library.html?section=ssr');
 assert.equal(libraryOffline.kind,'cached-offline-reader','SSR Library query route must open cached page offline');
 const pdfOffline=await exercise('navigate','pdf_viewer.html?file=private-catalog-id');
-assert.equal(pdfOffline.kind,'cached-offline-reader','Selected PDF viewer query route must open offline');
+assert.equal(pdfOffline.kind,'offline-page','Retired private PDF viewer route must not receive a cached reader');
 
 await assert.rejects(
   exercise('same-origin','uncached-script.js'),
@@ -385,8 +385,8 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  const guide=load('app-shell.js');
  for(const year of ['2002','2023']){
    const page='bridge_book_'+year+'.html';
-   assert.ok(shell.includes('./'+page),'Book missing from offline cache '+page);
-   assert.ok(gateway.includes('./'+page),'Gateway missing '+page);
+   assert.ok(!shell.includes('./'+page),'Restricted original-derived book index must not ship offline: '+page);
+   assert.ok(!gateway.includes('./'+page),'Public gateway must not expose restricted book index '+page);
    assert.ok(!load('library.html').includes('drive.google.com/file/d/'),'Bridge originals must never expose private Drive IDs in shared Library');
    const content=load(page);
    assert.ok(content.includes(year+' Bridge'),'Wrong book identity '+page);
@@ -395,7 +395,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
    assert.ok(content.includes('Actual drawing PDF page'),'Unverified actual page must be disclosed');
    assert.ok(content.includes('not digitized'),'Drawing details falsely digitized');
    assert.ok(content.includes("r.pub!=='"+year+"'"),'Book must reject cross-edition entries');
-   assert.ok(content.includes('./pdf_viewer.html?doc=bridge'+year),'Original private PDF link missing');
+   assert.ok(!content.includes('./pdf_viewer.html?doc=bridge'+year),'Private original PDF actions must not be offered');
    new vm.Script(content.match(/<script>([\s\S]*?)<\/script>/)[1],{filename:page});
  }
  const y2002=load('bridge_book_2002.html');
@@ -572,7 +572,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.ok(pdf.includes('bridge-local-source.js'),'Private PDF source handler not included');
  assert.ok(els.pdfPageIndicator.textContent.includes('17 / 221'),'Bridge PDF source page indication incorrect');
  assert.ok(els.docMeta.textContent.includes('requested page 17'),'Bridge deep link page status missing');
- assert.ok(shell.includes('./bridge-local-source.js'),'Private PDF helper must work offline');
+ assert.ok(!shell.includes('./bridge-local-source.js'),'Private PDF helper must not be distributed');
  const localJS=load('bridge-local-source.js');
  new vm.Script(localJS,{filename:'bridge-local-source.js'});
  for(const required of ['indexedDB.open','page-count match is not proof of drawing identity','file.slice(0,1024)','store.delete(key)','URL.revokeObjectURL']){
