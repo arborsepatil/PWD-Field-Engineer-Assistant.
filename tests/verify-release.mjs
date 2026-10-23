@@ -368,14 +368,14 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  const publicSource=load('library-public-catalog.js'),publicContext={window:{}};
  vm.runInNewContext(publicSource,publicContext,{filename:'library-public-catalog.js'});
  const published=publicContext.window.PWDPublicBookCatalogue;
- assert.equal(published.length,15,'Public Library approved publisher sources changed');
+ assert.equal(published.length,14,'Inaccessible direct-book URL excluded; only 14 publisher destinations approved');
  assert.ok(published.every(r=>r.url.startsWith('https://')&&!('id' in r)),'A private book id or non-HTTPS URL entered shared Library');
  const lib=load('library.html');
  assert.ok(lib.includes('./library-public-catalog.js')&&!lib.includes('./library-drive-catalog.js'),'Shared Library source must be public only');
  assert.ok(lib.includes('View on publisher ↗'),'Publisher view action missing');
  assert.ok(shell.includes('./library-public-catalog.js'),'Public catalogue must work with offline app shell');
  assert.ok(!shell.some(x=>/\.pdf$/i.test(x)),'App must never precache private or copyrighted PDF files');
- process.stdout.write('Removed modules and zero restricted Drive books; 15 official public publisher sources passed\n');
+ process.stdout.write('Removed modules and zero restricted Drive books; 14 official public publisher sources passed\n');
 }
 // Only source-available bridge books are published, and the retired hydraulic tool stays removed.
 {
