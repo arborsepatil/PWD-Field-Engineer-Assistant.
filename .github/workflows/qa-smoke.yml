@@ -55,5 +55,6 @@ jobs:
           node tests/verify-v26-simple-library.mjs
           node tests/verify-v33-public-library.mjs
           node tests/verify-v34-public-privacy.mjs
+          node tests/verify-v35-publisher-access.mjs
           python3 scripts/prepare_public_site.py
           node tests/verify-v27-ssr-reader.mjs
