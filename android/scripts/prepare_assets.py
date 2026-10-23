@@ -11,10 +11,19 @@ import shutil
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "android/app/src/main/assets/www"
 EXTENSIONS = {".html", ".js", ".css", ".json", ".svg", ".png", ".webp", ".jpg", ".jpeg"}
-EXCLUDED = {"sw.js", "rcc-wall-2023-bbs.js", "library-offline.js"}  # Defer BBS cutting; do not ship future-only calculation code in APK.
+# Exclude retired book-import/viewer code: public distribution must never grant
+# user-private Drive or downloaded licensed-PDF access through bundled controls.
+# Bridge index metadata remains available, but original private PDFs do not.
+EXCLUDED = {
+    "sw.js", "rcc-wall-2023-bbs.js",
+    "library-offline.js", "library-drive-catalog.js", "library-private-pdf.js",
+    "pdf_viewer.html", "bridge-local-source.js", "bridge-pdf-canvas.js",
+}
 OUTPUT.mkdir(parents=True, exist_ok=True)
-# Remove any retired script left by a previous local build before repackaging.
-(OUTPUT / "library-offline.js").unlink(missing_ok=True)
+# A previous local build may have copied these files before V34; remove stale
+# assets before packaging rather than trusting exclusions on a clean runner.
+for retired in EXCLUDED:
+    (OUTPUT / retired).unlink(missing_ok=True)
 count = 0
 for file in ROOT.iterdir():
     if not file.is_file() or file.suffix.lower() not in EXTENSIONS or file.name in EXCLUDED:
@@ -55,7 +64,13 @@ for bundled in OUTPUT.iterdir():
         assert not any(link in data for link in PRIVATE_PROVIDER_URLS), (
             f"Private Google Drive/Docs link must not ship inside shared app: {bundled.name}"
         )
-assert not (OUTPUT / "library-offline.js").exists(), "Legacy private-book importer/exporter must not ship"
+for retired in EXCLUDED:
+    assert not (OUTPUT / retired).exists(), f"Retired or private PDF component must not ship: {retired}"
+for drawing_page in ("bridge_book_2002.html", "bridge_book_2023.html"):
+    assert "pdf_viewer.html" not in (OUTPUT / drawing_page).read_text(encoding="utf-8"), (
+        f"Private PDF access link remains in distributed drawing index: {drawing_page}"
+    )
+assert (OUTPUT / "library-public-catalog.js").exists()
 
 
 print(f"Android offline APK assets prepared: {count} public files, "
