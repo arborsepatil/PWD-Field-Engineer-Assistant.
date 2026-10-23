@@ -390,6 +390,22 @@ const IS808_BIS_SPOT_CHECKS=Object.freeze([
  Object.freeze({series:'EQ',d:150,b:150,t:12,mass:27.29,area:34.70,ix:746.00,iy:746.00,table:9,pdfPage:32}),
  Object.freeze({series:'EQ',d:200,b:200,t:16,mass:48.53,area:61.80,ix:2360.00,iy:2360.00,table:9,pdfPage:32})
 ]);
+// V29: EIGHT additional limited independent checks on the owner's non-distributed
+// IS 808:2021, Table 1 physical PDF pp.7–8. This is a selective check ledger,
+// NOT the licensed table copied into the public app.
+// Values were checked against source on 2026-10-23 and against Osdag rows.
+// Web/flange t/T recorded as independent geometry checks; absent radii/slope
+// in the Osdag record MUST NOT be marked as verified geometry.
+const IS808_V29_SAMPLE_ROWS=Object.freeze([
+ Object.freeze({series:'MB',d:175,b:85,mass:19.50,area:24.8,ix:1260,iy:76.6,table:1,pdfPage:7,geom:Object.freeze({web:5.8,flange:9.0})}),
+ Object.freeze({series:'MB',d:225,b:110,mass:31.15,area:39.7,ix:3440,iy:218,table:1,pdfPage:7,geom:Object.freeze({web:6.5,flange:11.8})}),
+ Object.freeze({series:'MB',d:350,b:140,mass:52.33,area:66.7,ix:13600,iy:537,table:1,pdfPage:7,geom:Object.freeze({web:8.1,flange:14.2})}),
+ Object.freeze({series:'MB',d:400,b:140,mass:61.55,area:78.4,ix:20400,iy:622,table:1,pdfPage:8,geom:Object.freeze({web:8.9,flange:16.0})}),
+ Object.freeze({series:'WB',d:175,b:125,mass:22.06,area:28.1,ix:1510,iy:188,table:1,pdfPage:8,geom:Object.freeze({web:5.8,flange:7.4})}),
+ Object.freeze({series:'WB',d:200,b:140,mass:28.80,area:36.7,ix:2620,iy:328,table:1,pdfPage:8,geom:Object.freeze({web:6.1,flange:9.0})}),
+ Object.freeze({series:'WB',d:203,b:152,mass:52.09,area:66.4,ix:4780,iy:809,table:1,pdfPage:8,geom:Object.freeze({web:8.9,flange:16.5})}),
+ Object.freeze({series:'WB',d:225,b:150,mass:33.93,area:43.2,ix:3920,iy:448,table:1,pdfPage:8,geom:Object.freeze({web:6.4,flange:9.9})})
+]);
 // Source-published nominal figures use listed rounding; 0.01 kg/m mismatch
 // is NOT a numerical match. A missing optional dimension/property must not
 // be invented. Incomplete app rows can earn kg/m-only verification.
@@ -399,7 +415,7 @@ function auditIS808(row){
   return {status:'not-checked',source:null};
  const series=resolveSeries(row),d=Number(row.depthMm),b=Number(row.widthMm);
  const t=Number(row.thicknessMm);
- const found=IS808_BIS_SPOT_CHECKS.find(x=>x.series===series&&x.d===d&&x.b===b&&
+ const found=[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS].find(x=>x.series===series&&x.d===d&&x.b===b&&
    (x.t===undefined||x.t===t));
  if(!found)return {status:'not-checked',source,
    note:'This individual hot-rolled section has not been reconciled to the owner-held IS 808:2021.'};
@@ -414,11 +430,11 @@ function auditIS808(row){
  const geometryPairs=[['webMm','web'],['flangeMm','flange'],
   ['flangeSlopeDeg','slope'],['r1Mm','r1'],['r2Mm','r2']];
  const geometryAvailable=found.geom?geometryPairs.filter(([key])=>row[key]!==undefined&&row[key]!==null):[];
- const geometryOK=!found.geom||geometryAvailable.every(([key,src])=>equivalent(row[key],found.geom[src]));
+ const geometryOK=!found.geom||geometryAvailable.every(([key,src])=>found.geom[src]===undefined||equivalent(row[key],found.geom[src]));
  if(!massOK||!propsOK||!geometryOK)return {status:'is808-numeric-conflict',source,sourceTable:found.table,sourcePdfPage:found.pdfPage,geometryChecked:false,
    note:'Nominal mass, available section property or available geometric dimension disagrees with checked BIS IS 808:2021 row. Quantity calculation blocked for this record.'};
  const complete=available.length===3;
- const geometryChecked=Boolean(found.geom)&&geometryAvailable.length===geometryPairs.length;
+ const geometryChecked=Boolean(found.geom)&&geometryAvailable.length===geometryPairs.length&&geometryPairs.every(([,src])=>Number.isFinite(found.geom[src]));
  return {status:complete?'is808-mass-area-inertia-checked':'is808-mass-checked',source,sourceTable:found.table,sourcePdfPage:found.pdfPage,geometryChecked,
   note:complete?
    'Nominal mass, area, Izz and Iyy checked against the stated IS 808:2021 table row. '+
@@ -591,7 +607,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
