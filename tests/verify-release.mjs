@@ -362,30 +362,21 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  }
  assert.ok(!home.includes('id="guideCard"'),'Guide card still displayed');
  assert.ok(!shell.some(x=>x.startsWith('./morth-qc-')),'QC module cache still shipped');
- const source=load('library-drive-catalog.js'),context={window:{}};
- vm.runInNewContext(source,context,{filename:'library-drive-catalog.js'});
- const catalog=context.window.PWDDrivePDFCatalog;
- assert.equal(catalog.length,73,'Curated original PDF Library count changed');
- const expected={code:59,spec:4,ssr:4,bridge:2,design:2,rules:2};
- for(const [k,n] of Object.entries(expected))assert.equal(catalog.filter(x=>x.section===k).length,n,'Missing PDF section '+k);
- assert.equal(catalog.filter(x=>x.sub==='IS').length,17,'Missing IS codes');
- assert.equal(catalog.filter(x=>x.sub==='IRC').length,41,'Missing IRC codes');
- assert.equal(new Set(catalog.map(x=>x.id)).size,catalog.length,'Duplicate Drive source ID');
- assert.ok(catalog.every(x=>/^[A-Za-z0-9_-]{15,}$/.test(x.id)&&x.name&&x.section),'Malformed Drive PDF reference');
- assert.ok(!catalog.some(x=>/bridge.*2018|2018.*bridge/i.test(x.name)),'Unavailable Bridge Book included');
+ const retired=load('library-drive-catalog.js'),context={window:{}};
+ vm.runInNewContext(retired,context,{filename:'library-drive-catalog.js'});
+ assert.equal(context.window.PWDDrivePDFCatalog.length,0,'Shared app must never index restricted Drive books');
+ const publicSource=load('library-public-catalog.js'),publicContext={window:{}};
+ vm.runInNewContext(publicSource,publicContext,{filename:'library-public-catalog.js'});
+ const published=publicContext.window.PWDPublicBookCatalogue;
+ assert.equal(published.length,12,'Public Library approved publisher sources changed');
+ assert.ok(published.every(r=>r.url.startsWith('https://')&&!('id' in r)),'A private book id or non-HTTPS URL entered shared Library');
  const lib=load('library.html');
- assert.ok(lib.includes('./library-drive-catalog.js')&&lib.includes('get("libSearch")')===false,'Drive PDF catalog wiring missing');
- assert.ok(lib.includes('gr_library.html'),'GR reader must remain available');
- assert.ok(shell.includes('./library-drive-catalog.js'),'Drive PDF catalogue missing from offline cache');
- assert.ok(!shell.some(x=>/\.pdf$/i.test(x)),'Private PDF cached by public app');
- process.stdout.write('Removed modules and 73 authenticated Drive PDF references verified\n');
+ assert.ok(lib.includes('./library-public-catalog.js')&&!lib.includes('./library-drive-catalog.js'),'Shared Library source must be public only');
+ assert.ok(lib.includes('View on publisher ↗'),'Publisher view action missing');
+ assert.ok(shell.includes('./library-public-catalog.js'),'Public catalogue must work with offline app shell');
+ assert.ok(!shell.some(x=>/\.pdf$/i.test(x)),'App must never precache private or copyrighted PDF files');
+ process.stdout.write('Removed modules and zero restricted Drive books; 12 official public publisher sources passed\n');
 }
-const driveCatalog=(()=>{
- const context={window:{}};
- vm.runInNewContext(load('library-drive-catalog.js'),context,{filename:'library-drive-catalog.js'});
- return context.window.PWDDrivePDFCatalog;
-})();
-
 // Only source-available bridge books are published, and the retired hydraulic tool stays removed.
 {
  const gateway=load('pwd_bridge_plans.html');
@@ -396,7 +387,7 @@ const driveCatalog=(()=>{
    const page='bridge_book_'+year+'.html';
    assert.ok(shell.includes('./'+page),'Book missing from offline cache '+page);
    assert.ok(gateway.includes('./'+page),'Gateway missing '+page);
-   assert.ok(driveCatalog.some(x=>x.reader==='./'+page),'Drive Library missing '+page);
+   assert.ok(!load('library.html').includes('drive.google.com/file/d/'),'Bridge originals must never expose private Drive IDs in shared Library');
    const content=load(page);
    assert.ok(content.includes(year+' Bridge'),'Wrong book identity '+page);
    assert.ok(content.includes('</html>'),'Malformed bridge page '+page);
@@ -811,178 +802,41 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
 }
 
 
-// Unified on-device PDF Library checks: Drive originals are linked, not published.
+// V33 — shared book access is publisher-view-only. Device-owned bridge sources
+// are optional and isolated from the public book catalogue.
 {
- const lib=load('library.html'), viewer=load('pdf_viewer.html');
- const local=load('library-private-pdf.js');
- new vm.Script(local,{filename:'library-private-pdf.js'});
- assert.ok(shell.includes('./library-private-pdf.js'),'Offline private-PDF controller is missing');
- assert.ok(viewer.includes('./library-drive-catalog.js')&&viewer.includes('./library-private-pdf.js'),
-   'Unified viewer must load curated Drive IDs and private attachment handler');
- assert.ok(lib.includes("'./pdf_viewer.html?file='+encodeURIComponent(record.id)"),
-   'Library PDFs still leave the app instead of opening the in-app reader');
- assert.ok(lib.includes('Drive (internet) ↗'),'Explicit external Drive fallback must be retained');
- assert.ok(!shell.some(path=>/\.pdf$/i.test(path)),'Public app must not precache copyrighted original PDFs');
- assert.ok(!home.includes('Game-changer module deliberately held'),'Old SSR placeholder must stay removed');
- assert.ok(home.includes('SSR Master'),'User-retained SSR Master must be visible in app navigation');
- assert.ok(!home.includes('Rate engine pending'),'The Home tool list must not display unfinished development statuses');
- assert.ok(home.includes('library.html?section=ssr'),'SSR source PDFs must be reachable from home');
- assert.equal((home.match(/class="module-card"/g)||[]).length,0,
-   'Duplicated large module cards must be removed; tools remain in one list');
- assert.ok(manifest.shortcuts.some(x=>x.name==='Library'),'Android shortcut missing the Library');
- // Simple-feature polish: inactive preferences removed and controls wired.
- const settings=load('settings.html'), profile=load('profile.html');
- for(const retired of ['guideToggle','offlineToggle','wifiToggle','GPS Cam']){
-   assert.ok(!settings.includes(retired),'Inactive or removed Setting still visible: '+retired);
- }
- assert.ok(!settings.includes('bindCalculatorToggle()'),'Retired floating calculator setting must be removed');
- assert.ok(!settings.includes('calcToggle'),'Retired calculator switch must not be shown');
- assert.ok(!app.includes('pwdCalcFab'),'Floating overlay must be removed from shared shell');
- assert.ok(!profile.includes('Foundation for quick access'),'Empty favorites placeholder still visible');
- assert.ok(!profile.includes('Downloaded books/drawings will appear'),'Inactive download placeholder still visible');
- assert.ok(!profile.includes('Recent tools')&&!profile.includes('SSR Master'),'Profile should not duplicate the Home tool list or abandoned recents');
- assert.ok(!home.includes('recentGrid'),'No recent shortcuts on simplified Home');
- assert.equal((home.match(/class="tool-row"/g)||[]).length,8,'Exactly eight kept tools on Home');
-
-
- // Simulate opening a standard that was not hardcoded in the old PDF viewer.
- const entry=driveCatalog.find(r=>r.sub==='IS'&&r.name.includes('456'));
- assert.ok(entry,'IS 456 expected in curated Drive library');
- const surfaceEvents={};
- const surface={
-   addEventListener(name,fn){surfaceEvents[name]=fn},
-   setPointerCapture(){},
-   getBoundingClientRect(){return {left:0,top:0,width:320,height:550}}
- };
- const viewerModes=new Set();
- const fakeViewer={classList:{
-   add(x){viewerModes.add(x)},remove(x){viewerModes.delete(x)},
-   toggle(x,enabled){if(enabled)viewerModes.add(x);else viewerModes.delete(x)}
- }};
- const pdfFrame={style:{},src:'',addEventListener(){}};
- const layer={style:{},hidden:true};
- const fallback={classList:{add(){},remove(){}}};
- const back={href:'./library.html'};
- const elements={
-   viewer:fakeViewer,gestureSurface:surface,frame:pdfFrame,
-   canvasLayer:layer,drawingCanvas:{style:{}},
-   privateBar:{classList:{add(){}}},
-   gestureHint:{textContent:''},
-   pdfPageIndicator:{textContent:'',classList:{add(){}}},
-   fallback,
-   docTitle:{textContent:''},docMeta:{textContent:''},
-   driveBtn:{href:''},fallbackBtn:{href:''}
- };
- let privateConfig=null,rendered=0,changedUrl='';
- const mock={
-   window:{PWDDrivePDFCatalog:driveCatalog},
-   URLSearchParams,location:{search:'?file='+entry.id,pathname:'/pdf_viewer.html'},
-   history:{replaceState(_s,_t,url){changedUrl=url}},setTimeout(){},
-   document:{
-     title:'',getElementById(id){return elements[id]||null},
-     querySelector(sel){return sel==='.top a'?back:null}
-   },
-   PWDBridgeCanvas:{setup(options){
-     let ready=false;
-     return {
-       get ready(){return ready},
-       get pageCount(){return 57},
-       open:async(_blob,page)=>{ready=true;rendered=page;options.onState('ready','Loaded');return true},
-       showPage(page){rendered=page},
-       close:async()=>{ready=false},
-       rerenderForZoom(){}
-     }
-   }},
-   PWDLibraryPrivatePDF:{setup(config){privateConfig=config}},
-   PWDBridgeLocalSource:{setup(){throw Error('General PDF used bridge-only source')}}
- };
- const begin=viewer.indexOf('<script>'),inline=viewer.slice(begin+8,viewer.indexOf('</script>',begin));
- vm.runInNewContext(inline,mock,{filename:'standard-pdf-viewer'});
- assert.equal(elements.docTitle.textContent,entry.name,'In-app viewer did not find the chosen Drive entry');
- assert.equal(pdfFrame.src,'about:blank','Do not embed authenticated Google Drive previews in Android');
- assert.ok(elements.driveBtn.href.includes(entry.id+'/view'),'Original Drive fallback missing');
- assert.equal(privateConfig?.key,'drive-'+entry.id,'Local copies must be segregated by Drive document ID');
- assert.ok(!viewerModes.has('gesture-mode'),'Online Drive iframe must keep its own touch interactions');
- await privateConfig.onSource('blob:https://example.invalid/standard',new Blob(['%PDF-1.7']));
- assert.ok(viewerModes.has('gesture-mode'),'Local canvas must support finger gestures');
- assert.equal(layer.hidden,false,'Local PDF renderer did not become visible');
- assert.equal(rendered,1,'Default exact PDF page was not rendered');
- const touch=(id,x,y)=>({pointerId:id,clientX:x,clientY:y,pointerType:'touch',preventDefault(){}});
- surfaceEvents.pointerdown(touch(1,240,160));
- surfaceEvents.pointermove(touch(1,70,160));
- surfaceEvents.pointerup(touch(1,70,160));
- assert.equal(rendered,2,'Unzoomed swipe did not render the next standard page');
- assert.ok(changedUrl.includes('page=2'),'Book page swipe must update the reader URL');
- await privateConfig.onSource(null,null);
- assert.ok(!viewerModes.has('gesture-mode'),'Native Drive fallback should restore touch interaction');
- assert.equal(pdfFrame.src,'about:blank','Forgetting device PDF must return to device chooser');
-
- // A private device attachment is never treated as source identity verification.
- const fakeFile=new Blob(['%PDF-1.7','x'.repeat(300)],{type:'application/pdf'});
- Object.defineProperty(fakeFile,'name',{value:'IS 456 2000.pdf'});
- const handlers={};
- const fileInput={files:[fakeFile],value:'x',addEventListener(k,fn){handlers[k]=fn}};
- const clear={hidden:true,addEventListener(k,fn){handlers['clear-'+k]=fn}};
- const status={textContent:'',appendChild(node){this.note=node.textContent}};
- const dom={privatePdfFile:fileInput,forgetPrivatePdf:clear,privatePdfStatus:status,privateBar:{classList:{add(){}}}};
- let opened=0,revoked=0;
- const sandbox={
-   window:{},Blob,Uint8Array,Promise,Date,
-   URL:{createObjectURL(){opened++;return 'blob:local-'+opened},revokeObjectURL(){revoked++}},
-   document:{
-     getElementById(id){return dom[id]},
-     createElement(){return {textContent:''}}
-   }
- };
- vm.runInNewContext(local,sandbox,{filename:'library-private-pdf-runtime'});
- const source=sandbox.window.PWDLibraryPrivatePDF.setup({
-   key:'drive-'+entry.id,
-   onSource:async(url)=>{assert.ok(url===null||url.startsWith('blob:local-'))}
- });
- await handlers.change();
- assert.equal(clear.hidden,false,'Locally chosen PDF must be removable');
- assert.ok(status.textContent.includes('session'),'Device storage failure must be disclosed');
- assert.ok(!status.textContent.includes('verified'),'PDF title must not be marked verified');
- await handlers['clear-click']();
- assert.equal(revoked,1,'Forget PDF must revoke the object URL');
- source.dispose();
- process.stdout.write('Unified Drive library PDF viewer, touch paging and device-private attachment checks passed\n');
-}
-
-// Offline-first PDF Library mobile quality checks (private bytes never committed).
-{
- const library=load('library.html'),offline=load('library-offline.js'),bridge=load('bridge-local-source.js');
+ const lib=load('library.html'),viewer=load('pdf_viewer.html'),bridge=load('bridge-local-source.js');
+ const offline=load('library-offline.js');
  new vm.Script(offline,{filename:'library-offline.js'});
- assert.ok(shell.includes('./library-offline.js'),'Offline Library UI controller not precached');
- assert.ok(library.includes('./library-offline.js'),'Offline Library controller not loaded');
- for(const id of ['bulkImport','offlineOne','offlineMany','prepareOfflineReader','showOfflineOnly','offlineProgress'])
-   assert.ok(library.includes('id="'+id+'"'),'Missing mobile offline Library control: '+id);
- for(const action of ['data-offline-save','data-offline-remove','data-offline-export'])
-   assert.ok(library.includes(action),'Missing per-book offline action: '+action);
- assert.ok(library.includes("offline.list()"),'Offline Library must show saved books after reload');
- assert.ok(library.includes("offline.save(id,file"),'Single-book import must save locally');
- assert.ok(library.includes("offline.save(record.id,file)"),'Bulk import must save locally');
- assert.ok(library.includes('readerReady'),'Library must check PDF renderer readiness');
- assert.ok(library.includes("offline.requestDurableStorage()"),'Mobile persistent-storage request absent');
- assert.ok(sw.includes("const PDFJS_CACHE='pwd-public-pdfjs-offline-v1'"),'Stable renderer offline cache missing');
- assert.ok(sw.includes("caches.open(PDFJS_CACHE)"),'Service worker does not read persistent renderer assets');
- assert.ok(!shell.some(x=>x.endsWith('.pdf')),'Copyright-controlled original PDF must not ship in app cache');
- for(const id of ['13hCYBiVR-XWToOtVpbS2ZnjvQFz5wWcr','1juIQ-FJLpBsJzh2dKJlFxkixRbsrmEOv'])
-   assert.ok(bridge.includes(id),'Bridge PDF must share Library storage: '+id);
- assert.ok(bridge.includes('migratedFromLegacy'),'Existing saved bridge PDFs need migration');
- const sandbox={window:{PWDDrivePDFCatalog:driveCatalog},navigator:{},Blob,Uint8Array,Promise,Date};
- vm.runInNewContext(offline,sandbox,{filename:'offline-pdf-api'});
+ assert.ok(lib.includes('View on publisher ↗')&&lib.includes('./library-public-catalog.js'),'Public publisher viewer missing');
+ assert.ok(!lib.includes('./library-offline.js')&&!lib.includes('data-offline-export'),'Restricted PDF library controls must not be shown');
+ assert.ok(!lib.includes('Drive (internet) ↗')&&!lib.includes('drive.google.com/file/d/'),'No private Drive book links');
+ assert.ok(viewer.includes('id="chooseDevicePdf"')&&viewer.includes('id="privatePdfFile"'),'Optional device-owned PDF chooser retained');
+ assert.ok(!viewer.includes('drive.google.com/file/d/'),'Legacy viewer cannot construct private Drive URLs');
+ assert.ok(viewer.includes("bridge2002:{title:")&&viewer.includes("bridge2023:{title:"),'Only local user-supplied bridge reader keys retained');
+ assert.ok(!bridge.includes('BOOK_IDS')&&bridge.includes("const deviceKey='local-'+key"),'Device storage key must not encode a private Drive file ID');
+ assert.ok(!shell.some(x=>/\.pdf$/i.test(x)),'Public app must not cache PDF originals');
+ assert.ok(!home.includes('Game-changer module deliberately held')&&home.includes('SSR Master'),'Home SSR tool kept');
+ assert.ok(!home.includes('Rate engine pending'),'Do not show abandoned development status');
+ assert.ok(home.includes('library.html?section=ssr'),'SSR tab should open public publisher references');
+ assert.equal((home.match(/class="module-card"/g)||[]).length,0,'Home remains simplified');
+ assert.ok(manifest.shortcuts.some(x=>x.name==='Library'),'Library shortcut missing');
+ const settings=load('settings.html'),profile=load('profile.html');
+ for(const retired of ['guideToggle','offlineToggle','wifiToggle','GPS Cam'])
+  assert.ok(!settings.includes(retired),'Inactive Setting still visible: '+retired);
+ assert.ok(!settings.includes('bindCalculatorToggle()')&&!settings.includes('calcToggle'),'Unused calculator controls removed');
+ assert.ok(!app.includes('pwdCalcFab')&&!profile.includes('Recent tools'),'Old clutter in shell');
+ assert.equal((home.match(/class="tool-row"/g)||[]).length,8,'Exactly eight Home tools retained');
+ assert.ok(sw.includes("const PDFJS_CACHE='pwd-public-pdfjs-offline-v1'"),'Optional local PDF reader cache missing');
+ assert.ok(sw.includes('caches.open(PDFJS_CACHE)'),'Offline PDF renderer support missing');
+ const sandbox={window:{PWDDrivePDFCatalog:[]},navigator:{},Blob,Uint8Array,Promise,Date};
+ vm.runInNewContext(offline,sandbox,{filename:'local-pdf-legacy-utility'});
  const api=sandbox.window.PWDOfflineLibrary;
- assert.ok(api,'Offline private PDF API missing');
+ assert.ok(api,'Legacy user-owned local file utility still available if independently used');
  assert.equal(api.normalized('42. IS_456 (2000).pdf'),'is 456 2000');
- assert.equal(api.normalized('PWD_Standard_Plans_Road_Bridges_2002.pdf'),'pwd standard plans road bridges 2002');
- const isCode=driveCatalog.find(x=>x.sub==='IS'&&/IS 456 /.test(x.name));
- assert.ok(api.fileMatch({name:'IS_456_2000.pdf'},isCode),'Filename based exact matching failed');
- assert.equal(api.fileMatch({name:'IRC 78 2014.pdf'},isCode),false,'Cross-publication file matched');
  await api.checkPDF(new Blob(['%PDF-1.7'+'.'.repeat(250)],{type:'application/pdf'}));
  await assert.rejects(api.checkPDF(new Blob(['not-a-pdf'.repeat(25)])),/does not appear to be a PDF/);
- assert.equal(await api.rendererReady(),false,'No browser cache must report PDF renderer not ready');
- process.stdout.write('Offline PDF Library controls, file matching, renderer preparation and bridge shared storage verified\n');
+ process.stdout.write('Public publisher Library and device-owned local PDF reader privacy boundaries passed\n');
 }
 
 // Cache a pinned, publicly distributable PDF.js renderer after successful first use.
