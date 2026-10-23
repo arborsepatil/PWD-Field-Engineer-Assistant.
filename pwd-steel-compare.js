@@ -27,6 +27,16 @@ function audit(catalog,row){
   issues:[...issues]
  });
 }
+// Only explicitly checked, non-conflicting source mass may feed field quantity.
+// This is a source-audit gate, NOT permission to certify an actual material batch.
+function quantityEligibility(catalog,row){
+ if(!row)return Object.freeze({allowed:false,status:'missing',reason:'Select a section first.'});
+ const state=audit(catalog,row);
+ if(state.status==='hold')return Object.freeze({allowed:false,status:'hold',reason:'Quantity blocked: section source data is on hold or internally conflicting. Verify the original standard and resolve the discrepancy.'});
+ if(!CHECKED.has(state.sourceStatus))return Object.freeze({allowed:false,status:'review',reason:'Quantity blocked: this exact section\'s nominal kg/m has not been independently checked against its applicable standard.'});
+ if(!Number.isFinite(row.kgPerM)||row.kgPerM<=0)return Object.freeze({allowed:false,status:'hold',reason:'Quantity blocked: no valid nominal mass available.'});
+ return Object.freeze({allowed:true,status:'checked',reason:'Source nominal kg/m has a limited independent table check. Confirm applicable amendment, delivered size and MTC before project use.'});
+}
 function dimension(row){
  if(row.family==='hollow'&&row.series==='CHS'){
   const od=row.diameterMm??row.depthMm;
@@ -52,7 +62,7 @@ function build(catalog,items){
   });
  }));
 }
-const api=Object.freeze({audit,dimension,build,HOLD,CHECKED});
+const api=Object.freeze({audit,quantityEligibility,dimension,build,HOLD,CHECKED});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCompare=api;
 })(typeof window!=='undefined'?window:globalThis);
