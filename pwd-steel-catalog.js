@@ -418,6 +418,28 @@ const IS808_V29B_SAMPLE_ROWS=Object.freeze([
  Object.freeze({series:'WB',d:350,b:200,mass:56.89,area:72.4,ix:15500,iy:1170,table:1,pdfPage:8,geom:Object.freeze({web:8,flange:11.4})}),
  Object.freeze({series:'WB',d:400,b:200,mass:66.71,area:85,ix:23400,iy:1380,table:1,pdfPage:8,geom:Object.freeze({web:8.6,flange:13})})
 ]);
+// V30 independent exact-variant checks from owner-held IS 808:2021:
+// physical PDF p10 Table 2, p22 Table 5 and p26 Table 7. These three
+// genuinely distinct published variants share the same nominal D/B with
+// other variants. Match exact source ID + dimensions before generic samples.
+// The owner-held BIS PDF is NOT copied into this public source file.
+const IS808_EXACT_VARIANT_CHECKS=Object.freeze([
+ Object.freeze({rowId:'OSD13',series:'LB',d:200,b:100,mass:21.06,area:26.8,ix:1800,iy:112,table:2,pdfPage:10,geom:Object.freeze({web:5.6,flange:8})}),
+ Object.freeze({rowId:'OSD251',series:'HB',d:200,b:200,mass:39.73,area:50.6,ix:3690,iy:971,table:5,pdfPage:22,geom:Object.freeze({web:7.8,flange:9})}),
+ Object.freeze({rowId:'OSD331',series:'LC',d:150,b:75,mass:15.6,area:19.8,ix:750,iy:96.1,table:7,pdfPage:26,geom:Object.freeze({web:5,flange:8.7})})
+]);
+// V30: original BIS table rows themselves print mutually inconsistent
+// kg/m and cm² on FIVE listed variants; do not substitute 0.785*area,
+// silently correct published numbers or accept for engineering quantities.
+// Private IS 808:2021 PDF: Table 4 physical p18, Table 6 physical p23.
+// Values are limited identifying facts, not a reproduction of the tables.
+const IS808_PRINTED_DISCREPANCIES=Object.freeze([
+ Object.freeze({rowId:'OSD193',series:'WPB',d:377,b:309,mass:290.64,area:315,table:4,pdfPage:18}),
+ Object.freeze({rowId:'OSD194',series:'WPB',d:339,b:300,mass:91.04,area:106,table:4,pdfPage:18}),
+ Object.freeze({rowId:'OSD195',series:'WPB',d:350,b:300,mass:125.81,area:142,table:4,pdfPage:18}),
+ Object.freeze({rowId:'OSD196',series:'WPB',d:360,b:300,mass:163,area:180,table:4,pdfPage:18}),
+ Object.freeze({rowId:'OSD308',series:'MC',d:175,b:76,mass:22.7,area:27.3,table:6,pdfPage:23})
+]);
 // Source-published nominal figures use listed rounding; 0.01 kg/m mismatch
 // is NOT a numerical match. A missing optional dimension/property must not
 // be invented. Incomplete app rows can earn kg/m-only verification.
@@ -427,12 +449,23 @@ function auditIS808(row){
   return {status:'not-checked',source:null};
  const series=resolveSeries(row),d=Number(row.depthMm),b=Number(row.widthMm);
  const t=Number(row.thicknessMm);
- const found=[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS,...IS808_V29B_SAMPLE_ROWS].find(x=>x.series===series&&x.d===d&&x.b===b&&
+ // An original BIS row with internally inconsistent mass/area must remain
+ // quarantined even when a secondary source transcribes it faithfully.
+ const printed=IS808_PRINTED_DISCREPANCIES.find(x=>x.rowId===row.id&&row.sourceId==='osdag808');
+ if(printed){
+  const massExpected=Number((printed.area*0.785).toFixed(2));
+  return {status:'source-numeric-hold',source,sourceTable:printed.table,sourcePdfPage:printed.pdfPage,geometryChecked:false,
+   note:'Original BIS IS 808:2021 Table '+printed.table+', physical PDF page '+printed.pdfPage+
+   ', prints mass '+printed.mass+' kg/m and area '+printed.area+' cm². Area × 0.785 implies about '+
+    massExpected.toFixed(2)+' kg/m, inconsistent with the printed mass. This is a source-internal discrepancy, NOT an approved correction. Do not use this row for quantity or design until an authoritative correction is located.'};
+ }
+ const variant=IS808_EXACT_VARIANT_CHECKS.find(x=>x.rowId===row.id&&row.sourceId==='osdag808');
+ const found=variant||[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS,...IS808_V29B_SAMPLE_ROWS].find(x=>x.series===series&&x.d===d&&x.b===b&&
    (x.t===undefined||x.t===t));
  if(!found)return {status:'not-checked',source,
    note:'This individual hot-rolled section has not been reconciled to the owner-held IS 808:2021.'};
  const equivalent=(a,b)=>Math.abs(Number(a)-b)<0.005;
- const massOK=equivalent(row.kgPerM,found.mass);
+ const massOK=equivalent(row.kgPerM,found.mass)&&(!variant||(variant.series===series&&variant.d===d&&variant.b===b));
  const propPairs=[['areaCm2','area'],['ixCm4','ix'],['iyCm4','iy']];
  const available=propPairs.filter(([key])=>row[key]!==undefined&&row[key]!==null);
  const propsOK=available.every(([key,src])=>equivalent(row[key],found[src]));
@@ -619,7 +652,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V30VariantCount:IS808_EXACT_VARIANT_CHECKS.length,is808V30PrintedConflictCount:IS808_PRINTED_DISCREPANCIES.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
