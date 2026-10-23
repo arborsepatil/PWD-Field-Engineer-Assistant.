@@ -15,10 +15,10 @@ assert.ok(!library.includes('Save multiple PDFs')&&!library.includes('Export cop
 assert.ok(library.includes('View on publisher ↗')&&library.includes("anchor.target='_blank'"),'Official view-only action and outside publisher should remain');
 assert.ok(library.includes("get('digitalSSR').hidden=section!=='ssr'"),'Offline user-owned SSR search is a separate tool, not a shared private book');
 assert.ok(home.includes('href="./library.html?section=ssr"')&&home.includes('href="./library.html"'),'Home SSR and Library gateways preserved');
-assert.ok(viewer.includes('id="chooseDevicePdf"')&&viewer.includes('id="privatePdfFile"'),'User-owned local bridge document chooser retained');
-assert.ok(!viewer.includes('drive.google.com/file/d/'),'Legacy viewer must not contain direct private Drive URLs');
-assert.ok(/pwd-tools-public-library-v33-2026-10-23/.test(sw),'Offline app cache must invalidate retired private Library');
+assert.ok(!sw.includes("'./pdf_viewer.html'"),'Retired private PDF chooser must not be distributed in offline app');
+assert.ok(!viewer.includes('drive.google.com/file/d/'),'Archived viewer must not embed private Drive URLs');
+assert.ok(/pwd-tools-public-library-v34-2026-10-23/.test(sw),'Offline app cache must invalidate retired private Library');
 const inline=library.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(inline,'Active Library filter/view script missing');
 new vm.Script(inline[1],{filename:'library-v33.inline.js'});
-console.log('V26→V33 compatibility PASS: public-only Library, categories, SSR local tool, no private Drive book controls, valid view-only UI script.');
+console.log('V26→V34 compatibility PASS: public-only Library, categories, local SSR tool, no packaged private PDF reader, valid publisher-view script.');
