@@ -18,7 +18,8 @@ vm.runInNewContext(read('pwd-steel-compare.js'),scope,{filename:'pwd-steel-compa
 const compare=scope.module.exports;
 assert.equal(cat.is808AuditSampleCount,42,'Preserve previous 42-row sample ledger');
 assert.equal(cat.is808V29AuditSampleCount,8);
-assert.equal(cat.is808TotalLimitedAuditSamples,50);
+assert.equal(cat.is808V29BAuditSampleCount,8);
+assert.equal(cat.is808TotalLimitedAuditSamples,58);
 const cases=[
  {series:'MB',d:175,b:85,m:19.50,a:24.8,ix:1260,iy:76.6,web:5.8,flange:9,page:7},
  {series:'MB',d:225,b:110,m:31.15,a:39.7,ix:3440,iy:218,web:6.5,flange:11.8,page:7},
