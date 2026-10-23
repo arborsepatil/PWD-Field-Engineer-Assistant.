@@ -11,6 +11,9 @@ const read=p=>fs.readFileSync(path.resolve(import.meta.dirname,'..',p),'utf8');
 const ctx={module:{exports:{}}};
 vm.runInNewContext(read('pwd-steel-catalog.js'),ctx,{filename:'pwd-steel-catalog.js'});
 const cat=ctx.module.exports;
+const compareCtx={module:{exports:{}}};
+vm.runInNewContext(read('pwd-steel-compare.js'),compareCtx,{filename:'pwd-steel-compare.js'});
+const comparison=compareCtx.module.exports;
 const cases=[
  // series, table, physical D/B (mm), kg/m, area cm2, Iz/Iy cm4, web/flange mm
  ['NPB',3,100,55,8.10,10.3,171,15.9,4.1,5.7],
@@ -84,11 +87,11 @@ const app=read('pwd-steel-app.js');
 new vm.Script(app);
 const start=app.indexOf('function calculate(){'),end=app.indexOf('function updateResult(){',start);
 assert.ok(start>=0&&end>start,'Real steel calculator function must remain available');
-const calculate=new Function('selected','catalog','math','$','source','family',app.slice(start,end)+'\nreturn calculate();');
+const calculate=new Function('selected','catalog','math','$','source','family','comparison',app.slice(start,end)+'\nreturn calculate();');
 const $=id=>({value:id==='steelLength'?'6':id==='steelCountPieces'?'2':'0'});
 const math={quantity:(row,L,N)=>({totalMassKg:row.kgPerM*Number(L)*Number(N),totalTonnes:row.kgPerM*Number(L)*Number(N)/1000,unitMassKgM:row.kgPerM,basis:'Verified nominal mass only',totalPrice:null})};
 for(const row of direct){
- const result=calculate(row,cat,math,$,id=>cat.SOURCES[id],row.family);
+ const result=calculate(row,cat,math,$,id=>cat.SOURCES[id],row.family,comparison);
  assert.equal(result.q.totalMassKg,row.kgPerM*12,
   row.series+' should calculate 6m x 2 pieces in the real calculator');
 }
