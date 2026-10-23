@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f8fc"><title>SSR Item Search · PWD Field Assistant</title><link rel="stylesheet" href="./app-shell.css"><style>
+.ssr-wrap{max-width:850px;margin:auto;padding:14px 13px 110px}.ssr-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}.ssr-head h1{font-size:23px;margin:0}.ssr-head p{font-size:12px;color:var(--muted);margin:2px 0}.ssr-box{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px;margin:11px 0}.ssr-note{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0}.ssr-strong-warning{border-left:3px solid #c77a00;padding:8px 10px;background:var(--soft);border-radius:8px}.ssr-import{display:flex;flex-wrap:wrap;gap:9px;align-items:center}.ssr-import button,.ssr-import a,.ssr-action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border-radius:11px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:750;text-decoration:none;font:inherit;cursor:pointer}.ssr-import .primary{color:white;background:var(--accent);border-color:var(--accent)}.ssr-search{display:grid;grid-template-columns:2fr 1fr;gap:9px}.ssr-search label{font-size:12px;font-weight:750;display:grid;gap:5px}.ssr-search input,.ssr-search select{width:100%;border:1px solid var(--line);padding:12px;border-radius:11px;background:var(--card);color:var(--ink);font:inherit;min-height:46px}.ssr-item{border:1px solid var(--line);border-radius:13px;background:var(--card);padding:13px;margin-bottom:8px}.ssr-item h2{font-size:15px;margin:0 0 6px}.ssr-item p{font-size:13px;line-height:1.5;margin:5px 0;overflow-wrap:anywhere}.ssr-meta{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0}.ssr-meta span{font-size:11px;border-radius:8px;padding:4px 7px;background:var(--soft);color:var(--muted)}.ssr-item .ssr-source{font-size:11px;color:var(--muted)}.ssr-more{margin:9px 0;cursor:pointer}.ssr-more summary{font-weight:750;font-size:12px}.ssr-count{margin:8px 2px;font-weight:750;font-size:12px;color:var(--muted)}.ssr-empty{padding:22px;border:1px dashed var(--line);border-radius:12px;text-align:center;color:var(--muted)}.ssr-status{font-size:12px;line-height:1.5;margin:7px 0}button:disabled,input:disabled,select:disabled{opacity:.65;cursor:not-allowed}@media(max-width:540px){.ssr-search{grid-template-columns:1fr}.ssr-head h1{font-size:20px}}
+</style></head><body class="app-page"><main class="ssr-wrap">
+<header class="ssr-head"><a class="icon-btn" href="./library.html?section=ssr" aria-label="Back to SSR Library">‹</a><div><h1>SSR Item Search</h1><p>2022–23 source · on-device digital index</p></div></header>
+<div class="ssr-note ssr-strong-warning">Historical SSR 2022–23. Rates exclude GST. Confirm the applicable SSR year, correction sheets, approvals and contract conditions before any estimate or bill.</div>
+<section class="ssr-box"><div class="ssr-import"><button id="importBtn" type="button" class="primary">Choose SSR Excel</button><a href="./library.html?section=ssr">Original SSR PDFs</a><button id="removeBtn" type="button" hidden>Remove imported index</button><input id="xlsxFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></div>
+<p id="status" class="ssr-status" role="status" aria-live="polite">Checking for a saved digital index on this device…</p>
+<details class="ssr-more"><summary>How private SSR search works</summary><p class="ssr-note">Select your authorised <b>SSR_2022-23.xlsx</b> once. This app reads and searches the spreadsheet entirely on this device and saves an offline index privately in app storage. It does not upload the workbook, publish it in the APK, or sync it to other devices. The PDF stays accessible separately through the Library.</p></details></section>
+<section class="ssr-box"><div class="ssr-search"><label>Search item number or description<input id="itemSearch" type="search" autocomplete="off" placeholder="Try 1.10, concrete, excavation…" disabled></label><label>SSR section<select id="chapterFilter" disabled><option value="">All sections</option></select></label></div><div class="ssr-count" id="matchCount">Import an SSR workbook to search items.</div></section>
+<div id="itemResults" aria-live="polite"></div><button class="ssr-action" id="showMore" type="button" hidden>Show more items</button>
+</main><script src="./app-shell.js"></script><script src="./ssr-local-core.js"></script><script>
+(function(){
+'use strict';
+const el=id=>document.getElementById(id);
+const status=el('status'),search=el('itemSearch'),filter=el('chapterFilter'),results=el('itemResults'),showMore=el('showMore'),choose=el('xlsxFile'),remove=el('removeBtn'),importBtn=el('importBtn');
+let dataset=null,matched=[],limit=60;
+const DB_NAME='pwd-ssr-private-v1',KEY='ssr2022';
+const html=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&quot;',"'":'&#39;'}[c]));
+function openDb(){
+ return new Promise((resolve,reject)=>{
+  if(!('indexedDB' in window))return reject(Error('Private device storage unavailable'));
+  const request=indexedDB.open(DB_NAME,1);
+  request.onupgradeneeded=()=>{const db=request.result;if(!db.objectStoreNames.contains('indices'))db.createObjectStore('indices')};
+  request.onerror=()=>reject(request.error||Error('Cannot open private storage'));
+  request.onsuccess=()=>resolve(request.result);
+ });
+}
+async function privateAccess(mode,fn){
+ const db=await openDb();
+ try{
+  return await new Promise((resolve,reject)=>{
+   const tx=db.transaction('indices',mode);const req=fn(tx.objectStore('indices'));
+   req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||Error('Private storage error'));
+  });
+ }finally{db.close()}
+}
+function line(item){
+ const unit=item.unit?' · '+html(item.unit):'';
+ const rate=item.rate===null?'No usable rate':new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(item.rate)+' excl. GST';
+ return '<article class="ssr-item"><h2>SSR '+html(item.code)+(item.deleted?' · Deleted':'')+'</h2><div class="ssr-meta"><span>'+html(item.chapter)+'</span>'+(item.subcategory&&item.subcategory!==item.chapter?'<span>'+html(item.subcategory)+'</span>':'')+'<span>'+rate+unit+'</span></div><p>'+html(item.description)+'</p>'+(item.duplicateCode?'<p class="ssr-note ssr-strong-warning">This code occurs more than once in this section. Confirm the specific item and Excel row against the original PDF.</p>':'')+'<p class="ssr-source">SSR '+html(dataset.edition)+' · Excel row '+item.row+' · Refer to original PDF for final verification</p></article>';
+}
+function render(){
+ if(!dataset)return;
+ matched=window.PWDSSR.matching(dataset.records,search.value,filter.value);
+ const available=matched.length,count=Math.min(limit,available);
+ el('matchCount').textContent=available+' matching item'+(available===1?'':'s')+' · '+dataset.categories.length+' source sections · '+dataset.edition;
+ results.innerHTML=matched.slice(0,limit).map(line).join('')||(dataset.records.length?'<div class="ssr-empty">No matching item. Try another keyword or All sections.</div>':'');
+ showMore.hidden=count>=available;showMore.textContent='Show next '+Math.min(60,available-count)+' items';
+}
+function loaded(data,stored=true){
+ if(!data||!Array.isArray(data.records)||!Array.isArray(data.categories))throw Error('Saved index is invalid');
+ dataset=data;
+ filter.replaceChildren(new Option('All sections',''));
+ for(const category of data.categories){filter.appendChild(new Option(category.name+' ('+category.count+')',category.name))}
+ search.disabled=false;filter.disabled=false;remove.hidden=!stored;
+ status.textContent=data.records.length+' SSR items in '+data.categories.length+' original sections · '+data.edition+'. '+(stored?'Saved privately on this device.':'Loaded for this session; private storage unavailable.');
+ limit=60;render();
+}
+importBtn.addEventListener('click',()=>choose.click());
+choose.addEventListener('change',async()=>{
+ const file=choose.files&&choose.files[0];if(!file)return;
+ importBtn.disabled=true;status.textContent='Reading source workbook on this device…';
+ try{
+  const candidate=await PWDSSR.fromXlsx(file);
+  // Keep current data until the replacement has been parsed and validated.
+  let stored=true;
+  try{await privateAccess('readwrite',store=>store.put(candidate,KEY))}
+  catch(err){stored=false;status.textContent='Private storage failed: '+err.message}
+  loaded(candidate,stored);
+ }catch(err){status.textContent='Import not completed: '+err.message}
+ finally{importBtn.disabled=false;choose.value=''}
+});
+remove.addEventListener('click',async()=>{
+ if(!confirm('Remove the local digital SSR index? Original Drive PDF and workbook are not deleted.'))return;
+ try{await privateAccess('readwrite',store=>store.delete(KEY))}
+ catch(err){status.textContent='Could not remove private index: '+err.message;return}
+ dataset=null;search.value='';search.disabled=true;filter.disabled=true;filter.replaceChildren(new Option('All sections',''));results.replaceChildren();el('matchCount').textContent='Choose SSR Excel to search items.';showMore.hidden=true;remove.hidden=true;status.textContent='Local SSR index removed; original Drive files are unchanged.';
+});
+search.addEventListener('input',()=>{limit=60;render()});
+filter.addEventListener('change',()=>{limit=60;render()});
+showMore.addEventListener('click',()=>{limit+=60;render()});
+(async()=>{try{const cached=await privateAccess('readonly',store=>store.get(KEY));if(cached)loaded(cached);else status.textContent='No SSR index saved here. Choose your private SSR_2022-23.xlsx file once.'}
+catch(err){status.textContent='No private storage available: '+err.message+'. You can still import for this session.'}})();
+})();
+</script></body></html>

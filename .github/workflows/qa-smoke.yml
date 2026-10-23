@@ -46,3 +46,4 @@ jobs:
           node tests/verify-v24-mobile-reader.mjs
           node tests/verify-v25-reader-filters.mjs
           node tests/verify-v26-simple-library.mjs
+          node tests/verify-v27-ssr-reader.mjs
