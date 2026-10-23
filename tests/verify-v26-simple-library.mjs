@@ -24,7 +24,7 @@ function sections(html){
  assert.ok(cut>=0,'More options must exist and be collapsed by default');
  const main=html.slice(0,cut),optional=html.slice(cut);
  assert.match(optional,/<summary>More options<\/summary>/);
- assert.ok(!main.includes('Drive (internet)'),'Drive link crowds document's primary choices');
+ assert.ok(!main.includes('Drive (internet)'),"Drive link crowds document primary choices");
  assert.ok(!main.includes('Save PDF on device'),'Offline management crowds document's primary choices');
  return {main,optional};
 }
