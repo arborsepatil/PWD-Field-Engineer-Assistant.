@@ -9,7 +9,7 @@ const html=read('library.html'),viewer=read('pdf_viewer.html'),sw=read('sw.js');
 const context={window:{}};
 vm.runInNewContext(source,context);
 const records=Array.from(context.window.PWDPublicBookCatalogue);
-assert.equal(records.length,12);
+assert.equal(records.length,15,'12 original and 3 independently checked official public references');
 assert.match(old,/window\.PWDDrivePDFCatalog=\[\];/);
 assert.ok(!html.includes('library-drive-catalog.js')&&!html.includes('library-offline.js'));
 assert.ok(!html.includes('Save multiple PDFs')&&!html.includes('Export copy'));
@@ -33,9 +33,9 @@ for(const item of records){
  links.add(item.url);groups.add(item.section);
  assert.ok(['book','index','portal','catalogue'].includes(item.kind));
 }
-for(const cat of ['rules','ssr','spec','code','gr'])assert.ok(groups.has(cat));
+for(const cat of ['rules','design','ssr','spec','code','gr'])assert.ok(groups.has(cat));
 const inline=html.match(/<script>([\s\S]*?)<\/script>/);assert.ok(inline);
 new vm.Script(inline[1]);
 const pack=read('android/scripts/prepare_assets.py');
 assert.ok(pack.includes('library-public-catalog.js'));
-console.log('V33 public-only library PASS: 12 verified official references; no private Drive IDs in shared catalogue or viewer; five filters and safe view controls.');
+console.log('V33 public-only library PASS: 15 official public reference links; no private Drive IDs in shared catalogue or viewer; six category filters and safe view controls.');
