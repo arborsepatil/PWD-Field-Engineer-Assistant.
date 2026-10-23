@@ -78,7 +78,7 @@ function normalize(rows,name){
  const header=rows.find(r=>r.cells.C&&/SSR\s*Item\s*No/i.test(r.cells.C));
  if(!header||!/Description\s+of\s+the\s+item/i.test(header.cells.E||''))throw Error('Original SSR item headings not found. Use the SSR 2022-23 master XLSX, not an estimate.');
  if(!/exclu(?:ding|ded)\s*GST/i.test(header.cells.H||''))throw Error('SSR completed-rate column header differs; verify this edition before import.');
- const edition=(rows[0]?.cells.A||name||'').match(/\b20\d\d[-–]20\d\d\b/);
+ const edition=(rows[0]?.cells.A||name||'').match(/\b20\d{2}[-–](?:20)?\d{2}\b/);
  const year=edition?edition[0].replace('–','-'):'Unknown edition';
  const records=[],cats=new Map(),dups=new Set();let section='';
  for(const {number,cells:v} of rows){
