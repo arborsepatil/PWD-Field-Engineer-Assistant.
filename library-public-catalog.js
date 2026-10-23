@@ -57,7 +57,7 @@ window.PWDPublicBookCatalogue=Object.freeze([
     "publisher": "Central Public Works Department",
     "url": "https://cpwd.gov.in/Publication/speci_vol1.pdf",
     "kind": "book",
-    "note": "Publicly hosted publisher PDF. Viewing does not imply permission to redistribute; check project applicability."
+    "note": "Official CPWD PDF link; publisher sometimes rejects direct viewing. See the CPWD Publications entry if access fails. Free page access does not grant permission to redistribute."
   },
   {
     "section": "spec",

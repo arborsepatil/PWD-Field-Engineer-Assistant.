@@ -11,8 +11,10 @@ import shutil
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "android/app/src/main/assets/www"
 EXTENSIONS = {".html", ".js", ".css", ".json", ".svg", ".png", ".webp", ".jpg", ".jpeg"}
-EXCLUDED = {"sw.js", "rcc-wall-2023-bbs.js"}  # Defer BBS cutting; do not ship future-only calculation code in APK.
+EXCLUDED = {"sw.js", "rcc-wall-2023-bbs.js", "library-offline.js"}  # Defer BBS cutting; do not ship future-only calculation code in APK.
 OUTPUT.mkdir(parents=True, exist_ok=True)
+# Remove any retired script left by a previous local build before repackaging.
+(OUTPUT / "library-offline.js").unlink(missing_ok=True)
 count = 0
 for file in ROOT.iterdir():
     if not file.is_file() or file.suffix.lower() not in EXTENSIONS or file.name in EXCLUDED:
@@ -41,6 +43,20 @@ assert (OUTPUT / "library-public-catalog.js").exists(), "Public publisher catalo
 assert "window.PWDDrivePDFCatalog=[]" in (OUTPUT / "library-drive-catalog.js").read_text(encoding="utf-8")
 assert "drive.google.com/file/d/" not in (OUTPUT / "library.html").read_text(encoding="utf-8")
 assert "drive.google.com/file/d/" not in (OUTPUT / "pdf_viewer.html").read_text(encoding="utf-8")
+# All exported HTML/JS is scanned, not just the Library and PDF viewer. This
+# also catches accidental private work-register URLs in other modules.
+PRIVATE_PROVIDER_URLS = (
+    "drive.google.com/file/d/", "drive.google.com/drive/folders/",
+    "docs.google.com/spreadsheets/d/", "docs.google.com/document/d/",
+)
+for bundled in OUTPUT.iterdir():
+    if bundled.is_file() and bundled.suffix.lower() in {".html", ".js", ".json"}:
+        data = bundled.read_text(encoding="utf-8")
+        assert not any(link in data for link in PRIVATE_PROVIDER_URLS), (
+            f"Private Google Drive/Docs link must not ship inside shared app: {bundled.name}"
+        )
+assert not (OUTPUT / "library-offline.js").exists(), "Legacy private-book importer/exporter must not ship"
+
 
 print(f"Android offline APK assets prepared: {count} public files, "
       f"{len(list(OUTPUT.glob('*.html')))} HTML screens, no private PDFs, no PWA registration")
