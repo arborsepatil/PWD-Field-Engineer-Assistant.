@@ -47,6 +47,7 @@ function model(type,datum={}){
   geometryWarnings.push('Leg thickness unavailable/conflicting; internal thickness shown schematically.');
  if(kind==='i'||kind==='channel'||kind==='angle')
   geometryWarnings.push('Root/toe fillets and rolling profiles not reproduced.');
+ if(t==='pile')geometryWarnings.push('Pile member outline is a generic I-shaped envelope: specialised pile edges/bulbs are not reproduced.');
  if(kind==='i'||kind==='channel'){
   if(num(datum.flangeSlopeDeg)!==null&&Math.abs(datum.flangeSlopeDeg-90)>0.0001)
    geometryWarnings.push('Sloped flange face not reproduced; simple envelope only.');
@@ -83,18 +84,19 @@ function svg(type,data={}){
  const tv=m.sourceFlange?m.flangeScaled:h*.1;
  const leg=m.thick!==null&&m.ratioOK&&m.thick<Math.min(m.b,m.d)?f(m.thick*m.scale):Math.min(w,h)*.14;
  if(kind==='i'){
-  const web=Math.min(w*.85,Math.max(0.0001,wv)),flange=Math.min(h*.35,Math.max(0.0001,tv));
+  // Sourced thickness must never be visually clamped to a preferred size.
+  const web=m.sourceWeb?wv:w*.12,flange=m.sourceFlange?tv:h*.10;
   const L=f(xc-web/2),R=f(xc+web/2);
   body='<path d="M'+N(x1)+' '+N(y1)+'H'+N(x2)+'V'+N(y1+flange)+'H'+N(R)+'V'+N(y2-flange)+'H'+N(x2)+'V'+N(y2)+'H'+N(x1)+'V'+N(y2-flange)+'H'+N(L)+'V'+N(y1+flange)+'H'+N(x1)+'Z"/>';
  }else if(kind==='channel'){
-  const web=Math.min(w*.7,Math.max(0.0001,wv)),flange=Math.min(h*.35,Math.max(0.0001,tv));
+  const web=m.sourceWeb?wv:w*.12,flange=m.sourceFlange?tv:h*.10;
   body='<path d="M'+N(x1)+' '+N(y1)+'H'+N(x2)+'V'+N(y1+flange)+'H'+N(x1+web)+'V'+N(y2-flange)+'H'+N(x2)+'V'+N(y2)+'H'+N(x1)+'Z"/>';
  }else if(kind==='angle'){
-  const l=Math.max(0.0001,Math.min(Math.min(w,h)*.65,leg));
+  const l=m.thick!==null&&m.ratioOK&&m.thick<Math.min(m.d,m.b)?leg:Math.min(w,h)*.14;
   body='<path d="M'+N(x1)+' '+N(y1)+'H'+N(x1+l)+'V'+N(y2-l)+'H'+N(x2)+'V'+N(y2)+'H'+N(x1)+'Z"/>';
  }else if(kind==='shs'||kind==='rhs'){
   const wall=m.sourceWall?m.wallScaled:Math.min(w,h)*.12;
-  const tt=Math.max(0.0001,Math.min(Math.min(w,h)*.35,wall));
+  const tt=m.sourceWall?wall:Math.min(w,h)*.12;
   body='<rect x="'+N(x1)+'" y="'+N(y1)+'" width="'+N(w)+'" height="'+N(h)+'"/>'+
    '<rect class="cutout" x="'+N(x1+tt)+'" y="'+N(y1+tt)+'" width="'+N(w-2*tt)+'" height="'+N(h-2*tt)+'"/>';
  }else if(kind==='chs'||kind==='round'){
