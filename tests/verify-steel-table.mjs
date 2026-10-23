@@ -71,9 +71,9 @@ for(const row of catalog.sections.filter(x=>x.basis==='secondary-unverified')){
 }
 // Missing edition-level source verification must remain explicit.
 assert.match(app,/Secondary · BIS review/);
-assert.ok(app.includes('Nominal dimensions · illustrative · not to scale'),'Dimensioned diagrams must remain non-fabrication drawings');
-assert.ok(app.includes('Equal')&&app.includes('Unequal'),'Equal/unequal angle geometry labels required');
-assert.ok(app.includes("const dDims=()"),'Section diagrams must show B and D source dimensions');
+assert.ok(ui.includes('id="steelDiagramStatus"')&&app.includes('window.PWDSteelDiagram.svg'),'Dimensioned source-proportional non-fabrication drawings must be rendered and explained');
+assert.ok(ui.includes('id="steelSectionDiagram"')&&ui.includes('pwd-steel-diagram.js'),'Angle geometry supplied through independent verified SVG engine');
+assert.ok(app.includes('window.PWDSteelDiagram.model')&&ui.includes('steelDiagramStatus'),'D/B envelope and drawing limitations must be accessible');
 assert.match(ui,/id="steelSeries"/);
 // Manufacturer's later source and the older SAIL 2020 ISA 90×90×6
 // disagree; preserve BOTH editions visibly instead of erasing history.
@@ -134,7 +134,7 @@ assert.ok(csv.includes('PWD FIELD ASSISTANT'));
 assert.ok(csv.includes('Not a design'));
 for(const id of ['steelFamilies','steelSearch','steelResults','steelDetail','steelSectionDiagram','steelProperties','steelLength','steelCountPieces','steelRate','steelCalculate','steelCompareCard','steelCompareAdd','steelQuantityDisclosure','steelCustomShape','steelWidth','steelThickness','steelDiameter','steelSide'])
  assert.ok(ui.includes('id="'+id+'"'),'Missing steel module control '+id);
-for(const asset of ['pwd-steel-catalog.js','pwd-steel-core.js','pwd-steel-compare.js','pwd-steel-app.js']){
+for(const asset of ['pwd-steel-catalog.js','pwd-steel-core.js','pwd-steel-compare.js','pwd-steel-diagram.js','pwd-steel-app.js']){
  assert.ok(ui.includes('src="./'+asset+'"'));
  assert.ok(cache.includes("'./"+asset+"'"),'Offline caching missing '+asset);
 }

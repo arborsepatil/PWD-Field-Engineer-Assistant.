@@ -19,6 +19,7 @@ button.more-sizes{display:block;width:100%;min-height:44px;margin-top:9px;border
 .selected{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;padding:11px 12px;border-radius:11px;background:var(--soft)}.selected strong{font-size:1rem}.selected span{font-size:.74rem;color:var(--muted)}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stat{padding:12px 9px;border:1px solid var(--line);border-radius:12px}.stat:first-child{background:var(--soft)}.stat span{font-size:.73rem;color:var(--muted);display:block}.stat b{font-size:1.23rem;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.stat:first-child b{font-size:1.58rem;color:var(--ink)}
 .price{padding:9px 0 0;font-weight:750;color:var(--ink)}
+.steel-diagram-status{font-size:.77rem;color:var(--muted);line-height:1.5;padding:0 3px;margin:-3px 0 12px}
 .figure{background:var(--figureBg);border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}.figure svg{display:block;width:100%;height:auto;max-height:335px}.figure .bg{fill:var(--figureBg)}.figure .shape{fill:var(--figureSteel);stroke:var(--figureStroke)}.figure .shape .cutout{fill:var(--figureBg);stroke:var(--figureStroke)}.figure .ink{fill:var(--figureInk)}.figure .muted{fill:var(--figureMuted)}
 table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:8px 5px;border-bottom:1px solid var(--line);font-size:.82rem}td:last-child{text-align:right;font-weight:730}th{background:var(--soft)}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}.action{color:var(--btnText);background:var(--btn);border:1px solid var(--btn);border-radius:11px;font-size:.87rem;font-weight:760;padding:10px;cursor:pointer;min-height:45px}.action.secondary{color:var(--ink);background:var(--soft);border-color:var(--line)}.sourceLink{display:inline-block;overflow-wrap:anywhere}
@@ -98,7 +99,8 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
     <div class="steel-key"><span id="steelMainThicknessLabel">Thickness</span><strong id="steelMainThickness">—</strong><small>mm</small></div>
    </div>
    <p id="steelKeyAudit" class="steel-audit-line" role="status" aria-live="polite">Select a section to see source verification status.</p>
-   <div id="steelSectionDiagram" class="figure" aria-label="Illustrative steel section"></div>
+   <div id="steelSectionDiagram" class="figure" aria-label="Dimensioned, source-proportional steel section schematic"></div>
+   <p id="steelDiagramStatus" class="steel-diagram-status" role="note">The section drawing shows sourced outside dimensions; internal profiles are simplified where geometry is not fully verified.</p>
    <details class="steel-tech"><summary>More section properties</summary><div id="steelProperties"></div></details>
    <div class="warning" id="steelDataCaution"></div>
    <button type="button" class="action secondary compare-add-main" id="steelCompareAdd">+ Add this size to comparison</button>
@@ -143,4 +145,4 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
  <div class="inside"><p class="small">IS 808:2021 section types; limited SAIL 2023 and secondary examples. Hollow weights use archived Tata or secondary data, NOT a fully BIS-amended table. Verify current approved tables and MTC for site use.</p><div id="steelStandards"></div><p class="small"><a href="./pwd-steel-osdag-license.html">Osdag open-source data &amp; LGPL license</a></p><p class="small">Custom hollow mass is theoretical only; rectangular corners are simplified. No structural design or RCC BBS.</p></div>
 </details>
 <footer>Reference nominal weights only · check current standards and MTC</footer>
-</main><script src="./pwd-steel-osdag.js"></script><script src="./pwd-steel-catalog.js"></script><script src="./pwd-steel-core.js"></script><script src="./pwd-steel-compare.js"></script><script src="./pwd-steel-app.js"></script><script src="./app-shell.js"></script></body></html>
+</main><script src="./pwd-steel-osdag.js"></script><script src="./pwd-steel-catalog.js"></script><script src="./pwd-steel-core.js"></script><script src="./pwd-steel-compare.js"></script><script src="./pwd-steel-diagram.js"></script><script src="./pwd-steel-app.js"></script><script src="./app-shell.js"></script></body></html>

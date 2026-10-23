@@ -6,84 +6,14 @@
 (function(){
 'use strict';
 const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,comparison=window.PWDSteelCompare,$=id=>document.getElementById(id);
-if(!catalog||!math||!comparison||!$('steelFamilies'))return;
+if(!catalog||!math||!comparison||!window.PWDSteelDiagram||!$('steelFamilies'))return;
 let family='beam',selected=null,last=null,lastEntry=null,shownLimit=60,compareIds=[];
 const source=id=>catalog.SOURCES[id];
 const format=(x,d=2)=>Number(x).toLocaleString('en-IN',{maximumFractionDigits:d,minimumFractionDigits:d});
 const text=(el,value)=>{el.textContent=String(value)};
 function shapeSvg(type,data={}){
- // Geometry is based on nominal source dimensions where available;
- // fillets, taper without a documented slope, and rolling tolerances remain schematic.
- const safe=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const fmt=v=>Number(v).toLocaleString('en-IN');
- const D=Number(data.depthMm)||100,B=Number(data.widthMm)||D;
- const height=174,top=84,bottom=top+height,cx=251;
- const width=Math.max(48,Math.min(210,height*B/D)),left=cx-width/2,right=cx+width/2;
- const label=safe(data.designation||type.replace('hollow-','').toUpperCase());
- const dim=(x1,y1,x2,y2,t,tx,ty)=>'<path d="M'+x1+' '+y1+'L'+x2+' '+y2+'" class="dim"/><text x="'+tx+'" y="'+ty+'" class="ink" font-size="13" text-anchor="middle">'+safe(t)+'</text>';
- let body='',info='',legend='',marks='';
- const dDims=()=>dim(left,60,right,60,'B '+fmt(B)+' mm',cx,50)+dim(112,top,112,bottom,'D '+fmt(D)+' mm',74,174);
- if(type==='beam'||type==='column'||type==='pile'){
-  const web=Number(data.webMm)>0?Math.max(4,height*data.webMm/D):Math.max(8,width*.11);
-  const thick=Number(data.flangeMm)>0?Math.max(5,height*data.flangeMm/D):Math.max(11,height*.095);
-  const slope=Number.isFinite(data.flangeSlopeDeg)?Math.tan(Math.abs(90-data.flangeSlopeDeg)*Math.PI/180)*((width-web)/2):0;
-  const edge=Math.max(4,thick-slope/2),root=thick+slope/2;
-  body='<path d="M'+left+' '+top+'H'+right+'V'+(top+edge)+'L'+(cx+web/2)+' '+(top+root)+'V'+(bottom-root)+'L'+right+' '+(bottom-edge)+'V'+bottom+'H'+left+'V'+(bottom-edge)+'L'+(cx-web/2)+' '+(bottom-root)+'V'+(top+root)+'L'+left+' '+(top+edge)+'Z"/>';
-  marks=dDims();
-  legend='t '+(data.webMm??'not sourced')+' mm · T '+(data.flangeMm??'not sourced')+' mm';
-  if(data.flangeSlopeDeg!=null)legend+=' · α '+data.flangeSlopeDeg+'°';
-  info='I-section · section fillets schematic';
- }else if(type==='channel'){
-  const web=Number(data.webMm)>0?Math.max(4,height*data.webMm/D):Math.max(8,width*.11);
-  const thick=Number(data.flangeMm)>0?Math.max(5,height*data.flangeMm/D):Math.max(12,height*.10);
-  const slope=Number.isFinite(data.flangeSlopeDeg)?Math.tan(Math.abs(90-data.flangeSlopeDeg)*Math.PI/180)*(width-web):0;
-  const edge=Math.max(4,thick-slope/2),root=thick+slope/2;
-  body='<path d="M'+left+' '+top+'H'+right+'V'+(top+edge)+'L'+(left+web)+' '+(top+root)+'V'+(bottom-root)+'L'+right+' '+(bottom-edge)+'V'+bottom+'H'+left+'Z"/>';
-  marks=dDims();
-  legend='t '+(data.webMm??'not sourced')+' mm · T '+(data.flangeMm??'not sourced')+' mm';
-  if(data.flangeSlopeDeg!=null)legend+=' · α '+data.flangeSlopeDeg+'°';
-  info='Channel · no centroid axes assumed';
- }else if(type==='angle'){
-  const t=Number(data.thicknessMm),px=Number.isFinite(t)&&t>0?Math.max(4,Math.min(width*.4,height*t/D)):Math.max(8,width*.14);
-  body='<path d="M'+left+' '+top+'H'+(left+px)+'V'+(bottom-px)+'H'+right+'V'+bottom+'H'+left+'Z"/>';
-  marks=dDims();legend='t '+(data.thicknessMm??'not sourced')+' mm';
-  info=(D===B?'Equal':'Unequal')+' leg angle · root/toe fillets schematic';
- }else if(type==='hollow'||type.startsWith('hollow-')){
-  const kind=type==='hollow'?(data.series==='CHS'?'hollow-chs':data.series==='SHS'?'hollow-shs':'hollow-rhs'):type;
-  const t=Number(data.thicknessMm),hasWall=Number.isFinite(t)&&t>0;
-  if(kind==='hollow-chs'){
-   const OD=Number(data.diameterMm??data.depthMm);
-   const radius=86;
-   // Wall is proportional to nominal t/OD where both are sourced.
-   const wall=hasWall&&OD>0?Math.max(3,Math.min(radius*.4,2*radius*t/OD)):20;
-   body='<circle cx="'+cx+'" cy="171" r="'+radius+'"/><circle class="cutout" cx="'+cx+'" cy="171" r="'+(radius-wall)+'"/>';
-   if(OD>0)marks=dim(cx-radius,60,cx+radius,60,'OD '+fmt(OD)+' mm',cx,50);
-   legend=hasWall?'t '+fmt(t)+' mm · nominal outside diameter':'Wall thickness not sourced';
-   info='Circular hollow · wall shown approximately';
-  }else{
-   const outerW=kind==='hollow-shs'?174:width,outerLeft=cx-outerW/2,outerTop=top;
-   const wall=hasWall&&D>0?Math.max(3,Math.min(outerW*.3,height*.3,height*t/D)):18;
-   body='<rect x="'+outerLeft+'" y="'+outerTop+'" width="'+outerW+'" height="'+height+'"/><rect class="cutout" x="'+(outerLeft+wall)+'" y="'+(outerTop+wall)+'" width="'+(outerW-2*wall)+'" height="'+(height-2*wall)+'"/>';
-   if(Number(data.depthMm)>0&&Number(data.widthMm)>0)
-    marks=dim(outerLeft,60,outerLeft+outerW,60,'B '+fmt(B)+' mm',cx,50)+dim(112,top,112,bottom,'D '+fmt(D)+' mm',74,174);
-   legend=hasWall?'t '+fmt(t)+' mm · nominal dimensions':'Wall thickness not sourced';
-   info='Square / rectangular hollow · corner radii schematic';
-  }
- }else if(type==='round'){
-  body='<circle cx="'+cx+'" cy="171" r="85"/>';info='Solid round · theoretical geometry';
- }else if(type==='square'){
-  body='<rect x="164" y="84" width="174" height="174"/>';info='Solid square · theoretical geometry';
- }else{
-  body='<rect x="120" y="146" width="260" height="52"/>';info='Plate/flat · theoretical geometry';
- }
- return '<svg viewBox="0 0 500 348" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+safe(type)+' nominal section diagram; not a fabrication drawing">'+
-  '<rect width="500" height="348" class="bg"/>'+
-  '<text x="250" y="23" class="ink" text-anchor="middle" font-size="16" font-weight="700">'+label+'</text>'+
-  '<g class="shape" stroke-width="2.5" stroke-linejoin="round">'+body+'</g>'+
-  '<g fill="none" stroke="var(--figureInk)" stroke-width="1.4"><path id="unusedAxis" d="" />'+marks+'</g>'+
-  '<text x="250" y="292" class="ink" font-size="12.5" text-anchor="middle">'+safe(legend)+'</text>'+
-  '<text x="250" y="316" class="muted" font-size="12" text-anchor="middle">'+safe(info)+'</text>'+
-  '<text x="250" y="337" class="muted" font-size="10.5" text-anchor="middle">Nominal dimensions · illustrative · not to scale</text></svg>';
+ // Engineering envelope at one scale, with source-status limitations in SVG <desc>.
+ return window.PWDSteelDiagram.svg(type,data);
 }
 function setFamily(next){
  if(next!==family)compareIds=[];
@@ -219,6 +149,8 @@ function renderDetail(){
  $('steelMainThicknessLabel').textContent=['beam','column','channel','pile'].includes(selected.family)?'Web thickness':selected.family==='hollow'?'Wall thickness':'Thickness';
  $('steelMainThickness').textContent=dim.thickness===null?'—':format(dim.thickness,2).replace(/\.00$/,'');
  $('steelSectionDiagram').innerHTML=shapeSvg(selected.family,selected);
+ const diagram=window.PWDSteelDiagram.model(selected.family,selected);
+ $('steelDiagramStatus').textContent=diagram.warnings.length?diagram.warnings.join(' '):'Source-proportional schematic; nominal dimensions only.';
  $('steelProperties').replaceChildren(propertyTable(selected));
  $('steelDataCaution').textContent=bisAudit.status!=='not-checked'?bisAudit.note:selected.basis==='archived-manufacturer-only'?
   'Historical manufacturer data. For RHS verify IS 4923:2017 Amendment 3 (2024); for SHS/CHS check the latest applicable standard.':
@@ -246,6 +178,7 @@ function updateCustomInputs(){
  $('steelMainWidth').textContent='—';
  $('steelMainThickness').textContent='—';
  $('steelSectionDiagram').innerHTML=shapeSvg(type);
+ $('steelDiagramStatus').textContent='Theoretical illustration · user-entered geometry is not BIS-certified.';
  $('steelProperties').textContent='User-entered dimensions';
  updateSelectedSummary();
  updateResult();

@@ -41,6 +41,7 @@ jobs:
           node tests/verify-steel-v28-compare.mjs
           node tests/verify-steel-v29-bis-batch.mjs
           node tests/verify-steel-v29b-bis-batch.mjs
+          node tests/verify-steel-v30-diagram.mjs
           node tests/verify-v20-simple-ux.mjs
           node tests/verify-v21-reader-ux.mjs
           node tests/verify-v21-batch-guidance.mjs
