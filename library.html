@@ -1,229 +1,120 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f8fc"><title>PWD Tools · Drive PDF Library</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f8fc">
+<meta name="description" content="Public publisher reference library for Maharashtra PWD engineers">
+<title>PWD Tools · Public Engineering Library</title>
 <link rel="stylesheet" href="./app-shell.css">
 <style>
-.lib-wrap{max-width:1120px;margin:auto;padding:15px 14px 105px}
-.lib-head{display:flex;align-items:center;gap:12px;margin-bottom:15px}
-.lib-head a{text-decoration:none}
-.lib-hero{padding:20px;border:1px solid var(--line);border-radius:22px;background:var(--card);box-shadow:var(--shadow)}
-.lib-hero h1{margin:5px 0;font-size:27px;line-height:1.15}.lib-hero p{font-size:13px;line-height:1.6;color:var(--muted);margin:6px 0 0}
-.lib-note{padding:10px 12px;border-left:3px solid var(--accent);background:var(--soft);border-radius:9px;margin-top:12px;font-size:12px;line-height:1.5}
-.library-search{display:flex;gap:8px;align-items:center;margin:16px 0}
-.library-search input{flex:1;width:100%;font:inherit;font-size:15px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px;min-width:0}
-.categories,.subgroups{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
-.categories button,.subgroups button{border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);padding:9px 12px;font-size:12px;font-weight:750;cursor:pointer}
-.categories button[aria-pressed="true"],.subgroups button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:white}
-.subgroups[hidden]{display:none}
-.categories button:focus-visible,.subgroups button:focus-visible,.library-search input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.section-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:20px 0 10px}
-.section-title h2{font-size:20px;margin:0}.count{font-size:12px;color:var(--muted)}
-.lib-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.book{border:1px solid var(--line);background:var(--card);border-radius:17px;padding:15px;min-width:0}
-.book h3{font-size:16px;margin:7px 0;line-height:1.4;overflow-wrap:anywhere}
-.book p{color:var(--muted);font-size:12px;margin:3px 0 0;line-height:1.55}
-.tag{display:inline-flex;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:999px;font-size:10px;font-weight:750;padding:4px 8px;color:var(--muted)}
-.book .actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:13px}
-.book .actions a{font-size:12px;border-radius:10px;padding:9px 11px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:750;min-height:44px;display:inline-flex;align-items:center}
-.book .actions a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.offline-tools{border:1px solid var(--line);border-radius:17px;background:var(--card);padding:8px 13px;margin-top:12px}
-.lib-caution{font-size:12px;color:var(--muted);margin:8px 3px}
-.lib-source-info{margin:4px 3px 9px}
-.offline-tools>summary,.book-more>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:750;font-size:13px}
-.offline-tools>.offline-actions{margin-top:5px}
-.book-more{margin-top:5px}
-.book-more>summary{color:var(--accent)}
-.book-more[open]>summary{border-bottom:1px solid var(--line)}
-.offline-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.offline-actions button,.book .actions button{font:inherit;font-size:12px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-height:44px;background:var(--card);color:var(--ink);cursor:pointer;font-weight:700}
-.offline-actions button:disabled,.book .actions button:disabled{opacity:.55;cursor:wait}
-.offline-notice{font-size:12px;color:var(--muted);line-height:1.6;margin:8px 0 0}
-.offline-tag{background:color-mix(in srgb,var(--ok) 11%,var(--card));color:var(--ok);border-color:var(--ok)}
-.offline-filter{font-size:12px;display:inline-flex;align-items:center;gap:5px}
-.ssr-digital-entry{border:1px solid var(--line);border-radius:14px;padding:13px;background:var(--card);display:grid;gap:5px;margin-top:14px}.ssr-digital-entry[hidden]{display:none}.ssr-digital-entry a{font-size:14px;font-weight:850;color:var(--accent);text-decoration:none;min-height:44px;display:flex;align-items:center}.ssr-digital-entry span{font-size:12px;color:var(--muted)}
-.empty{display:none;text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:15px;padding:20px;color:var(--muted)}
-@media(max-width:680px){.lib-grid{grid-template-columns:1fr}.lib-hero h1{font-size:23px}.categories button{padding:8px 10px;font-size:11px}}
-</style><style>.lib-context{margin-top:10px;font-size:12px;color:var(--muted)}.lib-context summary{cursor:pointer;font-weight:700}.lib-context p{line-height:1.5;margin:7px 0}</style></head>
-<body class="app-page"><main class="lib-wrap">
-<header class="lib-head"><a class="icon-btn" href="./index.html" aria-label="Back to home">‹</a><div><div class="brand-title" style="font-size:25px">Library</div><div class="brand-sub">Original PDFs · private on-device reading</div></div></header>
-<p class="lib-caution">Check the applicable edition, amendments and project specifications before site use.</p>
-<details class="lib-context lib-source-info"><summary>Source and edition information</summary>
- <p>Library listings are from a Drive catalogue snapshot dated 18 October 2026, not live synchronization. Check amendments, editions and project specifications before engineering use. PDFs remain in your private Drive or device storage.</p>
-</details>
-<details class="offline-tools" id="offlineSetup" aria-label="Offline PDF Library"><summary>Offline library setup</summary><div class="offline-actions"><button type="button" id="bulkImport">Save multiple PDFs</button><button type="button" id="prepareOfflineReader">Prepare offline reader</button><label class="offline-filter"><input type="checkbox" id="showOfflineOnly"> Offline books only</label></div><input type="file" id="offlineOne" accept=".pdf,application/pdf" hidden><input type="file" id="offlineMany" accept=".pdf,application/pdf" multiple hidden><p id="offlineProgress" class="offline-notice" role="status" aria-live="polite">Checking saved books on this device…</p><details class="lib-context"><summary>How offline books work</summary><p class="offline-notice">Prepare the PDF reader online once. Save PDFs already on your phone for offline use. Saving is private to this app/browser and never automatically downloads files from Drive.</p></details></details><div class="library-search"><span aria-hidden="true">🔎</span><input id="libSearch" type="search" autocomplete="off" placeholder="Search IS 456, IRC 78, SSR, Code, bridge…" aria-label="Search Drive PDF titles"></div>
-<nav class="categories" id="libraryTabs" aria-label="Library sections"></nav>
-<nav class="subgroups" id="librarySubgroups" aria-label="Code category filters" hidden></nav>
-<div id="digitalSSR" class="ssr-digital-entry" hidden><a href="./ssr_search.html">🔎 Search SSR Items · Digital (2022–23)</a><span>Import original Excel once · private offline searching</span></div>
-<div class="section-title"><h2 id="sectionTitle">All PDFs</h2><span class="count" id="matchCount"></span></div>
-<div class="lib-grid" id="bookGrid" aria-live="polite"></div>
-<div class="empty" id="emptyResults">No matching PDF found in this Library section. Check the spelling or choose All PDFs.</div>
-<details class="lib-context"><summary>Where saved PDFs are stored</summary><p>Google Drive permissions are unchanged. Saved PDFs remain in private app/browser storage on your phone and may be cleared by the device. The digital reader is not a substitute for the original PDF.</p></details>
+*{box-sizing:border-box}
+.public-library{max-width:940px;padding:16px 14px 110px;margin:auto}
+.lib-head{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+.lib-head a{flex-shrink:0;text-decoration:none}
+.lib-head h1{font-size:25px;line-height:1.2;margin:0 0 4px}
+.lib-head p{margin:0;color:var(--muted);font-size:13px}
+.lib-intro{padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--card);margin-bottom:13px}
+.lib-intro strong{font-size:14px}
+.lib-intro p{margin:7px 0 0;font-size:13px;line-height:1.55;color:var(--muted)}
+.lib-search label{font-size:13px;font-weight:800;display:block;margin-bottom:6px}
+.lib-search input{width:100%;min-height:46px;padding:11px 13px;border:1px solid var(--line);background:var(--card);border-radius:12px;color:var(--ink);font:inherit;font-size:15px}
+.categories{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}
+.categories button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;min-height:44px;padding:9px 12px;font:inherit;font-size:12px;font-weight:750;cursor:pointer}
+.categories button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.heading{display:flex;align-items:center;justify-content:space-between;margin:17px 0 10px;gap:8px}
+.heading h2{font-size:18px;margin:0}
+.heading span{font-size:12px;color:var(--muted)}
+.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.book{border:1px solid var(--line);border-radius:15px;padding:15px;background:var(--card);min-width:0}
+.book h3{font-size:16px;margin:7px 0;line-height:1.35;overflow-wrap:anywhere}
+.book p{font-size:12px;line-height:1.55;color:var(--muted);margin:7px 0}
+.book .kind{border:1px solid var(--line);background:var(--soft);font-size:11px;color:var(--muted);font-weight:750;padding:3px 8px;border-radius:999px;display:inline-block}
+.book .publisher{font-size:12px;color:var(--muted);margin:3px 0 10px}
+.book a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;padding:8px 15px;font-weight:780;font-size:13px}
+.lib-note{background:var(--soft);border-left:3px solid var(--accent);border-radius:10px;padding:11px 13px;margin-top:15px;font-size:12px;color:var(--muted);line-height:1.65}
+.ssr-entry{margin-top:12px;padding:13px;border-radius:13px;border:1px solid var(--line);background:var(--card)}
+.ssr-entry a{font-weight:800;color:var(--accent);text-decoration:none}
+.ssr-entry p{font-size:12px;line-height:1.5;color:var(--muted);margin:6px 0 0}
+.empty{background:var(--soft);border-radius:11px;padding:15px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:600px){.book-grid{grid-template-columns:1fr}.lib-head h1{font-size:23px}}
+@media(prefers-reduced-motion:no-preference){.book a:focus-visible,.categories button:focus-visible,.lib-search input:focus-visible{outline:3px solid var(--accent);outline-offset:3px}}
+</style>
+</head>
+<body class="app-page">
+<main class="public-library">
+ <header class="lib-head"><a class="icon-btn" href="./index.html" aria-label="Back to home">‹</a><div><h1>Engineering Library</h1><p>Public publisher references · view only</p></div></header>
+ <section class="lib-intro" aria-label="Library access policy">
+  <strong>Only official public reference links</strong>
+  <p>No private Drive documents, private file IDs or third-party PDF copies are shared here. <b>View</b> opens the publisher's website using the device browser. Internet may be required.</p>
+  <p>Publicly accessible does not mean copyright-free or the latest valid edition. Check the applicable code, amendments, project contract and government directions.</p>
+ </section>
+ <div class="lib-search"><label for="libSearch">Find a public reference</label><input id="libSearch" type="search" placeholder="Search PWD, SSR, manual, CPWD, BIS, IRC, GR…" autocomplete="off"></div>
+ <nav class="categories" id="libraryTabs" aria-label="Library categories"></nav>
+ <section id="digitalSSR" class="ssr-entry" hidden><a href="./ssr_search.html">Search SSR items in your own Excel file</a><p>This is a separate local engineering tool. It does not make a private SSR file publicly available.</p></section>
+ <div class="heading"><h2 id="sectionTitle">Public references</h2><span id="matchCount" role="status"></span></div>
+ <div id="bookGrid" class="book-grid"></div>
+ <p class="empty" id="emptyResults" hidden>No public reference matches. Try a different keyword or category.</p>
+ <p class="lib-note">Official publisher pages may offer their own PDF viewing, download or purchase controls. This app provides only a View link; it cannot prevent actions offered by the publisher's browser page. Restricted and unverified private documents are omitted.</p>
 </main>
-<script src="./library-drive-catalog.js"></script><script src="./library-offline.js"></script>
+<script src="./library-public-catalog.js"></script>
 <script>
 (function(){
  'use strict';
- const data=Array.isArray(window.PWDDrivePDFCatalog)?window.PWDDrivePDFCatalog:[];
- const groups=[
-  ['all','All PDFs'],['code','Code'],['spec','Specifications'],['ssr','SSR'],
-  ['bridge','Bridge Plans'],['design','Design Guidelines'],['rules','Rules / GR']
- ];
- const labels={all:'All PDFs',code:'Code · PWD / IS / IRC',spec:'Specifications',ssr:'Schedule of Rates · SSR',bridge:'Bridge Plans',design:'Design Guidelines',rules:'Rules / GR'};
+ const data=Array.isArray(window.PWDPublicBookCatalogue)?window.PWDPublicBookCatalogue:[];
+ const categories=[['all','All'],['rules','PWD Manuals'],['ssr','SSR'],['spec','Specifications'],['code','IS / IRC'],['gr','GR / Circulars']];
+ const titles=Object.fromEntries(categories);
  const get=id=>document.getElementById(id);
- const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const params=new URLSearchParams(location.search);
- const start=params.get('section');
- let section=groups.some(x=>x[0]===start)?start:'all',sub='all',query='',saved={},readerReady=false,offlineOnly=false;
- const buttons=get('libraryTabs'),subgroups=get('librarySubgroups');
- function select(next){
-  section=next;sub='all';
-  const url=new URL(location.href);url.searchParams.set('section',section);
-  history.replaceState(null,'',url.pathname+url.search);
-  render();
+ const requested=new URLSearchParams(location.search).get('section')||'all';
+ let section=titles[requested]?requested:'all',query='';
+ const trusted=new Set(['pwd.maharashtra.gov.in','cpwd.gov.in','www.bis.gov.in','irc.nic.in','gr.maharashtra.gov.in']);
+ function safeUrl(link){
+  try{const u=new URL(link);return u.protocol==='https:'&&trusted.has(u.hostname)?u.href:null}catch{return null}
  }
- groups.forEach(([id,label])=>{
-  const btn=document.createElement('button');btn.type='button';btn.textContent=label+' ('+(id==='all'?data.length:id==='rules'?data.filter(r=>r.section===id).length+1:data.filter(r=>r.section===id).length)+')';
-  btn.dataset.section=id;btn.onclick=()=>select(id);buttons.appendChild(btn);
- });
- function codeFilters(){
-  subgroups.hidden=section!=='code';
-  subgroups.replaceChildren();
-  if(section!=='code')return;
-  for(const type of ['all','PWD','IS','IRC']){
-    const btn=document.createElement('button');btn.type='button';btn.textContent=type==='all'?'All Codes':type;
-    btn.setAttribute('aria-pressed',String(sub===type));
-    btn.onclick=()=>{sub=type;render()};
-    subgroups.appendChild(btn);
+ function text(tag,value,className){
+  const el=document.createElement(tag);el.textContent=String(value||'');
+  if(className)el.className=className;
+  return el;
+ }
+ function card(item){
+  const safe=safeUrl(item.url);
+  if(!safe)return null;
+  const root=document.createElement('article');root.className='book';
+  root.append(text('span',item.kind==='book'?'Public book / PDF':'Official '+item.kind,'kind'));
+  root.append(text('h3',item.title));
+  root.append(text('div',item.publisher,'publisher'));
+  root.append(text('p',item.note));
+  const anchor=document.createElement('a');
+  anchor.href=safe;anchor.target='_blank';anchor.rel='noopener noreferrer external';
+  anchor.textContent='View on publisher ↗';
+  anchor.setAttribute('aria-label','View '+item.title+' on the publisher website');
+  root.append(anchor);return root;
+ }
+ function renderTabs(){
+  const nav=get('libraryTabs');nav.replaceChildren();
+  for(const [code,title] of categories){
+   const b=document.createElement('button');b.type='button';b.textContent=title;
+   b.setAttribute('aria-pressed',String(section===code));
+   b.addEventListener('click',()=>{section=code;render()});
+   nav.append(b);
   }
  }
- function bookCard(record){
-  const isBridge=record.section==='bridge';
-  const drive='https://drive.google.com/file/d/'+encodeURIComponent(record.id)+'/view?usp=drivesdk';
-  const primary=record.reader?'<a class="primary" href="'+esc(record.reader)+'">Open digital reader</a>':'';
-  const local=record.viewer||'./pdf_viewer.html?file='+encodeURIComponent(record.id);
-  const native='<a class="'+(record.reader?'':'primary')+'" href="'+esc(local)+'">Open PDF reader</a>';
-  const external='<a href="'+esc(drive)+'" rel="noopener noreferrer">Drive (internet) ↗</a>';
-  const isSaved=!!saved[record.id];
-  const offline='<button type="button" data-offline-save="'+esc(record.id)+'">'+(isSaved?'Replace saved PDF':'Save PDF on device')+'</button>'+(isSaved?'<button type="button" data-offline-export="'+esc(record.id)+'">Export copy</button><button type="button" data-offline-remove="'+esc(record.id)+'">Remove offline</button>':'');
-  const info=isBridge?'Drawing index is separate from the original private PDF. Detailed drawing QA and DWG checks are pending.':
-   record.section==='code'?'Original published edition as named in Drive · check applicability and amendments.':
-   record.section==='ssr'?'Historical SSR reference · confirm the applicable schedule and year.':
-   'Original Drive publication · check the applicable edition.';
-  return '<article class="book"><span class="tag">'+esc(record.sub)+'</span> <span class="tag '+(isSaved?'offline-tag':'')+'">'+(isSaved?'Saved offline':'Not saved')+'</span><h3>'+esc(record.name)+'</h3><p>'+esc(info)+'</p><div class="actions">'+primary+native+'</div><details class="book-more"><summary>More options</summary><div class="actions">'+external+offline+'</div></details></article>';
- }
  function render(){
+  renderTabs();get('sectionTitle').textContent=section==='all'?'Public references':titles[section];
+  const q=query.trim().toLowerCase();
+  const results=data.filter(r=>(section==='all'||r.section===section)&&
+   (!q||[r.title,r.publisher,r.note,r.section].join(' ').toLowerCase().includes(q)));
+  const grid=get('bookGrid');grid.replaceChildren();
+  for(const item of results){const el=card(item);if(el)grid.append(el)}
+  const n=grid.children.length;
+  get('matchCount').textContent=n+' public links';
+  get('emptyResults').hidden=n!==0;
   get('digitalSSR').hidden=section!=='ssr';
-  [...buttons.children].forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.section===section)));
-  codeFilters();
-  const records=data.filter(r=>(section==='all'||r.section===section)&&(section!=='code'||sub==='all'||r.sub===sub)&&(!offlineOnly||!!saved[r.id])
-    &&(!query||(r.name+' '+r.sub+' '+labels[r.section]).toLowerCase().includes(query)));
-  get('sectionTitle').textContent=labels[section];
-  const showGR=(section==='rules'||section==='all')&&(!query||'gr government resolutions circulars technical rules'.includes(query));
-  get('matchCount').textContent=(records.length+(showGR?1:0))+' document'+(records.length+(showGR?1:0)===1?'':'s');
-  get('bookGrid').innerHTML=records.map(bookCard).join('')+
-   (showGR?'<article class="book"><span class="tag">Government Resolutions</span><h3>Technical GR / Circular Register</h3><p>Digital index for technical GRs. This is a reader, not a single source PDF.</p><div class="actions"><a class="primary" href="./gr_library.html">Open GR Library</a></div></article>':'');
-  get('emptyResults').style.display=records.length||showGR?'none':'block';
  }
- const offline=window.PWDOfflineLibrary;
- const progress=get('offlineProgress'),one=get('offlineOne'),many=get('offlineMany');
- let chosenId=null,doing=false;
- const notice=msg=>{progress.textContent=msg};
- async function refreshOffline(){
-   try{
-     saved=await offline.list();
-     readerReady=await offline.rendererReady();
-     notice(Object.keys(saved).length+' of '+data.length+' PDFs saved on this phone · PDF renderer '+(readerReady?'ready offline':'not prepared')+' · private browser storage can be cleared by your device.');
-   }catch(e){saved={};notice('Private storage unavailable: '+e.message+'. Try another browser or open PDFs through Files.')}
-   render();
- }
- const busy=active=>{
-   doing=active;
-   get('bulkImport').disabled=active;
-   get('prepareOfflineReader').disabled=active;
-   document.querySelectorAll('[data-offline-save],[data-offline-remove],[data-offline-export]').forEach(b=>b.disabled=active);
- };
- get('libSearch').addEventListener('input',e=>{query=e.target.value.toLowerCase().trim();render()});
- get('showOfflineOnly').onchange=e=>{offlineOnly=e.target.checked;get('offlineSetup').querySelector('summary').textContent=offlineOnly?'Offline library setup · Offline-only filter active':'Offline library setup';render()};
- get('bulkImport').onclick=()=>{if(!doing)many.click()};
- get('prepareOfflineReader').onclick=async()=>{
-   if(doing)return;
-   busy(true);notice('Preparing the PDF renderer for offline reading…');
-   try{
-     await offline.prepareRenderer();
-     const durable=await offline.requestDurableStorage();
-     notice('PDF renderer is saved for offline use. '+(durable?'Device granted persistent storage.':'Keep a backup in Files; your browser may remove app storage.'));
-   }catch(e){notice('Could not prepare offline reader: '+e.message)}
-   finally{busy(false);await refreshOffline()}
- };
- get('bookGrid').addEventListener('click',async e=>{
-   const button=e.target.closest('button[data-offline-save],button[data-offline-remove],button[data-offline-export]');
-   if(!button||doing)return;
-   const id=button.dataset.offlineSave||button.dataset.offlineRemove||button.dataset.offlineExport;
-   const record=data.find(r=>r.id===id);
-   if(!record)return;
-   if(button.hasAttribute('data-offline-save')){
-     chosenId=id;one.click();return;
-   }
-   if(button.hasAttribute('data-offline-remove')){
-     if(!confirm('Remove the offline copy of '+record.name+' from this device? The Google Drive original remains unchanged.'))return;
-     busy(true);
-     try{await offline.remove(id);await refreshOffline()}
-     catch(error){notice('Could not remove offline book: '+error.message)}
-     finally{busy(false)}
-     return;
-   }
-   if(button.hasAttribute('data-offline-export')){
-     busy(true);
-     try{
-       const file=await offline.get(id);
-       if(!file)throw Error('This PDF is no longer saved.');
-       offline.exportCopy(file,file.name);
-       notice('Sent '+file.name+' to your browser Downloads/Files. Keep this backup to move to another phone.');
-     }catch(error){notice('Could not export PDF: '+error.message)}
-     finally{busy(false)}
-   }
- });
- one.onchange=async()=>{
-   const file=one.files?.[0],id=chosenId;
-   one.value='';chosenId=null;
-   if(!file||!id)return;
-   const record=data.find(r=>r.id===id);
-   if(!record)return;
-   let mismatch=false;
-   if(!offline.fileMatch(file,record)){
-     mismatch=true;
-     if(!confirm('Selected filename: '+file.name+'\nExpected: '+record.name+'\n\nOnly continue if you personally checked that this is the SAME publication and edition. The app cannot verify contents. Save under this book?'))return;
-   }
-   if(saved[id]&&!confirm('Replace the previously saved offline copy of '+record.name+'?'))return;
-   busy(true);notice('Saving '+record.name+' privately on this device…');
-   try{
-     await offline.save(id,file,{allowDifferentName:mismatch,replace:!!saved[id]});
-     await offline.requestDurableStorage();
-     await refreshOffline();
-   }catch(error){notice('Could not save '+record.name+': '+error.message)}
-   finally{busy(false)}
- };
- many.onchange=async()=>{
-   const files=Array.from(many.files||[]);many.value='';
-   if(!files.length||doing)return;
-   busy(true);
-   let added=0,skipped=0,failed=0;
-   const lookup=new Map(data.map(r=>[offline.normalized(r.name),r]));
-   for(const file of files){
-     const record=lookup.get(offline.normalized(file.name));
-     if(!record||saved[record.id]){skipped++;continue}
-     try{
-       notice('Saving '+(added+skipped+failed+1)+' / '+files.length+': '+file.name);
-       await offline.save(record.id,file);
-       added++;
-     }catch{failed++}
-   }
-   await offline.requestDurableStorage();
-   await refreshOffline();
-   notice(added+' PDFs saved offline; '+skipped+' skipped (name not matched or already saved); '+failed+' failed. Review green Saved offline labels. Only exact filename matches are imported automatically.');
-   busy(false);
- };
+ get('libSearch').addEventListener('input',e=>{query=e.target.value;render()});
  render();
- refreshOffline();
 })();
 </script>
-<script src="./app-shell.js"></script></body></html>
+<script src="./app-shell.js"></script>
+</body>
+</html>
