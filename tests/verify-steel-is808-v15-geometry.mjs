@@ -13,6 +13,9 @@ const load=p=>fs.readFileSync(path.join(root,p),'utf8');
 const ctx={module:{exports:{}}};
 vm.runInNewContext(load('pwd-steel-catalog.js'),ctx,{filename:'pwd-steel-catalog.js'});
 const cat=ctx.module.exports;
+const compareCtx={module:{exports:{}}};
+vm.runInNewContext(load('pwd-steel-compare.js'),compareCtx,{filename:'pwd-steel-compare.js'});
+const comparison=compareCtx.module.exports;
 const geometries=[
  // id, family, web mm, flange mm, slope degrees, R1 mm, R2 mm,
  // source PDF page, nominal area cm², Izz/Iyy cm⁴
@@ -77,11 +80,11 @@ assert.match(app,/chsAudit\.geometryChecked/);
 const start=app.indexOf('function calculate(){');
 const end=app.indexOf('function updateResult(){',start);
 assert.ok(start>=0&&end>start);
-const calc=new Function('selected','catalog','math','$','source','family',app.slice(start,end)+'\nreturn calculate();');
+const calc=new Function('selected','catalog','math','$','source','family','comparison',app.slice(start,end)+'\nreturn calculate();');
 const $=id=>({value:id==='steelLength'?'6':id==='steelCountPieces'?'2':'0'});
 const math={quantity:(x,L,N)=>({unitMassKgM:x.kgPerM,totalMassKg:x.kgPerM*L*N,totalTonnes:x.kgPerM*L*N/1000,basis:'Nominal IS808',totalPrice:null})};
 const source=id=>cat.SOURCES[id];
-const run=(x,family)=>calc(x,cat,math,$,source,family);
+const run=(x,family)=>calc(x,cat,math,$,source,family,comparison);
 assert.equal(run(cat.byId('ISMB200'),'beam').q.totalMassKg,24.17*12);
 assert.equal(run(cat.byId('ISMC150'),'channel').q.totalMassKg,16.8*12);
 assert.throws(()=>run({...cat.byId('ISMC150'),r1Mm:10.1},'channel'),/IS 808:2021.*conflicts/i);
