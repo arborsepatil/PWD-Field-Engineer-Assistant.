@@ -13,6 +13,9 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const scope={module:{exports:{}}};
 vm.runInNewContext(read('pwd-steel-catalog.js'),scope,{filename:'pwd-steel-catalog.js'});
 const cat=scope.module.exports;
+scope.module={exports:{}};
+vm.runInNewContext(read('pwd-steel-compare.js'),scope,{filename:'pwd-steel-compare.js'});
+const comparison=scope.module.exports;
 const audited=[
  // existing sample id, IS808 table, BIS kg/m, availability of Izz/Iyy
  ['ISMB100',1,8.95,true],
@@ -105,11 +108,11 @@ for(const status of ['is808-mass-checked','is808-mass-area-inertia-checked','is8
 const start=app.indexOf('function calculate(){');
 const end=app.indexOf('function updateResult(){',start);
 assert.ok(start>=0&&end>start,'Cannot locate actual steel section calculator function');
-const calculate=new Function('selected','catalog','math','$','source','family',app.slice(start,end)+'\nreturn calculate();');
+const calculate=new Function('selected','catalog','math','$','source','family','comparison',app.slice(start,end)+'\nreturn calculate();');
 const $=id=>({value:id==='steelLength'?'6':id==='steelCountPieces'?'3':'0'});
 const math={quantity:(row,L,N)=>({unitMassKgM:row.kgPerM,totalMassKg:row.kgPerM*L*N,basis:'Nominal checked steel mass',totalTonnes:row.kgPerM*L*N/1000,totalPrice:null})};
 const src=id=>cat.SOURCES[id];
-const call=(id,family='angle')=>calculate(cat.byId(id),cat,math,$,src,family);
+const call=(id,family='angle')=>calculate(cat.byId(id),cat,math,$,src,family,comparison);
 assert.equal(call('ISMB300','beam').q.totalMassKg,46.02*18);
 assert.equal(call('sail23-ISA90x90x6').q.totalMassKg,8.32*18);
 assert.throws(()=>call('ISA90x90x6'),/IS 808:2021.*conflicts/i,'Archive angle conflict must not produce quantity');

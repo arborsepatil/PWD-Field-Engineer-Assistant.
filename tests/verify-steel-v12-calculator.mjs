@@ -12,13 +12,16 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const scope={module:{exports:{}}};
 vm.runInNewContext(read('pwd-steel-catalog.js'),scope,{filename:'pwd-steel-catalog.js'});
 const catalog=scope.module.exports;
+scope.module={exports:{}};
+vm.runInNewContext(read('pwd-steel-compare.js'),scope,{filename:'pwd-steel-compare.js'});
+const comparison=scope.module.exports;
 const app=read('pwd-steel-app.js');
 // Run the real calculator function, not just an expression string match.
 const start=app.indexOf('function calculate(){');
 const end=app.indexOf('function updateResult(){',start);
 assert.ok(start>=0&&end>start,'Calculator extraction boundaries must exist');
 const calculateSource=app.slice(start,end);
-const runner=new Function('selected','catalog','math','$','source','family',
+const runner=new Function('selected','catalog','math','$','source','family','comparison',
  calculateSource+'\nreturn calculate();');
 const $=id=>({value:id==='steelLength'?'6':id==='steelCountPieces'?'2':'0'});
 const math={quantity:(section,length,count)=>({
@@ -28,7 +31,7 @@ const math={quantity:(section,length,count)=>({
  basis:'Source nominal kg/m',totalPrice:null
 })};
 const source=id=>catalog.SOURCES[id];
-const calc=(row,family='hollow')=>runner(row,catalog,math,$,source,family);
+const calc=(row,family='hollow')=>runner(row,catalog,math,$,source,family,comparison);
 const beam=calc(catalog.byId('ISMB300'),'beam');
 assert.equal(beam.q.unitMassKgM,46.02,'Normal beam must calculate, not get rejected as below scope');
 assert.equal(beam.q.totalMassKg,46.02*12);

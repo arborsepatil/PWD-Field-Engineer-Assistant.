@@ -31,6 +31,8 @@ function setFamily(next){
   $('steelSource').removeAttribute('href');$('sourceLinks').hidden=true;
   $('steelDataCaution').textContent='Theoretical weight uses assumed density: 7850 kg/m³. Not a nominal BIS value.';
  $('steelKeyAudit').dataset.audit='review';$('steelKeyAudit').textContent='Theoretical geometry only · not a BIS published nominal section.';
+  $('steelQuantitySourceGate').textContent='Theoretical calculation from user-entered geometry only; no published BIS nominal mass.';
+  $('steelCalculate').disabled=false;
   updateCustomInputs();
  }else{
   $('sourceLinks').hidden=false;
@@ -93,6 +95,8 @@ function renderRows(){
   const status=catalog.standardAudit(row).status;
   subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(status==='is808-numeric-conflict'?' · IS 808 source conflict':status==='is808-mass-area-inertia-checked'?' · IS 808 mass/area/inertia checked':status==='is808-mass-checked'?' · IS 808 kg/m checked':status==='spot-checked-match'?' · 2023 spot-check':status==='not-listed-in-replacement'?' · Historical / unlisted':status==='spot-checked-conflict'?' · BIS conflict':status==='outside-current-scope'?' · Outside IS 4923 scope':status==='source-numeric-hold'?' · Source table row on hold':status==='mass-area-conflict'?' · Mass/area inconsistency':status==='shs-row-checked'?' · BIS numeric sample checked':status==='shs-row-conflict'?' · BIS numeric conflict':status==='rhs-weight-checked'?' · BIS kg/m checked':status==='rhs-weight-conflict'?' · BIS kg/m conflict':status==='amendment3-review'?' · Amd.3 not verified':row.basis==='archived-manufacturer-only'?' · Archive':
  row.basis==='osdag-open-unverified'?' · Open source':['secondary-unverified','secondary-amendment-unverified'].includes(row.basis)?' · Secondary':'');
+  const quantityState=comparison.quantityGate(catalog,row);
+  if(!quantityState.allowed)subtitle.textContent+=' · '+(quantityState.category==='hold'?'HOLD · no quantity':'Reference only · no quantity');
   btn.append(name,subtitle);
   btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
   const holder=document.createElement('div');holder.className='size-row';
@@ -141,6 +145,10 @@ function renderDetail(){
  $('steelKeyAudit').dataset.audit=auditState.status;
  $('steelKeyAudit').textContent=auditState.status==='hold'?'HOLD · Source conflict or incomplete record. Do not use this nominal weight for quantity calculations.':auditState.status==='checked'?'Selected numerical values checked · NOT a complete standard, material or design certification.':'Source-only weight · BIS row still needs verification before approval use.';
  $('steelMass').textContent=format(selected.kgPerM);
+ const quantityState=comparison.quantityGate(catalog,selected);
+ $('steelCalculate').disabled=!quantityState.allowed;
+ $('steelQuantitySourceGate').textContent=quantityState.message;
+ $('steelQuantitySourceGate').dataset.status=quantityState.category;
  const dim=comparison.dimension(selected);
  $('steelDepthLabel').textContent=dim.first;
  $('steelWidthLabel').textContent=dim.second;
@@ -203,6 +211,10 @@ function calculate(){
  if(['not-listed-in-replacement','spot-checked-conflict'].includes(chsAudit.status))
   throw Error('IS 1161 Amendment 2 review: not an approved current table weight for this size. Choose a listed section.');
  if(selected.qualityFlag==='mass-area-inconsistent'||catalog.auditRow(selected).includes('mass-vs-area'))throw Error('Mass/area conflict in source row — quantity blocked pending review.');
+ // Selected BIS source check is mandatory for preliminary nominal quantity arithmetic.
+ // All historic, secondary, unsampled and internally conflicting rows remain reference only.
+ const eligibility=comparison.quantityGate(catalog,selected);
+ if(!eligibility.allowed)throw Error(eligibility.message);
  const q=math.quantity(selected,L,N,rate),src=source(selected.sourceId);
  return {q,entry:{...selected,sourceLabel:src.label+' · '+(selected.sourceUrl||src.url),sourceDate:src.date,sourceStatus:chsAudit.geometryChecked?'IS 808:2021 selected mass, area, inertia and web/flange/radius geometry checked; NOT design/MTC certified':chsAudit.status==='is808-mass-area-inertia-checked'?'IS 808:2021 selected mass/area/Izz/Iyy checked; NOT design/MTC certified':chsAudit.status==='is808-mass-checked'?'IS 808:2021 selected nominal mass checked; other properties and MTC not certified':chsAudit.status==='rhs-weight-checked'?'BIS amended nominal kg/m spot-check; not product/design certification':chsAudit.status==='shs-row-checked'?'BIS SHS nominal table spot-check; not product/design certification':selected.basis}};
 }
@@ -264,7 +276,7 @@ function renderComparison(){
  const tbody=document.createElement('tbody');
  const v=x=>x===null||x===undefined||!Number.isFinite(Number(x))?'—':format(x,3).replace(/0+$/,'').replace(/\.$/,'');
  const properties=[
-  ['Weight (kg/m)',x=>x.audit.status==='hold'?format(x.kgPerM,2)+' · HOLD':format(x.kgPerM,2)],
+  ['Weight (kg/m)',x=>x.audit.status==='hold'?format(x.kgPerM,2)+' · HOLD':x.audit.status==='review'?format(x.kgPerM,2)+' · UNVERIFIED':format(x.kgPerM,2)+' · limited check'],
   ['Depth / leg (mm)',x=>v(x.depthMm)],
   ['Width / leg (mm)',x=>v(x.widthMm)],
   ['Web/wall/leg thickness (mm)',x=>v(x.thicknessMm)],
