@@ -30,23 +30,19 @@
 .source-chooser strong{font-size:18px}
 .source-chooser p{max-width:330px;font-size:13px;line-height:1.45}
 @media(max-width:560px){.source-chooser button{width:min(280px,100%)}}
-</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Private source · sign-in may be required</small></div><a id="driveBtn" class="primary" rel="noopener">Open in Drive ↗</a></header><main class="viewer" id="viewer"><div id="privateBar" class="private-pdf-bar" aria-label="Private source PDF"><label class="import-label" for="privatePdfFile">Change PDF<input id="privatePdfFile" type="file" accept=".pdf,application/pdf" aria-label="Select original PDF for offline viewing"></label><button id="forgetPrivatePdf" type="button" hidden>Forget PDF</button><span class="private-status" id="privatePdfStatus" role="status" aria-live="polite">This source stays on your device.</span></div><div id="pdfPageIndicator" class="sheet-count" role="status" aria-live="polite"></div>
+/* V33: no external private Drive links, including legacy fallback */
+#driveBtn,#fallbackBtn{display:none!important}
+</style></head><body><header class="top"><a href="./library.html">‹ Library</a><div class="title"><b id="docTitle">PDF Viewer</b><small id="docMeta">Local PDF · select your own file</small></div><a id="driveBtn" class="primary" rel="noopener">Private Drive unavailable</a></header><main class="viewer" id="viewer"><div id="privateBar" class="private-pdf-bar" aria-label="Private source PDF"><label class="import-label" for="privatePdfFile">Change PDF<input id="privatePdfFile" type="file" accept=".pdf,application/pdf" aria-label="Select original PDF for offline viewing"></label><button id="forgetPrivatePdf" type="button" hidden>Forget PDF</button><span class="private-status" id="privatePdfStatus" role="status" aria-live="polite">This source stays on your device.</span></div><div id="pdfPageIndicator" class="sheet-count" role="status" aria-live="polite"></div>
 <div id="sourceChooser" class="source-chooser" role="status" aria-live="polite">
 <strong>Open original PDF</strong>
-<p>Choose a PDF saved on your phone. Drive requires Internet.</p>
+<p>Private books are not distributed in this app. Choose a PDF from your own device only.</p>
 <button id="chooseDevicePdf" type="button">Choose PDF</button>
-</div><div class="gesture-surface" id="gestureSurface"><div class="canvas-layer" id="canvasLayer" hidden><canvas id="drawingCanvas" aria-label="Rendered original PDF drawing"></canvas></div><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This source remains private in Google Drive. On some mobile browsers, Drive blocks embedded sign-in or third-party cookies.</p><a id="fallbackBtn" class="primary" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Open PDF in Drive</a></div></div></main><script src="./library-drive-catalog.js"></script><script src="./bridge-local-source.js"></script><script src="./library-private-pdf.js"></script><script src="./bridge-pdf-canvas.js"></script><script>
+</div><div class="gesture-surface" id="gestureSurface"><div class="canvas-layer" id="canvasLayer" hidden><canvas id="drawingCanvas" aria-label="Rendered original PDF drawing"></canvas></div><iframe id="frame" title="Original PDF source preview" allow="autoplay" referrerpolicy="no-referrer"></iframe></div><div id="gestureHint" class="gesture-hint">Pinch to zoom · drag to move · double-tap to reset</div><div id="fallback" class="fallback"><div class="box"><h2>PDF preview could not load here</h2><p>This app does not include private Google Drive publications. Select a file on your own device if you have access.</p><a id="fallbackBtn" class="primary" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;background:var(--blue);color:white;font-weight:850">Return to Library</a></div></div></main><script src="./library-drive-catalog.js"></script><script src="./bridge-local-source.js"></script><script src="./library-private-pdf.js"></script><script src="./bridge-pdf-canvas.js"></script><script>
+// V33: no private Google Drive publication IDs or external private source links.
+// These names identify optional files the device owner selects, not shared books.
 const DOCS={
-morth:{title:'MoRTH Specifications · 5th Revision 2013',id:'1pVTcUdNoUcmSpfhVhnM2Ld-3gXiJPpFe',meta:'Road & Bridge Works'},
-rulebook:{title:'PWD Rule Book · Marathi 6th Edition 1984',id:'1g1bLZJtVyYDB5RLTjqoDxZUyEpvdkGaZ',meta:'Maharashtra Public Works Rule Book'},
-bridge2002:{title:'Bridge Standard Plans · 2002',id:'13hCYBiVR-XWToOtVpbS2ZnjvQFz5wWcr',meta:'Legacy / Blue Book'},
-bridge2023:{title:'Bridge Standard Plans · 2023 Part 2',id:'1juIQ-FJLpBsJzh2dKJlFxkixRbsrmEOv',meta:'Road bridges up to 30 m'},
-redbook2:{title:'Red Book · 2012 Volume II Buildings',id:'1IV4rR0XOktx2_i5WHaSivQQcdeeuiBbD',meta:'Revised Standard Specifications'},
-bridgeguidelines:{title:'Bridge Design Guidelines · 2007',id:'1k0U8c6qzwBX9RwQBBmaOxQRPIVjs0w_J',meta:'PWD Maharashtra · Second Edition'},
-buildingguidelines:{title:'Building Design Guidelines · 2010',id:'1G6FKwL8HEw82ddbAqMO_f2rD9zPbvDql',meta:'PWD Maharashtra'},
-pwdcode:{title:'Maharashtra Public Works Code',id:'16KG360bPSFyE8CfCVfss7WeV9wQhzppb',meta:'Departmental reference'},
-officemanual:{title:'PWD Office Manual · Establishment & Administration',id:'12NwFXjot_8mwapevhz875unyvlLTDqcf',meta:'Administrative reference'},
-qcfreq:{title:'QC Frequency Chart',id:'1S8nxt3u82tW4gxyIuzDIHc9Tc609OkME',meta:'Quality-control reference'}
+ bridge2002:{title:'Bridge Drawings 2002 · local file only',id:'user-local-bridge2002',meta:'User-selected PDF · not shared'},
+ bridge2023:{title:'Bridge Drawings 2023 · local file only',id:'user-local-bridge2023',meta:'User-selected PDF · not shared'}
 };
 
 function enableBridgeFingerGestures(onPageSwipe,onGestureIdle){
@@ -149,9 +145,9 @@ function enableBridgeFingerGestures(onPageSwipe,onGestureIdle){
 }
 
 const p=new URLSearchParams(location.search),key=p.get('doc')||'';
-const driveFileId=p.get('file')||'';
-const catalogRecord=(typeof window==='undefined'?[]:(window.PWDDrivePDFCatalog||[])).find(x=>x.id===driveFileId);
-const d=DOCS[key]||(catalogRecord?{id:catalogRecord.id,title:catalogRecord.name,meta:catalogRecord.sub+' · original Drive PDF'}:null);
+// Arbitrary ?file=Google-Drive-ID links are no longer recognised.
+const catalogRecord=null;
+const d=DOCS[key]||null;
 const isBridge=key==='bridge2002'||key==='bridge2023',year=isBridge?key.slice(-4):null;
 const maxPage=key==='bridge2002'?91:key==='bridge2023'?221:null;
 const requested=Number(p.get('page'));
@@ -161,7 +157,7 @@ const element=id=>document.getElementById(id);
 // Do not embed authenticated Drive pages inside Android WebView: third-party
 // authentication may be blocked and even a Google error can fire iframe load.
 const noLocalPDF='about:blank';
-const driveView=()=> 'https://drive.google.com/file/d/'+d.id+'/view?usp=drivesdk';
+// Public app does not provide private Drive links.
 document.getElementById('chooseDevicePdf')?.addEventListener('click',()=>document.getElementById('privatePdfFile')?.click());
 function setPageStatus(){
  if(!isBridge&&!canvasActive)return;
@@ -196,8 +192,6 @@ function display(){
    element('frame').style.display=localURL?'block':'none';
  }
  element('fallback').classList.remove('show');
- element('driveBtn').href=driveView();
- element('fallbackBtn').href=driveView();
  setPageStatus();
 }
 function pageSwipe(direction){
@@ -220,9 +214,7 @@ if(!d){
 }else{
  document.title=d.title+' · PWD Tools';
  element('docTitle').textContent=d.title;
- element('docMeta').textContent=d.meta+' · private Drive source';
- element('driveBtn').href=driveView();
- element('fallbackBtn').href=driveView();
+ element('docMeta').textContent=d.meta;
  if(isBridge){
    document.querySelector('.top a').href='./bridge_book_'+year+'.html';
    element('gestureHint').textContent='Pinch to zoom · drag to move · swipe to change page · double-tap to reset';

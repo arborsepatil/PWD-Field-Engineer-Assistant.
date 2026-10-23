@@ -35,5 +35,12 @@ index_path.write_text(page, encoding="utf-8")
 assert "navigator.serviceWorker.register" not in page
 assert len(list(OUTPUT.glob("*.html"))) >= 10
 assert not any(p.suffix.lower() == ".pdf" for p in OUTPUT.iterdir())
+# All legacy Drive private/publication IDs have been withdrawn from the distributed
+# catalogue and legacy PDF viewer. A public publisher link is not a redistributed book.
+assert (OUTPUT / "library-public-catalog.js").exists(), "Public publisher catalogue not packaged"
+assert "window.PWDDrivePDFCatalog=[]" in (OUTPUT / "library-drive-catalog.js").read_text(encoding="utf-8")
+assert "drive.google.com/file/d/" not in (OUTPUT / "library.html").read_text(encoding="utf-8")
+assert "drive.google.com/file/d/" not in (OUTPUT / "pdf_viewer.html").read_text(encoding="utf-8")
+
 print(f"Android offline APK assets prepared: {count} public files, "
       f"{len(list(OUTPUT.glob('*.html')))} HTML screens, no private PDFs, no PWA registration")

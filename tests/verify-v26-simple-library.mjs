@@ -1,56 +1,24 @@
-/** V26: Library lists documents first, with on-demand storage actions. */
+/** V26 compatibility regression, updated for V33's public-only reference policy. */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
-
 const root=path.resolve(import.meta.dirname,'..');
-const library=fs.readFileSync(path.join(root,'library.html'),'utf8');
-const home=fs.readFileSync(path.join(root,'index.html'),'utf8');
-const renderer=fs.readFileSync(path.join(root,'pdf_viewer.html'),'utf8');
-const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
-const start=library.indexOf(' function bookCard(record){');
-const end=library.indexOf(' function render(){',start);
-assert.ok(start>=0&&end>start,'Actual Library card renderer missing');
-const cardFn=library.slice(start,end);
-function renderCard(record,saved={}){
- return vm.runInNewContext(cardFn+';bookCard(record);',{
-  record,saved,encodeURIComponent,
-  esc:x=>String(x)
- });
-}
-function sections(html){
- const cut=html.indexOf('<details class="book-more">');
- assert.ok(cut>=0,'More options must exist and be collapsed by default');
- const main=html.slice(0,cut),optional=html.slice(cut);
- assert.match(optional,/<summary>More options<\/summary>/);
- assert.ok(!main.includes('Drive (internet)'),"Drive link crowds document primary choices");
- assert.ok(!main.includes('Save PDF on device'),'Offline management crowds the primary choices');
- return {main,optional};
-}
-const code={id:'codePDF1234567890',name:'IS 456: sample',sub:'IS',section:'code'};
-const codeHtml=renderCard(code);
-const codeParts=sections(codeHtml);
-assert.match(codeParts.main,/<a class="primary"[^>]*>Open PDF reader<\/a>/);
-assert.ok(!codeParts.main.includes('Open digital reader'),'Code with no digital reader must not claim one');
-assert.ok(codeParts.optional.includes('Drive (internet)')&&codeParts.optional.includes('Save PDF on device'));
-const bridge={id:'bridgePDF12345678',name:'Bridge 2023',sub:'Bridge',section:'bridge',reader:'./bridge_book_2023.html',viewer:'./pdf_viewer.html?doc=bridge2023'};
-const bridgeHtml=renderCard(bridge);
-const bridgeParts=sections(bridgeHtml);
-assert.ok(bridgeParts.main.includes('Open digital reader')&&bridgeParts.main.includes('Open PDF reader'),'Bridge must keep both index and original PDF');
-assert.ok(bridgeParts.main.includes('Drawing index is separate'),'Do not imply index equals original checked PDF');
-const savedCard=renderCard(code,{[code.id]:{name:'selected.pdf'}});
-const savedParts=sections(savedCard);
-assert.ok(savedParts.optional.includes('Replace saved PDF')&&savedParts.optional.includes('Export copy')&&savedParts.optional.includes('Remove offline'),'Saved-PDF management inaccessible');
-assert.ok(savedParts.main.includes('Saved offline'),'Current offline state not visible');
-assert.match(library,/<details class="offline-tools" id="offlineSetup"[^>]*><summary>Offline library setup<\/summary>/,'Bulk offline options must open only on demand');
-assert.ok(library.includes("offlineOnly?'Offline library setup · Offline-only filter active'"),'Collapsed offline-only filter must remain clearly disclosed');
-for(const id of ['bulkImport','prepareOfflineReader','showOfflineOnly','offlineProgress','libSearch','bookGrid','libraryTabs']){
- assert.ok(library.includes('id="'+id+'"'),'Library control missing '+id);
-}
-assert.ok(library.includes('Check the applicable edition, amendments and project specifications before site use.'),'Critical current-applicability note must remain visible');
-assert.ok(library.includes('Library listings are from a Drive catalogue snapshot dated 18 October 2026'),'Private source freshness boundary missing');
-assert.ok(home.includes('href="./library.html?section=ssr"')&&home.includes('href="./library.html"'),'Home SSR and Library gateways not preserved');
-assert.ok(renderer.includes('Choose PDF'),'Private original PDF chooser missing');
-assert.ok(/pwd-tools-(?:compact-v26|digital-ssr-v27|steel-compare-v28|steel-audit-v29|steel-drawing-v30|steel-thickness-v31|steel-source-gate-v32)-2026-10-23/.test(sw),'Offline public assets must refresh for V26 or later');
-console.log('V26 PASS: compact PDF cards, preserved reader/offline actions, source cautions, touch targets and cache invalidation.');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const library=read('library.html'),home=read('index.html'),viewer=read('pdf_viewer.html'),sw=read('sw.js');
+for(const id of ['libSearch','libraryTabs','sectionTitle','matchCount','bookGrid','emptyResults','digitalSSR'])
+ assert.ok(library.includes('id="'+id+'"'),'Missing useful public library screen control '+id);
+assert.ok(library.includes('library-public-catalog.js'),'Public catalogue must be loaded');
+assert.ok(!library.includes('<script src="./library-drive-catalog.js"'),'Old private Drive catalogue must not populate Library');
+assert.ok(!library.includes('data-offline-save')&&!library.includes('data-offline-export'),'Shared Library cannot distribute private books or copies');
+assert.ok(!library.includes('Save multiple PDFs')&&!library.includes('Export copy'),'Download/private-book UI must be absent');
+assert.ok(library.includes('View on publisher ↗')&&library.includes("anchor.target='_blank'"),'Official view-only action and outside publisher should remain');
+assert.ok(library.includes("get('digitalSSR').hidden=section!=='ssr'"),'Offline user-owned SSR search is a separate tool, not a shared private book');
+assert.ok(home.includes('href="./library.html?section=ssr"')&&home.includes('href="./library.html"'),'Home SSR and Library gateways preserved');
+assert.ok(viewer.includes('id="chooseDevicePdf"')&&viewer.includes('id="privatePdfFile"'),'User-owned local bridge document chooser retained');
+assert.ok(!viewer.includes('drive.google.com/file/d/'),'Legacy viewer must not contain direct private Drive URLs');
+assert.ok(/pwd-tools-public-library-v33-2026-10-23/.test(sw),'Offline app cache must invalidate retired private Library');
+const inline=library.match(/<script>([\s\S]*?)<\/script>/);
+assert.ok(inline,'Active Library filter/view script missing');
+new vm.Script(inline[1],{filename:'library-v33.inline.js'});
+console.log('V26→V33 compatibility PASS: public-only Library, categories, SSR local tool, no private Drive book controls, valid view-only UI script.');
