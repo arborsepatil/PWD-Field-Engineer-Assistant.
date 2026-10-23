@@ -68,7 +68,7 @@ for(const id of ['rccSbc','rccHeight','rccResult','rccDims','rccMismatch','rccDr
  assert.match(ui,new RegExp('id="'+id+'"'));
 assert.match(ui,/src="\.\/rcc-wall-2023-data\.js"/);
 assert.match(ui,/src="\.\/rcc-wall-2023-app\.js"/);
-assert.match(ui,/doc=bridge2023&amp;page=209/);
+assert.ok(!ui.includes('pdf_viewer.html')&&ui.includes('./library.html?section=design'),'Source-derived RCC data must not open a private PDF from the shared app');
 assert.match(ui,/minor bridges\/culverts with raft foundations/i);
 assert.match(ui,/no source-steel extrapolation or BBS calculations are included/);
 assert.match(ui,/geometry-based length estimates are shown separately/i);
