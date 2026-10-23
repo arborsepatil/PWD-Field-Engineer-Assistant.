@@ -32,6 +32,10 @@
 .book .kind{border:1px solid var(--line);background:var(--soft);font-size:11px;color:var(--muted);font-weight:750;padding:3px 8px;border-radius:999px;display:inline-block}
 .book .publisher{font-size:12px;color:var(--muted);margin:3px 0 10px}
 .book a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;padding:8px 15px;font-weight:780;font-size:13px}
+.lib-access{font-size:12px;color:var(--muted);line-height:1.45;margin:4px 0 12px}
+.book .access{margin-top:6px;font-size:11px;font-weight:700;color:var(--muted)}
+.book .access.unconfirmed{color:var(--warn)}
+.book a.unconfirmed{background:var(--soft);border:1px solid var(--line);color:var(--ink)}
 .lib-note{background:var(--soft);border-left:3px solid var(--accent);border-radius:10px;padding:11px 13px;margin-top:15px;font-size:12px;color:var(--muted);line-height:1.65}
 .ssr-entry{margin-top:12px;padding:13px;border-radius:13px;border:1px solid var(--line);background:var(--card)}
 .ssr-entry a{font-weight:800;color:var(--accent);text-decoration:none}
@@ -45,14 +49,15 @@
 <main class="public-library">
  <header class="lib-head"><a class="icon-btn" href="./index.html" aria-label="Back to home">‹</a><div><h1>Engineering Library</h1><p>Public publisher references · view only</p></div></header>
  <section class="lib-intro" aria-label="Library access policy">
-  <strong>Only official public reference links</strong>
-  <p>No private Drive documents, private file IDs or third-party PDF copies are shared here. <b>View</b> opens the publisher's website using the device browser. Internet may be required.</p>
+  <strong>Only official publisher references</strong>
+  <p>No private Drive documents, private file IDs or third-party PDF copies are shared here. <b>View</b> opens accessible publisher pages; links that could not be accessed in the audit are labelled separately. Internet may be required.</p>
   <p>Publicly accessible does not mean copyright-free or the latest valid edition. Check the applicable code, amendments, project contract and government directions.</p>
  </section>
  <div class="lib-search"><label for="libSearch">Find a public reference</label><input id="libSearch" type="search" placeholder="Search PWD, SSR, manual, CPWD, BIS, IRC, GR…" autocomplete="off"></div>
  <nav class="categories" id="libraryTabs" aria-label="Library categories"></nav>
  <section id="digitalSSR" class="ssr-entry" hidden><a href="./ssr_search.html">Search SSR items in your own Excel file</a><p>This is a separate local engineering tool. It does not make a private SSR file publicly available.</p></section>
  <div class="heading"><h2 id="sectionTitle">Public references</h2><span id="matchCount" role="status"></span></div>
+ <p class="lib-access" id="accessSummary" role="status">Checking publisher reference status…</p>
  <div id="bookGrid" class="book-grid"></div>
  <p class="empty" id="emptyResults" hidden>No public reference matches. Try a different keyword or category.</p>
  <p class="lib-note">Official publisher pages may offer their own PDF viewing, download or purchase controls. This app provides only a View link; it cannot prevent actions offered by the publisher's browser page. Restricted and unverified private documents are omitted.</p>
@@ -83,11 +88,15 @@
   root.append(text('span',item.kind==='book'?'Public book / PDF':'Official '+item.kind,'kind'));
   root.append(text('h3',item.title));
   root.append(text('div',item.publisher,'publisher'));
+  const verified=item.access==='public-page';
+  root.append(text('p',verified?'Official publisher page accessible at last check · book access subject to publisher':'Official publisher · access could not be confirmed','access'+(verified?'':' unconfirmed')));
   root.append(text('p',item.note));
   const anchor=document.createElement('a');
   anchor.href=safe;anchor.target='_blank';anchor.rel='noopener noreferrer external';
-  anchor.textContent='View on publisher ↗';
-  anchor.setAttribute('aria-label','View '+item.title+' on the publisher website');
+  const verifiedLink=item.access==='public-page';
+  anchor.textContent=verifiedLink?'View on publisher ↗':'Check publisher availability ↗';
+  if(!verifiedLink)anchor.classList.add('unconfirmed');
+  anchor.setAttribute('aria-label',(verifiedLink?'View ':'Check publisher availability for ')+item.title+' on the official website');
   root.append(anchor);return root;
  }
  function renderTabs(){
@@ -107,7 +116,9 @@
   const grid=get('bookGrid');grid.replaceChildren();
   for(const item of results){const el=card(item);if(el)grid.append(el)}
   const n=grid.children.length;
-  get('matchCount').textContent=n+' public links';
+  get('matchCount').textContent=n+' official links';
+  const verifiedCount=results.filter(r=>r.access==='public-page'&&safeUrl(r.url)).length;
+  get('accessSummary').textContent=verifiedCount+' publisher pages checked · '+(n-verifiedCount)+' access unconfirmed. No private Drive files or PDF downloads in this app.';
   get('emptyResults').hidden=n!==0;
   get('digitalSSR').hidden=section!=='ssr';
  }
