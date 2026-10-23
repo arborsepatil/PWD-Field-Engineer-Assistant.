@@ -145,6 +145,13 @@ function makeFamilyButtons(){
   $('steelFamilies').append(button);
  }
 }
+function visibleDesignation(row){
+ // IS 808 Table 1 repeats WB 200 for two different depths and weights.
+ // The app must not make two unique source variants appear identical.
+ const same=catalog.sections.filter(x=>x.family===row.family&&x.series===row.series&&x.designation===row.designation);
+ if(same.length<2)return row.designation;
+ return row.designation+' · '+format(row.depthMm,2)+'×'+format(row.widthMm,2)+' mm · '+format(row.kgPerM,2)+' kg/m';
+}
 function renderRows(){
  const rows=catalog.search($('steelSearch').value,family,$('steelSeries').value||'all');
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
@@ -158,7 +165,7 @@ function renderRows(){
  for(const row of rows.slice(0,shownLimit)){
   const btn=document.createElement('button');btn.className='pick';btn.type='button';
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
-  const name=document.createElement('b');name.textContent=row.designation;
+  const name=document.createElement('b');name.textContent=visibleDesignation(row);
   const subtitle=document.createElement('span');
   const status=catalog.standardAudit(row).status;
   subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(status==='is808-numeric-conflict'?' · IS 808 source conflict':status==='is808-mass-area-inertia-checked'?' · IS 808 mass/area/inertia checked':status==='is808-mass-checked'?' · IS 808 kg/m checked':status==='spot-checked-match'?' · 2023 spot-check':status==='not-listed-in-replacement'?' · Historical / unlisted':status==='spot-checked-conflict'?' · BIS conflict':status==='outside-current-scope'?' · Outside IS 4923 scope':status==='source-numeric-hold'?' · Source table row on hold':status==='mass-area-conflict'?' · Mass/area inconsistency':status==='shs-row-checked'?' · BIS numeric sample checked':status==='shs-row-conflict'?' · BIS numeric conflict':status==='rhs-weight-checked'?' · BIS kg/m checked':status==='rhs-weight-conflict'?' · BIS kg/m conflict':status==='amendment3-review'?' · Amd.3 not verified':row.basis==='archived-manufacturer-only'?' · Archive':
@@ -204,7 +211,7 @@ function renderDetail(){
  if(!selected){$('steelDetail').hidden=true;$('steelDetailsEmpty').hidden=false;return;}
  const src=source(selected.sourceId);
  $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
- $('steelTitle').textContent=selected.designation;
+ $('steelTitle').textContent=visibleDesignation(selected);
  const bisAudit=catalog.standardAudit(selected);
  $('steelStatus').textContent=bisAudit.status==='is808-numeric-conflict'?'⚠ IS 808 numeric conflict':bisAudit.geometryChecked?'IS 808:2021 · dimensions and section properties checked':bisAudit.status==='is808-mass-area-inertia-checked'?'IS 808:2021 · mass/area/inertia checked':bisAudit.status==='is808-mass-checked'?'IS 808:2021 · nominal kg/m checked':bisAudit.status==='spot-checked-match'?'IS 1161:2014 Amd.2 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ Conflicts with BIS':bisAudit.status==='outside-current-scope'?'⚠ Below IS 4923 minimum':bisAudit.status==='source-numeric-hold'?'⚠ BIS source discrepancy · hold':bisAudit.status==='mass-area-conflict'?'⚠ Mass/area inconsistency':bisAudit.status==='shs-row-checked'?'IS 4923 · SHS checked sample':bisAudit.status==='shs-row-conflict'?'⚠ SHS BIS conflict':bisAudit.status==='rhs-weight-checked'?'IS 4923 · nominal mass checked':bisAudit.status==='rhs-weight-conflict'?'⚠ RHS BIS mass conflict':bisAudit.status==='amendment3-review'?'RHS · BIS Amd.3 not verified':bisAudit.status==='not-listed-in-replacement'?'⚠ Not listed in 2023 Table 1':selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area check':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
  const auditState=comparison.audit(catalog,selected);
@@ -262,7 +269,7 @@ function calculate(){
  if(!selected)throw Error('Choose a steel section from the search results.');
  const chsAudit=catalog.standardAudit(selected);
  if(chsAudit.status==='is808-numeric-conflict')throw Error('IS 808:2021: this archived or secondary steel profile conflicts with the checked BIS mass or section properties. Quantity blocked. Select the current checked matching variant.');
- if(chsAudit.status==='source-numeric-hold')throw Error('IS 4923:2017 RHS 120×80×6 has an unresolved numeric source-table discrepancy. Weight calculation is on hold; do not use an inferred area as a BIS correction.');
+ if(chsAudit.status==='source-numeric-hold')throw Error('This selected section has an unresolved discrepancy in the applicable BIS source table. Quantity is blocked: '+(chsAudit.note||'Confirm the original standard and amendments.'));
  if(chsAudit.status==='mass-area-conflict')throw Error('IS 4923:2017 nominal mass and area are inconsistent in this source record. Calculation blocked for engineering review.');
  if(chsAudit.status==='rhs-weight-conflict')throw Error('IS 4923:2017 amended RHS numeric record conflicts with BIS source. Quantity blocked pending correction.');
  if(chsAudit.status==='shs-row-conflict')throw Error('IS 4923:2017 amended SHS nominal record conflicts with BIS source. Quantity blocked pending correction.');
@@ -270,6 +277,11 @@ function calculate(){
  if(['not-listed-in-replacement','spot-checked-conflict'].includes(chsAudit.status))
   throw Error('IS 1161 Amendment 2 review: not an approved current table weight for this size. Choose a listed section.');
  if(selected.qualityFlag==='mass-area-inconsistent'||catalog.auditRow(selected).includes('mass-vs-area'))throw Error('Mass/area conflict in source row — quantity blocked pending review.');
+ // Accuracy-first gate: any nominal catalogue weight lacking a checked
+ // applicable source cannot drive a steel quantity, even if search allows
+ // inspecting the unverified historic value.
+ if(comparison.audit(catalog,selected).status!=='checked')
+  throw Error('Quantity unavailable: this section’s nominal kg/m has not passed the applicable source verification. Read-only reference only.');
  const q=math.quantity(selected,L,N,rate),src=source(selected.sourceId);
  return {q,entry:{...selected,sourceLabel:src.label+' · '+(selected.sourceUrl||src.url),sourceDate:src.date,sourceStatus:chsAudit.geometryChecked?'IS 808:2021 selected mass, area, inertia and web/flange/radius geometry checked; NOT design/MTC certified':chsAudit.status==='is808-mass-area-inertia-checked'?'IS 808:2021 selected mass/area/Izz/Iyy checked; NOT design/MTC certified':chsAudit.status==='is808-mass-checked'?'IS 808:2021 selected nominal mass checked; other properties and MTC not certified':chsAudit.status==='rhs-weight-checked'?'BIS amended nominal kg/m spot-check; not product/design certification':chsAudit.status==='shs-row-checked'?'BIS SHS nominal table spot-check; not product/design certification':selected.basis}};
 }
@@ -313,7 +325,7 @@ function renderComparison(){
  if(items.length===0){message.textContent='';result.hidden=true;return;}
  for(const row of items){
   const chip=document.createElement('div');chip.className='compare-chip';
-  const label=document.createElement('span');label.textContent=row.designation;
+  const label=document.createElement('span');label.textContent=visibleDesignation(row);
   const button=document.createElement('button');button.type='button';button.textContent='×';
   button.setAttribute('aria-label','Remove '+row.designation+' from comparison');
   button.addEventListener('click',()=>toggleCompare(row));
@@ -324,7 +336,7 @@ function renderComparison(){
  message.textContent=rows.length+' sizes compared · scroll sideways on mobile · not a design or load-capacity comparison.';
  const table=document.createElement('table');
  const heading=document.createElement('thead'),header=document.createElement('tr');
- for(const label of ['Property',...rows.map(x=>x.designation)]){
+ for(const label of ['Property',...items.map(x=>visibleDesignation(x))]){
   const th=document.createElement('th');th.textContent=label;header.append(th);
  }
  heading.append(header);table.append(heading);
