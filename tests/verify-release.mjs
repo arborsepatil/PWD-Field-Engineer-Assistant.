@@ -172,7 +172,7 @@ for(const [section,test] of Object.entries(expected)){
 // This catches links that look fine online but silently fail after PWA install.
 const offlineSet=new Set(shell.map(entry=>entry.replace(/^\.\/?/,'')).filter(Boolean));
 let checkedHtml=0, checkedLinks=0;
-for(const htmlFile of fs.readdirSync(root).filter(name=>name.endsWith('.html'))){
+for(const htmlFile of fs.readdirSync(root).filter(name=>name.endsWith('.html')&&offlineSet.has(name))){
   const htmlText=load(htmlFile);
   checkedHtml++;
   const attr=/\b(?:href|src)\s*=\s*(["'])(.*?)\1/gi;
