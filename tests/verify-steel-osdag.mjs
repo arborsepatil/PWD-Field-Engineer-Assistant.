@@ -54,7 +54,7 @@ assert.match(app,/quantity blocked pending review|quantity blocked until/i);
 assert.match(app,/rows\.slice\(0,shownLimit\)/);
 assert.match(app,/steelMoreSizes'\)\.addEventListener\('click'/);
 assert.ok(html.includes('id="steelMoreSizes"'));
-assert.match(app,/function saveCsv/);
+assert.ok(!app.includes('function saveCsv'),'Steel UI exports deliberately removed; core CSV maths stays tested elsewhere');
 assert.match(app,/function shapeSvg/);
 assert.doesNotMatch(app,/rccWallBBS|cuttingLength|barBending/i);
 console.log('Osdag open-source overlay passed: 640 licensed rows, 6 inconsistent data flags, full previous hollow tools retained, search/citation/license and mass conflict blocking.');
