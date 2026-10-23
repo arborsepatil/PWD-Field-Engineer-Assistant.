@@ -424,9 +424,9 @@ const IS808_V29B_SAMPLE_ROWS=Object.freeze([
 // other variants. Match exact source ID + dimensions before generic samples.
 // The owner-held BIS PDF is NOT copied into this public source file.
 const IS808_EXACT_VARIANT_CHECKS=Object.freeze([
- Object.freeze({rowId:'OSD13',series:'LB',d:200,b:100,mass:21.06,area:26.8,ix:1800,iy:112,table:2,pdfPage:10,geom:Object.freeze({web:5.6,flange:8})}),
- Object.freeze({rowId:'OSD251',series:'HB',d:200,b:200,mass:39.73,area:50.6,ix:3690,iy:971,table:5,pdfPage:22,geom:Object.freeze({web:7.8,flange:9})}),
- Object.freeze({rowId:'OSD331',series:'LC',d:150,b:75,mass:15.6,area:19.8,ix:750,iy:96.1,table:7,pdfPage:26,geom:Object.freeze({web:5,flange:8.7})})
+ Object.freeze({rowId:'OSD13',family:'beam',series:'LB',d:200,b:100,mass:21.06,area:26.8,ix:1800,iy:112,table:2,pdfPage:10,geom:Object.freeze({web:5.6,flange:8})}),
+ Object.freeze({rowId:'OSD251',family:'column',series:'HB',d:200,b:200,mass:39.73,area:50.6,ix:3690,iy:971,table:5,pdfPage:22,geom:Object.freeze({web:7.8,flange:9})}),
+ Object.freeze({rowId:'OSD331',family:'channel',series:'LC',d:150,b:75,mass:15.6,area:19.8,ix:750,iy:96.1,table:7,pdfPage:26,geom:Object.freeze({web:5,flange:8.7})})
 ]);
 // V30: original BIS table rows themselves print mutually inconsistent
 // kg/m and cm² on FIVE listed variants; do not substitute 0.785*area,
@@ -465,7 +465,7 @@ function auditIS808(row){
  if(!found)return {status:'not-checked',source,
    note:'This individual hot-rolled section has not been reconciled to the owner-held IS 808:2021.'};
  const equivalent=(a,b)=>Math.abs(Number(a)-b)<0.005;
- const massOK=equivalent(row.kgPerM,found.mass)&&(!variant||(variant.series===series&&variant.d===d&&variant.b===b));
+ const massOK=equivalent(row.kgPerM,found.mass)&&(!variant||(variant.series===series&&variant.d===d&&variant.b===b&&variant.family===row.family));
  const propPairs=[['areaCm2','area'],['ixCm4','ix'],['iyCm4','iy']];
  const available=propPairs.filter(([key])=>row[key]!==undefined&&row[key]!==null);
  const propsOK=available.every(([key,src])=>equivalent(row[key],found[src]));
