@@ -94,7 +94,7 @@ assert.equal(cat.standardAudit({...mc250,widthMm:80}).status,'is808-numeric-conf
  'MC250 B80 cannot use the B82 variant 34.2 kg/m mass');
 assert.equal(cat.standardAudit({...alternate,widthMm:82}).status,'is808-numeric-conflict',
  'MC250 B82 cannot use the B80 30.6 kg/m mass');
-assert.equal(cat.standardAudit({family:'beam',series:'MB',depthMm:350,widthMm:140,kgPerM:52.33}).status,
+assert.equal(cat.standardAudit({family:'beam',series:'MB',depthMm:675,widthMm:240,kgPerM:152.33}).status,
  'not-checked','Unsampled IS808 sizes stay unverified despite plausible weights');
 assert.equal(cat.standardAudit({family:'angle',series:'UE',depthMm:100,widthMm:50,thicknessMm:8,kgPerM:9.05}).status,
  'is808-mass-checked','Supplementary unequal angle 100x50x8 mass is checked under IS 808 Table 12');

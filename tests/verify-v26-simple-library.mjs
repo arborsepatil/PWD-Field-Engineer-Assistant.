@@ -52,5 +52,5 @@ assert.ok(library.includes('Check the applicable edition, amendments and project
 assert.ok(library.includes('Library listings are from a Drive catalogue snapshot dated 18 October 2026'),'Private source freshness boundary missing');
 assert.ok(home.includes('href="./library.html?section=ssr"')&&home.includes('href="./library.html"'),'Home SSR and Library gateways not preserved');
 assert.ok(renderer.includes('Choose PDF'),'Private original PDF chooser missing');
-assert.ok(/pwd-tools-(?:compact-v26|digital-ssr-v27|steel-compare-v28)-2026-10-23/.test(sw),'Offline public assets must refresh for V26 or later');
+assert.ok(/pwd-tools-(?:compact-v26|digital-ssr-v27|steel-compare-v28|steel-audit-v29)-2026-10-23/.test(sw),'Offline public assets must refresh for V26 or later');
 console.log('V26 PASS: compact PDF cards, preserved reader/offline actions, source cautions, touch targets and cache invalidation.');

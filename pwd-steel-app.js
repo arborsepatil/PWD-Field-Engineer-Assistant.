@@ -100,6 +100,7 @@ function setFamily(next){
   $('steelMass').textContent='—';
   $('steelSource').removeAttribute('href');$('sourceLinks').hidden=true;
   $('steelDataCaution').textContent='Theoretical weight uses assumed density: 7850 kg/m³. Not a nominal BIS value.';
+ $('steelKeyAudit').dataset.audit='review';$('steelKeyAudit').textContent='Theoretical geometry only · not a BIS published nominal section.';
   updateCustomInputs();
  }else{
   $('sourceLinks').hidden=false;
@@ -183,8 +184,8 @@ function propertyTable(row){
   ['Web thickness (mm)',row.webMm],
   ['Flange thickness (mm)',row.flangeMm],
   ['Flange slope α (degrees)',row.flangeSlopeDeg],
-  ['Root radius R₁ (mm)',row.rootRadiusMm],
-  ['Toe radius R₂ (mm)',row.toeRadiusMm],
+  ['Root radius R₁ (mm)',row.r1Mm],
+  ['Toe radius R₂ (mm)',row.r2Mm],
   ['Area (cm²)',row.areaCm2],
   ['Izz / major axis (cm⁴)',row.ixCm4],
   ['Iyy / minor axis (cm⁴)',row.iyCm4],
@@ -206,6 +207,9 @@ function renderDetail(){
  $('steelTitle').textContent=selected.designation;
  const bisAudit=catalog.standardAudit(selected);
  $('steelStatus').textContent=bisAudit.status==='is808-numeric-conflict'?'⚠ IS 808 numeric conflict':bisAudit.geometryChecked?'IS 808:2021 · dimensions and section properties checked':bisAudit.status==='is808-mass-area-inertia-checked'?'IS 808:2021 · mass/area/inertia checked':bisAudit.status==='is808-mass-checked'?'IS 808:2021 · nominal kg/m checked':bisAudit.status==='spot-checked-match'?'IS 1161:2014 Amd.2 · sample checked':bisAudit.status==='spot-checked-conflict'?'⚠ Conflicts with BIS':bisAudit.status==='outside-current-scope'?'⚠ Below IS 4923 minimum':bisAudit.status==='source-numeric-hold'?'⚠ BIS source discrepancy · hold':bisAudit.status==='mass-area-conflict'?'⚠ Mass/area inconsistency':bisAudit.status==='shs-row-checked'?'IS 4923 · SHS checked sample':bisAudit.status==='shs-row-conflict'?'⚠ SHS BIS conflict':bisAudit.status==='rhs-weight-checked'?'IS 4923 · nominal mass checked':bisAudit.status==='rhs-weight-conflict'?'⚠ RHS BIS mass conflict':bisAudit.status==='amendment3-review'?'RHS · BIS Amd.3 not verified':bisAudit.status==='not-listed-in-replacement'?'⚠ Not listed in 2023 Table 1':selected.qualityFlag==='mass-area-inconsistent'?'⚠ Mass/area check':selected.basis==='osdag-open-unverified'?'Osdag · BIS row pending':selected.basis==='archived-manufacturer-only'?'Historical · verify current':selected.basis.startsWith('secondary-')?'Secondary · BIS review':'Manufacturer · '+src.date;
+ const auditState=comparison.audit(catalog,selected);
+ $('steelKeyAudit').dataset.audit=auditState.status;
+ $('steelKeyAudit').textContent=auditState.status==='hold'?'HOLD · Source conflict or incomplete record. Do not use this nominal weight for quantity calculations.':auditState.status==='checked'?'Selected numerical values checked · NOT a complete standard, material or design certification.':'Source-only weight · BIS row still needs verification before approval use.';
  $('steelMass').textContent=format(selected.kgPerM);
  const dim=comparison.dimension(selected);
  $('steelDepthLabel').textContent=dim.first;
