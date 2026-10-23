@@ -109,6 +109,7 @@ jobs:
         run: node tests/verify-steel-is808-v18-angles.mjs
       - name: Verify steel quantity and CSV method source attribution
         run: node tests/verify-steel-v19-provenance.mjs
+          node tests/verify-steel-v28-compare.mjs
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
       - name: Test simplified reference readers and preserve source checks
