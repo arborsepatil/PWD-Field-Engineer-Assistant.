@@ -1,22 +1,9 @@
-const PDFJS_CACHE='pwd-public-pdfjs-offline-v1';const CACHE_PREFIX='pwd-tools-';const CACHE='pwd-tools-public-library-v33-2026-10-23';const SHELL=['./','./index.html','./settings.html','./profile.html','./library.html','./library-public-catalog.js','./ssr_search.html','./ssr-local-core.js','./library-drive-catalog.js','./library-offline.js','./pdf_viewer.html','./bridge-local-source.js','./library-private-pdf.js','./bridge-pdf-canvas.js','./app-shell.css','./app-global.css','./concrete-ui-polish.css','./app-shell.js','./manifest.json','./icon.svg','./icon-192.png','./icon-512.png','./pwd_calculators_converters.html','./pwd-unit-data.js','./pwd_retaining_wall_section_quantity.html','./pwd_retaining_walls.html','./pwd_steel_table.html','./pwd-steel-osdag.js','./pwd-steel-osdag-license.html','./pwd-steel-catalog.js','./pwd-steel-core.js','./pwd-steel-compare.js','./pwd-steel-diagram.js','./pwd-steel-app.js','./pwd_pcc_wall_reference.html','./pwd_rcc_wall_reference.html','./rcc-wall-2023-data.js','./rcc-wall-2023-rebar.js','./rcc-wall-2023-section.js','./rcc-wall-2023-app.js','./pwd-retaining-wall-core.js','./pwd-wall-diagrams.js','./pwd_mix_batch_assistant.html','./pwd-batch-core.js','./pwd_concrete_mix_design.html','./pwd_bridge_plans.html','./bridge_book_2002.html','./bridge-2002-drawing-audit.js','./bridge_book_2023.html','./bridge-2023-drawing-audit.js','./pwd_rule_book.html','./morth_reader.html','./morth-section-2500.js','./morth-section-2600.js','./morth-section-2611-2612.js','./morth-section-2613-2615.js','./morth-section-2700.js','./morth-section-2800.js','./morth-section-2900.js','./morth-section-3000.js','./morth-section-3100.js','./morth-section-100-300.js','./red_book_reader.html','./gr_library.html'];
+const CACHE_PREFIX='pwd-tools-';const CACHE='pwd-tools-public-library-v34-2026-10-23';const SHELL=['./','./index.html','./settings.html','./profile.html','./library.html','./library-public-catalog.js','./ssr_search.html','./ssr-local-core.js','./app-shell.css','./app-global.css','./concrete-ui-polish.css','./app-shell.js','./manifest.json','./icon.svg','./icon-192.png','./icon-512.png','./pwd_calculators_converters.html','./pwd-unit-data.js','./pwd_retaining_wall_section_quantity.html','./pwd_retaining_walls.html','./pwd_steel_table.html','./pwd-steel-osdag.js','./pwd-steel-osdag-license.html','./pwd-steel-catalog.js','./pwd-steel-core.js','./pwd-steel-compare.js','./pwd-steel-diagram.js','./pwd-steel-app.js','./pwd_pcc_wall_reference.html','./pwd_rcc_wall_reference.html','./rcc-wall-2023-data.js','./rcc-wall-2023-rebar.js','./rcc-wall-2023-section.js','./rcc-wall-2023-app.js','./pwd-retaining-wall-core.js','./pwd-wall-diagrams.js','./pwd_mix_batch_assistant.html','./pwd-batch-core.js','./pwd_concrete_mix_design.html','./pwd_bridge_plans.html','./gr_library.html'];
 self.addEventListener('install',event=>{
   event.waitUntil(
     caches.open(CACHE)
       .then(cache=>cache.addAll(SHELL))
-      .then(async()=>{
-        // Optional, public PDF.js preload. An offline install still succeeds;
-        // users can explicitly retry from Library > Prepare offline reader.
-        try{
-          const renderer=await caches.open(PDFJS_CACHE);
-          await Promise.allSettled([...PDFJS_CDN_ASSETS].map(async(url)=>{
-            const request=new Request(url,{mode:'cors',credentials:'omit'});
-            if(await renderer.match(request))return;
-            const response=await fetch(request);
-            if(response.ok&&response.type!=='opaque')await renderer.put(request,response);
-          }));
-        }catch{}
-        await self.skipWaiting();
-      })
+      .then(()=>self.skipWaiting())
   );
 });
 self.addEventListener('activate',event=>{
@@ -28,30 +15,13 @@ self.addEventListener('activate',event=>{
       .then(()=>self.clients.claim())
   );
 });
-// Only the two version-pinned, public PDF.js assets may enter the app cache.
-// No PDF files from the user's Google Drive are ever cached here.
-const PDFJS_CDN_ASSETS=new Set([
- 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
-]);
+// Shared app has no PDF viewer or user-private document import. Public books
+// open as publisher links in the device browser; their bytes are never cached.
 self.addEventListener('fetch',event=>{
   const req=event.request;
   if(req.method!=='GET')return;
   const url=new URL(req.url);
-  if(url.origin!==self.location.origin){
-    if(!PDFJS_CDN_ASSETS.has(url.href))return;
-    // Pinned public renderer assets are cached independently from app updates.
-    // Originals and Drive preview URLs are never intercepted. Browser support varies.
-    event.respondWith((async()=>{
-      const cache=await caches.open(PDFJS_CACHE);
-      const saved=await cache.match(req);
-      if(saved)return saved;
-      const response=await fetch(req);
-      if(response.ok)await cache.put(req,response.clone());
-      return response;
-    })());
-    return;
-  }
+  if(url.origin!==self.location.origin)return;
 
   if(req.mode==='navigate'){
     // Fetch page updates when online; fall back only to cached HTML offline.
@@ -65,9 +35,8 @@ self.addEventListener('fetch',event=>{
           return response;
         })
         .catch(async()=>{
-          // Ignore query only for offline HTML navigation so PDFs selected by
-          // ?file=<ID>, ?doc=bridge2023 and Library ?section=ssr use the
-          // already installed HTML shell. Private PDF bytes remain in IndexedDB.
+          // Ignore query for the public HTML shell (e.g. Library filters).
+          // This service worker does not cache original publication PDFs.
           const cached=await caches.match(req,{ignoreSearch:true});
           if(cached)return cached;
           const fallback=await caches.match('./index.html');

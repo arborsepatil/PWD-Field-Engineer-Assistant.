@@ -36,6 +36,30 @@ window.PWDPublicBookCatalogue=Object.freeze([
     "note": "Public SSR publications index. Choose the applicable year and scope."
   },
   {
+    "section": "design",
+    "title": "PWD — Guidelines to Bridge Design",
+    "publisher": "Maharashtra Public Works Department",
+    "url": "https://pwd.maharashtra.gov.in/en/publication/a-book-writter-by-shri-k-s-jangde-sec-roads-and-shri-s-b-tamsekar-ce-pune-regionpublic-works-department/",
+    "kind": "book",
+    "note": "Official publisher page with bridge-design guideline PDF. Publication-page date does not establish this book's technical edition."
+  },
+  {
+    "section": "design",
+    "title": "PWD — General Procedure of the Designs Circle",
+    "publisher": "Maharashtra Public Works Department",
+    "url": "https://pwd.maharashtra.gov.in/en/publication/general-procedure-followed-in-the-designs-circle-public-works-department-maharashtra/",
+    "kind": "book",
+    "note": "Publisher-hosted PDF; confirm the edition and any applicable subsequent directions."
+  },
+  {
+    "section": "design",
+    "title": "PWD — Civil Design Circulars",
+    "publisher": "Maharashtra Public Works Department",
+    "url": "https://pwd.maharashtra.gov.in/en/document-category/civil-designs/",
+    "kind": "index",
+    "note": "Official public circular index for bridge detailing, skew bridges and design practice; verify individual circular dates."
+  },
+  {
     "section": "rules",
     "title": "PWD Public E-Books",
     "publisher": "Maharashtra Public Works Department",

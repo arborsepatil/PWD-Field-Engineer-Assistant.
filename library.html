@@ -62,7 +62,7 @@
 (function(){
  'use strict';
  const data=Array.isArray(window.PWDPublicBookCatalogue)?window.PWDPublicBookCatalogue:[];
- const categories=[['all','All'],['rules','PWD Manuals'],['ssr','SSR'],['spec','Specifications'],['code','IS / IRC'],['gr','GR / Circulars']];
+ const categories=[['all','All'],['rules','PWD Manuals'],['design','Design / Bridges'],['ssr','SSR'],['spec','Specifications'],['code','IS / IRC'],['gr','GR / Circulars']];
  const titles=Object.fromEntries(categories);
  const get=id=>document.getElementById(id);
  const requested=new URLSearchParams(location.search).get('section')||'all';

@@ -20,12 +20,12 @@ for(const old of ["morth:{title:","rulebook:{title:","redbook2:{title:","pwdcode
 const inline=pdf.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(inline);new vm.Script(inline[1],{filename:'private-free-local-viewer.js'});
 for(const [label,page,doc] of [['2023',218,'bridge2023'],['2002',69,'bridge2002']]){
- assert.ok(wall.includes('./pdf_viewer.html?doc='+doc+'&amp;page='+page),
-  label+' page-level link retained for users who provide their own local document');
+ assert.ok(!wall.includes('./pdf_viewer.html?doc='+doc+'&amp;page='+page),
+  label+' original PDF URL must not be exposed through public app');
 }
 assert.ok(wall.includes('Engineering limitation:')&&wall.includes('Do not apply its quantities'),'Safety disclaimer must remain visible');
 assert.match(wall,/<details class="source-more group">[\s\S]*?<summary>Drawing references and discrepancies<\/summary>/);
 assert.ok(wall.includes('sheet 174')||wall.includes('Sheet 174'),'Source drawing discrepancy must remain visible');
 assert.ok(wall.includes('omits the index leading zero'),'2002 scheme discrepancy must remain visible');
-assert.ok(cache.includes("'./pdf_viewer.html'")&&cache.includes("'./pwd_pcc_wall_reference.html'"),'Local technical source screens still cached');
-console.log('V23→V33 PASS: private file IDs and Drive actions removed, optional user-selected bridge PDF chooser and engineering warnings retained.');
+assert.ok(!cache.includes("'./pdf_viewer.html'")&&cache.includes("'./pwd_pcc_wall_reference.html'"),'Public technical references cached; private PDF reader not cached');
+console.log('V23→V34 PASS: no public original-PDF navigation, historical viewer code excluded from cache; engineering warnings retained.');

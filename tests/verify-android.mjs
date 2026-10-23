@@ -38,7 +38,10 @@ assert.match(builder,/androidx\.webkit:webkit/);
 assert.match(workflow,/assembleDebug/);
 assert.match(workflow,/upload-artifact/);
 assert.match(workflow,/prepare_assets\.py/);
-assert.match(pack,/EXCLUDED = \{"sw\.js", "rcc-wall-2023-bbs\.js", "library-offline\.js"\}/);
+for(const restricted of ['library-offline.js','library-drive-catalog.js','library-private-pdf.js','pdf_viewer.html','bridge-local-source.js','bridge_book_2002.html','bridge_book_2023.html','morth_reader.html','red_book_reader.html','pwd_rule_book.html']){
+ assert.ok(pack.includes('"'+restricted+'"'),'Private or licensed book component is not excluded from public APK: '+restricted);
+}
+assert.ok(pack.includes('for retired in EXCLUDED'),'Android packager must remove stale private assets');
 assert.match(pack,/PRIVATE_PROVIDER_URLS/,'All Android assets must be checked for private Drive/Docs links');
 assert.match(pack,/not any\(p\.suffix\.lower\(\) == "\.pdf"/);
 assert.doesNotMatch(activity,/setAllowUniversalAccessFromFileURLs\(true\)/);

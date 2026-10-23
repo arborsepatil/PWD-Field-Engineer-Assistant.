@@ -39,21 +39,22 @@ assert.ok(diagrams.length>500, 'Original section and setting-out diagrams must b
 assert.doesNotMatch(pccCalc,/masonry|weep[- ]?hole/i);
 assert.doesNotMatch(core,/weep[- ]?hole/i);
 
-assert.match(pccRefs,/doc=bridge2023&amp;page=218/);
-assert.match(pccRefs,/doc=bridge2002&amp;page=69/);
+assert.ok(!pccRefs.includes('pdf_viewer.html'),'Public PCC reference cannot expose private PDF viewer');
+assert.ok(pccRefs.includes('./library.html?section=design'),'PCC references use official PWD publisher pages');
 assert.match(pccRefs,/href="\.\/pwd_retaining_wall_section_quantity\.html"/);
 assert.match(pccRefs,/classification under review/);
 assert.match(pccRefs,/Confirm material and section/);
 assert.match(pccRefs,/not automatically used in its geometry/);
 assert.doesNotMatch(pccRefs,/masonry/i);
 
-assert.match(rcc,/doc=bridge2023&amp;page=209/);
+assert.ok(!rcc.includes('pdf_viewer.html'),'Public RCC reference cannot expose private PDF viewer');
 assert.match(rcc,/id="rccSbc"/);
 assert.match(rcc,/id="rccHeight"/);
 assert.match(rcc,/src="\.\/rcc-wall-2023-data\.js"/);
 assert.match(rcc,/src="\.\/rcc-wall-2023-app\.js"/);
 assert.match(rcc,/raft foundations/);
 assert.doesNotMatch(rcc,/doc=bridge2002|Masonry Wall/);
+assert.ok(rcc.includes('./library.html?section=design'),'RCC publisher references available');
 for(const f of ['rcc-wall-2023-data.js','rcc-wall-2023-app.js'])
   assert.ok(shell.includes('./'+f),'Uncached RCC source script '+f);
 for(const f of ['pwd_retaining_walls.html','pwd_retaining_wall_section_quantity.html','pwd_pcc_wall_reference.html','pwd_rcc_wall_reference.html'])

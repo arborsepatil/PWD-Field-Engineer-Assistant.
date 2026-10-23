@@ -164,6 +164,7 @@ jobs:
           ! grep -q 'navigator.serviceWorker.register' android/app/src/main/assets/www/index.html
           ! find android/app/src/main/assets/www -iname '*.pdf' | grep -q .
           test ! -f android/app/src/main/assets/www/library-offline.js
+          python3 scripts/prepare_public_site.py
       - name: Build INSTALLABLE Android debug APK
         working-directory: android
         run: gradle --no-daemon --stacktrace :app:assembleDebug
