@@ -55,9 +55,9 @@ assert not any(p.suffix.lower() == ".pdf" for p in OUTPUT.iterdir())
 # All legacy Drive private/publication IDs have been withdrawn from the distributed
 # catalogue and legacy PDF viewer. A public publisher link is not a redistributed book.
 assert (OUTPUT / "library-public-catalog.js").exists(), "Public publisher catalogue not packaged"
-assert "window.PWDDrivePDFCatalog=[]" in (OUTPUT / "library-drive-catalog.js").read_text(encoding="utf-8")
+assert not (OUTPUT / "library-drive-catalog.js").exists(), "No retired Drive catalogue in shared APK"
+assert not (OUTPUT / "pdf_viewer.html").exists(), "No retired private viewer in shared APK"
 assert "drive.google.com/file/d/" not in (OUTPUT / "library.html").read_text(encoding="utf-8")
-assert "drive.google.com/file/d/" not in (OUTPUT / "pdf_viewer.html").read_text(encoding="utf-8")
 # All exported HTML/JS is scanned, not just the Library and PDF viewer. This
 # also catches accidental private work-register URLs in other modules.
 PRIVATE_PROVIDER_URLS = (
