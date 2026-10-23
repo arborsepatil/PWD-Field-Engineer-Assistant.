@@ -13,6 +13,8 @@ OUTPUT = ROOT / "android/app/src/main/assets/www"
 EXTENSIONS = {".html", ".js", ".css", ".json", ".svg", ".png", ".webp", ".jpg", ".jpeg"}
 EXCLUDED = {"sw.js", "rcc-wall-2023-bbs.js", "library-offline.js"}  # Defer BBS cutting; do not ship future-only calculation code in APK.
 OUTPUT.mkdir(parents=True, exist_ok=True)
+# Remove any retired script left by a previous local build before repackaging.
+(OUTPUT / "library-offline.js").unlink(missing_ok=True)
 count = 0
 for file in ROOT.iterdir():
     if not file.is_file() or file.suffix.lower() not in EXTENSIONS or file.name in EXCLUDED:
