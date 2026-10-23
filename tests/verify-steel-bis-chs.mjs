@@ -37,7 +37,7 @@ assert.equal(full.standardAudit(full.byId('tata-legacy-chs33.7x33.7x2.6')).statu
 assert.match(app,/IS 1161 Amendment 2 review: not an approved current table weight/);
 assert.match(app,/IS 1161:2014 Amd.2 · sample checked/);
 assert.match(app,/not-listed-in-replacement/);
-assert.match(app,/2023 spot-check/);
+assert.ok(app.includes('Limited BIS check')&&app.includes('comparison.audit(catalog,row)'),'CHS and other limited BIS spot-checks retain truthful visible source status');
 assert.match(app,/spot-checked-conflict/);
 const list=cat.codeReferences.find(x=>x.standard.startsWith('IS 1161:2014'));
 assert.ok(list.standard.includes('Amd.2 (Aug 2023)'));
