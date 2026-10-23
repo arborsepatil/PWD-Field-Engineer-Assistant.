@@ -18,15 +18,21 @@ EXCLUDED = {
     "sw.js", "rcc-wall-2023-bbs.js",
     "library-offline.js", "library-drive-catalog.js", "library-private-pdf.js",
     "pdf_viewer.html", "bridge-local-source.js", "bridge-pdf-canvas.js",
+    "bridge_book_2002.html", "bridge_book_2023.html",
+    "bridge-2002-drawing-audit.js", "bridge-2023-drawing-audit.js",
+    "pwd_rule_book.html", "red_book_reader.html", "morth_reader.html",
 }
 OUTPUT.mkdir(parents=True, exist_ok=True)
 # A previous local build may have copied these files before V34; remove stale
 # assets before packaging rather than trusting exclusions on a clean runner.
 for retired in EXCLUDED:
     (OUTPUT / retired).unlink(missing_ok=True)
+for retired in OUTPUT.glob("morth-*"):
+    retired.unlink(missing_ok=True)
 count = 0
 for file in ROOT.iterdir():
-    if not file.is_file() or file.suffix.lower() not in EXTENSIONS or file.name in EXCLUDED:
+    if (not file.is_file() or file.suffix.lower() not in EXTENSIONS or
+            file.name in EXCLUDED or file.name.startswith("morth-")):
         continue
     shutil.copy2(file, OUTPUT / file.name)
     count += 1
@@ -66,10 +72,9 @@ for bundled in OUTPUT.iterdir():
         )
 for retired in EXCLUDED:
     assert not (OUTPUT / retired).exists(), f"Retired or private PDF component must not ship: {retired}"
-for drawing_page in ("bridge_book_2002.html", "bridge_book_2023.html"):
-    assert "pdf_viewer.html" not in (OUTPUT / drawing_page).read_text(encoding="utf-8"), (
-        f"Private PDF access link remains in distributed drawing index: {drawing_page}"
-    )
+assert not list(OUTPUT.glob("morth-*")), "Unapproved MoRTH-derived publication content must not ship"
+assert "bridge_book_2002.html" not in (OUTPUT / "pwd_bridge_plans.html").read_text(encoding="utf-8")
+assert "bridge_book_2023.html" not in (OUTPUT / "pwd_bridge_plans.html").read_text(encoding="utf-8")
 assert (OUTPUT / "library-public-catalog.js").exists()
 
 
