@@ -111,6 +111,7 @@ jobs:
         run: node tests/verify-steel-v19-provenance.mjs
           node tests/verify-steel-v28-compare.mjs
           node tests/verify-steel-v29-bis-batch.mjs
+          node tests/verify-steel-v29b-bis-batch.mjs
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
       - name: Test simplified reference readers and preserve source checks
