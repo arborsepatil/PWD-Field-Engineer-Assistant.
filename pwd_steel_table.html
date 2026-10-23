@@ -19,6 +19,10 @@ button.more-sizes{display:block;width:100%;min-height:44px;margin-top:9px;border
 .selected{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;padding:11px 12px;border-radius:11px;background:var(--soft)}.selected strong{font-size:1rem}.selected span{font-size:.74rem;color:var(--muted)}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stat{padding:12px 9px;border:1px solid var(--line);border-radius:12px}.stat:first-child{background:var(--soft)}.stat span{font-size:.73rem;color:var(--muted);display:block}.stat b{font-size:1.23rem;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.stat:first-child b{font-size:1.58rem;color:var(--ink)}
 .price{padding:9px 0 0;font-weight:750;color:var(--ink)}
+.steel-qty-gate{font-size:.78rem;line-height:1.5;border-left:3px solid var(--line);border-radius:8px;background:var(--soft);padding:8px 10px;margin:9px 0}
+.steel-qty-gate[data-audit="hold"],.steel-qty-gate[data-audit="review"]{border-left-color:var(--warn);background:var(--warnBg);color:var(--warn)}
+#steelCalculate:disabled{opacity:.58;cursor:not-allowed}
+.pick[data-audit="hold"]{border-left:3px solid var(--warn)}
 .steel-diagram-status{font-size:.77rem;color:var(--muted);line-height:1.5;padding:0 3px;margin:-3px 0 12px}
 .figure{background:var(--figureBg);border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}.figure svg{display:block;width:100%;height:auto;max-height:335px}.figure .bg{fill:var(--figureBg)}.figure .shape{fill:var(--figureSteel);stroke:var(--figureStroke)}.figure .shape .cutout{fill:var(--figureBg);stroke:var(--figureStroke)}.figure .ink{fill:var(--figureInk)}.figure .muted{fill:var(--figureMuted)}
 table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:8px 5px;border-bottom:1px solid var(--line);font-size:.82rem}td:last-child{text-align:right;font-weight:730}th{background:var(--soft)}
@@ -120,7 +124,8 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 <details class="details" id="steelQuantityDisclosure">
  <summary>Quantity calculator · optional</summary>
  <div class="inside"><section class="steel-qty-inside" aria-label="Steel quantity calculator">
- <p class="small">Optional: length × number of pieces × listed kg/m. Not a structural design check.</p>
+ <p class="small">Optional: length × pieces × independently source-checked kg/m. Not a structural design or MTC check.</p>
+ <p id="steelQtyGate" class="steel-qty-gate" role="status">Choose a verified section before calculating a quantity.</p>
  <div class="three">
   <div class="field"><label for="steelLength">Length / piece (m)</label><input id="steelLength" type="number" min="0.001" step="any" inputmode="decimal" value="6"></div>
   <div class="field"><label for="steelCountPieces">Pieces</label><input id="steelCountPieces" type="number" min="1" step="1" inputmode="numeric" value="1"></div>
