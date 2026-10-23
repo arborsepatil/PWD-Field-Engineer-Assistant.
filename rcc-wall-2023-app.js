@@ -126,7 +126,7 @@ function render(){
   $('rccRebarCount').textContent='';
  }
  refreshGeometryQuantity();
- $('rccDrawingLink').href='./pdf_viewer.html?doc=bridge2023&page='+row.pdfPage;
+ $('rccDrawingLink').href='./library.html?section=design'; // Private original drawing not distributed.
 }
 fillHeights(q.get('height'));
 sbcSelect.addEventListener('change',()=>{const old=heightSelect.value;fillHeights(old);render();});
