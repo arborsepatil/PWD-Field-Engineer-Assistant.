@@ -123,6 +123,8 @@ jobs:
         run: node tests/verify-v24-mobile-reader.mjs
       - name: Verify simplified source reader filters
         run: node tests/verify-v25-reader-filters.mjs
+      - name: Verify compact original-PDF Library and advanced actions
+        run: node tests/verify-v26-simple-library.mjs
       - name: Verify Android wrapper security and release scope
         run: node tests/verify-android.mjs
       - name: Bundle public engineering assets inside Android APK
