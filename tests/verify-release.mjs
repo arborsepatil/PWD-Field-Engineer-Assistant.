@@ -496,7 +496,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  const oldBook=load('bridge_book_2002.html');
  assert.ok(oldBook.includes('bridge-2002-drawing-audit.js'),'2002 source metadata script not linked');
  assert.ok(oldBook.includes('sourceAudit[r.sr]'),'2002 per-record source mapping unused');
- assert.ok(oldBook.includes('View original '),'2002 original page links missing');
+ assert.ok(!oldBook.includes('View original '),'Private 2002 original PDF link must not appear');
  assert.ok(oldBook.includes('not digitized'),'2002 graphical detail must remain undigitized');
 
  const auditSrc=load('bridge-2023-drawing-audit.js');
@@ -528,7 +528,7 @@ process.stdout.write('MoRTH General 101–119: source-linked QC extension passed
  assert.ok(bookJs.includes('UNNUMBERED-RAFT-147'),'Missing unnumbered raft index entry');
  assert.ok(bookJs.includes('sourceAudit[r.sr]'),'Per-drawing page mapping not connected');
  assert.ok(bookJs.includes('DRAWING NUMBER DISCREPANCY'),'Actual sheet-number differences must be visible');
- assert.ok(bookJs.includes('View original drawing · PDF p.'),'Verified page deeplink missing');
+ assert.ok(!bookJs.includes('View original drawing · PDF p.'),'Private 2023 source link must not appear');
  assert.ok(bookJs.includes('Original DWG comparison'),'DWG presence may not be implied');
 
  assert.ok(!pdf.includes('id="zoomIn"')&&!pdf.includes('id="zoomOut"'),'Zoom buttons must not appear');
@@ -839,49 +839,19 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  process.stdout.write('Public publisher Library and device-owned local PDF reader privacy boundaries passed\n');
 }
 
-// Cache a pinned, publicly distributable PDF.js renderer after successful first use.
-// This does not cache any original Drive PDFs or weaken permission requirements.
+// V34: public app must not intercept the publisher's PDF or library pages.
 {
- const pinned='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
- const worker='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
- const allowed=new Set([pinned,worker]),events={};
- const cached=new Map(),fetches=[];
- let connected=true;
- const cache={match:async req=>cached.get(req.url),
-              put:async(req,response)=>{cached.set(req.url,response)}};
- const testEnv={
-  URL,
-  self:{location:{origin:'https://example.test'},addEventListener(k,fn){events[k]=fn}},
-  caches:{open:async()=>cache},
-  fetch:async req=>{
-    fetches.push(req.url);
-    if(!connected)throw Error('Network offline');
-    return {ok:true,asset:req.url,clone(){return this}};
-  }
- };
- vm.runInNewContext(sw,testEnv,{filename:'pdfjs-cache-offline-test'});
- async function asset(url){
-   let response;
-   const request={method:'GET',url,mode:'cors'};
-   events.fetch({request,respondWith(p){response=p}});
-   return response?await response:null;
- }
- for(const url of allowed){
-   assert.equal((await asset(url)).asset,url,'First online use did not serve pinned PDF.js resource');
-   assert.ok(cached.has(url),'PDF.js resource not saved for later offline reading');
- }
- connected=false;
- for(const url of allowed){
-   assert.equal((await asset(url)).asset,url,'Saved renderer unavailable when offline');
- }
- assert.equal(fetches.length,2,'Offline PDF.js should not refetch the CDN after caching');
- assert.equal(await asset('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/other.js'),null,
-   'Only allowlisted public assets can be intercepted');
- assert.equal(await asset('https://drive.google.com/file/d/private-identifier/preview'),null,
-   'Never intercept original Drive PDF requests in public service worker');
- process.stdout.write('PDF.js public CDN runtime cache and private Drive exclusion passed\n');
+ const handlers={};
+ const env={URL,self:{location:{origin:'https://site.test'},addEventListener(k,v){handlers[k]=v}}};
+ vm.runInNewContext(sw,env,{filename:'public-only-fetch-scope'});
+ const external={method:'GET',mode:'cors',url:'https://pwd.maharashtra.gov.in/en/publication/a-book-onpublic-works-department-rules-manual/'};
+ let intercepted=false;
+ handlers.fetch({request:external,respondWith(){intercepted=true}});
+ assert.equal(intercepted,false,'Service worker must not intercept publisher book requests');
+ assert.ok(!shell.includes('./pdf_viewer.html'),'Public offline app must not include a private PDF reader');
+ assert.ok(!shell.includes('./bridge-local-source.js'),'Public offline app must not include private PDF import');
+ process.stdout.write('Publisher-only PDF viewing: private renderer excluded and external books not intercepted\\n');
 }
-
 
 // Unit converter release audit: exact international and Maharashtra land units.
 // Run factors through isolated JS context and verify every category round trips.
