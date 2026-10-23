@@ -30,6 +30,9 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 @media print{.top,.tabs,.results,#steelSearch,#steelSearchLabel,.actions,.hide-print,details.details:not([open]){display:none!important}body{background:white;color:#111}main{padding:0;max-width:none}.card,details.details{border:1px solid #ccc;break-inside:avoid}.figure svg{max-height:215px}details.details .inside{display:block}}
 
 /* V28 — weight and dimensions first, information-only comparison, quantity secondary. */
+.steel-audit-line{margin:7px 0 10px;border-left:3px solid var(--line);border-radius:7px;padding:8px 10px;background:var(--soft);color:var(--ink);font-size:.77rem;font-weight:710}
+.steel-audit-line[data-audit="hold"]{border-left-color:#bf5100;background:var(--warnBg);color:var(--warn)}
+.steel-audit-line[data-audit="review"]{border-left-color:var(--warn);background:var(--warnBg);color:var(--warn)}
 #steelPicked{display:none!important}
 .steel-key-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:11px 0}
 .steel-key{display:flex;flex-direction:column;gap:3px;border:1px solid var(--line);border-radius:12px;padding:10px 9px;min-width:0}
@@ -94,6 +97,7 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
     <div class="steel-key"><span id="steelWidthLabel">Width / leg</span><strong id="steelMainWidth">—</strong><small>mm</small></div>
     <div class="steel-key"><span id="steelMainThicknessLabel">Thickness</span><strong id="steelMainThickness">—</strong><small>mm</small></div>
    </div>
+   <p id="steelKeyAudit" class="steel-audit-line" role="status" aria-live="polite">Select a section to see source verification status.</p>
    <div id="steelSectionDiagram" class="figure" aria-label="Illustrative steel section"></div>
    <details class="steel-tech"><summary>More section properties</summary><div id="steelProperties"></div></details>
    <div class="warning" id="steelDataCaution"></div>
