@@ -1,5 +1,15 @@
 # PWD Field Assistant — installable Android APK
 
+## PUBLIC LIBRARY POLICY (V34, 23 October 2026)
+- The shared test APK includes **official public publisher links only**, which open in the device browser. Download/redistribution permission is NOT inferred from public view access.
+- The former 73-entry owner-Drive catalogue, original PDFs, device-owned private book viewer/importer, unapproved original-derived bridge book indexes, historical manual readers and MoRTH digitised reference copies are excluded from the shared package.
+- The Bridge Plans menu opens a public reference gateway. The 2002 and 2023 original type-plan PDFs are **not included**; no design approval should be inferred from stored index metadata.
+- Public references require internet unless separately accessed through the publisher's lawful offline provisions. The Library does not bundle offline publisher PDFs, private Drive IDs, a downloader, or a PDF export action.
+- Previous test APKs may have provided local private PDFs. Updating the APK changes bundled pages but may preserve old local app data; users can clear app storage if they explicitly want that data erased (this also removes app preferences and personal imports).
+- Do not confuse an Android debug test APK with a signed production release. Civil engineering source QA is separately pending.
+
+
+
 This is a normal Android application with a launcher icon, package ID
 `in.pwdtools.fieldassistant`, bundled public engineering screens, Java-based
 Android Activity, Android file picker and Android print-service integration.
