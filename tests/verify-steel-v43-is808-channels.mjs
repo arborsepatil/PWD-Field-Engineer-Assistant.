@@ -79,5 +79,5 @@ const ledger=source.split('/* V43: 24 existing Osdag')[1]?.split('// Source-publ
 assert.match(ledger,/IS808_V43_ROW_CHECKS/);
 assert.match(ledger,/fingerprint/);
 assert.ok(!ledger.includes('mass:')&&!ledger.includes('area:')&&!ledger.includes('ix:'),'Licensed source table cannot be copied into the app audit ledger');
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v44-2026-10-24'));
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v45-2026-10-24'));
 console.log('STEEL V43 PASS: 24 channel source matches; '+result.counts.checked+' limited-checked, '+result.counts.review+' pending, '+result.counts.hold+' held. Quantity gate and provisional holds intact.');
