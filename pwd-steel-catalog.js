@@ -418,7 +418,7 @@ const IS808_V29B_SAMPLE_ROWS=Object.freeze([
  Object.freeze({series:'WB',d:350,b:200,mass:56.89,area:72.4,ix:15500,iy:1170,table:1,pdfPage:8,geom:Object.freeze({web:8,flange:11.4})}),
  Object.freeze({series:'WB',d:400,b:200,mass:66.71,area:85,ix:23400,iy:1380,table:1,pdfPage:8,geom:Object.freeze({web:8.6,flange:13})})
 ]);
-// V42: 22 additional selected junior/light-weight beam records independently
+// V42: 23 additional selected junior/light-weight beam records independently
 // compared to the privately held IS 808:2021 Table 2, physical PDF pages 9-10,
 // printed pages 7-8. Only the listed values (mass, A, D, B, t, T, Izz, Iyy)
 // were checked on 2026-10-24. These are individual row checks, NOT a
@@ -447,6 +447,7 @@ const IS808_V42_TABLE2_SAMPLE_ROWS=Object.freeze([
  ["OSD23","LB",500,180,74.92,95.4,38500,1060,9.2,14.1,10],
  ["OSD24","LB",550,190,86.28,109,53100,1330,9.9,15,10],
  ["OSD25","LB",600,210,99.39,126,72900,1820,10.5,15.5,10],
+ ["OSD13","LB",200,100,21.06,26.8,1800,112,5.6,8,10],
 ].map(([rowId,series,d,b,mass,area,ix,iy,web,flange,pdfPage])=>Object.freeze({
  rowId,series,d,b,mass,area,ix,iy,table:2,pdfPage,
  geom:Object.freeze({web,flange})
@@ -461,9 +462,13 @@ function auditIS808(row){
   return {status:'not-checked',source:null};
  const series=resolveSeries(row),d=Number(row.depthMm),b=Number(row.widthMm);
  const t=Number(row.thicknessMm);
- const found=[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS,...IS808_V29B_SAMPLE_ROWS,...IS808_V42_TABLE2_SAMPLE_ROWS].find(x=>
-   (x.rowId===undefined||x.rowId===row.id)&&x.series===series&&x.d===d&&x.b===b&&
-   (x.t===undefined||x.t===t));
+ const candidates=[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS,...IS808_V29B_SAMPLE_ROWS,...IS808_V42_TABLE2_SAMPLE_ROWS];
+ // An exact reviewed row-ID takes precedence over a generic dimension-only
+ // sample. LB 200 and LB(P) 200 share D=200/B=100 but have different
+ // nominal kg/m; comparing the latter with the former causes a false hold.
+ const matches=x=>x.series===series&&x.d===d&&x.b===b&&(x.t===undefined||x.t===t);
+ const found=candidates.find(x=>x.rowId===row.id&&matches(x))||
+  candidates.find(x=>x.rowId===undefined&&matches(x));
  if(!found)return {status:'not-checked',source,
    note:'This individual hot-rolled section has not been reconciled to the owner-held IS 808:2021.'};
  const equivalent=(a,b)=>Math.abs(Number(a)-b)<0.005;
