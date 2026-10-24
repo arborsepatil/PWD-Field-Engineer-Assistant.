@@ -26,9 +26,9 @@ const batch=[
  ['OSD16',32.96,10],['OSD17',37.72,10],['OSD18',41.50,10],
  ['OSD19',43.07,10],['OSD20',49.44,10],['OSD21',56.82,10],
  ['OSD22',65.22,10],['OSD23',74.92,10],['OSD24',86.28,10],
- ['OSD25',99.39,10]
+ ['OSD25',99.39,10],['OSD13',21.06,10]
 ];
-assert.equal(new Set(batch.map(x=>x[0])).size,22);
+assert.equal(new Set(batch.map(x=>x[0])).size,23);
 for(const [id,mass,page] of batch){
  const row=cat.byId(id);
  assert.ok(row,'Missing original row '+id);
@@ -50,18 +50,25 @@ assert.equal(a.widthMm,b.widthMm);
 assert.notEqual(a.kgPerM,b.kgPerM);
 assert.equal(cat.standardAudit(a).status,'is808-mass-area-inertia-checked');
 assert.equal(cat.standardAudit(b).status,'is808-mass-area-inertia-checked');
-assert.ok(!cat.standardAudit(cat.byId('OSD13')).status.startsWith('is808-mass-'),
- 'Conflicting LB(P) 200 cannot be promoted by another row');
+const l200=cat.byId('OSD12'),lp200=cat.byId('OSD13');
+assert.ok(l200&&lp200,'Separate LB 200 and LB(P) 200 must exist');
+assert.equal(l200.depthMm,lp200.depthMm);
+assert.equal(l200.widthMm,lp200.widthMm);
+assert.notEqual(l200.kgPerM,lp200.kgPerM);
+assert.equal(lp200.kgPerM,21.06);
+assert.equal(cat.standardAudit(lp200).status,'is808-mass-area-inertia-checked',
+ 'LB(P)200 was incorrectly compared against LB 200: source-specific audit must override it');
+assert.equal(compare.quantityGate(cat,lp200).allowed,true);
 const snapshot=status.summarize(cat,compare,cat.sections);
 assert.equal(snapshot.total,757);
-assert.equal(snapshot.counts.checked,171,'22 newly checked rows expected on previous 149');
-assert.equal(snapshot.counts.review,566,'Pending count should fall by exactly 22');
-assert.equal(snapshot.counts.hold,20,'Prior held records must remain held');
+assert.equal(snapshot.counts.checked,172,'23 newly checked rows expected on previous 149');
+assert.equal(snapshot.counts.review,566,'Pending count falls by 22, plus one former false-hold corrected');
+assert.equal(snapshot.counts.hold,19,'Only the reviewed false LB(P)200 hold is resolved');
 for(const row of cat.sections){
  const review=compare.audit(cat,row),gate=compare.quantityGate(cat,row);
  assert.equal(gate.allowed,review.status==='checked','Quantity eligibility changed: '+row.id);
 }
 assert.match(read('pwd-steel-catalog.js'),/IS808_V42_TABLE2_SAMPLE_ROWS/);
-assert.match(read('pwd-steel-catalog.js'),/x\.rowId===undefined\|\|x\.rowId===row\.id/);
+assert.match(read('pwd-steel-catalog.js'),/candidates\.find\(x=>x\.rowId===row\.id&&matches\(x\)\)/);
 assert.ok(read('pwd_steel_table.html').includes('steelCatalogueAudit'),'Actual app must render source counts');
-console.log('STEEL V42 SOURCE AUDIT PASS: checked 171, pending 566, held 20; 22 IS 808 Table 2 records matched and only those records newly unlocked for provisional quantity.');
+console.log('STEEL V42 SOURCE AUDIT PASS: checked 172, pending 566, held 19; 23 IS 808 Table 2 records checked, including corrected LB(P)200 variant.');
