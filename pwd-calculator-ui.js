@@ -34,12 +34,12 @@
   }
   function addToken(token) {
     if(solved) {
-      if(/^[+\-×÷^%]/.test(token)) expression.value=String(lastAnswer??'');
+      if(/^[+−×÷^%]/.test(token)) expression.value=String(lastAnswer??'');
       else expression.value='';
     }
     solved=false;
     // Make 2π, 2sin(30), 2(5) and (1+2)(3+4) explicit multiplication.
-    if((token==='π'||token==='e'||token.endsWith('('))&&
+    if((token==='π'||token==='e'||token.startsWith('(')||token.endsWith('('))&&
       /(?:\d|[)%πe])$/.test(expression.value)) expression.value+='×';
     expression.value+=token;
     render();
