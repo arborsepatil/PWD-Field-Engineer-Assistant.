@@ -120,6 +120,8 @@ jobs:
         run: node tests/verify-v37-calculator.mjs
       - name: Verify V38 CivilBandhu branding and Home icon order
         run: node tests/verify-v38-civilbandhu-home.mjs
+      - name: Verify V39 compact Home and safe bottom navigation
+        run: node tests/verify-v39-home-navigation.mjs
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
       - name: Test simplified reference readers and preserve source checks
