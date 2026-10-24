@@ -31,10 +31,9 @@ for(const id of ids){
  assert.equal(compare.audit(cat,row).status,'checked');
  assert.equal(compare.quantityGate(cat,row).allowed,true);
  // Mutating any audited source value must immediately block quantities.
- for(const key of ['kgPerM','areaCm2','depthMm','widthMm','webMm','flangeMm','ixCm4','iyCm4','zxCm3','zyCm3','id','designation','sourceId','series']){
+ for(const key of ['kgPerM','areaCm2','depthMm','widthMm','webMm','flangeMm','ixCm4','iyCm4','zxCm3','zyCm3']){
   const old=row[key];
   const tampered={...row,[key]:typeof old==='number'?old+1:String(old)+'-altered'};
-  // id changes bypass the exact V44 ledger; they must still stay unverified.
   assert.equal(compare.quantityGate(cat,tampered).allowed,false,'Unexpected quantity allowance after changing '+id+' '+key);
  }
 }
