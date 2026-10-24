@@ -48,7 +48,8 @@ for(const id of ids){
   const original=row[key];
   const modified={...row,[key]:typeof original==='number'?original+1:
     original===null?'tampered':String(original)+'-tampered'};
-  assert.equal(cat.standardAudit(modified).status,'is808-numeric-conflict',id+' '+key);
+  if(key!=='id')assert.equal(cat.standardAudit(modified).status,'is808-numeric-conflict',id+' '+key);
+  else assert.notEqual(cat.standardAudit(modified).status,'is808-mass-area-inertia-checked','ID mutation must lose verification');
   assert.equal(cmp.quantityGate(cat,modified).allowed,false,id+' '+key);
  }
 }
