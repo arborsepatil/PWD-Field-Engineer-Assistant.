@@ -10,7 +10,7 @@
 const SOURCES=Object.freeze({
  sail2023:Object.freeze({label:'SAIL · Product Range brochure (2023)',date:'2023-09',url:'https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf',note:'Manufacturer-published mass/overall dimensions. Do not assume conformity of delivered material without inspection/MTC.'}),
  sailProps2023:Object.freeze({label:'SAIL · Structurals / Tapered Flange (2023)',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'Manufacturer-published section properties for specific MB sizes; 2023 product data, not a replacement for the current BIS text.'}),
- is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; last selected audit 2026-10-23',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Limited selected hot-rolled rows in curated and licensed open catalogue compared directly with the owner-held IS 808:2021. The older 42-row ledger and two later eight-row V29 batches are separately tracked; only matched properties are checked. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
+ is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; last selected audit 2026-10-24',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Limited selected hot-rolled rows in curated and licensed open catalogue compared directly with the owner-held IS 808:2021. The older 42-row ledger and two later eight-row V29 batches are separately tracked; only matched properties are checked. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
  secondary808:Object.freeze({label:'2021 steel section table · secondary index',date:'IS 808:2021 (secondary website)',url:'https://quickboq.in/steel/',note:'Selected numbers independently transcribed from a public secondary index. Not independently certified against a current authorized BIS publication; verify before design/acceptance.'}),
  sailStruct2023:Object.freeze({label:'SAIL · Structural Product Range',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'SAIL manufacturer range; nominal stock availability and latest BIS row require separate confirmation.'}),
  tataLegacy:Object.freeze({label:'Tata Structura · Archived manufacturer brochure',date:'2015-era',url:'https://www.tatasteel.com/media/23759/tata-steel-structura-brochure.pdf',note:'Historical manufacturer section weight. Published BEFORE Amendment 3 (June 2024) to IS 4923:2017; NOT certified as current amended value.'}),
@@ -418,6 +418,41 @@ const IS808_V29B_SAMPLE_ROWS=Object.freeze([
  Object.freeze({series:'WB',d:350,b:200,mass:56.89,area:72.4,ix:15500,iy:1170,table:1,pdfPage:8,geom:Object.freeze({web:8,flange:11.4})}),
  Object.freeze({series:'WB',d:400,b:200,mass:66.71,area:85,ix:23400,iy:1380,table:1,pdfPage:8,geom:Object.freeze({web:8.6,flange:13})})
 ]);
+// V42: 23 additional selected junior/light-weight beam records independently
+// compared to the privately held IS 808:2021 Table 2, physical PDF pages 9-10,
+// printed pages 7-8. Only the listed values (mass, A, D, B, t, T, Izz, Iyy)
+// were checked on 2026-10-24. These are individual row checks, NOT a
+// public reproduction of the licensed table or blanket BIS certification.
+// rowId is vital: LB 100 and LB(P) 100 share D/B but differ in kg/m.
+const IS808_V42_TABLE2_SAMPLE_ROWS=Object.freeze([
+ ["OSD2","JB",175,50,8.07,10.2,480,9.65,3.2,4.8,9],
+ ["OSD3","JB",200,60,9.92,12.6,780,17.2,3.4,5,9],
+ ["OSD4","JB",225,80,12.78,16.2,1310,40.4,3.7,5,9],
+ ["OSD5","LB",75,50,6.05,7.71,72.7,10,3.7,5,9],
+ ["OSD6","LB",100,50,8.01,10.2,168,12.7,4,6.4,9],
+ ["OSD7","LB",100,50,8.75,11.1,181,14,4.3,7,10],
+ ["OSD8","LB",125,75,11.87,15.1,406,43.3,4.4,6.5,10],
+ ["OSD9","LB",150,80,14.19,18,687,55.2,4.8,6.8,10],
+ ["OSD10","LB",175,90,16.59,21.1,1090,79.5,5,6.9,10],
+ ["OSD11","LB",175,80,16.6,21.1,1060,57.2,5.2,7.7,10],
+ ["OSD14","LB",225,100,23.47,29.9,2500,112,5.8,8.6,10],
+ ["OSD15","LB",250,125,27.87,35.5,3720,193,6.1,8.2,10],
+ ["OSD16","LB",275,140,32.96,42,5370,287,6.4,8.8,10],
+ ["OSD17","LB",300,150,37.72,48,7340,376,6.7,9.4,10],
+ ["OSD18","LB",300,140,41.5,52.8,8140,414,7,11.6,10],
+ ["OSD19","LB",325,165,43.07,54.8,9880,510,7,9.8,10],
+ ["OSD20","LB",350,165,49.44,63,13100,632,7.4,11.4,10],
+ ["OSD21","LB",400,165,56.82,72.4,19300,716,8,12.5,10],
+ ["OSD22","LB",450,170,65.22,83.1,27500,853,8.6,13.4,10],
+ ["OSD23","LB",500,180,74.92,95.4,38500,1060,9.2,14.1,10],
+ ["OSD24","LB",550,190,86.28,109,53100,1330,9.9,15,10],
+ ["OSD25","LB",600,210,99.39,126,72900,1820,10.5,15.5,10],
+ ["OSD13","LB",200,100,21.06,26.8,1800,112,5.6,8,10],
+].map(([rowId,series,d,b,mass,area,ix,iy,web,flange,pdfPage])=>Object.freeze({
+ rowId,series,d,b,mass,area,ix,iy,table:2,pdfPage,
+ geom:Object.freeze({web,flange})
+})));
+
 // Source-published nominal figures use listed rounding; 0.01 kg/m mismatch
 // is NOT a numerical match. A missing optional dimension/property must not
 // be invented. Incomplete app rows can earn kg/m-only verification.
@@ -427,8 +462,13 @@ function auditIS808(row){
   return {status:'not-checked',source:null};
  const series=resolveSeries(row),d=Number(row.depthMm),b=Number(row.widthMm);
  const t=Number(row.thicknessMm);
- const found=[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS,...IS808_V29B_SAMPLE_ROWS].find(x=>x.series===series&&x.d===d&&x.b===b&&
-   (x.t===undefined||x.t===t));
+ const candidates=[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS,...IS808_V29B_SAMPLE_ROWS,...IS808_V42_TABLE2_SAMPLE_ROWS];
+ // An exact reviewed row-ID takes precedence over a generic dimension-only
+ // sample. LB 200 and LB(P) 200 share D=200/B=100 but have different
+ // nominal kg/m; comparing the latter with the former causes a false hold.
+ const matches=x=>x.series===series&&x.d===d&&x.b===b&&(x.t===undefined||x.t===t);
+ const found=candidates.find(x=>x.rowId===row.id&&matches(x))||
+  candidates.find(x=>x.rowId===undefined&&matches(x));
  if(!found)return {status:'not-checked',source,
    note:'This individual hot-rolled section has not been reconciled to the owner-held IS 808:2021.'};
  const equivalent=(a,b)=>Math.abs(Number(a)-b)<0.005;
