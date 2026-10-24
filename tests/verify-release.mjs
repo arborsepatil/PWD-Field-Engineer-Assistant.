@@ -816,7 +816,7 @@ process.stdout.write('Bridge available books only, removed Hydro, touch gesture 
  assert.ok(viewer.includes("bridge2002:{title:")&&viewer.includes("bridge2023:{title:"),'Only local user-supplied bridge reader keys retained');
  assert.ok(!bridge.includes('BOOK_IDS')&&bridge.includes("const deviceKey='local-'+key"),'Device storage key must not encode a private Drive file ID');
  assert.ok(!shell.some(x=>/\.pdf$/i.test(x)),'Public app must not cache PDF originals');
- assert.ok(!home.includes('Game-changer module deliberately held')&&home.includes('SSR Master'),'Home SSR tool kept');
+ assert.ok(!home.includes('Game-changer module deliberately held')&&home.includes('SSR & Rates'),'Home SSR tool kept');
  assert.ok(!home.includes('Rate engine pending'),'Do not show abandoned development status');
  assert.ok(home.includes('library.html?section=ssr'),'SSR tab should open public publisher references');
  assert.equal((home.match(/class="module-card"/g)||[]).length,0,'Home remains simplified');
