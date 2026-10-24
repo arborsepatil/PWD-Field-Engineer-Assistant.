@@ -7,6 +7,8 @@
   const message=document.getElementById('calcMessage');
   const engineeringPad=document.getElementById('calcEngineeringPad');
   const angleButton=document.getElementById('calcAngle');
+  const keyboardButton=document.getElementById('calcKeyboard');
+  const inputHint=document.getElementById('calcInputHint');
   const modeButtons=[...document.querySelectorAll('[data-calc-mode]')];
   let angle='deg',lastAnswer=null,solved=false;
 
@@ -32,36 +34,56 @@
       return null;
     }
   }
+  // Place keypad input at the user's cursor, not always at the end.
+  function caretAt(position) {
+    if (typeof expression.setSelectionRange==='function') {
+      expression.setSelectionRange(position,position);
+    }
+  }
+  function selection() {
+    const length=expression.value.length;
+    const start=Number.isInteger(expression.selectionStart)?expression.selectionStart:length;
+    const end=Number.isInteger(expression.selectionEnd)?expression.selectionEnd:start;
+    return {start,end};
+  }
   function addToken(token) {
     if(solved) {
-      if(/^[+−×÷^%]/.test(token)) expression.value=String(lastAnswer??'');
-      else expression.value='';
+      expression.value=/^[+−×÷^%]/.test(token)?String(lastAnswer??''):'';
+      caretAt(expression.value.length);
     }
     solved=false;
-    // Make 2π, 2sin(30), 2(5) and (1+2)(3+4) explicit multiplication.
-    if((token==='π'||token==='e'||token.startsWith('(')||token.endsWith('('))&&
-      /(?:\d|[)%πe])$/.test(expression.value)) expression.value+='×';
-    expression.value+=token;
+    const {start,end}=selection();
+    const left=expression.value.slice(0,start),right=expression.value.slice(end);
+    // e.g. 2π, 2sin(30), and 2(5) need explicit multiplication.
+    if ((token==='π'||token==='e'||token.startsWith('(')||token.endsWith('('))&&
+        /(?:\d|[)%πe])$/.test(left)) token='×'+token;
+    expression.value=left+token+right;
+    caretAt(left.length+token.length);
     render();
   }
   function action(kind) {
-    if(kind==='clear'){expression.value='';solved=false;render();return;}
-    if(kind==='back'){expression.value=expression.value.slice(0,-1);solved=false;render();return;}
+    if(kind==='clear'){expression.value='';caretAt(0);solved=false;render();return;}
+    if(kind==='back'){
+      const {start,end}=selection(),left=expression.value.slice(0,start),right=expression.value.slice(end);
+      expression.value=left.slice(0,start===end?-1:undefined)+right;
+      caretAt(start===end?Math.max(0,start-1):start);
+      solved=false;render();return;
+    }
     if(kind==='negate'){
       const x=expression.value.trim();
       if(!x){expression.value='−';}
       else if(x.startsWith('−(')&&x.endsWith(')')) expression.value=x.slice(2,-1);
       else expression.value='−('+x+')';
-      solved=false;render();return;
+      caretAt(expression.value.length);solved=false;render();return;
     }
     if(kind==='square'){
       const x=expression.value.trim();
-      if(x) {expression.value='('+x+')^2';solved=false;render();}
+      if(x) {expression.value='('+x+')^2';caretAt(expression.value.length);solved=false;render();}
       return;
     }
     if(kind==='reciprocal'){
       const x=expression.value.trim();
-      if(x) {expression.value='1/('+x+')';solved=false;render();}
+      if(x) {expression.value='1/('+x+')';caretAt(expression.value.length);solved=false;render();}
       return;
     }
     if(kind==='equal') {render(true);return;}
@@ -91,6 +113,14 @@
       b.setAttribute('aria-pressed',String(active));
     });
   }));
+  keyboardButton?.addEventListener('click',()=>{
+    const enable=keyboardButton.getAttribute('aria-pressed')!=='true';
+    keyboardButton.setAttribute('aria-pressed',String(enable));
+    keyboardButton.textContent=enable?'Done typing':'Type expression';
+    expression.inputMode=enable?'text':'none';
+    inputHint.textContent=enable?'Keyboard editing enabled':'Use keypad · tap expression to position cursor';
+    if(enable){expression.focus();caretAt(expression.value.length);}else{expression.blur();}
+  });
   angleButton.addEventListener('click',()=>{
     angle=angle==='deg'?'rad':'deg';
     angleButton.textContent=angle==='deg'?'DEG':'RAD';
