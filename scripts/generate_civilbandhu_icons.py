@@ -46,7 +46,7 @@ def pixel(x,y):
     # Bridge under the monogram: deck, arch and posts.
     if segment_distance(x,y,16,87,92,87)<=1.65:
         colour=PALE
-    if 25<=x<=83 and abs(y-(70+17*((x-54)/29)**2))<=1.8:
+    if 25<=x<=83 and abs(y-(76+11*((x-54)/29)**2))<=1.8:
         colour=PALE
     if (segment_distance(x,y,25,87,25,93)<=1.65 or segment_distance(x,y,83,87,83,93)<=1.65):
         colour=PALE
