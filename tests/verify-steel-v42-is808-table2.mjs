@@ -42,7 +42,12 @@ for(const id of ['OSD13']){
  assert.equal(comparison.quantityGate(catalog,row).allowed,false);
 }
 const totals=status.summarize(catalog,comparison,catalog.sections);
-assert.deepEqual({...totals.counts},{checked:171,review:566,hold:20});
+// V42 verified its own 22 rows above. Later batches may add further checked
+// rows without changing these source locks or the historical held count.
+assert.ok(totals.counts.checked>=171,'V42 source-checked minimum must not regress');
+assert.ok(totals.counts.review<=566,'Later source checks may reduce pending records');
+assert.equal(totals.counts.hold,20,'Historical numeric holds must remain blocked');
+assert.equal(totals.counts.checked+totals.counts.review+totals.counts.hold,757);
 assert.equal(totals.total,757);
 // Confirm the licensed standard is not embedded, and table values are NOT duplicated.
 const code=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
