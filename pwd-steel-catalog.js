@@ -418,6 +418,40 @@ const IS808_V29B_SAMPLE_ROWS=Object.freeze([
  Object.freeze({series:'WB',d:350,b:200,mass:56.89,area:72.4,ix:15500,iy:1170,table:1,pdfPage:8,geom:Object.freeze({web:8,flange:11.4})}),
  Object.freeze({series:'WB',d:400,b:200,mass:66.71,area:85,ix:23400,iy:1380,table:1,pdfPage:8,geom:Object.freeze({web:8.6,flange:13})})
 ]);
+// V42: 22 additional selected junior/light-weight beam records independently
+// compared to the privately held IS 808:2021 Table 2, physical PDF pages 9-10,
+// printed pages 7-8. Only the listed values (mass, A, D, B, t, T, Izz, Iyy)
+// were checked on 2026-10-24. These are individual row checks, NOT a
+// public reproduction of the licensed table or blanket BIS certification.
+// rowId is vital: LB 100 and LB(P) 100 share D/B but differ in kg/m.
+const IS808_V42_TABLE2_SAMPLE_ROWS=Object.freeze([
+ ["OSD2","JB",175,50,8.07,10.2,480,9.65,3.2,4.8,9],
+ ["OSD3","JB",200,60,9.92,12.6,780,17.2,3.4,5,9],
+ ["OSD4","JB",225,80,12.78,16.2,1310,40.4,3.7,5,9],
+ ["OSD5","LB",75,50,6.05,7.71,72.7,10,3.7,5,9],
+ ["OSD6","LB",100,50,8.01,10.2,168,12.7,4,6.4,9],
+ ["OSD7","LB",100,50,8.75,11.1,181,14,4.3,7,10],
+ ["OSD8","LB",125,75,11.87,15.1,406,43.3,4.4,6.5,10],
+ ["OSD9","LB",150,80,14.19,18,687,55.2,4.8,6.8,10],
+ ["OSD10","LB",175,90,16.59,21.1,1090,79.5,5,6.9,10],
+ ["OSD11","LB",175,80,16.6,21.1,1060,57.2,5.2,7.7,10],
+ ["OSD14","LB",225,100,23.47,29.9,2500,112,5.8,8.6,10],
+ ["OSD15","LB",250,125,27.87,35.5,3720,193,6.1,8.2,10],
+ ["OSD16","LB",275,140,32.96,42,5370,287,6.4,8.8,10],
+ ["OSD17","LB",300,150,37.72,48,7340,376,6.7,9.4,10],
+ ["OSD18","LB",300,140,41.5,52.8,8140,414,7,11.6,10],
+ ["OSD19","LB",325,165,43.07,54.8,9880,510,7,9.8,10],
+ ["OSD20","LB",350,165,49.44,63,13100,632,7.4,11.4,10],
+ ["OSD21","LB",400,165,56.82,72.4,19300,716,8,12.5,10],
+ ["OSD22","LB",450,170,65.22,83.1,27500,853,8.6,13.4,10],
+ ["OSD23","LB",500,180,74.92,95.4,38500,1060,9.2,14.1,10],
+ ["OSD24","LB",550,190,86.28,109,53100,1330,9.9,15,10],
+ ["OSD25","LB",600,210,99.39,126,72900,1820,10.5,15.5,10],
+].map(([rowId,series,d,b,mass,area,ix,iy,web,flange,pdfPage])=>Object.freeze({
+ rowId,series,d,b,mass,area,ix,iy,table:2,pdfPage,
+ geom:Object.freeze({web,flange})
+})));
+
 // Source-published nominal figures use listed rounding; 0.01 kg/m mismatch
 // is NOT a numerical match. A missing optional dimension/property must not
 // be invented. Incomplete app rows can earn kg/m-only verification.
@@ -427,7 +461,8 @@ function auditIS808(row){
   return {status:'not-checked',source:null};
  const series=resolveSeries(row),d=Number(row.depthMm),b=Number(row.widthMm);
  const t=Number(row.thicknessMm);
- const found=[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS,...IS808_V29B_SAMPLE_ROWS].find(x=>x.series===series&&x.d===d&&x.b===b&&
+ const found=[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS,...IS808_V29B_SAMPLE_ROWS,...IS808_V42_TABLE2_SAMPLE_ROWS].find(x=>
+   (x.rowId===undefined||x.rowId===row.id)&&x.series===series&&x.d===d&&x.b===b&&
    (x.t===undefined||x.t===t));
  if(!found)return {status:'not-checked',source,
    note:'This individual hot-rolled section has not been reconciled to the owner-held IS 808:2021.'};
