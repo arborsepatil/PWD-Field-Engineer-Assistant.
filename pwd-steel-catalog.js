@@ -10,7 +10,7 @@
 const SOURCES=Object.freeze({
  sail2023:Object.freeze({label:'SAIL · Product Range brochure (2023)',date:'2023-09',url:'https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf',note:'Manufacturer-published mass/overall dimensions. Do not assume conformity of delivered material without inspection/MTC.'}),
  sailProps2023:Object.freeze({label:'SAIL · Structurals / Tapered Flange (2023)',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'Manufacturer-published section properties for specific MB sizes; 2023 product data, not a replacement for the current BIS text.'}),
- is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; last selected audit 2026-10-23',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Limited selected hot-rolled rows in curated and licensed open catalogue compared directly with the owner-held IS 808:2021. The older 42-row ledger and two later eight-row V29 batches are separately tracked; only matched properties are checked. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
+ is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; last selected audit 2026-10-24',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Limited selected hot-rolled rows in curated and licensed open catalogue compared directly with the owner-held IS 808:2021. The earlier selected-source ledgers and an additional V42 22-row Table 2 audit are tracked separately; only reviewed properties are checked. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
  secondary808:Object.freeze({label:'2021 steel section table · secondary index',date:'IS 808:2021 (secondary website)',url:'https://quickboq.in/steel/',note:'Selected numbers independently transcribed from a public secondary index. Not independently certified against a current authorized BIS publication; verify before design/acceptance.'}),
  sailStruct2023:Object.freeze({label:'SAIL · Structural Product Range',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'SAIL manufacturer range; nominal stock availability and latest BIS row require separate confirmation.'}),
  tataLegacy:Object.freeze({label:'Tata Structura · Archived manufacturer brochure',date:'2015-era',url:'https://www.tatasteel.com/media/23759/tata-steel-structura-brochure.pdf',note:'Historical manufacturer section weight. Published BEFORE Amendment 3 (June 2024) to IS 4923:2017; NOT certified as current amended value.'}),
@@ -418,6 +418,47 @@ const IS808_V29B_SAMPLE_ROWS=Object.freeze([
  Object.freeze({series:'WB',d:350,b:200,mass:56.89,area:72.4,ix:15500,iy:1170,table:1,pdfPage:8,geom:Object.freeze({web:8,flange:11.4})}),
  Object.freeze({series:'WB',d:400,b:200,mass:66.71,area:85,ix:23400,iy:1380,table:1,pdfPage:8,geom:Object.freeze({web:8.6,flange:13})})
 ]);
+// V42: Twenty-two *existing* Osdag junior/light-beam rows manually checked
+// against the owner-held IS 808:2021 Fourth Revision, Table 2, PDF pp.9-10.
+// Compared nominal mass, area, D/B, web/flange thickness, Izz/Iyy and
+// Zzz/Zyy. The source PDF is neither embedded nor reprinted. Fingerprints
+// identify exactly the already-published Osdag figures and fail closed if
+// ANY audited value/identity changes. These are audit checks, NOT a copy of
+// BIS numeric tables or evidence about steel grade, stock, MTC or strength.
+// OSD13 (LB(P) 200) remains held; do not infer verification by designation.
+const IS808_V42_ROW_CHECKS=Object.freeze([
+ Object.freeze({id:'OSD2',fingerprint:'4309546e',table:2,pdfPage:9}),
+ Object.freeze({id:'OSD3',fingerprint:'f5c0ec96',table:2,pdfPage:9}),
+ Object.freeze({id:'OSD4',fingerprint:'e26766e6',table:2,pdfPage:9}),
+ Object.freeze({id:'OSD5',fingerprint:'4fc696e1',table:2,pdfPage:9}),
+ Object.freeze({id:'OSD6',fingerprint:'0431d246',table:2,pdfPage:9}),
+ Object.freeze({id:'OSD7',fingerprint:'77d645ec',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD8',fingerprint:'53a17eea',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD9',fingerprint:'4fba2ab7',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD10',fingerprint:'0ff07a78',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD11',fingerprint:'ce0cafad',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD14',fingerprint:'73414d5c',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD15',fingerprint:'38320c1c',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD16',fingerprint:'52eff19c',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD17',fingerprint:'0b997535',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD18',fingerprint:'df0844a8',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD19',fingerprint:'52afe504',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD20',fingerprint:'8123f3e0',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD21',fingerprint:'9ff41244',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD22',fingerprint:'d0c5707e',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD23',fingerprint:'d48dd575',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD24',fingerprint:'c8921f68',table:2,pdfPage:10}),
+ Object.freeze({id:'OSD25',fingerprint:'e1aca1f7',table:2,pdfPage:10})
+]);
+function v42Fingerprint(row){
+ const fields=['id','sourceId','series','depthMm','widthMm','kgPerM',
+  'areaCm2','ixCm4','iyCm4','zxCm3','zyCm3','webMm','flangeMm'];
+ const payload=fields.map(key=>key+':'+(row[key]??'~')).join('|');
+ let hash=2166136261;
+ for(let i=0;i<payload.length;i++)hash=Math.imul(hash^payload.charCodeAt(i),16777619)>>>0;
+ return hash.toString(16).padStart(8,'0');
+}
+
 // Source-published nominal figures use listed rounding; 0.01 kg/m mismatch
 // is NOT a numerical match. A missing optional dimension/property must not
 // be invented. Incomplete app rows can earn kg/m-only verification.
@@ -425,6 +466,14 @@ function auditIS808(row){
  const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–9, 12 and 13 checks';
  if(!row||!['beam','channel','column','angle','pile'].includes(row.family))
   return {status:'not-checked',source:null};
+ const v42=IS808_V42_ROW_CHECKS.find(item=>item.id===row.id);
+ if(v42){
+  if(row.sourceId!=='osdag808'||v42Fingerprint(row)!==v42.fingerprint)
+   return {status:'is808-numeric-conflict',source,sourceTable:2,sourcePdfPage:v42.pdfPage,
+    geometryChecked:false,note:'A previously source-checked Table 2 member has changed its identity or a numeric property. Provisional quantity blocked until re-audited.'};
+  return {status:'is808-mass-area-inertia-checked',source,sourceTable:2,sourcePdfPage:v42.pdfPage,
+   geometryChecked:false,note:'This exact Osdag row has a limited direct IS 808:2021 Table 2 check of nominal mass, area, D/B, t/T, Izz/Iyy and Zzz/Zyy (2026-10-24). Flange slope/radii, full structural properties, actual grade and MTC are not certified.'};
+ }
  const series=resolveSeries(row),d=Number(row.depthMm),b=Number(row.widthMm);
  const t=Number(row.thicknessMm);
  const found=[...IS808_BIS_SPOT_CHECKS,...IS808_V29_SAMPLE_ROWS,...IS808_V29B_SAMPLE_ROWS].find(x=>x.series===series&&x.d===d&&x.b===b&&
@@ -619,7 +668,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);

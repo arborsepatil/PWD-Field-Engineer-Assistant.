@@ -126,6 +126,8 @@ jobs:
         run: node tests/verify-v39-home-navigation.mjs
       - name: Verify Steel V41 source-status views and quantity safety
         run: node tests/verify-steel-v41-source-status.mjs
+      - name: Verify V42 IS 808:2021 selected Table 2 records
+        run: node tests/verify-steel-v42-is808-table2.mjs
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
       - name: Test simplified reference readers and preserve source checks
