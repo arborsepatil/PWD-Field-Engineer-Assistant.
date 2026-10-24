@@ -116,6 +116,8 @@ jobs:
           node tests/verify-steel-v31-thickness.mjs
           node tests/verify-steel-v32-quantity-gate.mjs
           node tests/verify-steel-v33-audit-register.mjs
+      - name: Verify restored Basic and Engineering Calculator
+        run: node tests/verify-v37-calculator.mjs
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
       - name: Test simplified reference readers and preserve source checks
