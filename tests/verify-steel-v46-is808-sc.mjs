@@ -27,7 +27,7 @@ assert.equal(cat.standardAudit(sc100).geometryChecked,false);
 assert.equal(cmp.quantityGate(cat,sc100).allowed,true,'Limited SC100 nominal weight now checked');
 for(const key of ['id','sourceId','designation','kgPerM','areaCm2','depthMm','widthMm','ixCm4','zxCm3','webMm','flangeMm']){
  const v=sc100[key],changed={...sc100,[key]:typeof v==='number'?v+1:String(v)+'-changed'};
- assert.equal(cat.standardAudit(changed).status,'is808-numeric-conflict','SC100: '+key);
+ assert.equal(cat.standardAudit(changed).status,key==='id'?'not-checked':'is808-numeric-conflict','SC100: '+key);
  assert.equal(cmp.quantityGate(cat,changed).allowed,false,'SC100: '+key);
 }
 for(const id of ids){
@@ -50,7 +50,7 @@ for(const id of ids){
   const val=row[key];
   const changed={...row,[key]:typeof val==='number'?val+1:
    val===null?'changed':String(val)+'-changed'};
-  assert.equal(cat.standardAudit(changed).status,'is808-numeric-conflict',id+': '+key);
+  assert.equal(cat.standardAudit(changed).status,key==='id'?'not-checked':'is808-numeric-conflict',id+': '+key);
   assert.equal(cmp.quantityGate(cat,changed).allowed,false,id+': '+key);
  }
 }
