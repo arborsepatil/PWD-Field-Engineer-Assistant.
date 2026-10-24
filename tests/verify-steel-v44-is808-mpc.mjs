@@ -61,5 +61,5 @@ assert.ok(ledger.includes('IS808_V44_ROW_CHECKS'));
 assert.ok(ledger.includes('fingerprint'));
 assert.ok(!ledger.includes('mass:7.14')&&!ledger.includes('mass:38.1'));
 const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
-assert.ok(sw.includes('pwd-tools-steel-v45-2026-10-24'));
+assert.ok(sw.includes('pwd-tools-steel-v46-2026-10-24'));
 console.log('STEEL V44 PASS: 19 MPC Table 8 records remain checked; later batches may extend verified totals.');
