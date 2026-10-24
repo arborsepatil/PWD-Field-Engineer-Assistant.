@@ -49,7 +49,7 @@ assert.equal(new Set(variant.map(x=>x.id)).size,3);
 const result=selector.summarize(cat,compare,cat.sections);
 assert.equal(result.total,757);
 assert.ok(result.counts.checked>=214&&result.counts.review<=523);
-assert.equal(result.counts.hold,20);
+assert.equal(result.counts.hold,19);
 assert.equal(result.counts.checked+result.counts.review+result.counts.hold,757);
 for(const type of ['checked','review','hold']){
  const filtered=selector.select(cat,compare,cat.sections,type);
@@ -61,5 +61,5 @@ assert.ok(ledger.includes('IS808_V44_ROW_CHECKS'));
 assert.ok(ledger.includes('fingerprint'));
 assert.ok(!ledger.includes('mass:7.14')&&!ledger.includes('mass:38.1'));
 const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
-assert.ok(sw.includes('pwd-tools-steel-v46-2026-10-24'));
+assert.ok(sw.includes('pwd-tools-steel-v47-2026-10-25'));
 console.log('STEEL V44 PASS: 19 MPC Table 8 records remain checked; later batches may extend verified totals.');
