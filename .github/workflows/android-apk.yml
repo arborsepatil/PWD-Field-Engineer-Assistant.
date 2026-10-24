@@ -116,6 +116,30 @@ jobs:
           node tests/verify-steel-v31-thickness.mjs
           node tests/verify-steel-v32-quantity-gate.mjs
           node tests/verify-steel-v33-audit-register.mjs
+      - name: Verify restored Basic and Engineering Calculator
+        run: node tests/verify-v37-calculator.mjs
+      - name: Verify V40 Calculator and Civil user interactions
+        run: node tests/verify-v40-calculator-ux.mjs
+      - name: Verify V38 CivilBandhu branding and Home icon order
+        run: node tests/verify-v38-civilbandhu-home.mjs
+      - name: Verify V39 compact Home and safe bottom navigation
+        run: node tests/verify-v39-home-navigation.mjs
+      - name: Verify Steel V41 source-status views and quantity safety
+        run: node tests/verify-steel-v41-source-status.mjs
+      - name: Verify V42 IS 808:2021 selected Table 2 records
+        run: node tests/verify-steel-v42-is808-table2.mjs
+      - name: Verify Steel V43 IS 808 Table 6 and 7 channels
+        run: node tests/verify-steel-v43-is808-channels.mjs
+      - name: Verify Steel V44 IS 808 Table 8 parallel flange channels
+        run: node tests/verify-steel-v44-is808-mpc.mjs
+      - name: Verify Steel V45 IS 808 Table 1 remaining WB variants
+        run: node tests/verify-steel-v45-is808-wb.mjs
+      - name: Verify Steel V46 IS 808 Table 5 structural columns
+        run: node tests/verify-steel-v46-is808-sc.mjs
+      - name: Verify Steel V47 IS 808 Table 5 heavy-beam roll variants
+        run: node tests/verify-steel-v47-is808-hb.mjs
+      - name: Report incomplete Steel Table families (no deployment)
+        run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
       - name: Test simplified reference readers and preserve source checks

@@ -5,8 +5,8 @@
  */
 (function(){
 'use strict';
-const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,comparison=window.PWDSteelCompare,$=id=>document.getElementById(id);
-if(!catalog||!math||!comparison||!window.PWDSteelDiagram||!$('steelFamilies'))return;
+const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,comparison=window.PWDSteelCompare,steelStatus=window.PWDSteelStatus,$=id=>document.getElementById(id);
+if(!catalog||!math||!comparison||!steelStatus||!window.PWDSteelDiagram||!$('steelFamilies'))return;
 let family='beam',selected=null,last=null,lastEntry=null,shownLimit=60,compareIds=[];
 const source=id=>catalog.SOURCES[id];
 const format=(x,d=2)=>Number(x).toLocaleString('en-IN',{maximumFractionDigits:d,minimumFractionDigits:d});
@@ -78,7 +78,11 @@ function makeFamilyButtons(){
  }
 }
 function renderRows(){
- const rows=catalog.search($('steelSearch').value,family,$('steelSeries').value||'all');
+ const rawRows=catalog.search($('steelSearch').value,family,$('steelSeries').value||'all');
+ const snapshot=steelStatus.select(catalog,comparison,rawRows,$('steelAuditFilter').value);
+ const rows=snapshot.rows;
+ const counts=snapshot.counts;
+ $('steelAuditSummary').textContent='Matches: '+snapshot.total+' sections · '+counts.checked+' limited source-checked · '+counts.review+' pending · '+counts.hold+' on hold. Only limited-checked records allow provisional quantity arithmetic.';
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
  const root=$('steelResults');root.replaceChildren();
  $('noResults').hidden=rows.length!==0;
@@ -299,6 +303,8 @@ function renderComparison(){
  table.append(tbody);result.append(table);result.hidden=false;
 }
 function showStandards(){
+ const all=steelStatus.summarize(catalog,comparison,catalog.sections);
+ $('steelCatalogueAudit').textContent='Catalogue: '+all.total+' records · '+all.counts.checked+' limited source-checked · '+all.counts.review+' pending verification · '+all.counts.hold+' on hold. Quantity calculations remain restricted to checked source rows only.';
  const c=$('steelStandards');
  for(const s of catalog.codeReferences){
   const p=document.createElement('p');p.className='small';
@@ -320,6 +326,7 @@ $('steelSearch').addEventListener('input',()=>{
  }
  renderRows();renderDetail();updateSelectedSummary();updateResult();
 });
+$('steelAuditFilter').addEventListener('change',()=>{shownLimit=60;renderRows();renderDetail();updateSelectedSummary();updateResult();});
 $('steelSeries').addEventListener('change',()=>{
  shownLimit=60;selected=null;renderRows();renderDetail();updateSelectedSummary();updateResult();
 });
