@@ -16,7 +16,7 @@
   }
   function render(strict=false) {
     const value=expression.value.trim();
-    if(!value){result.textContent='0';message.textContent='';return null;}
+    if(!value){result.textContent='0';result.dataset.error='false';message.textContent='';return null;}
     try {
       const n=PWDCalculator.calculate(value,angle);
       result.textContent=format(n);
