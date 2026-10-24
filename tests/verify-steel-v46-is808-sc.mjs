@@ -18,7 +18,18 @@ assert.equal(new Set(ids).size,7);
 assert.equal(cat.byId('OSD293'),null,'SC 100 must stay deduplicated to curated checked original');
 const sc100=cat.sections.find(x=>cat.resolveSeries(x)==='SC'&&x.depthMm===100&&x.widthMm===100);
 assert.ok(sc100,'Curated SC 100 missing');
-assert.equal(cmp.quantityGate(cat,sc100).allowed,true,'Original checked SC 100 must not regress');
+assert.equal(cat.standardAudit(sc100).status,'is808-mass-checked');
+assert.equal(cat.standardAudit(sc100).sourceTable,5);
+assert.equal(cat.standardAudit(sc100).sourcePdfPage,22);
+assert.equal(sc100.iyCm4,undefined,'Do not fabricate missing Iyy');
+assert.equal(sc100.zyCm3,undefined,'Do not fabricate missing Zyy');
+assert.equal(cat.standardAudit(sc100).geometryChecked,false);
+assert.equal(cmp.quantityGate(cat,sc100).allowed,true,'Limited SC100 nominal weight now checked');
+for(const key of ['id','sourceId','designation','kgPerM','areaCm2','depthMm','widthMm','ixCm4','zxCm3','webMm','flangeMm']){
+ const v=sc100[key],changed={...sc100,[key]:typeof v==='number'?v+1:String(v)+'-changed'};
+ assert.equal(cat.standardAudit(changed).status,'is808-numeric-conflict','SC100: '+key);
+ assert.equal(cmp.quantityGate(cat,changed).allowed,false,'SC100: '+key);
+}
 for(const id of ids){
  const row=cat.byId(id);
  assert.ok(row,'Missing Osdag column '+id);
@@ -44,11 +55,11 @@ for(const id of ids){
  }
 }
 const s=st.summarize(cat,cmp,cat.sections);
-assert.deepEqual({...s.counts},{checked:226,review:511,hold:20});
+assert.deepEqual({...s.counts},{checked:227,review:510,hold:20});
 const script=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
 const ledger=script.split('/* V46: seven existing SC rows')[1]?.split('function auditIS808(row)')[0]||'';
 assert.ok(ledger.includes('IS808_V46_ROW_CHECKS'));
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger),'Do not include licensed table values');
 assert.ok(!fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')));
 assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v46-2026-10-24'));
-console.log('STEEL V46 PASS: seven SC column rows checked, 226 checked, 511 pending, 20 held.');
+console.log('STEEL V46 PASS: seven SC records plus curated SC100 checked, 227 checked, 510 pending, 20 held.');
