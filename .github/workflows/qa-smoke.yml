@@ -49,6 +49,7 @@ jobs:
           node tests/verify-steel-v42-is808-table2.mjs
           node tests/verify-steel-v43-is808-channels.mjs
           node tests/verify-steel-v44-is808-mpc.mjs
+          node scripts/steel-release-readiness.mjs --report-only
           node tests/verify-v20-simple-ux.mjs
           node tests/verify-v37-calculator.mjs
           node tests/verify-v40-calculator-ux.mjs
