@@ -138,6 +138,8 @@ jobs:
         run: node tests/verify-steel-v46-is808-sc.mjs
       - name: Verify Steel V47 IS 808 Table 5 heavy-beam roll variants
         run: node tests/verify-steel-v47-is808-hb.mjs
+      - name: Verify Steel V48 IS 808 Table 4 WPB source matches
+        run: node tests/verify-steel-v48-is808-wpb.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens
