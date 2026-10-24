@@ -10,7 +10,7 @@
 const SOURCES=Object.freeze({
  sail2023:Object.freeze({label:'SAIL · Product Range brochure (2023)',date:'2023-09',url:'https://sail.co.in/sites/default/files/product-brochure/2023-09/PFS-Brochure.pdf',note:'Manufacturer-published mass/overall dimensions. Do not assume conformity of delivered material without inspection/MTC.'}),
  sailProps2023:Object.freeze({label:'SAIL · Structurals / Tapered Flange (2023)',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'Manufacturer-published section properties for specific MB sizes; 2023 product data, not a replacement for the current BIS text.'}),
- is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; last selected audit 2026-10-24',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Limited selected hot-rolled rows in curated and licensed open catalogue compared directly with the owner-held IS 808:2021. Earlier selected ledgers, V42 Table 2 (22), V43 Tables 6/7 (24), and V44 Table 8 (19 newly checked, plus an earlier checked curated MPC 150), and V45 Table 1 (five WB variants), and V46 Table 5 (seven SC columns) are tracked separately; source checks cover only specifically compared properties. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
+ is808Spot2021:Object.freeze({label:'BIS IS 808:2021 Fourth Revision · selected hot-rolled section checks',date:'2021; last selected audit 2026-10-24',url:'https://www.services.bis.gov.in/tmp/tbl5_2024-11-11-05-24.pdf',note:'Limited selected hot-rolled rows in curated and licensed open catalogue compared directly with the owner-held IS 808:2021. Earlier selected ledgers, V42 Table 2 (22), V43 Tables 6/7 (24), and V44 Table 8 (19 newly checked, plus an earlier checked curated MPC 150), and V45 Table 1 (five WB variants), and V46 Table 5 (seven full-property SC rows and one partial curated SC 100) are tracked separately; source checks cover only specifically compared properties. Public link identifies standard but does not reproduce licensed numerical tables. Actual product and MTC remain unverified.'}),
  secondary808:Object.freeze({label:'2021 steel section table · secondary index',date:'IS 808:2021 (secondary website)',url:'https://quickboq.in/steel/',note:'Selected numbers independently transcribed from a public secondary index. Not independently certified against a current authorized BIS publication; verify before design/acceptance.'}),
  sailStruct2023:Object.freeze({label:'SAIL · Structural Product Range',date:'2023-10',url:'https://www.sail.co.in/sites/default/files/product-brochure/2023-10/PFS-Brochure_New-2023.pdf',note:'SAIL manufacturer range; nominal stock availability and latest BIS row require separate confirmation.'}),
  tataLegacy:Object.freeze({label:'Tata Structura · Archived manufacturer brochure',date:'2015-era',url:'https://www.tatasteel.com/media/23759/tata-steel-structura-brochure.pdf',note:'Historical manufacturer section weight. Published BEFORE Amendment 3 (June 2024) to IS 4923:2017; NOT certified as current amended value.'}),
@@ -569,8 +569,9 @@ const IS808_V45_ROW_CHECKS=Object.freeze([
 const v45Fingerprint=v44Fingerprint;
 
 /* V46: seven existing SC rows checked directly with owner-held IS 808:2021
- * Table 5, physical PDF page 22. SC 100 was already a curated BIS spot-check;
- * its duplicated OSD293 entry is intentionally excluded by deduplication.
+ * Table 5, physical PDF page 22. SC 100 is a curated secondary-source
+ * record; its duplicate OSD293 is intentionally excluded by deduplication.
+ * SC 100 has only partial listed properties and earns a limited mass check.
  * Checked variant identity, mass, area, D/B, t/T, Izz/Iyy and Zzz/Zyy.
  * Source PDF and numerical table are not distributed or reproduced.
  * Section radii/slope, steel grade and delivered material are not approved.
@@ -585,11 +586,20 @@ const IS808_V46_ROW_CHECKS=Object.freeze([
  Object.freeze({id:'OSD300',fingerprint:'66ea10fa',table:5,pdfPage:22})
 ]);
 const v46Fingerprint=v44Fingerprint;
+const IS808_V46_SC100=Object.freeze({id:'ref-SC-SC-100-19.97',fingerprint:'4457838f',table:5,pdfPage:22});
 
 function auditIS808(row){
  const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–9, 12 and 13 checks';
  if(!row||!['beam','channel','column','angle','pile'].includes(row.family))
   return {status:'not-checked',source:null};
+ if(row.id===IS808_V46_SC100.id){
+  if(row.family!=='column'||resolveSeries(row)!=='SC'||
+     v46Fingerprint(row)!==IS808_V46_SC100.fingerprint)
+   return {status:'is808-numeric-conflict',source,sourceTable:5,sourcePdfPage:22,
+    geometryChecked:false,note:'SC 100 curated value or source identity has changed since the Table 5 limited check. Quantity blocked until re-audited.'};
+  return {status:'is808-mass-checked',source,sourceTable:5,sourcePdfPage:22,
+   geometryChecked:false,note:'Limited direct Table 5 check: SC 100 source mass, area, D/B, t/T and available Izz/Zzz. Iyy, Zyy, flange radii/slope and full structural properties are missing from this curated row and are NOT claimed verified. Confirm delivered product and MTC separately.'};
+ }
  const v46=IS808_V46_ROW_CHECKS.find(item=>item.id===row.id);
  if(v46){
   if(row.sourceId!=='osdag808'||row.family!=='column'||resolveSeries(row)!=='SC'||
