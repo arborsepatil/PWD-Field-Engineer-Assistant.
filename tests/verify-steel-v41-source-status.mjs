@@ -35,7 +35,7 @@ for(const filter of ['all','checked','review','hold']){
   if(filter==='review'||filter==='hold')assert.equal(compare.quantityGate(cat,row).allowed,false,'Unverified row allowed: '+row.id);
  }
  const expectedRows=items.filter(x=>filter==='all'||compare.audit(cat,x).status===filter);
- assert.deepEqual(Array.from(selected.rows,r=>r.id),expectedRows.map(r=>r.id),'Source order must stay stable');
+ assert.deepEqual(Array.from(selected.rows,r=>r.id),Array.from(expectedRows,r=>r.id),'Source order must stay stable');
 }
 for(const bad of ['unknown','checked-unsafe','geometry-only',null]){
  assert.throws(()=>status.select(cat,compare,items,bad));
