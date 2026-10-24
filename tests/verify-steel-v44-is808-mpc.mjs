@@ -1,4 +1,4 @@
-/* V44 — Exact source audit for 20 MPC channel variants.
+/* V44 — Exact source audit for 19 new MPC records + pre-checked MPC 150.
  * The proprietary source table is NOT included in app or tests.
  * Source: owner-held IS 808:2021 Fourth Revision, Table 8, PDF pp.27-28.
  */
@@ -13,10 +13,14 @@ const cat=require('../pwd-steel-catalog.js');
 const compare=require('../pwd-steel-compare.js');
 const selector=require('../pwd-steel-status.js');
 
-const ids=Array.from({length:20},(_,i)=>'OSD'+(341+i));
-assert.equal(cat.is808V44AuditSampleCount,20);
-assert.equal(new Set(ids).size,20);
+const ids=Array.from({length:20},(_,i)=>'OSD'+(341+i)).filter(id=>id!=='OSD345');
+assert.equal(cat.is808V44AuditSampleCount,19);
+assert.equal(new Set(ids).size,19);
 assert.equal(cat.sections.length,757);
+assert.equal(cat.byId('OSD345'),null,'MPC 150 duplicate stays de-duplicated');
+const prior=cat.sections.find(r=>r.series==='MPC'&&r.depthMm===150&&r.widthMm===75&&r.kgPerM===16.8);
+assert.ok(prior,'Original curated MPC 150 must remain');
+assert.equal(compare.quantityGate(cat,prior).allowed,true,'Original pre-checked MPC 150 remains usable');
 for(const id of ids){
  const row=cat.byId(id);
  assert.ok(row,'Original Osdag member absent '+id);
@@ -56,4 +60,4 @@ assert.ok(ledger.includes('fingerprint'));
 assert.ok(!ledger.includes('mass:7.14')&&!ledger.includes('mass:38.1'));
 const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
 assert.ok(sw.includes('pwd-tools-steel-v44-2026-10-24'));
-console.log('STEEL V44 PASS: 20 MPC source-locked variants, checked=214 pending=523 held=20; no numeric source copied.');
+console.log('STEEL V44 PASS: 19 newly checked MPC records + 1 previously verified curated MPC 150; checked=214 pending=523 held=20.');
