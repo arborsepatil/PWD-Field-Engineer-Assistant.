@@ -130,6 +130,8 @@ jobs:
         run: node tests/verify-steel-v42-is808-table2.mjs
       - name: Verify Steel V43 IS 808 Table 6 and 7 channels
         run: node tests/verify-steel-v43-is808-channels.mjs
+      - name: Verify Steel V44 IS 808 Table 8 parallel flange channels
+        run: node tests/verify-steel-v44-is808-mpc.mjs
       - name: Verify V20 simplified Home and module screens
         run: node tests/verify-v20-simple-ux.mjs
       - name: Test simplified reference readers and preserve source checks
