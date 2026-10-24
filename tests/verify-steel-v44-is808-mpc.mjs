@@ -54,7 +54,7 @@ for(const type of ['checked','review','hold']){
  assert.equal(filtered.rows.length,result.counts[type]);
 }
 const script=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
-const ledger=script.split('/* V44: 20 existing Osdag')[1]?.split('// Source-published nominal figures')[0]||'';
+const ledger=script.split('/* V44: 19 imported Osdag')[1]?.split('// Source-published nominal figures')[0]||'';
 assert.ok(ledger.includes('IS808_V44_ROW_CHECKS'));
 assert.ok(ledger.includes('fingerprint'));
 assert.ok(!ledger.includes('mass:7.14')&&!ledger.includes('mass:38.1'));
