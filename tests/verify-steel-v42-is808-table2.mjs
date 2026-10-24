@@ -46,7 +46,7 @@ const totals=status.summarize(catalog,comparison,catalog.sections);
 // rows without changing these source locks or the historical held count.
 assert.ok(totals.counts.checked>=171,'V42 source-checked minimum must not regress');
 assert.ok(totals.counts.review<=566,'Later source checks may reduce pending records');
-assert.equal(totals.counts.hold,20,'Historical numeric holds must remain blocked');
+assert.equal(totals.counts.hold,19,'After verifying distinct HB 200*, remaining source holds must stay blocked');
 assert.equal(totals.counts.checked+totals.counts.review+totals.counts.hold,757);
 assert.equal(totals.total,757);
 // Confirm the licensed standard is not embedded, and table values are NOT duplicated.
@@ -56,4 +56,4 @@ assert.ok(inserted.includes('fingerprint'));
 assert.ok(!inserted.includes('mass:7.07'));
 assert.ok(!inserted.includes('mass:99.39'));
 assert.ok(!fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')));
-console.log('STEEL V42 PASS: 22 added selected Table 2 checks; 171 checked, 566 pending, 20 hold; source-property tampering stays blocked.');
+console.log('STEEL V42 PASS: 22 added selected Table 2 checks; V42 original checks preserved; source-property tampering stays blocked.');
