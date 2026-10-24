@@ -51,7 +51,7 @@ assert.ok(read('android/app/build.gradle').includes("applicationId 'in.pwdtools.
 assert.ok(read('android/scripts/prepare_assets.py').includes('generate_civilbandhu_icons.py'));
 assert.ok(read('scripts/prepare_public_site.py').includes('generate_civilbandhu_icons.py'));
 assert.ok(read('sw.js').includes('home-v38.css'));
-assert.ok(read('sw.js').includes('pwd-tools-steel-v43-2026-10-24'));
+assert.ok(read('sw.js').includes('pwd-tools-steel-v44-2026-10-24'));
 const destination=fs.mkdtempSync(path.join(os.tmpdir(),'civilbandhu-icons-'));
 try{
  const process=spawnSync('python3',[path.join(root,'scripts/generate_civilbandhu_icons.py'),destination],{encoding:'utf8',timeout:90000});
