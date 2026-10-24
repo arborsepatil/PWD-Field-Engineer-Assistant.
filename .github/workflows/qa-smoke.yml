@@ -47,6 +47,7 @@ jobs:
           node tests/verify-steel-v33-audit-register.mjs
           node tests/verify-v20-simple-ux.mjs
           node tests/verify-v37-calculator.mjs
+          node tests/verify-v38-civilbandhu-home.mjs
           node tests/verify-v21-reader-ux.mjs
           node tests/verify-v21-batch-guidance.mjs
           node tests/verify-v21-final-navigation.mjs
