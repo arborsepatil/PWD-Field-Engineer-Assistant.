@@ -50,7 +50,7 @@ assert.equal(a.widthMm,b.widthMm);
 assert.notEqual(a.kgPerM,b.kgPerM);
 assert.equal(cat.standardAudit(a).status,'is808-mass-area-inertia-checked');
 assert.equal(cat.standardAudit(b).status,'is808-mass-area-inertia-checked');
-const l200=cat.byId('OSD12'),lp200=cat.byId('OSD13');
+const l200=cat.sections.find(x=>x.designation==='LB 200'&&x.kgPerM===19.83),lp200=cat.byId('OSD13');
 assert.ok(l200&&lp200,'Separate LB 200 and LB(P) 200 must exist');
 assert.equal(l200.depthMm,lp200.depthMm);
 assert.equal(l200.widthMm,lp200.widthMm);
