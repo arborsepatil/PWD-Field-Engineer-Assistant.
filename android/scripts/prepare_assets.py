@@ -39,6 +39,7 @@ for file in ROOT.iterdir():
 
 import subprocess
 import sys
+# Use the shared CivilBandhu vector geometry (including bridge arch) for PNG assets.
 subprocess.run([sys.executable, str(ROOT / "scripts/generate_civilbandhu_icons.py"), str(OUTPUT)], check=True)
 
 index_path = OUTPUT / "index.html"
