@@ -67,7 +67,7 @@ for(const id of ['OSD329','OSD334','OSD338']){
 const result=status.summarize(catalog,compare,catalog.sections);
 assert.ok(result.counts.checked>=195,'V43 checked rows must remain verified');
 assert.ok(result.counts.review<=542,'Later source audit may reduce pending');
-assert.equal(result.counts.hold,20,'Historical held rows must remain blocked');
+assert.equal(result.counts.hold,19,'Remaining source conflicts must stay blocked after verified HB 200* correction');
 assert.equal(result.counts.checked+result.counts.review+result.counts.hold,757);
 assert.equal(result.total,757);
 for(const type of ['checked','review','hold']){
@@ -79,5 +79,5 @@ const ledger=source.split('/* V43: 24 existing Osdag')[1]?.split('// Source-publ
 assert.match(ledger,/IS808_V43_ROW_CHECKS/);
 assert.match(ledger,/fingerprint/);
 assert.ok(!ledger.includes('mass:')&&!ledger.includes('area:')&&!ledger.includes('ix:'),'Licensed source table cannot be copied into the app audit ledger');
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v46-2026-10-24'));
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v47-2026-10-25'));
 console.log('STEEL V43 PASS: 24 channel source matches; '+result.counts.checked+' limited-checked, '+result.counts.review+' pending, '+result.counts.hold+' held. Quantity gate and provisional holds intact.');
