@@ -1022,8 +1022,95 @@ const IS808_V54_ROW_CHECKS=Object.freeze([
 ]);
 const v54Fingerprint=v44Fingerprint;
 
+/* V55: 74 previously pending equal-leg angle source comparisons,
+ * owner-held IS 808:2021 Table 9 (physical PDF pages 29–32) and Table 10
+ * supplementary (physical pages 33–34). Only exact mass variants,
+ * nominal kg/m, area, a/b/t, Izz/Iyy and Zz/Zy were checked.
+ * Sixteen Osdag angle variants were already audited; OSD383 was
+ * de-duplicated earlier to the independently checked curated equal angle.
+ * Manufacturer archived discrepancies and secondary rows still need work.
+ * No licensed BIS PDF or copyrighted numerical table is distributed.
+ */
+const IS808_V55_ROW_CHECKS=Object.freeze([
+ Object.freeze({id:'OSD361',fingerprint:'52ce4aa2',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD362',fingerprint:'5f62060d',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD363',fingerprint:'b31a4db3',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD364',fingerprint:'53026c61',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD365',fingerprint:'035191bd',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD366',fingerprint:'e49324d6',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD367',fingerprint:'ae34702c',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD368',fingerprint:'36e10c3c',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD369',fingerprint:'1d60bbd4',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD370',fingerprint:'b082c521',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD371',fingerprint:'74ce7c80',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD372',fingerprint:'5f9aefd5',table:9,pdfPage:29}),
+ Object.freeze({id:'OSD373',fingerprint:'f4a090cf',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD374',fingerprint:'5d7c197e',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD375',fingerprint:'c65523dc',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD376',fingerprint:'b640405b',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD377',fingerprint:'03081f68',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD378',fingerprint:'155cedb4',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD379',fingerprint:'21e223cd',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD380',fingerprint:'9d037750',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD381',fingerprint:'e4b90884',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD382',fingerprint:'e4d70eae',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD385',fingerprint:'35d38717',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD386',fingerprint:'685628f8',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD387',fingerprint:'20e03aa4',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD388',fingerprint:'83357ff0',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD389',fingerprint:'f74edb07',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD393',fingerprint:'0f504909',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD395',fingerprint:'ed883aeb',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD396',fingerprint:'60a65bdb',table:9,pdfPage:30}),
+ Object.freeze({id:'OSD397',fingerprint:'24cd79b2',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD398',fingerprint:'ffd922b8',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD399',fingerprint:'6fc52d8e',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD400',fingerprint:'62c73506',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD401',fingerprint:'bc702d41',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD402',fingerprint:'404a41de',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD404',fingerprint:'272dafb4',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD405',fingerprint:'3b8fa83f',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD407',fingerprint:'7d32b071',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD408',fingerprint:'5d5f3f64',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD412',fingerprint:'87a0b8b9',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD413',fingerprint:'1c7fba51',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD416',fingerprint:'eab8da7a',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD417',fingerprint:'af638e84',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD418',fingerprint:'46d5346a',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD419',fingerprint:'748c7010',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD420',fingerprint:'36ed44de',table:9,pdfPage:31}),
+ Object.freeze({id:'OSD421',fingerprint:'b9ce543a',table:9,pdfPage:32}),
+ Object.freeze({id:'OSD422',fingerprint:'a6fc8ad6',table:9,pdfPage:32}),
+ Object.freeze({id:'OSD423',fingerprint:'07c94a11',table:9,pdfPage:32}),
+ Object.freeze({id:'OSD424',fingerprint:'613b11be',table:9,pdfPage:32}),
+ Object.freeze({id:'OSD427',fingerprint:'265e1e29',table:9,pdfPage:32}),
+ Object.freeze({id:'OSD428',fingerprint:'368a776a',table:9,pdfPage:32}),
+ Object.freeze({id:'OSD431',fingerprint:'025f1fb9',table:9,pdfPage:32}),
+ Object.freeze({id:'OSD432',fingerprint:'267f40d9',table:9,pdfPage:32}),
+ Object.freeze({id:'OSD433',fingerprint:'a261d222',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD434',fingerprint:'892ac41b',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD435',fingerprint:'2b1ad75e',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD436',fingerprint:'391b4294',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD437',fingerprint:'14169c5a',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD438',fingerprint:'6bddcc0e',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD439',fingerprint:'affa2742',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD440',fingerprint:'e34ada95',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD441',fingerprint:'5b0375ad',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD442',fingerprint:'39f25b96',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD443',fingerprint:'bfa11616',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD444',fingerprint:'37911817',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD445',fingerprint:'5f78f1d1',table:10,pdfPage:33}),
+ Object.freeze({id:'OSD446',fingerprint:'7dcdb3a8',table:10,pdfPage:34}),
+ Object.freeze({id:'OSD447',fingerprint:'3d1e89e3',table:10,pdfPage:34}),
+ Object.freeze({id:'OSD448',fingerprint:'cf0443c2',table:10,pdfPage:34}),
+ Object.freeze({id:'OSD449',fingerprint:'8ab91d17',table:10,pdfPage:34}),
+ Object.freeze({id:'OSD450',fingerprint:'c9eb7938',table:10,pdfPage:34}),
+ Object.freeze({id:'OSD451',fingerprint:'3f92e69d',table:10,pdfPage:34})
+]);
+const v55Fingerprint=v44Fingerprint;
+
 function auditIS808(row){
- const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–9, 11–13 checks';
+ const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–13 checks';
  if(!row||!['beam','channel','column','angle','pile'].includes(row.family))
   return {status:'not-checked',source:null};
  if(row.id===IS808_V46_SC100.id){
@@ -1033,6 +1120,17 @@ function auditIS808(row){
     geometryChecked:false,note:'SC 100 curated value or source identity has changed since the Table 5 limited check. Quantity blocked until re-audited.'};
   return {status:'is808-mass-checked',source,sourceTable:5,sourcePdfPage:22,
    geometryChecked:false,note:'Limited direct Table 5 check: SC 100 source mass, area, D/B, t/T and available Izz/Zzz. Iyy, Zyy, flange radii/slope and full structural properties are missing from this curated row and are NOT claimed verified. Confirm delivered product and MTC separately.'};
+ }
+ const v55=IS808_V55_ROW_CHECKS.find(item=>item.id===row.id);
+ if(v55){
+  if(row.sourceId!=='osdag808'||row.family!=='angle'||resolveSeries(row)!=='EQ'||
+     v55Fingerprint(row)!==v55.fingerprint)
+   return {status:'is808-numeric-conflict',source,sourceTable:v55.table,
+    sourcePdfPage:v55.pdfPage,geometryChecked:false,
+    note:'BIS source-checked equal-leg angle designation, mass or sectional property was altered; quantity blocked until re-audit.'};
+  return {status:'is808-mass-area-inertia-checked',source,sourceTable:v55.table,
+   sourcePdfPage:v55.pdfPage,geometryChecked:false,
+   note:'Limited exact IS 808:2021 Table 9/10 equal-angle check (2026-10-25): nominal kg/m, area, a/b/t, Izz/Iyy and Zz/Zy. Remaining geometry, delivered material, grade, radii and design certification require separate checks.'};
  }
  const v54=IS808_V54_ROW_CHECKS.find(item=>item.id===row.id);
  if(v54){
@@ -1358,7 +1456,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808V53AuditSampleCount:IS808_V53_ROW_CHECKS.length,is808V54AuditSampleCount:IS808_V54_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808V53AuditSampleCount:IS808_V53_ROW_CHECKS.length,is808V54AuditSampleCount:IS808_V54_ROW_CHECKS.length,is808V55AuditSampleCount:IS808_V55_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
