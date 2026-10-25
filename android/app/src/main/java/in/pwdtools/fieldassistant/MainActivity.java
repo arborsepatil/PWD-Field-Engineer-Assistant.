@@ -159,8 +159,8 @@ public final class MainActivity extends Activity {
         if (webView == null) return;
         PrintManager manager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
         if (manager != null) {
-            manager.print("PWD Field Assistant — " + webView.getTitle(),
-                webView.createPrintDocumentAdapter("PWD Field Assistant"),
+            manager.print("CivilBandhu — " + webView.getTitle(),
+                webView.createPrintDocumentAdapter("CivilBandhu"),
                 new PrintAttributes.Builder().build());
         }
     }
