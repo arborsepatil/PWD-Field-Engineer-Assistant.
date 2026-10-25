@@ -59,12 +59,12 @@ for(const id of ['OSD193','OSD194','OSD195','OSD196']){
  assert.equal(comparison.audit(cat,row).status,'hold',id);
  assert.equal(comparison.quantityGate(cat,row).allowed,false,id);
 }
-// Adjacent rows in the next batch must remain blocked.
+// Next-batch rows must be source-checked before their weight gate opens.
 for(const id of ['OSD197','OSD198']){
  const row=cat.byId(id);
  assert.ok(row);
  assert.equal(comparison.audit(cat,row).status,'checked',id);
- assert.equal(comparison.quantityGate(cat,row).allowed,false,id);
+ assert.equal(comparison.quantityGate(cat,row).allowed,true,id);
 }
 const all=status.summarize(cat,comparison,cat.sections);
 assert.deepEqual({...all.counts},{checked:360,review:378,hold:19});
