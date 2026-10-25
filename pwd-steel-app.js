@@ -207,7 +207,7 @@ function calculate(){
  if(!selected)throw Error('Choose a steel section from the search results.');
  const chsAudit=catalog.standardAudit(selected);
  if(chsAudit.status==='is808-numeric-conflict')throw Error('IS 808:2021: this archived or secondary steel profile conflicts with the checked BIS mass or section properties. Quantity blocked. Select the current checked matching variant.');
- if(chsAudit.status==='source-numeric-hold')throw Error(chsAudit.note||'An unresolved nominal-source inconsistency blocks quantity arithmetic; seek an authoritative correction.');
+ if(chsAudit.status==='source-numeric-hold')throw Error('Unresolved source-table discrepancy: '+(chsAudit.note||'An unresolved nominal-source inconsistency blocks quantity arithmetic; seek an authoritative correction.'));
   if(chsAudit.status==='is808-not-tabulated')throw Error(chsAudit.note||'Historical section is not a tabulated current IS 808 nominal mass; calculation blocked.');
  if(chsAudit.status==='mass-area-conflict')throw Error('IS 4923:2017 nominal mass and area are inconsistent in this source record. Calculation blocked for engineering review.');
  if(chsAudit.status==='rhs-weight-conflict')throw Error('IS 4923:2017 amended RHS numeric record conflicts with BIS source. Quantity blocked pending correction.');
