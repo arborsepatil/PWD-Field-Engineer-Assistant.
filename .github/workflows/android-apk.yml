@@ -166,6 +166,8 @@ jobs:
         run: node tests/verify-steel-v60-is808-final-six.mjs
       - name: Audit remaining held and unverified Steel Table rows (V60)
         run: node scripts/steel-v59-pending-inventory.mjs
+      - name: Verify V61 source hold evidence grouping and fail-closed quantity gates
+        run: node tests/verify-steel-v61-hold-evidence.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens

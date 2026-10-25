@@ -63,6 +63,7 @@ jobs:
           node tests/verify-steel-v58-chs-unlisted.mjs
           node tests/verify-steel-v59-is808-curated.mjs
           node tests/verify-steel-v60-is808-final-six.mjs
+          node tests/verify-steel-v61-hold-evidence.mjs
           node scripts/steel-v59-pending-inventory.mjs
           node scripts/steel-release-readiness.mjs --report-only
           node tests/verify-v20-simple-ux.mjs
