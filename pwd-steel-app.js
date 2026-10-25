@@ -213,7 +213,7 @@ function calculate(){
  if(chsAudit.status==='shs-row-conflict')throw Error('IS 4923:2017 amended SHS nominal record conflicts with BIS source. Quantity blocked pending correction.');
  if(chsAudit.status==='outside-current-scope')throw Error('IS 4923 Amendment 2: steel hollow sections below 2 mm are outside amended structural section scope. Do not use this record for structural quantity calculations.');
  if(['not-listed-in-replacement','spot-checked-conflict'].includes(chsAudit.status))
-  throw Error('IS 1161 Amendment 2 review: not an approved current table weight for this size. Choose a listed section.');
+  throw Error('IS 1161 Amendment 2 review: not an approved current table weight for this size. This OD/thickness combination is not tabulated in the replacement Table 1. Clause 6.1.3 may allow a thicker tube by purchaser–manufacturer agreement; this archival kg/m still requires separate technical verification, so calculation stays blocked.');
  if(selected.qualityFlag==='mass-area-inconsistent'||catalog.auditRow(selected).includes('mass-vs-area'))throw Error('Mass/area conflict in source row — quantity blocked pending review.');
  // Selected BIS source check is mandatory for preliminary nominal quantity arithmetic.
  // All historic, secondary, unsampled and internally conflicting rows remain reference only.
