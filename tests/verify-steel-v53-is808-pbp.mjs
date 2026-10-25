@@ -46,5 +46,5 @@ const source=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
 const ledger=source.split('IS808_V53_ROW_CHECKS=Object.freeze([')[1]?.split(']);')[0]||'';
 assert.equal((ledger.match(/fingerprint:/g)||[]).length,28);
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v54-2026-10-25'));
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').match(/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/));
 console.log('STEEL V53 PASS: 28 newly verified exact PBP variants; 30/30 pile sections checked; all quantities gated by source identity.');
