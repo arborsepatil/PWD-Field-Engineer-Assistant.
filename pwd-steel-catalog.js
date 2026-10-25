@@ -722,6 +722,68 @@ const IS808_V50_ROW_CHECKS=Object.freeze([
 ]);
 const v50Fingerprint=v44Fingerprint;
 
+/* V51: remaining 50 Table 4 WPB catalogue variants, IS 808:2021.
+ * Compared with owner-held BIS document, physical PDF pages 18–20.
+ * Exact variant designation/mass, area, actual D/B, t/T, Izz/Iyy and
+ * Zzz/Zyy compared, with mass-area and approximate geometry sanity tests.
+ * Source data unchanged. OSD180 remains pending; OSD193–196 remain held.
+ * Root/toe radii, design adequacy, steel grade, actual supply and MTC
+ * are outside the limited source check. No BIS table or PDF is embedded.
+ */
+const IS808_V51_ROW_CHECKS=Object.freeze([
+ Object.freeze({id:'OSD197',fingerprint:'bc0c9dd9',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD198',fingerprint:'b3bff2f8',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD199',fingerprint:'472c26ba',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD200',fingerprint:'9fba7575',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD201',fingerprint:'2f0aae12',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD202',fingerprint:'a6618085',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD203',fingerprint:'fc9fb205',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD204',fingerprint:'ce6a5402',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD205',fingerprint:'39cf6d00',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD206',fingerprint:'e770933f',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD207',fingerprint:'2cef3e5b',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD208',fingerprint:'44b608bb',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD209',fingerprint:'7e63487c',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD210',fingerprint:'6d0887b2',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD211',fingerprint:'a700a365',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD212',fingerprint:'baa7c928',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD213',fingerprint:'29d46815',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD214',fingerprint:'d46d2f71',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD215',fingerprint:'efa5f377',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD216',fingerprint:'ed9e0a0f',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD217',fingerprint:'1ce5dc39',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD218',fingerprint:'fbdf6ec7',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD219',fingerprint:'9920c984',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD220',fingerprint:'57154314',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD221',fingerprint:'aaa3b22b',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD222',fingerprint:'20fc563c',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD223',fingerprint:'ac62c961',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD224',fingerprint:'0d71456b',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD225',fingerprint:'ff7b25d3',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD226',fingerprint:'1d56f74d',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD227',fingerprint:'9cb5005b',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD228',fingerprint:'0d18694b',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD229',fingerprint:'66f0ba28',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD230',fingerprint:'7174f456',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD231',fingerprint:'b4c06714',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD232',fingerprint:'79296790',table:4,pdfPage:19}),
+ Object.freeze({id:'OSD233',fingerprint:'5c12cf6e',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD234',fingerprint:'620f8f94',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD235',fingerprint:'5fc5d735',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD236',fingerprint:'27fc05a6',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD237',fingerprint:'71f73c5b',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD238',fingerprint:'ec33b8f7',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD239',fingerprint:'29dbc1e1',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD240',fingerprint:'ad32c310',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD241',fingerprint:'57398508',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD242',fingerprint:'a5ef17ba',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD243',fingerprint:'1433aa97',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD244',fingerprint:'b6ef3315',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD245',fingerprint:'a8e631be',table:4,pdfPage:20}),
+ Object.freeze({id:'OSD246',fingerprint:'932e05b6',table:4,pdfPage:20})
+]);
+const v51Fingerprint=v44Fingerprint;
+
 function auditIS808(row){
  const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–9, 12 and 13 checks';
  if(!row||!['beam','channel','column','angle','pile'].includes(row.family))
@@ -733,6 +795,15 @@ function auditIS808(row){
     geometryChecked:false,note:'SC 100 curated value or source identity has changed since the Table 5 limited check. Quantity blocked until re-audited.'};
   return {status:'is808-mass-checked',source,sourceTable:5,sourcePdfPage:22,
    geometryChecked:false,note:'Limited direct Table 5 check: SC 100 source mass, area, D/B, t/T and available Izz/Zzz. Iyy, Zyy, flange radii/slope and full structural properties are missing from this curated row and are NOT claimed verified. Confirm delivered product and MTC separately.'};
+ }
+ const v51=IS808_V51_ROW_CHECKS.find(item=>item.id===row.id);
+ if(v51){
+  if(row.sourceId!=='osdag808'||row.family!=='beam'||resolveSeries(row)!=='WPB'||
+     v51Fingerprint(row)!==v51.fingerprint)
+   return {status:'is808-numeric-conflict',source,sourceTable:4,sourcePdfPage:v51.pdfPage,
+    geometryChecked:false,note:'Source-checked Table 4 WPB identity or nominal properties changed. Weight calculation blocked pending re-audit.'};
+  return {status:'is808-mass-area-inertia-checked',source,sourceTable:4,sourcePdfPage:v51.pdfPage,
+   geometryChecked:false,note:'Limited owner-held IS 808:2021 Table 4 comparison of this exact WPB mass variant: nominal mass, area, D/B, web/flange thickness, Izz/Iyy and Zzz/Zyy. Complete geometry, design properties, material grade, supplied section and MTC not certified.'};
  }
  const v50=IS808_V50_ROW_CHECKS.find(item=>item.id===row.id);
  if(v50){
@@ -1014,7 +1085,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
