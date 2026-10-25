@@ -54,7 +54,7 @@ for(const id of ['OSD193','OSD194','OSD195','OSD196']){
  assert.equal(compare.audit(cat,row).status,'hold','Previously held WPB still blocked: '+id);
  assert.equal(compare.quantityGate(cat,row).allowed,false,id);
 }
-for(const id of ['OSD180','OSD197']){
+for(const id of ['OSD180']){
  const row=cat.byId(id);
  assert.ok(row);
  assert.equal(compare.audit(cat,row).status,'review','Unreviewed next WPB section must remain pending');
@@ -83,17 +83,52 @@ assert.ok(exception);
 assert.equal(cat.standardAudit(exception).status,'not-checked');
 assert.equal(compare.quantityGate(cat,exception).allowed,false);
 
+
+/* V51 continuation: all fifty remaining exact WPB Table 4 mass variants. */
+const v51=Array.from({length:50},(_,i)=>'OSD'+(197+i));
+assert.equal(cat.is808V51AuditSampleCount,50);
+for(const id of v51){
+ const row=cat.byId(id),n=Number(id.slice(3));
+ assert.ok(row,id+' must remain in the catalogue');
+ assert.equal(cat.resolveSeries(row),'WPB',id);
+ const review=cat.standardAudit(row);
+ assert.equal(review.status,'is808-mass-area-inertia-checked',id);
+ assert.equal(review.sourceTable,4,id);
+ assert.equal(review.sourcePdfPage,n<=208?18:n<=232?19:20,id);
+ assert.equal(review.geometryChecked,false,id);
+ assert.equal(compare.quantityGate(cat,row).allowed,true,id);
+ for(const prop of ['id','sourceId','series','designation','qualityFlag',
+   'kgPerM','areaCm2','depthMm','widthMm','webMm','flangeMm',
+   'ixCm4','iyCm4','zxCm3','zyCm3']){
+   const val=row[prop],wrong={...row,[prop]:typeof val==='number'?val+1:
+     val===null?'altered':String(val)+'-altered'};
+   if(prop!=='id')assert.equal(cat.standardAudit(wrong).status,
+     'is808-numeric-conflict',id+' '+prop);
+   else assert.notEqual(cat.standardAudit(wrong).status,
+     'is808-mass-area-inertia-checked',id+' identity');
+   assert.equal(compare.quantityGate(cat,wrong).allowed,false,
+     id+' mutated '+prop);
+ }
+}
+// Maintain exact isolated-source provenance; no full reproduction of the BIS table.
+const v51Source=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
+const v51Ledger=v51Source.split('/* V51: remaining 50 exact WPB')[1]?.split('function auditIS808(row)')[0]||'';
+assert.ok(v51Ledger.includes('IS808_V51_ROW_CHECKS'));
+assert.equal((v51Ledger.match(/fingerprint:/g)||[]).length,50);
+assert.equal(cat.standardAudit(cat.byId('OSD185')).sourcePdfPage,18,
+ 'Prior V50 source physical-page reference must remain accurate');
+
 const summary=status.summarize(cat,compare,cat.sections);
-assert.deepEqual({...summary.counts},{checked:310,review:428,hold:19});
+assert.deepEqual({...summary.counts},{checked:360,review:378,hold:19});
 assert.equal(summary.total,757);
 const wpb=summary.records.filter(r=>cat.resolveSeries(r.row)==='WPB');
 assert.deepEqual(wpb.reduce((tot,r)=>(tot[r.status]++,tot),
- {checked:0,review:0,hold:0}),{checked:69,review:51,hold:4});
+ {checked:0,review:0,hold:0}),{checked:119,review:1,hold:4});
 const source=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
 const ledger=source.split('/* V49: 24 further WPB variants')[1]?.split('/* V50: 21 exact Table 4 WPB')[0]||'';
 assert.ok(ledger.includes('IS808_V49_ROW_CHECKS'));
 assert.equal((ledger.match(/fingerprint:/g)||[]).length,24);
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger));
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v50-2026-10-25'));
-console.log('STEEL V49/V50 PASS: 24+21 WPB source matches; OSD180 and all source holds remain blocked; 310 checked, 428 pending, 19 held.');
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v51-2026-10-25'));
+console.log('STEEL V49–V51 PASS: 24+21+50 WPB source matches; OSD180 and all four WPB holds remain blocked; 360 checked, 378 pending, 19 held.');
