@@ -46,8 +46,10 @@ for(const {id,page} of entries){
   const old=row[key];
   const altered={...row,[key]:typeof old==='number'?old+1:
     old===null||old===undefined?'changed':String(old)+'-changed'};
-  assert.equal(cat.standardAudit(altered).status,'spot-checked-conflict',
-   id+' altered '+key);
+  const newStatus=cat.standardAudit(altered).status;
+  if(key==='id')assert.notEqual(newStatus,'spot-checked-match',
+   id+' replacement ID cannot inherit source approval');
+  else assert.equal(newStatus,'spot-checked-conflict',id+' altered '+key);
   assert.equal(comparison.quantityGate(cat,altered).allowed,false,
    id+' quantity blocked after altered '+key);
  }
