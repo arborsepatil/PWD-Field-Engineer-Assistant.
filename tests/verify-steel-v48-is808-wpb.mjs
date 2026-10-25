@@ -73,7 +73,7 @@ assert.equal(s.counts.checked+s.counts.review+s.counts.hold,757);
 assert.equal(s.total,757);
 const selected=s.records.filter(x=>cat.resolveSeries(x.row)==='WPB');
 assert.deepEqual(selected.reduce((tot,x)=>(tot[x.status]++,tot),
- {checked:0,review:0,hold:0}),{checked:119,review:1,hold:4});
+ {checked:0,review:0,hold:0}),{checked:119,review:0,hold:5});
 const src=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
 const ledger=src.split('/* V48: first 22 newly checked')[1]?.split('function auditIS808(row)')[0]||'';
 assert.ok(ledger.includes('IS808_V48_ROW_CHECKS'));
