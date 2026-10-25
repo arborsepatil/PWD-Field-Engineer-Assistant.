@@ -12,7 +12,7 @@ assert.ok(home.includes('home-v38 home-v39'),'V38 list must remain and V39 polis
 assert.ok(home.includes('<link rel="stylesheet" href="./home-v39.css">'));
 assert.ok(sw.includes("'./home-v39.css'"),'Polished Home style must be available offline');
 assert.ok(pack.includes('".css"'),'Android package must bundle the V39 stylesheet');
-assert.ok(sw.includes('pwd-tools-steel-v53-2026-10-25'),'Web cache must refresh the Home polish');
+assert.ok(sw.includes('pwd-tools-steel-v54-2026-10-25'),'Web cache must refresh the Home polish');
 assert.match(css,/\.home-v39\.app-page\s*\{padding-bottom:0;/,
   'Remove padding previously reserved for fixed navigation on Home');
 assert.match(css,/\.home-v39 \.bottom-nav\s*\{[\s\S]*?position:relative;/,
