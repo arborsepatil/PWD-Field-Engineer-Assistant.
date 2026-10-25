@@ -80,5 +80,5 @@ assert.ok(ledger.includes('IS808_V50_ROW_CHECKS'));
 assert.equal((ledger.match(/fingerprint:/g)||[]).length,21);
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger));
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v52-2026-10-25'));
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v53-2026-10-25'));
 console.log('STEEL V50 preservation PASS: all 21 V50 WPB checked rows retain their source and quantity gates; outstanding WPB exceptions blocked.');
