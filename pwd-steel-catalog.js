@@ -1431,6 +1431,68 @@ function v57CHSFingerprint(row){
  return hash.toString(16).padStart(8,'0');
 }
 
+/* V58 negative-source audit, 25 Oct 2026: 49 Osdag CHS diameter ×
+ * thickness pairs do NOT occur in IS 1161:2014 Amendment 2 (Aug 2023)
+ * replacement Table 1, PDF physical pages 3–10.
+ * This is NOT a prohibition on non-tabulated thicker sections:
+ * Clause 6.1.3 allows thicker tubes by purchaser/manufacturer agreement.
+ * It DOES mean the obsolete catalogue's nominal weight cannot inherit
+ * the standard's tabulated nominal mass without an independent check.
+ * Only original open-data IDs and change-detection hashes are retained;
+ * no restricted BIS mass/dimension tables are distributed.
+ */
+const CHS_V58_UNLISTED=Object.freeze([
+ Object.freeze({id:'OSD561',fingerprint:'8b1115d5'}),
+ Object.freeze({id:'OSD562',fingerprint:'6450797b'}),
+ Object.freeze({id:'OSD563',fingerprint:'a0fa3fe0'}),
+ Object.freeze({id:'OSD564',fingerprint:'92cb0602'}),
+ Object.freeze({id:'OSD565',fingerprint:'a014711e'}),
+ Object.freeze({id:'OSD566',fingerprint:'f2041bfc'}),
+ Object.freeze({id:'OSD567',fingerprint:'d2297c22'}),
+ Object.freeze({id:'OSD568',fingerprint:'4da283e3'}),
+ Object.freeze({id:'OSD569',fingerprint:'8194ffd7'}),
+ Object.freeze({id:'OSD570',fingerprint:'13fcc2c5'}),
+ Object.freeze({id:'OSD572',fingerprint:'ecd7d2f2'}),
+ Object.freeze({id:'OSD573',fingerprint:'c0ec7b3e'}),
+ Object.freeze({id:'OSD575',fingerprint:'ba723d7a'}),
+ Object.freeze({id:'OSD576',fingerprint:'4799aa58'}),
+ Object.freeze({id:'OSD577',fingerprint:'e0c907f6'}),
+ Object.freeze({id:'OSD578',fingerprint:'aec4735c'}),
+ Object.freeze({id:'OSD579',fingerprint:'9dfef27e'}),
+ Object.freeze({id:'OSD580',fingerprint:'5311981b'}),
+ Object.freeze({id:'OSD581',fingerprint:'01da2950'}),
+ Object.freeze({id:'OSD583',fingerprint:'bf5de352'}),
+ Object.freeze({id:'OSD584',fingerprint:'c5a57f1d'}),
+ Object.freeze({id:'OSD586',fingerprint:'051f8e31'}),
+ Object.freeze({id:'OSD587',fingerprint:'94896869'}),
+ Object.freeze({id:'OSD588',fingerprint:'a2704902'}),
+ Object.freeze({id:'OSD589',fingerprint:'1dfecebd'}),
+ Object.freeze({id:'OSD590',fingerprint:'e967cd2a'}),
+ Object.freeze({id:'OSD591',fingerprint:'01175aec'}),
+ Object.freeze({id:'OSD592',fingerprint:'2163c86d'}),
+ Object.freeze({id:'OSD593',fingerprint:'06b6cb30'}),
+ Object.freeze({id:'OSD594',fingerprint:'3eec41b8'}),
+ Object.freeze({id:'OSD595',fingerprint:'ca670182'}),
+ Object.freeze({id:'OSD596',fingerprint:'dd4b954d'}),
+ Object.freeze({id:'OSD597',fingerprint:'ea4f73f9'}),
+ Object.freeze({id:'OSD598',fingerprint:'1e5def85'}),
+ Object.freeze({id:'OSD599',fingerprint:'d9d48a2b'}),
+ Object.freeze({id:'OSD600',fingerprint:'bbdc430d'}),
+ Object.freeze({id:'OSD601',fingerprint:'8be7c534'}),
+ Object.freeze({id:'OSD602',fingerprint:'25257e8c'}),
+ Object.freeze({id:'OSD605',fingerprint:'65b3c944'}),
+ Object.freeze({id:'OSD606',fingerprint:'4425bd53'}),
+ Object.freeze({id:'OSD607',fingerprint:'fecd0777'}),
+ Object.freeze({id:'OSD611',fingerprint:'6c96a64b'}),
+ Object.freeze({id:'OSD612',fingerprint:'17904486'}),
+ Object.freeze({id:'OSD613',fingerprint:'e759a7fe'}),
+ Object.freeze({id:'OSD618',fingerprint:'51b5a97b'}),
+ Object.freeze({id:'OSD619',fingerprint:'14036882'}),
+ Object.freeze({id:'OSD620',fingerprint:'d18bc66e'}),
+ Object.freeze({id:'OSD625',fingerprint:'47e8948b'}),
+ Object.freeze({id:'OSD629',fingerprint:'685fe506'}),
+]);
+
 // Reject any 0.01 discrepancy where the BIS table specifies 2 decimals.
 const agrees=(got,expected)=>got!==undefined&&got!==null&&Math.abs(Number(got)-expected)<0.005;
 const massAgrees=(got,expected)=>got!==undefined&&got!==null&&Math.abs(Number(got)-expected)<0.005;
@@ -1507,9 +1569,19 @@ function standardAudit(row){
    note:'Limited exact CHS check against IS 1161:2014 Amendment 2 (Aug 2023), replacement Table 1: OD, wall thickness, nominal kg/m and area. Osdag inertia, section modulus, production route, supplied steel grade, tolerances, MTC and structural design remain unverified.'};
  }
  const od=Number(row.diameterMm??row.depthMm),t=Number(row.thicknessMm??row.webMm);
+ const excluded=CHS_V58_UNLISTED.find(item=>item.id===row.id);
+ if(excluded){
+  if(row.sourceId!=='osdagCHS'||row.family!=='hollow'||
+     row.series!=='CHS'||v57CHSFingerprint(row)!==excluded.fingerprint)
+   return {status:'spot-checked-conflict',source,sourceTable:1,
+    geometryChecked:false,note:'Previously source-audited unlisted CHS record has changed identity or numerical properties. Quantity blocked until a new source review.'};
+  return {status:'not-listed-in-replacement',source,sourceTable:1,
+   geometryChecked:false,
+   note:'This exact historic CHS diameter and wall thickness is NOT tabulated in IS 1161:2014 Amendment 2 replacement Table 1 (PDF pp. 3–10). It is not automatically forbidden: Clause 6.1.3 can permit an increased thickness by purchaser/manufacturer agreement. Neither such agreement nor this nominal mass has been certified; provisional quantity blocked until independently resolved.'};
+ }
  if(CHS_WITHDRAWN_SAMPLE.some(x=>x.od===od&&x.t===t))
   return {status:'not-listed-in-replacement',source,
-   note:'Historical size not listed in the 2023 replacement Table 1. Do not present its published mass as a current standard size.'};
+   note:'This exact historical CHS OD/thickness pair is absent from 2023 replacement Table 1. Clause 6.1.3 can permit thicker non-tabulated tubes by purchaser/manufacturer agreement, but this legacy nominal kg/m is not a checked 2023 table value. Quantity blocked pending independent verification.'};
  if(row.series!=='CHS')return {status:'not-checked',source:null};
  const match=CHS_BIS_SPOT_CHECKS.find(x=>x.od===od&&x.t===t);
  if(!match)return {status:'not-checked',source};
@@ -1521,7 +1593,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808V53AuditSampleCount:IS808_V53_ROW_CHECKS.length,is808V54AuditSampleCount:IS808_V54_ROW_CHECKS.length,is808V55AuditSampleCount:IS808_V55_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,is1161V57AuditSampleCount:CHS_V57_ROW_CHECKS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808V53AuditSampleCount:IS808_V53_ROW_CHECKS.length,is808V54AuditSampleCount:IS808_V54_ROW_CHECKS.length,is808V55AuditSampleCount:IS808_V55_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,is1161V57AuditSampleCount:CHS_V57_ROW_CHECKS.length,is1161V58NonTabulatedCount:CHS_V58_UNLISTED.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);

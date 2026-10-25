@@ -66,8 +66,8 @@ for(const id of ['OSD180','OSD543']){
  assert.equal(comparison.quantityGate(cat,row).allowed,false,id+' still blocked');
 }
 const all=status.summarize(cat,comparison,cat.sections);
-assert.ok(all.counts.checked>=637&&all.counts.review<=101&&all.counts.hold===19,
- 'Later source-checked CHS additions may reduce pending counts');
+assert.ok(all.counts.checked>=637&&all.counts.review<=101&&all.counts.hold>=19,
+ 'Subsequent source audits may either check rows or correctly quarantine unlisted CHS');
 assert.equal(all.total,757);
 assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8')
  .match(/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/),'New steel data must invalidate PWA cache');
