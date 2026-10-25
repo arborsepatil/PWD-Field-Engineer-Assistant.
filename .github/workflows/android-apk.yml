@@ -156,6 +156,8 @@ jobs:
         run: node tests/verify-steel-v54-is808-ue.mjs
       - name: Verify Steel V55 equal-leg angles, tamper holds and quantity gate
         run: node tests/verify-steel-v55-is808-eq.mjs
+      - name: Verify Steel V57 circular-tube source masses and fail-closed checks
+        run: node tests/verify-steel-v57-is1161-chs.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens
