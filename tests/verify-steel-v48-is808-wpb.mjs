@@ -62,7 +62,7 @@ for(const id of onHold){
  assert.equal(cmp.audit(cat,row).status,'hold',id);
  assert.equal(cmp.quantityGate(cat,row).allowed,false,id);
 }
-const pending=cat.byId('OSD171');
+const pending=cat.byId('OSD180');
 assert.ok(pending);
 assert.equal(cmp.quantityGate(cat,pending).allowed,false,
  'Next Table 4 page must not become eligible without audit');
@@ -73,12 +73,12 @@ assert.equal(s.counts.checked+s.counts.review+s.counts.hold,757);
 assert.equal(s.total,757);
 const selected=s.records.filter(x=>cat.resolveSeries(x.row)==='WPB');
 assert.deepEqual(selected.reduce((tot,x)=>(tot[x.status]++,tot),
- {checked:0,review:0,hold:0}),{checked:48,review:72,hold:4});
+ {checked:0,review:0,hold:0}),{checked:69,review:51,hold:4});
 const src=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
 const ledger=src.split('/* V48: first 22 newly checked')[1]?.split('function auditIS808(row)')[0]||'';
 assert.ok(ledger.includes('IS808_V48_ROW_CHECKS'));
 assert.ok(ledger.includes('fingerprint'));
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger),'No BIS numerical tables allowed in public catalogue');
 assert.ok(!fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')));
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v49-2026-10-25'));
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v50-2026-10-25'));
 console.log('STEEL V48 PASS: the 22 original WPB source checks remain intact; all four WPB holds stay blocked.');
