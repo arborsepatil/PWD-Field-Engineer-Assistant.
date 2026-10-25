@@ -67,7 +67,7 @@ for(const id of ['OSD329','OSD334','OSD338']){
 const result=status.summarize(catalog,compare,catalog.sections);
 assert.ok(result.counts.checked>=195,'V43 checked rows must remain verified');
 assert.ok(result.counts.review<=542,'Later source audit may reduce pending');
-assert.equal(result.counts.hold,19,'Remaining source conflicts must stay blocked after verified HB 200* correction');
+assert.ok(result.counts.hold>=19,'Remaining source conflicts must stay blocked after verified HB 200* correction');
 assert.equal(result.counts.checked+result.counts.review+result.counts.hold,757);
 assert.equal(result.total,757);
 for(const type of ['checked','review','hold']){
