@@ -1,0 +1,64 @@
+/* V39 Home polish: readable engineer-first rows, no extra tools or categories. */
+.home-v39.app-page {padding-bottom:0;min-height:100vh}
+.home-v39 .shell {padding-top:clamp(14px, 3.2vh, 26px);padding-bottom:6px}
+.home-v39 .topbar {min-height:60px;align-items:center}
+.home-v39 .brand {gap:12px}
+.home-v39 .brand img {width:49px;height:49px;border-radius:13px;object-fit:contain;flex-shrink:0}
+.home-v39 .brand-title {font-size:clamp(22px, 5vw, 30px);line-height:1.12;letter-spacing:-.7px}
+.home-v39 .brand-sub {font-size:11px;margin-top:4px;color:var(--muted);font-weight:620}
+.home-v39 .top-actions .icon-btn {width:44px;height:44px;border-radius:12px;box-shadow:none}
+.home-v39 #tools.section-head {margin:18px 2px 8px}
+.home-v39 #tools h1 {font-size:17px;font-weight:800}
+.home-v39 #toolList.tools-list {display:flex;flex-direction:column;max-width:760px;gap:0;box-shadow:none;border-radius:17px;border:1px solid var(--line);background:var(--card);overflow:hidden}
+.home-v39 #toolList .tool-row {
+  display:flex;min-height:70px;padding:11px 13px;gap:13px;align-items:center;
+  border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none;
+  text-decoration:none;transition:background-color .12s ease;
+}
+.home-v39 #toolList .tool-row:last-child {border-bottom:0}
+.home-v39 #toolList .tool-row:focus-visible {outline:3px solid var(--accent);outline-offset:-3px}
+.home-v39 #toolList .tool-row:active,.home-v39 #toolList .tool-row:hover {background:var(--soft)}
+.home-v39 #toolList .module-icon {
+  width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;
+  color:var(--icon-tone,#245d9e);
+  background:color-mix(in srgb,var(--icon-tone,#245d9e) 12%,var(--card));
+}
+.home-v39 #toolList .module-icon svg {width:26px;height:26px;stroke:currentColor;stroke-width:1.85;fill:none}
+.home-v39 #toolList .tool-copy {display:block;min-width:0;flex:1}
+.home-v39 #toolList .tool-copy b {display:block;font-size:14px;font-weight:790;line-height:1.25;letter-spacing:-.12px;color:var(--ink)}
+.home-v39 #toolList .tool-copy small {display:block;font-size:12px;line-height:1.35;color:var(--muted);margin-top:4px}
+.home-v39 #toolList .chev {margin-left:auto;color:var(--muted);font-size:23px;line-height:1}
+.home-v39 #toolList [data-tool-id="units"] {--icon-tone:#2274be}
+.home-v39 #toolList [data-tool-id="batch"] {--icon-tone:#b57130}
+.home-v39 #toolList [data-tool-id="steeltable"] {--icon-tone:#607c9b}
+.home-v39 #toolList [data-tool-id="wall"] {--icon-tone:#13937d}
+.home-v39 #toolList [data-tool-id="mixdesign"] {--icon-tone:#7960ba}
+.home-v39 #toolList [data-tool-id="ssrmaster"] {--icon-tone:#ad7831}
+.home-v39 #toolList [data-tool-id="bridgeplans"] {--icon-tone:#2582a1}
+.home-v39 #toolList [data-tool-id="library"] {--icon-tone:#686bc0}
+.home-v39 .home-guidance {margin:14px 2px 18px;line-height:1.5}
+.home-v39 .home-guidance summary {min-height:34px;display:list-item}
+.home-v39 .bottom-nav {
+  /* Put the navigation in document flow, not above Android's system buttons. */
+  position:relative;left:auto;bottom:auto;transform:none;
+  width:min(760px,calc(100% - 26px));max-width:760px;height:61px;min-height:61px;
+  margin:2px auto calc(18px + env(safe-area-inset-bottom,0px));
+  grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;
+  background:var(--card);border:1px solid var(--line);border-radius:17px;
+  box-shadow:none;backdrop-filter:none;padding:5px;
+}
+.home-v39 .bottom-nav a {min-width:0;border-radius:11px;color:var(--muted);font-size:11px}
+.home-v39 .bottom-nav a.active {color:var(--accent)}
+.home-v39 .bottom-nav a span {font-size:20px;line-height:1}
+@media (max-width:430px) {
+ .home-v39 .shell {padding:14px 12px 5px}
+ .home-v39 .brand img {width:44px;height:44px}
+ .home-v39 .brand-title {font-size:24px}
+ .home-v39 .brand-sub {font-size:10px}
+ .home-v39 #toolList .tool-row {min-height:67px;padding:10px 11px;gap:11px}
+ .home-v39 #toolList .module-icon {width:44px;height:44px;flex-basis:44px;border-radius:12px}
+ .home-v39 #toolList .module-icon svg {width:24px;height:24px}
+ .home-v39 #toolList .tool-copy b {font-size:13.5px}
+ .home-v39 #toolList .tool-copy small {font-size:11.5px}
+}
+@media (prefers-reduced-motion:reduce) {.home-v39 #toolList .tool-row {transition:none}}

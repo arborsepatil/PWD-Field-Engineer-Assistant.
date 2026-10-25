@@ -45,7 +45,23 @@ jobs:
           node tests/verify-steel-v31-thickness.mjs
           node tests/verify-steel-v32-quantity-gate.mjs
           node tests/verify-steel-v33-audit-register.mjs
+          node tests/verify-steel-v41-source-status.mjs
+          node tests/verify-steel-v42-is808-table2.mjs
+          node tests/verify-steel-v43-is808-channels.mjs
+          node tests/verify-steel-v44-is808-mpc.mjs
+          node tests/verify-steel-v45-is808-wb.mjs
+          node tests/verify-steel-v46-is808-sc.mjs
+          node tests/verify-steel-v47-is808-hb.mjs
+          node tests/verify-steel-v48-is808-wpb.mjs
+          node tests/verify-steel-v49-is808-wpb.mjs
+          node tests/verify-steel-v51-wpb.mjs
+          node tests/verify-steel-v50-is808-wpb.mjs # V49 + V50 source audit, anomaly hold and quantity gates
+          node scripts/steel-release-readiness.mjs --report-only
           node tests/verify-v20-simple-ux.mjs
+          node tests/verify-v37-calculator.mjs
+          node tests/verify-v40-calculator-ux.mjs
+          node tests/verify-v38-civilbandhu-home.mjs
+          node tests/verify-v39-home-navigation.mjs
           node tests/verify-v21-reader-ux.mjs
           node tests/verify-v21-batch-guidance.mjs
           node tests/verify-v21-final-navigation.mjs

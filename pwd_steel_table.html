@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f8fc"><title>Steel Table · PWD Field Assistant</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f8fc"><title>Steel Table · CivilBandhu</title>
 <style>
 :root{color-scheme:light;--bg:#f4f7fb;--card:#fff;--ink:#17263b;--muted:#53637c;--line:#dce4ef;--soft:#edf3fb;--accent:#0b6cff;--btn:#1757bb;--btnText:#fff;--warn:#895f12;--warnBg:#fff7e8;--figureBg:#f7fbff;--figureInk:#294761;--figureSteel:#d8eafb;--figureStroke:#295d93;--figureMuted:#5b6d84}
 html[data-theme="dark"]{color-scheme:dark;--bg:#081321;--card:#111f32;--ink:#f2f6ff;--muted:#b6c5dc;--line:#31435d;--soft:#1a304b;--btn:#2e70d3;--btnText:#fff;--warn:#f4cc82;--warnBg:#30271c;--figureBg:#15283e;--figureInk:#e6f0ff;--figureSteel:#355b80;--figureStroke:#a8d0fb;--figureMuted:#bbcbe1}
@@ -62,6 +62,15 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 #steelCalculate:disabled{opacity:.5;cursor:not-allowed}
 .steel-qty-inside .three{margin-top:10px}.steel-qty-inside .actions{grid-template-columns:1fr}
 @media(max-width:480px){.size-compare{width:76px;min-width:76px}.steel-key.steel-mass strong{font-size:1.65rem}}
+
+/* V41: source-status clarity, not additional weights or inferred verification. */
+.steel-status-filter{margin:12px 0 5px;display:grid;grid-template-columns:1fr 1.65fr;gap:8px;align-items:center}
+.steel-status-filter label{margin:0;font-size:.81rem}
+.steel-status-filter select{min-height:47px;font-size:.9rem}
+.steel-status-summary{font-size:.79rem;line-height:1.55;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:var(--soft);color:var(--ink);margin:8px 0 11px}
+.steel-source-inventory{padding:11px 12px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:11px;background:var(--soft);color:var(--ink);font-size:.85rem;line-height:1.5}
+.steel-status-filter select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media(max-width:480px){.steel-status-filter{grid-template-columns:1fr;gap:5px}.steel-status-filter select{width:100%}}
 </style><link rel="stylesheet" href="./app-global.css"></head>
 <body data-pwd-shell="off"><header class="top"><a class="back" href="./index.html">‹ Home</a><b>Steel Table</b></header>
 <main>
@@ -73,10 +82,12 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
  <div id="catalogDetails">
   <label id="steelSearchLabel" for="steelSearch">2 · Find member size</label>
   <input id="steelSearch" type="search" placeholder="Search size: ISMB 300, ISMC 150…" autocomplete="off">
+  <div class="steel-status-filter hide-print"><label for="steelAuditFilter">Source verification</label><select id="steelAuditFilter" aria-describedby="steelAuditSummary"><option value="all">All sections</option><option value="checked">Limited checked · provisional quantity</option><option value="review">Pending verification · reference only</option><option value="hold">On hold · conflicting or outside scope</option></select></div>
+  <p class="steel-status-summary" id="steelAuditSummary" role="status" aria-live="polite">Reviewing catalogue status…</p>
   <p class="small hide-print" id="steelCount" aria-live="polite"></p>
   <div class="results" id="steelResults" aria-label="Select steel section"></div>
   <button id="steelMoreSizes" class="more-sizes" type="button" hidden>Show more sizes</button>
-  <p id="noResults" class="warning" hidden>No data for this size yet. See Data sources for the current audit status.</p>
+  <p id="noResults" class="warning" hidden>No matching steel section for the selected search, series and verification status. Clear the search or choose another filter.</p>
  </div>
  <div id="customDetails" hidden>
   <div class="field"><label for="steelCustomShape">Shape</label><select id="steelCustomShape"><option value="plate">Plate / strip</option><option value="flat">Flat bar</option><option value="round">Round bar</option><option value="square">Square bar</option><option value="hollow-shs">Custom SHS · approximate</option><option value="hollow-rhs">Custom RHS · approximate</option><option value="hollow-chs">Custom CHS · theoretical</option></select></div>
@@ -147,7 +158,7 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 </details>
 <details class="details" id="steelStandardsDisclosure">
  <summary>Data sources & limitations</summary>
- <div class="inside"><p class="small">IS 808:2021 section types; limited SAIL 2023 and secondary examples. Hollow weights use archived Tata or secondary data, NOT a fully BIS-amended table. Verify current approved tables and MTC for site use.</p><div id="steelStandards"></div><p class="small"><a href="./pwd-steel-osdag-license.html">Osdag open-source data &amp; LGPL license</a></p><p class="small">Custom hollow mass is theoretical only; rectangular corners are simplified. No structural design or RCC BBS.</p></div>
+ <div class="inside"><p class="small">IS 808:2021 section types; limited SAIL 2023 and secondary examples. Hollow weights use archived Tata or secondary data, NOT a fully BIS-amended table. Verify current approved tables and MTC for site use.</p><p class="steel-source-inventory" id="steelCatalogueAudit" aria-live="polite">Checking the source audit register…</p><p class="small">A checked row means selected numeric source verification only, not certification of material, all geometrical properties, structural capacity or the latest standard edition. Source-only and held nominal weights remain visible for reference but quantity arithmetic is blocked.</p><div id="steelStandards"></div><p class="small"><a href="./pwd-steel-osdag-license.html">Osdag open-source data &amp; LGPL license</a></p><p class="small">Custom hollow mass is theoretical only; rectangular corners are simplified. No structural design or RCC BBS.</p></div>
 </details>
-<footer>Reference nominal weights only · check current standards and MTC</footer>
-</main><script src="./pwd-steel-osdag.js"></script><script src="./pwd-steel-catalog.js"></script><script src="./pwd-steel-core.js"></script><script src="./pwd-steel-compare.js"></script><script src="./pwd-steel-diagram.js"></script><script src="./pwd-steel-app.js"></script><script src="./app-shell.js"></script></body></html>
+<footer>CivilBandhu · Reference nominal weights only · check current standards and MTC</footer>
+</main><script src="./pwd-steel-osdag.js"></script><script src="./pwd-steel-catalog.js"></script><script src="./pwd-steel-core.js"></script><script src="./pwd-steel-compare.js"></script><script src="./pwd-steel-status.js"></script><script src="./pwd-steel-diagram.js"></script><script src="./pwd-steel-app.js"></script><script src="./app-shell.js"></script></body></html>
