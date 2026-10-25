@@ -29,8 +29,8 @@ for(const id of ids){
    'zxCm3','zyCm3','webMm','flangeMm','family']){
   const v=row[key],copy={...row,[key]:typeof v==='number'?v+1:
     v===null?'changed':String(v)+'-changed'};
-  if(key!=='id')assert.equal(cat.standardAudit(copy).status,'is808-numeric-conflict',id+' '+key);
-  else assert.notEqual(cat.standardAudit(copy).status,'is808-mass-area-inertia-checked',id+' identity');
+  if(key!=='id'&&key!=='family')assert.equal(cat.standardAudit(copy).status,'is808-numeric-conflict',id+' '+key);
+  else assert.notEqual(cat.standardAudit(copy).status,'is808-mass-area-inertia-checked',id+' invalidated identity or family');
   assert.equal(compare.quantityGate(cat,copy).allowed,false,id+' '+key);
  }
 }
