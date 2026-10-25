@@ -917,7 +917,7 @@ function auditIS808(row){
  }
  const v53=IS808_V53_ROW_CHECKS.find(item=>item.id===row.id);
  if(v53){
-  if(row.sourceId!=='osdag808'||row.family!=='beam'||resolveSeries(row)!=='PBP'||
+  if(row.sourceId!=='osdag808'||row.family!=='pile'||resolveSeries(row)!=='PBP'||
      v53Fingerprint(row)!==v53.fingerprint)
    return {status:'is808-numeric-conflict',source,sourceTable:13,
     sourcePdfPage:v53.pdfPage,geometryChecked:false,
