@@ -57,7 +57,7 @@ for(const id of ['OSD193','OSD194','OSD195','OSD196']){
 for(const id of ['OSD180']){
  const row=cat.byId(id);
  assert.ok(row);
- assert.equal(compare.audit(cat,row).status,'review','Unreviewed next WPB section must remain pending');
+ assert.equal(compare.audit(cat,row).status,'hold','V60 independently identified the contradicted WPB source-geometry row; must remain held');
  assert.equal(compare.quantityGate(cat,row).allowed,false);
 }
 
