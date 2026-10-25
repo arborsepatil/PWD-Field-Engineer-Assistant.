@@ -1495,7 +1495,6 @@ function standardAudit(row){
   return {status:'not-checked',source};
  }
  const source='IS 1161:2014, Amendment 2 (Aug 2023), replacement Table 1';
- if(row.series!=='CHS')return {status:'not-checked',source:null};
  const v57=CHS_V57_ROW_CHECKS.find(item=>item.id===row.id);
  if(v57){
   const matching=row.sourceId==='osdagCHS'&&row.family==='hollow'&&
@@ -1511,6 +1510,7 @@ function standardAudit(row){
  if(CHS_WITHDRAWN_SAMPLE.some(x=>x.od===od&&x.t===t))
   return {status:'not-listed-in-replacement',source,
    note:'Historical size not listed in the 2023 replacement Table 1. Do not present its published mass as a current standard size.'};
+ if(row.series!=='CHS')return {status:'not-checked',source:null};
  const match=CHS_BIS_SPOT_CHECKS.find(x=>x.od===od&&x.t===t);
  if(!match)return {status:'not-checked',source};
  const m=Math.abs(row.kgPerM-match.mass)<=0.015;
