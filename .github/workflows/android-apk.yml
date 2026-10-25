@@ -140,7 +140,7 @@ jobs:
         run: node tests/verify-steel-v47-is808-hb.mjs
       - name: Verify Steel V48 IS 808 Table 4 WPB roll variants
         run: node tests/verify-steel-v48-is808-wpb.mjs
-      - name: Verify Steel V49 IS 808 Table 4 additional WPB variants
+      - name: Verify Steel V49 V50 IS 808 Table 4 WPB variants
         run: node tests/verify-steel-v49-is808-wpb.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
