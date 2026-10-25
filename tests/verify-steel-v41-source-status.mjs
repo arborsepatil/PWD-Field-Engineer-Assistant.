@@ -62,9 +62,9 @@ const html=read('pwd_steel_table.html'),app=read('pwd-steel-app.js');
 for(const id of ['steelAuditFilter','steelAuditSummary','steelCatalogueAudit','steelStatus','steelKeyAudit','steelQuantitySourceGate','steelCalculate','steelCount','steelSeries','steelSearch','steelResults','steelMoreSizes','steelSectionDiagram','steelCompareCard']){
  assert.ok(html.includes('id="'+id+'"'),'Lost Steel Table control '+id);
 }
-assert.ok(html.includes('<option value="checked">Limited checked'));
+assert.ok(html.includes('<option value="checked" selected>Working · source-checked</option>'),'Source-checked records must be shown by default');
 assert.ok(html.includes('<option value="review">Pending verification'));
-assert.ok(html.includes('<option value="hold">On hold'));
+assert.ok(html.includes('<option value="hold">Historical / unresolved · reference only</option>'),'Held records remain inspectable but separated from working library');
 assert.ok(html.includes('src="./pwd-steel-status.js"'));
 assert.ok(html.includes('BIS-amended table'),'Keep standards edition warning');
 assert.ok(app.includes('steelStatus.select(catalog,comparison,rawRows'), 'Displayed filters must use source-checked actual records');
