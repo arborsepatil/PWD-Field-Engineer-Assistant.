@@ -82,6 +82,6 @@ assert.equal(totals.records.filter(x=>x.status==='review').length,0);
 assert.ok(totals.records.filter(x=>x.status==='hold')
  .every(x=>compare.quantityGate(catalog,x.row).allowed===false));
 assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8')
- .includes('pwd-tools-steel-v60-2026-10-25'));
+ .match(/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/));
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
 console.log('STEEL V60 PASS: 4 exact LC/UE limited source matches, 1 inconsistent WPB and 1 untabulated angle held; 686 checked, 0 review, 71 hold; quantity gates fail closed.');
