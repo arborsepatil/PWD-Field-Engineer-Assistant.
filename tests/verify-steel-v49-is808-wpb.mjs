@@ -90,7 +90,7 @@ const wpb=summary.records.filter(r=>cat.resolveSeries(r.row)==='WPB');
 assert.deepEqual(wpb.reduce((tot,r)=>(tot[r.status]++,tot),
  {checked:0,review:0,hold:0}),{checked:69,review:51,hold:4});
 const source=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
-const ledger=source.split('/* V49: 24 further WPB variants')[1]?.split('function auditIS808(row)')[0]||'';
+const ledger=source.split('/* V49: 24 further WPB variants')[1]?.split('/* V50: 21 exact Table 4 WPB')[0]||'';
 assert.ok(ledger.includes('IS808_V49_ROW_CHECKS'));
 assert.equal((ledger.match(/fingerprint:/g)||[]).length,24);
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger));
