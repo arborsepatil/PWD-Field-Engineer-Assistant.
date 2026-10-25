@@ -140,7 +140,7 @@ jobs:
         run: node tests/verify-steel-v47-is808-hb.mjs
       - name: Verify Steel V48 IS 808 Table 4 WPB roll variants
         run: node tests/verify-steel-v48-is808-wpb.mjs
-      - name: Verify Steel V49 V50 IS 808 Table 4 WPB variants
+      - name: Verify Steel V49 V50 V51 IS 808 Table 4 WPB source variants
         run: node tests/verify-steel-v49-is808-wpb.mjs
       - name: Verify Steel V50 IS 808 Table 4 WPB 260-340 variants
         run: node tests/verify-steel-v50-is808-wpb.mjs
