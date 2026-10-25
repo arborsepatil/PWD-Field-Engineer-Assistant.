@@ -61,6 +61,8 @@ jobs:
           node tests/verify-steel-v55-is808-eq.mjs
           node tests/verify-steel-v57-is1161-chs.mjs
           node tests/verify-steel-v58-chs-unlisted.mjs
+          node tests/verify-steel-v59-is808-curated.mjs
+          node scripts/steel-v59-pending-inventory.mjs
           node scripts/steel-release-readiness.mjs --report-only
           node tests/verify-v20-simple-ux.mjs
           node tests/verify-v37-calculator.mjs
