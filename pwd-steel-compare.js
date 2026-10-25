@@ -6,7 +6,7 @@
 const HOLD=new Set([
  'is808-numeric-conflict','source-numeric-hold','mass-area-conflict',
  'rhs-weight-conflict','shs-row-conflict','outside-current-scope',
- 'not-listed-in-replacement','spot-checked-conflict'
+ 'not-listed-in-replacement','is808-not-tabulated','spot-checked-conflict'
 ]);
 const CHECKED=new Set([
  'is808-mass-checked','is808-mass-area-inertia-checked','rhs-weight-checked',
