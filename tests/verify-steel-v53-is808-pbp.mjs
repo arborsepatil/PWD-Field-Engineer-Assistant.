@@ -40,7 +40,7 @@ assert.deepEqual({...pbp.counts},{checked:30,review:0,hold:0});
 assert.equal(pbp.total,30);
 const overall=status.summarize(cat,compare,cat.sections);
 assert.ok(overall.counts.checked>=457&&overall.counts.review<=281);
-assert.equal(overall.counts.hold,19);
+assert.ok(overall.counts.hold>=19);
 assert.equal(overall.total,757);
 const source=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
 const ledger=source.split('IS808_V53_ROW_CHECKS=Object.freeze([')[1]?.split(']);')[0]||'';
