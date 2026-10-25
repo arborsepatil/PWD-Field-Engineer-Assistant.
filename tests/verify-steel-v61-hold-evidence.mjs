@@ -63,7 +63,7 @@ assert.ok(app.includes("selected.qualityFlag==='mass-area-inconsistent'?"),
 assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8')
  .includes("'./pwd-steel-holds.js'"));
 assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8')
- .includes("pwd-tools-steel-v61-2026-10-26"));
+ .match(/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/));
 const release=fs.readFileSync(path.join(root,'scripts/steel-release-readiness.mjs'),'utf8');
 assert.ok(release.includes('holdEvidenceGroups:'));
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);

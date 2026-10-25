@@ -28,7 +28,7 @@ const remaining=Object.entries(families).map(([family,n])=>({
 const complete=audit.counts.review===0&&audit.counts.hold===0&&audit.counts.checked===audit.total;
 const result={
  decision:complete?'VERIFIED-NOMINAL-DATA-COMPLETE':'HOLD-DEPLOYMENT',
- currentVersion:'Steel V61',
+ currentVersion:'Steel V62',
  catalogueCount:audit.total,...audit.counts,
  definition:'Source-checked nominal section weights only; structural design and delivered-product approval still require project-specific engineering.',
  incompleteByFamily:remaining,
