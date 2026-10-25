@@ -144,6 +144,8 @@ jobs:
         run: node tests/verify-steel-v49-is808-wpb.mjs
       - name: Verify Steel V50 IS 808 Table 4 WPB 260-340 variants
         run: node tests/verify-steel-v50-is808-wpb.mjs
+      - name: Verify Steel V52 IS 808 Table 3 NPB source variants
+        run: node tests/verify-steel-v52-is808-npb.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens
