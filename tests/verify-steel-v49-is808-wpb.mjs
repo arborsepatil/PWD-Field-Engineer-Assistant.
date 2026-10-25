@@ -54,7 +54,7 @@ for(const id of ['OSD193','OSD194','OSD195','OSD196']){
  assert.equal(compare.audit(cat,row).status,'hold','Previously held WPB still blocked: '+id);
  assert.equal(compare.quantityGate(cat,row).allowed,false,id);
 }
-for(const id of ['OSD180','OSD197']){
+for(const id of ['OSD180','OSD223']){
  const row=cat.byId(id);
  assert.ok(row);
  assert.equal(compare.audit(cat,row).status,'review','Unreviewed next WPB section must remain pending');
@@ -84,16 +84,16 @@ assert.equal(cat.standardAudit(exception).status,'not-checked');
 assert.equal(compare.quantityGate(cat,exception).allowed,false);
 
 const summary=status.summarize(cat,compare,cat.sections);
-assert.deepEqual({...summary.counts},{checked:310,review:428,hold:19});
+assert.deepEqual({...summary.counts},{checked:336,review:402,hold:19});
 assert.equal(summary.total,757);
 const wpb=summary.records.filter(r=>cat.resolveSeries(r.row)==='WPB');
 assert.deepEqual(wpb.reduce((tot,r)=>(tot[r.status]++,tot),
- {checked:0,review:0,hold:0}),{checked:69,review:51,hold:4});
+ {checked:0,review:0,hold:0}),{checked:95,review:25,hold:4});
 const source=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
 const ledger=source.split('/* V49: 24 further WPB variants')[1]?.split('/* V50: 21 exact Table 4 WPB')[0]||'';
 assert.ok(ledger.includes('IS808_V49_ROW_CHECKS'));
 assert.equal((ledger.match(/fingerprint:/g)||[]).length,24);
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger));
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v50-2026-10-25'));
-console.log('STEEL V49/V50 PASS: 24+21 WPB source matches; OSD180 and all source holds remain blocked; 310 checked, 428 pending, 19 held.');
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v51-2026-10-25'));
+console.log('STEEL V49/V50 PASS: earlier WPB checks, OSD180 exception and source holds preserved after V51.');
