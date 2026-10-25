@@ -160,6 +160,8 @@ jobs:
         run: node tests/verify-steel-v57-is1161-chs.mjs
       - name: Verify V58 historical CHS absence and purchaser agreement cautions
         run: node tests/verify-steel-v58-chs-unlisted.mjs
+      - name: Audit exact remaining Steel Table source-review queue (V59)
+        run: node scripts/steel-v59-pending-inventory.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens
