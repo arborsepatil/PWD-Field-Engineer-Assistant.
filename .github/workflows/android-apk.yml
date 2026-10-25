@@ -150,6 +150,8 @@ jobs:
         run: node tests/verify-steel-v53-is808-pbp.mjs
       - name: Verify Steel V54 IS 808 Unequal Leg Angles Tables 11 and 12
         run: node tests/verify-steel-v54-is808-ue.mjs
+      - name: Verify Steel V55 equal-leg angles, tamper holds and quantity gate
+        run: node tests/verify-steel-v55-is808-eq.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens
