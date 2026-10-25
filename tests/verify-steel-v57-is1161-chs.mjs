@@ -68,7 +68,8 @@ assert.ok(chs.counts.checked>=33&&chs.counts.review<=46&&chs.counts.hold>=4,
  'Later source-negative audits may move not-tabulated CHS from review to hold');
 assert.equal(chs.total,83);
 const all=status.summarize(cat,comparison,cat.sections);
-assert.deepEqual({...all.counts},{checked:667,review:71,hold:19});
+assert.ok(all.counts.checked>=667&&all.counts.review<=71&&all.counts.hold>=19,
+ 'Later audited historical omissions can be held without claiming a numerical BIS match');
 assert.equal(all.total,757);
 assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8')
  .includes('pwd-tools-steel-v57-2026-10-25'));
