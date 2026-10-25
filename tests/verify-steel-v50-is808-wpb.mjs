@@ -1,6 +1,6 @@
 /* V50 WPB sizes 260–340: owner-held IS 808:2021 Table 4.
  * Regression stores only variant IDs, page pointers and fingerprint-gate tests.
- * OSD180 remains pending due to ambiguous Table 4 source extraction.
+ * OSD180 is now explicitly held due to Table 4 mass/area versus section geometry contradiction.
  */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -49,8 +49,8 @@ const ambiguous=cat.byId('OSD180');
 assert.ok(ambiguous);
 assert.equal(ambiguous.sourceId,'osdag808');
 assert.equal(ambiguous.kgPerM,284.13,'Do not rewrite original source');
-assert.equal(cat.standardAudit(ambiguous).status,'not-checked');
-assert.equal(comparison.audit(cat,ambiguous).status,'review');
+assert.equal(cat.standardAudit(ambiguous).status,'source-numeric-hold');
+assert.equal(comparison.audit(cat,ambiguous).status,'hold');
 assert.equal(comparison.quantityGate(cat,ambiguous).allowed,false);
 // Four previously held outliers remain unusable despite shared WPB family.
 for(const id of ['OSD193','OSD194','OSD195','OSD196']){
@@ -63,7 +63,7 @@ for(const id of ['OSD193','OSD194','OSD195','OSD196']){
 for(const id of ['OSD180']){
  const row=cat.byId(id);
  assert.ok(row);
- assert.equal(comparison.audit(cat,row).status,'review',id);
+ assert.equal(comparison.audit(cat,row).status,'hold',id);
  assert.equal(comparison.quantityGate(cat,row).allowed,false,id);
 }
 const all=status.summarize(cat,comparison,cat.sections);
@@ -73,7 +73,7 @@ assert.equal(all.counts.checked+all.counts.review+all.counts.hold,757);
 assert.equal(all.total,757);
 const wpb=all.records.filter(r=>cat.resolveSeries(r.row)==='WPB');
 assert.deepEqual(wpb.reduce((z,r)=>(z[r.status]++,z),{checked:0,review:0,hold:0}),
- {checked:119,review:1,hold:4});
+ {checked:119,review:0,hold:5});
 const catalogText=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
 const ledger=catalogText.split('/* V50: 21 exact Table 4 WPB')[1]?.split('/* V51: remaining 50 exact WPB')[0]||'';
 assert.ok(ledger.includes('IS808_V50_ROW_CHECKS'));

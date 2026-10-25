@@ -61,8 +61,9 @@ for(const id of ['OSD308','OSD331']){
 for(const id of ['OSD329','OSD334','OSD338']){
  const row=catalog.byId(id);
  assert.ok(row);
- assert.equal(compare.audit(catalog,row).status,'review','Provisional LC variant remains pending: '+id);
- assert.equal(compare.quantityGate(catalog,row).allowed,false);
+ assert.equal(catalog.standardAudit(row).sourceTable,7,'Direct IS 808 Table 7 source check must remain: '+id);
+ assert.equal(compare.audit(catalog,row).status,'checked','Verified LC(P) source match must persist: '+id);
+ assert.equal(compare.quantityGate(catalog,row).allowed,true,'Only this exact source-checked variant can calculate provisional mass: '+id);
 }
 const result=status.summarize(catalog,compare,catalog.sections);
 assert.ok(result.counts.checked>=195,'V43 checked rows must remain verified');

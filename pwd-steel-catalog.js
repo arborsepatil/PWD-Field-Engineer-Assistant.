@@ -1117,6 +1117,29 @@ const v55Fingerprint=v44Fingerprint;
  * Fingerprints enforce variant- and source-specific decisions and do not
  * redistribute the copyrighted BIS numerical tables.
  */
+/* V60: direct owner-held IS 808:2021 source review, physical PDF pages
+ * 17 (WPB Table 4), 26 (LC Table 7), 32 (EQ Table 9), 39 (UE Table 12).
+ * LC(P) 125/200/300 and UE 100x50x10 have matching OD/nominal dimensions,
+ * kg/m and area. Verified checks are limited; no design certification.
+ * OSD180 WPB 280x280x284.13 is explicitly printed in Table 4, but its
+ * reported 361.95 cm2 mass-derived area conflicts strongly with dimensions
+ * 280x280, web 10.5, flange 18; simple plate geometric area ~126.42 cm2.
+ * This is an engineering consistency ALARM, not a BIS tolerance. HOLD.
+ * ISA 200x200x18 is not a tabulated IS 808:2021 Table 9/10 angle.
+ * Absence from a table does not imply illegality of custom production;
+ * this archival mass cannot use an IS 808 table-mass approval. HOLD.
+ * Preserve original open/manufacturer data and fingerprint source identity;
+ * do not copy the proprietary BIS tables to this repository.
+ */
+const IS808_V60_ROW_CHECKS=Object.freeze([
+ Object.freeze({id:'OSD329',result:'match',table:7,pdfPage:26,fingerprint:'c5b3fbe7'}),
+ Object.freeze({id:'OSD334',result:'match',table:7,pdfPage:26,fingerprint:'0af849c5'}),
+ Object.freeze({id:'OSD338',result:'match',table:7,pdfPage:26,fingerprint:'b31f6b24'}),
+ Object.freeze({id:'OSD543',result:'match',table:12,pdfPage:39,fingerprint:'3fc2e01d'}),
+ Object.freeze({id:'OSD180',result:'geometry-hold',table:4,pdfPage:17,fingerprint:'3730866f'}),
+ Object.freeze({id:'sail23-ISA200x200x18',result:'not-tabulated',table:9,pdfPage:32,fingerprint:'d2a060fd'}),
+]);
+
 const IS808_V59_ROW_CHECKS=Object.freeze([
  Object.freeze({id:'ISA110x110x8',result:'match',table:9,pdfPage:31,fingerprint:'8daaa79a'}),
  Object.freeze({id:'ref-JB-JB-150-7.07',result:'match',table:2,pdfPage:9,fingerprint:'8f5fd8b2'}),
@@ -1152,6 +1175,30 @@ function auditIS808(row){
  const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–13 checks';
  if(!row||!['beam','channel','column','angle','pile'].includes(row.family))
   return {status:'not-checked',source:null};
+ const v60=IS808_V60_ROW_CHECKS.find(item=>item.id===row.id);
+ if(v60){
+  const manufacturer=v60.id.startsWith('sail23-');
+  const validIdentity=row.sourceId===(manufacturer?'sailStruct2023':'osdag808')&&
+   row.family===(manufacturer?'angle':
+    row.id==='OSD180'?'beam':row.id==='OSD543'?'angle':'channel')&&
+   resolveSeries(row)===(manufacturer?'EQ':
+    row.id==='OSD180'?'WPB':row.id==='OSD543'?'UE':'LC')&&
+   v59Fingerprint(row)===v60.fingerprint;
+  if(!validIdentity)return {status:'source-numeric-hold',source,sourceTable:v60.table,
+   sourcePdfPage:v60.pdfPage,geometryChecked:false,
+   note:'Source-audited nominal section identity or weight has changed; quantity blocked pending repeat authoritative review.'};
+  if(v60.result==='geometry-hold'){
+   return {status:'source-numeric-hold',source,sourceTable:4,
+    sourcePdfPage:17,geometryChecked:false,
+    note:'IS 808:2021 Table 4 prints this exact WPB nominal mass and dimensions, but the reported 361.95 cm² area and 284.13 kg/m imply nearly 2.9 times the simple plate-geometry area (~126.42 cm²) from D/B 280, web 10.5 and flange 18 mm. Engineering plausibility alarm only, NOT a BIS tolerance or an assumed corrected number. Source row retained; nominal quantity blocked pending an authoritative clarification.'};
+  }
+  if(v60.result==='not-tabulated')return {status:'is808-not-tabulated',source,
+   sourceTable:9,sourcePdfPage:32,geometryChecked:false,
+   note:'ISA 200×200×18 historical manufacturer size is not listed in IS 808:2021 Tables 9–10 (Table 9 physical PDF page 32). Absence does not prohibit a separately specified custom angle, but no tabulated BIS nominal kg/m verifies this 54.30 kg/m entry. Quantity blocked pending independent technical/contract review.'};
+  return {status:'is808-mass-checked',source,sourceTable:v60.table,
+   sourcePdfPage:v60.pdfPage,geometryChecked:false,
+   note:'Limited owner-held IS 808:2021 Table '+v60.table+' direct check (2026-10-25): original Osdag section identity, dimensional values, nominal kg/m and area match the selected BIS row. Provisional mass quantity arithmetic only; other properties, fabricated materials, grade/MTC and design certification are not implied.'};
+ }
  const v59=IS808_V59_ROW_CHECKS.find(item=>item.id===row.id);
  if(v59){
   const expectedSource=row.id.startsWith('sail23-')?'sailStruct2023':
@@ -1651,7 +1698,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808V53AuditSampleCount:IS808_V53_ROW_CHECKS.length,is808V54AuditSampleCount:IS808_V54_ROW_CHECKS.length,is808V55AuditSampleCount:IS808_V55_ROW_CHECKS.length,is808V59AuditSampleCount:IS808_V59_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,is1161V57AuditSampleCount:CHS_V57_ROW_CHECKS.length,is1161V58NonTabulatedCount:CHS_V58_UNLISTED.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808V53AuditSampleCount:IS808_V53_ROW_CHECKS.length,is808V54AuditSampleCount:IS808_V54_ROW_CHECKS.length,is808V55AuditSampleCount:IS808_V55_ROW_CHECKS.length,is808V59AuditSampleCount:IS808_V59_ROW_CHECKS.length,is808V60AuditSampleCount:IS808_V60_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,is1161V57AuditSampleCount:CHS_V57_ROW_CHECKS.length,is1161V58NonTabulatedCount:CHS_V58_UNLISTED.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -40,17 +40,17 @@ for(const n of ids){
   assert.equal(comparison.quantityGate(cat,wrong).allowed,false,id+' '+f);
  }
 }
-// The source extraction around supplementary 100x50x10 has ambiguous
-// designation formatting and requires independent manual review.
+// V60 independently resolved supplementary Table 12 UE 100x50x10
+// identity, nominal mass, area and leg thickness.
 const uncertain=cat.byId('OSD543');
 assert.ok(uncertain);
 assert.equal(cat.resolveSeries(uncertain),'UE');
 assert.equal(uncertain.kgPerM,11.13,'Preserve the original value');
-assert.equal(cat.standardAudit(uncertain).status,'not-checked');
-assert.equal(comparison.quantityGate(cat,uncertain).allowed,false);
+assert.equal(cat.standardAudit(uncertain).status,'is808-mass-checked');
+assert.equal(comparison.quantityGate(cat,uncertain).allowed,true);
 assert.equal(cat.byId('OSD542'),null,'Previously de-duplicated source row must stay absent');
 const ue=status.summarize(cat,comparison,cat.sections.filter(r=>cat.resolveSeries(r)==='UE'));
-assert.deepEqual({...ue.counts},{checked:107,review:1,hold:0});
+assert.deepEqual({...ue.counts},{checked:108,review:0,hold:0});
 assert.equal(ue.total,108);
 const all=status.summarize(cat,comparison,cat.sections);
 assert.ok(all.counts.checked>=563&&all.counts.review<=175&&all.counts.hold>=19,
@@ -61,4 +61,4 @@ const fragment=raw.split('IS808_V54_ROW_CHECKS=Object.freeze([')[1]?.split(']);'
 assert.equal((fragment.match(/fingerprint:/g)||[]).length,106);
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
 assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').match(/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/));
-console.log('STEEL V54 PASS: 106 source-matched unequal angles; one unresolved OSD543 blocked. Total 563 checked, 175 pending, 19 held.');
+console.log('STEEL V54 HISTORICAL PASS: 106 earlier UE matches and the later source-confirmed OSD543 remain protected.');

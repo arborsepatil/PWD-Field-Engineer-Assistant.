@@ -39,15 +39,15 @@ for(const record of audit.records){
  assert.equal(item.quantityAllowed,false,item.id+' cannot be quantity-enabled');
  queue.push({key,...item});
 }
-assert.deepEqual({...audit.counts},{checked:682,review:6,hold:69});
+assert.deepEqual({...audit.counts},{checked:686,review:0,hold:71});
 const pending=queue.filter(x=>x.status==='review');
-assert.equal(pending.length,6);
-assert.equal(queue.filter(x=>x.status==='hold').length,69);
+assert.equal(pending.length,0);
+assert.equal(queue.filter(x=>x.status==='hold').length,71);
 console.log(JSON.stringify({
- version:'Steel V59 after exact IS 808 source comparisons',
+ version:'Steel V60 after final pending source reviews',
  total:audit.total,
  ...audit.counts,
  families:groups,
  pending
 },null,2));
-console.log('STEEL V59 INVENTORY PASS: six pending rows identified and every pending or held row is blocked from nominal quantity.');
+console.log('STEEL V60 INVENTORY PASS: zero pending rows identified and every pending or held row is blocked from nominal quantity.');
