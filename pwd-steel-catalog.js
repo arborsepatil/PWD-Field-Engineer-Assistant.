@@ -1109,10 +1109,68 @@ const IS808_V55_ROW_CHECKS=Object.freeze([
 ]);
 const v55Fingerprint=v44Fingerprint;
 
+/* V59: source-review of previously pending curated/manufacturer entries against
+ * owner-held IS 808:2021. 15 exact nominal weights align with Table 2/9/10;
+ * 4 historically published numbers DIFFER from the corresponding BIS rows.
+ * Only mass and identifying nominal dimensions are verified. No claims of
+ * inertia, fillet radii, grade, MTC or structural capacity approval.
+ * Fingerprints enforce variant- and source-specific decisions and do not
+ * redistribute the copyrighted BIS numerical tables.
+ */
+const IS808_V59_ROW_CHECKS=Object.freeze([
+ Object.freeze({id:'ISA110x110x8',result:'match',table:9,pdfPage:31,fingerprint:'8daaa79a'}),
+ Object.freeze({id:'ref-JB-JB-150-7.07',result:'match',table:2,pdfPage:9,fingerprint:'8f5fd8b2'}),
+ Object.freeze({id:'sail23-ISA100x100x6',result:'match',table:9,pdfPage:31,fingerprint:'c5b3aeff'}),
+ Object.freeze({id:'sail23-ISA90x90x12',result:'match',table:9,pdfPage:31,fingerprint:'6771cbdf'}),
+ Object.freeze({id:'sail23-ISA100x100x12',result:'match',table:9,pdfPage:31,fingerprint:'343c844c'}),
+ Object.freeze({id:'sail23-ISA65x65x6',result:'match',table:9,pdfPage:30,fingerprint:'abd21e89'}),
+ Object.freeze({id:'sail23-ISA65x65x8',result:'match',table:9,pdfPage:30,fingerprint:'6a64cd3d'}),
+ Object.freeze({id:'sail23-ISA65x65x10',result:'match',table:10,pdfPage:33,fingerprint:'f4f45abb'}),
+ Object.freeze({id:'sail23-ISA75x75x5',result:'match',table:9,pdfPage:31,fingerprint:'3197487e'}),
+ Object.freeze({id:'sail23-ISA75x75x6',result:'match',table:9,pdfPage:31,fingerprint:'88f8a95a'}),
+ Object.freeze({id:'sail23-ISA75x75x10',result:'match',table:9,pdfPage:31,fingerprint:'0e06cf16'}),
+ Object.freeze({id:'sail23-ISA80x80x6',result:'match',table:9,pdfPage:31,fingerprint:'3ac6cc30'}),
+ Object.freeze({id:'sail23-ISA80x80x10',result:'match',table:9,pdfPage:31,fingerprint:'f5e68db5'}),
+ Object.freeze({id:'sail23-ISA200x200x20',result:'match',table:9,pdfPage:32,fingerprint:'a3da5e5d'}),
+ Object.freeze({id:'sail23-ISA200x200x25',result:'match',table:9,pdfPage:32,fingerprint:'db7ac9fa'}),
+ Object.freeze({id:'ISA100x100x6',result:'conflict',table:9,pdfPage:31,fingerprint:'52b40725'}),
+ Object.freeze({id:'ISA130x130x10',result:'conflict',table:9,pdfPage:32,fingerprint:'e4f560ee'}),
+ Object.freeze({id:'sail23-ISA70x70x5',result:'conflict',table:9,pdfPage:31,fingerprint:'a019c08f'}),
+ Object.freeze({id:'sail23-ISA70x70x6',result:'conflict',table:9,pdfPage:31,fingerprint:'1e62829f'}),
+]);
+const V59_FIELDS=Object.freeze(['id','sourceId','family','series',
+ 'designation','depthMm','widthMm','thicknessMm','webMm','flangeMm',
+ 'kgPerM','areaCm2','ixCm4','iyCm4','zxCm3','zyCm3','qualityFlag']);
+function v59Fingerprint(row){
+ const source=JSON.stringify(V59_FIELDS.map(key=>row[key]??null));
+ let hash=2166136261;
+ for(let i=0;i<source.length;i++)hash=Math.imul(hash^source.charCodeAt(i),16777619)>>>0;
+ return hash.toString(16).padStart(8,'0');
+}
+
 function auditIS808(row){
  const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–13 checks';
  if(!row||!['beam','channel','column','angle','pile'].includes(row.family))
   return {status:'not-checked',source:null};
+ const v59=IS808_V59_ROW_CHECKS.find(item=>item.id===row.id);
+ if(v59){
+  const expectedSource=row.id.startsWith('sail23-')?'sailStruct2023':
+   row.id.startsWith('ref-JB-')?'secondary808':'sail2020';
+  const isJB=row.id.startsWith('ref-JB-');
+  const sourceCorrect=row.sourceId===expectedSource&&
+   row.family===(isJB?'beam':'angle')&&
+   resolveSeries(row)===(isJB?'JB':'EQ')&&
+   v59Fingerprint(row)===v59.fingerprint;
+  if(!sourceCorrect)return {status:'is808-numeric-conflict',source,
+   sourceTable:v59.table,sourcePdfPage:v59.pdfPage,geometryChecked:false,
+   note:'Previously audited nominal weight, source identity or selected section data changed. Provisional quantity blocked until independent recheck.'};
+  if(v59.result==='conflict')return {status:'is808-numeric-conflict',source,
+   sourceTable:v59.table,sourcePdfPage:v59.pdfPage,geometryChecked:false,
+   note:'Archived/manufacturer nominal unit weight disagrees with IS 808:2021 Table '+v59.table+' for this exact designation. Original value retained for traceability, but nominal quantity is BLOCKED.'};
+  return {status:'is808-mass-checked',source,
+   sourceTable:v59.table,sourcePdfPage:v59.pdfPage,geometryChecked:false,
+   note:'Limited direct IS 808:2021 Table '+v59.table+' nominal unit weight and section identity check (2026-10-25). This source-specific match permits provisional nominal quantity arithmetic only; full sectional properties, material grade, MTC and design suitability are unverified.'};
+ }
  if(row.id===IS808_V46_SC100.id){
   if(row.family!=='column'||resolveSeries(row)!=='SC'||
      v46Fingerprint(row)!==IS808_V46_SC100.fingerprint)
@@ -1593,7 +1651,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808V53AuditSampleCount:IS808_V53_ROW_CHECKS.length,is808V54AuditSampleCount:IS808_V54_ROW_CHECKS.length,is808V55AuditSampleCount:IS808_V55_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,is1161V57AuditSampleCount:CHS_V57_ROW_CHECKS.length,is1161V58NonTabulatedCount:CHS_V58_UNLISTED.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808V53AuditSampleCount:IS808_V53_ROW_CHECKS.length,is808V54AuditSampleCount:IS808_V54_ROW_CHECKS.length,is808V55AuditSampleCount:IS808_V55_ROW_CHECKS.length,is808V59AuditSampleCount:IS808_V59_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,is1161V57AuditSampleCount:CHS_V57_ROW_CHECKS.length,is1161V58NonTabulatedCount:CHS_V58_UNLISTED.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
