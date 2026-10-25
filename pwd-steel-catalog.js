@@ -784,6 +784,86 @@ const IS808_V51_ROW_CHECKS=Object.freeze([
 ]);
 const v51Fingerprint=v44Fingerprint;
 
+/* V52: complete 69 pending NPB owner-held IS 808:2021 Table 3
+ * source comparisons. Exact nominal mass variant, area, D/B, web/flange
+ * thickness, Izz/Iyy, Zzz/Zyy checked on PDF physical pages 11–14.
+ * NPB original source values unchanged. OSD40 and curated NPB100 already
+ * limited-checked and not duplicated. No source PDF or BIS table embedded.
+ * Root/toe radii, other sectional properties, grade and MTC not certified.
+ */
+const IS808_V52_ROW_CHECKS=Object.freeze([
+ Object.freeze({id:'OSD41',fingerprint:'6355bb3c',table:3,pdfPage:11}),
+ Object.freeze({id:'OSD42',fingerprint:'dd3fb5e4',table:3,pdfPage:11}),
+ Object.freeze({id:'OSD43',fingerprint:'6ad00215',table:3,pdfPage:11}),
+ Object.freeze({id:'OSD44',fingerprint:'c77c10da',table:3,pdfPage:11}),
+ Object.freeze({id:'OSD45',fingerprint:'a7a2bbf8',table:3,pdfPage:11}),
+ Object.freeze({id:'OSD46',fingerprint:'a3a5ab0c',table:3,pdfPage:11}),
+ Object.freeze({id:'OSD47',fingerprint:'bfef0aca',table:3,pdfPage:11}),
+ Object.freeze({id:'OSD48',fingerprint:'16e341f3',table:3,pdfPage:11}),
+ Object.freeze({id:'OSD49',fingerprint:'368eb7ea',table:3,pdfPage:11}),
+ Object.freeze({id:'OSD50',fingerprint:'71ef27e3',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD51',fingerprint:'93374b77',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD52',fingerprint:'98be8b22',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD53',fingerprint:'d4b4e81b',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD54',fingerprint:'ffb73ff7',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD55',fingerprint:'69758a18',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD56',fingerprint:'021b585a',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD57',fingerprint:'b12f1c0e',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD58',fingerprint:'2b3256f8',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD59',fingerprint:'ea15548f',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD60',fingerprint:'954f0495',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD61',fingerprint:'02f91081',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD62',fingerprint:'d0b3b466',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD63',fingerprint:'279d86d6',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD64',fingerprint:'1fd02e12',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD65',fingerprint:'7923a71a',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD66',fingerprint:'3a130669',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD67',fingerprint:'25c401e7',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD68',fingerprint:'652a90cb',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD69',fingerprint:'b7840e06',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD70',fingerprint:'39240347',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD71',fingerprint:'86a586c5',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD72',fingerprint:'a51622aa',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD73',fingerprint:'2a15abfd',table:3,pdfPage:12}),
+ Object.freeze({id:'OSD74',fingerprint:'6851c08b',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD75',fingerprint:'9849ce59',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD76',fingerprint:'6aa39ecf',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD77',fingerprint:'77fed1b8',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD78',fingerprint:'b412de61',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD79',fingerprint:'a8086f12',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD80',fingerprint:'260b05ec',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD81',fingerprint:'8f725923',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD82',fingerprint:'bc02989c',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD83',fingerprint:'1be183af',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD84',fingerprint:'b08b9fa6',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD85',fingerprint:'84315dad',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD86',fingerprint:'e1fe0bc5',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD87',fingerprint:'fc78ae5f',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD88',fingerprint:'d812b7cb',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD89',fingerprint:'f9939181',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD90',fingerprint:'dc4c50f0',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD91',fingerprint:'4eadcf5e',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD92',fingerprint:'be1fc7ea',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD93',fingerprint:'7026af04',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD94',fingerprint:'07c2a0bf',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD95',fingerprint:'9613ac0a',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD96',fingerprint:'bc68e9b2',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD97',fingerprint:'6dceff5e',table:3,pdfPage:13}),
+ Object.freeze({id:'OSD98',fingerprint:'2777e4d0',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD99',fingerprint:'91b1f0d9',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD100',fingerprint:'e5f8ba81',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD101',fingerprint:'b51ee7fd',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD102',fingerprint:'5a20c6e7',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD103',fingerprint:'72728a33',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD104',fingerprint:'ce695d2b',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD105',fingerprint:'de497742',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD106',fingerprint:'8bfc514a',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD107',fingerprint:'7bf28c19',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD108',fingerprint:'5b0c0301',table:3,pdfPage:14}),
+ Object.freeze({id:'OSD109',fingerprint:'eb6e0e45',table:3,pdfPage:14})
+]);
+const v52Fingerprint=v44Fingerprint;
+
 function auditIS808(row){
  const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–9, 12 and 13 checks';
  if(!row||!['beam','channel','column','angle','pile'].includes(row.family))
@@ -795,6 +875,15 @@ function auditIS808(row){
     geometryChecked:false,note:'SC 100 curated value or source identity has changed since the Table 5 limited check. Quantity blocked until re-audited.'};
   return {status:'is808-mass-checked',source,sourceTable:5,sourcePdfPage:22,
    geometryChecked:false,note:'Limited direct Table 5 check: SC 100 source mass, area, D/B, t/T and available Izz/Zzz. Iyy, Zyy, flange radii/slope and full structural properties are missing from this curated row and are NOT claimed verified. Confirm delivered product and MTC separately.'};
+ }
+ const v52=IS808_V52_ROW_CHECKS.find(item=>item.id===row.id);
+ if(v52){
+  if(row.sourceId!=='osdag808'||row.family!=='beam'||resolveSeries(row)!=='NPB'||
+     v52Fingerprint(row)!==v52.fingerprint)
+    return {status:'is808-numeric-conflict',source,sourceTable:3,sourcePdfPage:v52.pdfPage,
+     geometryChecked:false,note:'Checked Table 3 NPB mass variant or sectional properties changed. Nominal calculation blocked pending source re-audit.'};
+  return {status:'is808-mass-area-inertia-checked',source,sourceTable:3,sourcePdfPage:v52.pdfPage,
+   geometryChecked:false,note:'Limited direct IS 808:2021 Table 3 NPB check: exact mass variant, area, actual D/B, t/T, Izz/Iyy and Zzz/Zyy. Radii, full design data, actual supplied section, steel grade and MTC unverified.'};
  }
  const v51=IS808_V51_ROW_CHECKS.find(item=>item.id===row.id);
  if(v51){
@@ -1085,7 +1174,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
