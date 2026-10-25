@@ -45,6 +45,10 @@ for file in ROOT.iterdir():
         )
     shutil.copy2(file, SITE / file.name)
 
+import subprocess
+import sys
+subprocess.run([sys.executable, str(ROOT / "scripts/generate_civilbandhu_icons.py"), str(SITE)], check=True)
+
 for required in ("index.html", "sw.js", "library.html", "library-public-catalog.js",
                  "pwd_bridge_plans.html"):
     assert (SITE / required).is_file(), f"Missing public asset: {required}"

@@ -37,6 +37,11 @@ for file in ROOT.iterdir():
     shutil.copy2(file, OUTPUT / file.name)
     count += 1
 
+import subprocess
+import sys
+# Use the shared CivilBandhu vector geometry (including bridge arch) for PNG assets.
+subprocess.run([sys.executable, str(ROOT / "scripts/generate_civilbandhu_icons.py"), str(OUTPUT)], check=True)
+
 index_path = OUTPUT / "index.html"
 page = index_path.read_text(encoding="utf-8")
 # Android bundles public assets within the APK: no browser installation prompt
