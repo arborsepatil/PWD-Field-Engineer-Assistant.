@@ -158,6 +158,8 @@ jobs:
         run: node tests/verify-steel-v55-is808-eq.mjs
       - name: Verify Steel V57 circular-tube source masses and fail-closed checks
         run: node tests/verify-steel-v57-is1161-chs.mjs
+      - name: Verify V58 historical CHS absence and purchaser agreement cautions
+        run: node tests/verify-steel-v58-chs-unlisted.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens
