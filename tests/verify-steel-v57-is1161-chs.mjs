@@ -74,4 +74,4 @@ assert.equal(all.total,757);
 assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8')
  .match(/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/));
 assert.equal(fs.existsSync(path.join(root,'749441127-IS-1161-2014-STRUCTURAL-TUBE.pdf')),false);
-console.log('STEEL V57 PASS: 30 exact CHS source matches, 667 limited checked, 71 review, 19 hold; current-source quantity gate intact.');
+console.log('STEEL V57 HISTORICAL PASS: 30 exact source-checked CHS remain quantity-gated; original anomalies blocked.');
