@@ -132,5 +132,5 @@ assert.ok(ledger.includes('IS808_V49_ROW_CHECKS'));
 assert.equal((ledger.match(/fingerprint:/g)||[]).length,24);
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger));
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v52-2026-10-25'));
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v53-2026-10-25'));
 console.log('STEEL V49–V51 PASS: all 95 WPB variants source-checked in those batches; OSD180 and four held WPB records still blocked.');
