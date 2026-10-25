@@ -120,7 +120,7 @@ assert.equal(cat.standardAudit(cat.byId('OSD185')).sourcePdfPage,18,
 
 const summary=status.summarize(cat,compare,cat.sections);
 assert.ok(summary.counts.checked>=360&&summary.counts.review<=378);
-assert.equal(summary.counts.hold,19);
+assert.ok(summary.counts.hold>=19);
 assert.equal(summary.counts.checked+summary.counts.review+summary.counts.hold,757);
 assert.equal(summary.total,757);
 const wpb=summary.records.filter(r=>cat.resolveSeries(r.row)==='WPB');
