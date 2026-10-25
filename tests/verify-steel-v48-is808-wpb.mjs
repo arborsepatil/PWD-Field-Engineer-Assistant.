@@ -80,5 +80,5 @@ assert.ok(ledger.includes('IS808_V48_ROW_CHECKS'));
 assert.ok(ledger.includes('fingerprint'));
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger),'No BIS numerical tables allowed in public catalogue');
 assert.ok(!fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')));
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v52-2026-10-25'));
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v53-2026-10-25'));
 console.log('STEEL V48 PASS: the 22 original WPB source checks remain intact; all four WPB holds stay blocked.');
