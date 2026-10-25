@@ -864,6 +864,46 @@ const IS808_V52_ROW_CHECKS=Object.freeze([
 ]);
 const v52Fingerprint=v44Fingerprint;
 
+/* V53: 28 PBP (parallel flange bearing pile) owner-held IS 808:2021
+ * Table 13 source checks, physical PDF pages 40–41. Exact nominal
+ * mass, area, dimensions t/T, Izz/Iyy and Zzz/Zyy compared per variant;
+ * basic mass-area/geometry consistency screened; source values untouched.
+ * OSD264 and curated PBP200 already checked, not duplicated.
+ * Root radius, full sectional/design parameters and supplied product
+ * or MTC are NOT independently certified; no licensed BIS table included.
+ */
+const IS808_V53_ROW_CHECKS=Object.freeze([
+ Object.freeze({id:'OSD265',fingerprint:'a4e29334',table:13,pdfPage:40}),
+ Object.freeze({id:'OSD266',fingerprint:'87f0ba60',table:13,pdfPage:40}),
+ Object.freeze({id:'OSD267',fingerprint:'ebc3f8ba',table:13,pdfPage:40}),
+ Object.freeze({id:'OSD268',fingerprint:'566ee175',table:13,pdfPage:40}),
+ Object.freeze({id:'OSD269',fingerprint:'ba97fda8',table:13,pdfPage:40}),
+ Object.freeze({id:'OSD270',fingerprint:'4dadc63b',table:13,pdfPage:40}),
+ Object.freeze({id:'OSD271',fingerprint:'87426098',table:13,pdfPage:40}),
+ Object.freeze({id:'OSD272',fingerprint:'4d914d2a',table:13,pdfPage:40}),
+ Object.freeze({id:'OSD273',fingerprint:'f922dc62',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD274',fingerprint:'9cd6461e',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD275',fingerprint:'da41760f',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD276',fingerprint:'c98f89ba',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD277',fingerprint:'2b1b887e',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD278',fingerprint:'637c33b1',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD279',fingerprint:'2a1c983d',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD280',fingerprint:'b5f6ef82',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD281',fingerprint:'faef6b97',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD282',fingerprint:'ccf940de',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD283',fingerprint:'5ae1bb06',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD284',fingerprint:'5042615d',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD285',fingerprint:'ccc147fb',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD286',fingerprint:'74952a95',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD287',fingerprint:'7f71f2e4',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD288',fingerprint:'3177127f',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD289',fingerprint:'ca3c827c',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD290',fingerprint:'79c150c1',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD291',fingerprint:'184ee16e',table:13,pdfPage:41}),
+ Object.freeze({id:'OSD292',fingerprint:'80ee3062',table:13,pdfPage:41})
+]);
+const v53Fingerprint=v44Fingerprint;
+
 function auditIS808(row){
  const source='IS 808:2021 (Fourth Revision), owner-held BIS source, selected Tables 1–9, 12 and 13 checks';
  if(!row||!['beam','channel','column','angle','pile'].includes(row.family))
@@ -875,6 +915,15 @@ function auditIS808(row){
     geometryChecked:false,note:'SC 100 curated value or source identity has changed since the Table 5 limited check. Quantity blocked until re-audited.'};
   return {status:'is808-mass-checked',source,sourceTable:5,sourcePdfPage:22,
    geometryChecked:false,note:'Limited direct Table 5 check: SC 100 source mass, area, D/B, t/T and available Izz/Zzz. Iyy, Zyy, flange radii/slope and full structural properties are missing from this curated row and are NOT claimed verified. Confirm delivered product and MTC separately.'};
+ }
+ const v53=IS808_V53_ROW_CHECKS.find(item=>item.id===row.id);
+ if(v53){
+  if(row.sourceId!=='osdag808'||row.family!=='pile'||resolveSeries(row)!=='PBP'||
+     v53Fingerprint(row)!==v53.fingerprint)
+   return {status:'is808-numeric-conflict',source,sourceTable:13,sourcePdfPage:v53.pdfPage,
+    geometryChecked:false,note:'Checked PBP exact variant mass or section property changed. Weight calculations blocked pending re-audit.'};
+  return {status:'is808-mass-area-inertia-checked',source,sourceTable:13,sourcePdfPage:v53.pdfPage,
+   geometryChecked:false,note:'Limited IS 808:2021 Table 13 exact PBP variant audit: nominal kg/m, area, actual D/B, t/T, Izz/Iyy, Zzz/Zyy. Radii, structural adequacy, steel grade, material supply and MTC not certified.'};
  }
  const v52=IS808_V52_ROW_CHECKS.find(item=>item.id===row.id);
  if(v52){
@@ -1174,7 +1223,7 @@ function standardAudit(row){
   note:'At least one checked property conflicts with Amendment 2 Table 1. Do not calculate weight using this record.'};
 }
 function byId(id){return sections.find(x=>x.id===id)||null;}
-const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
+const api=Object.freeze({SOURCES,sections,categories,codeReferences,SERIES,resolveSeries,availableSeries,auditRow,standardAudit,collisionGroups,search,byId,rhsAuditSampleCount:RHS_BIS_SPOT_CHECKS.length+RHS_BIS_ADDITIONAL.length,shsAuditSampleCount:SHS_BIS_SAMPLES.length,is808AuditSampleCount:IS808_BIS_SPOT_CHECKS.length,is808V29AuditSampleCount:IS808_V29_SAMPLE_ROWS.length,is808V29BAuditSampleCount:IS808_V29B_SAMPLE_ROWS.length,is808V42AuditSampleCount:IS808_V42_ROW_CHECKS.length,is808V43AuditSampleCount:IS808_V43_ROW_CHECKS.length,is808V44AuditSampleCount:IS808_V44_ROW_CHECKS.length,is808V45AuditSampleCount:IS808_V45_ROW_CHECKS.length,is808V46AuditSampleCount:IS808_V46_ROW_CHECKS.length,is808V47AuditSampleCount:IS808_V47_ROW_CHECKS.length,is808V48AuditSampleCount:IS808_V48_ROW_CHECKS.length,is808V49AuditSampleCount:IS808_V49_ROW_CHECKS.length,is808V50AuditSampleCount:IS808_V50_ROW_CHECKS.length,is808V51AuditSampleCount:IS808_V51_ROW_CHECKS.length,is808V52AuditSampleCount:IS808_V52_ROW_CHECKS.length,is808V53AuditSampleCount:IS808_V53_ROW_CHECKS.length,is808TotalLimitedAuditSamples:IS808_BIS_SPOT_CHECKS.length+IS808_V29_SAMPLE_ROWS.length+IS808_V29B_SAMPLE_ROWS.length,openDataCount:(root.PWDSteelOsdag||{}).count||0});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelCatalog=api;
 })(typeof window!=='undefined'?window:globalThis);
