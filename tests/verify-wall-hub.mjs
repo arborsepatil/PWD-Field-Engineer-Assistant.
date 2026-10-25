@@ -15,7 +15,7 @@ const shell=read('sw.js');
 const pack=read('android/scripts/prepare_assets.py');
 
 assert.match(home,/href="\.\/pwd_retaining_walls\.html" data-tool-id="wall"/);
-assert.match(home,/PCC calculator · RCC 2023 type plans/);
+assert.match(home,/PCC quantity · RCC references/);
 assert.ok(!home.includes('recentGrid'),'Recent tool shortcuts are intentionally removed from Home');
 assert.match(hub,/<h2>⬛ PCC Retaining Wall<\/h2>/);
 assert.match(hub,/<h2>🏗️ RCC Retaining Wall<\/h2>/);
