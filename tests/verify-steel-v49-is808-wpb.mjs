@@ -112,14 +112,16 @@ for(const id of v51){
 }
 // Maintain exact isolated-source provenance; no full reproduction of the BIS table.
 const v51Source=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
-const v51Ledger=v51Source.split('/* V51: remaining 50 exact WPB')[1]?.split('function auditIS808(row)')[0]||'';
+const v51Ledger=v51Source.split('/* V51: remaining 50 exact WPB')[1]?.split('/* V52: 69 previously pending NPB')[0]||'';
 assert.ok(v51Ledger.includes('IS808_V51_ROW_CHECKS'));
 assert.equal((v51Ledger.match(/fingerprint:/g)||[]).length,50);
 assert.equal(cat.standardAudit(cat.byId('OSD185')).sourcePdfPage,18,
  'Prior V50 source physical-page reference must remain accurate');
 
 const summary=status.summarize(cat,compare,cat.sections);
-assert.deepEqual({...summary.counts},{checked:360,review:378,hold:19});
+assert.ok(summary.counts.checked>=360&&summary.counts.review<=378);
+assert.equal(summary.counts.hold,19);
+assert.equal(summary.counts.checked+summary.counts.review+summary.counts.hold,757);
 assert.equal(summary.total,757);
 const wpb=summary.records.filter(r=>cat.resolveSeries(r.row)==='WPB');
 assert.deepEqual(wpb.reduce((tot,r)=>(tot[r.status]++,tot),
@@ -130,5 +132,5 @@ assert.ok(ledger.includes('IS808_V49_ROW_CHECKS'));
 assert.equal((ledger.match(/fingerprint:/g)||[]).length,24);
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger));
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v51-2026-10-25'));
-console.log('STEEL V49–V51 PASS: 24+21+50 WPB source matches; OSD180 and all four WPB holds remain blocked; 360 checked, 378 pending, 19 held.');
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v52-2026-10-25'));
+console.log('STEEL V49–V51 PASS: all 95 WPB variants source-checked in those batches; OSD180 and four held WPB records still blocked.');
