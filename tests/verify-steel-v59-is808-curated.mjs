@@ -80,6 +80,6 @@ assert.ok(all.counts.checked>=682&&all.counts.review<=6&&all.counts.hold>=69,
  'A later source review can convert previously pending entries to checked/hold');
 assert.equal(all.total,757);
 assert.match(fs.readFileSync(path.join(root,'sw.js'),'utf8'),
- /pwd-tools-steel-v\d{2,}-2026-10-25/);
+ /pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/);
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
 console.log('STEEL V59 HISTORICAL PASS: all 15 original source matches, four manufacturer weight conflicts and tamper gates remain intact.');
