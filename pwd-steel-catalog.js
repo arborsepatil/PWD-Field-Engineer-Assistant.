@@ -690,7 +690,7 @@ const IS808_V49_ROW_CHECKS=Object.freeze([
 const v49Fingerprint=v44Fingerprint;
 
 /* V50: 21 exact Table 4 WPB mass variants (OSD171–OSD192 excluding
- * OSD180) matched to owner-held IS 808:2021, physical PDF page 17.
+ * OSD180) matched to owner-held IS 808:2021, physical PDF pages 17–18.
  * Checked designation, mass, area, actual D/B, web/flange thickness,
  * Izz/Iyy, Zzz/Zyy, with a mass/area sanity check.
  * OSD180 is NOT promoted: ambiguous extracted source inertia/moduli and
@@ -711,14 +711,14 @@ const IS808_V50_ROW_CHECKS=Object.freeze([
  Object.freeze({id:'OSD182',fingerprint:'c715f113',table:4,pdfPage:17}),
  Object.freeze({id:'OSD183',fingerprint:'bf8625c2',table:4,pdfPage:17}),
  Object.freeze({id:'OSD184',fingerprint:'971d1a54',table:4,pdfPage:17}),
- Object.freeze({id:'OSD185',fingerprint:'ba0d8747',table:4,pdfPage:17}),
- Object.freeze({id:'OSD186',fingerprint:'27094305',table:4,pdfPage:17}),
- Object.freeze({id:'OSD187',fingerprint:'853253e3',table:4,pdfPage:17}),
- Object.freeze({id:'OSD188',fingerprint:'5652bb10',table:4,pdfPage:17}),
- Object.freeze({id:'OSD189',fingerprint:'286d98dd',table:4,pdfPage:17}),
- Object.freeze({id:'OSD190',fingerprint:'9f73ca97',table:4,pdfPage:17}),
- Object.freeze({id:'OSD191',fingerprint:'d69282c8',table:4,pdfPage:17}),
- Object.freeze({id:'OSD192',fingerprint:'291a9c84',table:4,pdfPage:17})
+ Object.freeze({id:'OSD185',fingerprint:'ba0d8747',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD186',fingerprint:'27094305',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD187',fingerprint:'853253e3',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD188',fingerprint:'5652bb10',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD189',fingerprint:'286d98dd',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD190',fingerprint:'9f73ca97',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD191',fingerprint:'d69282c8',table:4,pdfPage:18}),
+ Object.freeze({id:'OSD192',fingerprint:'291a9c84',table:4,pdfPage:18})
 ]);
 const v50Fingerprint=v44Fingerprint;
 
