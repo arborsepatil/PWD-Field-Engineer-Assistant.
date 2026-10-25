@@ -63,5 +63,5 @@ const ledger=script.split('/* V46: seven existing SC rows')[1]?.split('function 
 assert.ok(ledger.includes('IS808_V46_ROW_CHECKS'));
 assert.ok(!/mass:\s*\d|area:\s*\d|ix:\s*\d/.test(ledger),'Do not include licensed table values');
 assert.ok(!fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')));
-assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v47-2026-10-25'));
+assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v48-2026-10-25'));
 console.log('STEEL V46 PASS: seven SC entries plus curated SC100 source checks remain intact.');
