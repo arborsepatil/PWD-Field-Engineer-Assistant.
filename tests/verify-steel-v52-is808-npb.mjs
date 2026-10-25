@@ -48,4 +48,4 @@ const ledger=source.split('IS808_V52_ROW_CHECKS=Object.freeze([')[1]?.split(']);
 assert.equal((ledger.match(/fingerprint:/g)||[]).length,69);
 assert.equal(fs.existsSync(path.join(root,'IS_808_2021_Fourth_Revision_User_Copy.pdf')),false);
 assert.ok(fs.readFileSync(path.join(root,'sw.js'),'utf8').includes('pwd-tools-steel-v53-2026-10-25'));
-console.log('STEEL V52 PASS: all 69 newly checked exact NPB Table 3 variants; 71/71 NPB, 429 checked total, 309 pending, 19 held.');
+console.log('STEEL V52 PASS: all 69 source checks preserved; 71/71 NPB rows limited verified; aggregate audit totals may increase.');
