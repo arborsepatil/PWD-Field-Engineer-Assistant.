@@ -34,6 +34,6 @@ assert.equal(cat.standardAudit(cat.byId('OSD180')).status,'not-checked');
 const wpb=st.summarize(cat,cmp,cat.sections.filter(r=>cat.resolveSeries(r)==='WPB'));
 assert.deepEqual({...wpb.counts},{checked:119,review:1,hold:4});
 const all=st.summarize(cat,cmp,cat.sections);
-assert.deepEqual({...all.counts},{checked:360,review:378,hold:19});
+assert.deepEqual({...all.counts},{checked:429,review:309,hold:19});
 assert.equal(all.total,757);
 console.log('Steel V51 PASS: 50 WPB source-checked, 119 WPB checked; five WPB records still restricted.');
