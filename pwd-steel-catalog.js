@@ -738,9 +738,9 @@ function auditIS808(row){
  if(v50){
   if(row.sourceId!=='osdag808'||row.family!=='beam'||resolveSeries(row)!=='WPB'||
      v50Fingerprint(row)!==v50.fingerprint)
-   return {status:'is808-numeric-conflict',source,sourceTable:4,sourcePdfPage:17,
+   return {status:'is808-numeric-conflict',source,sourceTable:4,sourcePdfPage:v50.pdfPage,
     geometryChecked:false,note:'Previously source-checked Table 4 WPB identity or numerical property has changed. Nominal quantity blocked pending re-audit.'};
-  return {status:'is808-mass-area-inertia-checked',source,sourceTable:4,sourcePdfPage:17,
+  return {status:'is808-mass-area-inertia-checked',source,sourceTable:4,sourcePdfPage:v50.pdfPage,
    geometryChecked:false,note:'Limited direct match for exact WPB mass variant against owner-held IS 808:2021 Table 4: nominal kg/m, area, D/B, web/flange thickness, Izz/Iyy and Zzz/Zyy (2026-10-25). Flange slope/radii, detailed structural design, material grade and delivered MTC remain unverified.'};
  }
  const v49=IS808_V49_ROW_CHECKS.find(item=>item.id===row.id);
