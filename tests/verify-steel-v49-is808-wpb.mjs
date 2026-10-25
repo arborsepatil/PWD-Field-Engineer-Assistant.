@@ -80,7 +80,7 @@ for(const id of extraIDs){
 }
 const exception=cat.byId('OSD180');
 assert.ok(exception);
-assert.equal(cat.standardAudit(exception).status,'not-checked');
+assert.equal(cat.standardAudit(exception).status,'source-numeric-hold','Inconsistent WPB source dimensions are quarantined rather than left ambiguous');
 assert.equal(compare.quantityGate(cat,exception).allowed,false);
 
 
