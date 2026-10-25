@@ -69,7 +69,7 @@ for(const id of extraIDs){
  const r=cat.byId(id),b=cat.standardAudit(r);
  assert.equal(b.status,'is808-mass-area-inertia-checked',id);
  assert.equal(b.sourceTable,4);
- assert.equal(b.sourcePdfPage,17);
+ assert.equal(b.sourcePdfPage,Number(id.slice(3))<=184?17:18);
  assert.equal(b.geometryChecked,false);
  assert.equal(compare.quantityGate(cat,r).allowed,true);
  for(const key of ['kgPerM','areaCm2','depthMm','widthMm','webMm','flangeMm','ixCm4','iyCm4','zxCm3','zyCm3']){
