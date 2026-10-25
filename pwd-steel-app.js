@@ -164,7 +164,9 @@ function renderDetail(){
  const diagram=window.PWDSteelDiagram.model(selected.family,selected);
  $('steelDiagramStatus').textContent=diagram.warnings.length?diagram.warnings.join(' '):'Source-proportional schematic; nominal dimensions only.';
  $('steelProperties').replaceChildren(propertyTable(selected));
- $('steelDataCaution').textContent=bisAudit.status!=='not-checked'?bisAudit.note:selected.basis==='archived-manufacturer-only'?
+ $('steelDataCaution').textContent=selected.qualityFlag==='mass-area-inconsistent'?
+  'INTERNAL MASS/AREA ALARM · '+(selected.massAreaDeltaPct??'Unspecified')+'% discrepancy (not a BIS tolerance). '+(bisAudit.note||'Quantity blocked until authoritative source correction.'):
+  bisAudit.status!=='not-checked'?bisAudit.note:selected.basis==='archived-manufacturer-only'?
   'Historical manufacturer data. For RHS verify IS 4923:2017 Amendment 3 (2024); for SHS/CHS check the latest applicable standard.':
   selected.qualityFlag==='mass-area-inconsistent'?'Mass and section area disagree by '+selected.massAreaDeltaPct+'%. Weight calculation is blocked until the row is verified.':
   selected.basis==='osdag-open-unverified'?'Licensed open-source Osdag values; not independently checked against IS 808:2021 or current IS 1161.':
@@ -306,6 +308,14 @@ function renderComparison(){
 function showStandards(){
  const all=steelStatus.summarize(catalog,comparison,catalog.sections);
  $('steelCatalogueAudit').textContent='Catalogue: '+all.total+' records · '+all.counts.checked+' limited source-checked · '+all.counts.review+' pending verification · '+all.counts.hold+' on hold. Quantity calculations remain restricted to checked source rows only.';
+ const evidence=window.PWDSteelHolds.build(catalog,comparison,steelStatus);
+ $('steelHoldCount').textContent='On hold: '+evidence.hold+' records · evidence needed';
+ const holdList=$('steelHoldBreakdown');holdList.replaceChildren();
+ for(const item of evidence.groups){
+  const p=document.createElement('p');p.className='small';
+  const name=document.createElement('strong');name.textContent=item.label+' ('+item.count+'): ';
+  p.append(name,document.createTextNode(item.nextEvidence));holdList.append(p);
+ }
  const c=$('steelStandards');
  for(const s of catalog.codeReferences){
   const p=document.createElement('p');p.className='small';
