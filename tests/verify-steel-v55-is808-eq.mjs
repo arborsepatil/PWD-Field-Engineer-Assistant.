@@ -60,11 +60,13 @@ for(const item of entries){
 // Existing, conflicting or not-yet-reviewed variants must not inherit
 // approval merely because the same nominal leg size was reviewed.
 assert.equal(cat.byId('OSD383'),null,'De-duplicated source row stays absent');
-for(const id of ['OSD180','OSD543']){
- const row=cat.byId(id);
- assert.ok(row,id+' unresolved source row retained');
- assert.equal(comparison.quantityGate(cat,row).allowed,false,id+' still blocked');
-}
+const geometryHold=cat.byId('OSD180');
+assert.ok(geometryHold,'Contradictory WPB source row must remain traceable');
+assert.equal(comparison.quantityGate(cat,geometryHold).allowed,false,'Unresolved WPB source geometry is on hold');
+const laterUE=cat.byId('OSD543');
+assert.ok(laterUE,'Later verified unequal-angle record must remain traceable');
+assert.equal(cat.standardAudit(laterUE).sourceTable,12);
+assert.equal(comparison.quantityGate(cat,laterUE).allowed,true,'V60 exact Table 12 nominal kg/m source checked');
 const all=status.summarize(cat,comparison,cat.sections);
 assert.ok(all.counts.checked>=637&&all.counts.review<=101&&all.counts.hold>=19,
  'Subsequent source audits may either check rows or correctly quarantine unlisted CHS');
