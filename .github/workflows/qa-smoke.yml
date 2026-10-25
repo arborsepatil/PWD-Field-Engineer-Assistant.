@@ -57,6 +57,7 @@ jobs:
           node tests/verify-steel-v50-is808-wpb.mjs # V49 + V50 source audit, anomaly hold and quantity gates
           node tests/verify-steel-v51-is808-wpb.mjs
           node tests/verify-steel-v52-is808-npb.mjs
+          node tests/verify-steel-v53-is808-pbp.mjs
           node scripts/steel-release-readiness.mjs --report-only
           node tests/verify-v20-simple-ux.mjs
           node tests/verify-v37-calculator.mjs
