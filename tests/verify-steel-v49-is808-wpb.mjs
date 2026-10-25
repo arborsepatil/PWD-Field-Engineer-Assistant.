@@ -125,7 +125,7 @@ assert.equal(summary.counts.checked+summary.counts.review+summary.counts.hold,75
 assert.equal(summary.total,757);
 const wpb=summary.records.filter(r=>cat.resolveSeries(r.row)==='WPB');
 assert.deepEqual(wpb.reduce((tot,r)=>(tot[r.status]++,tot),
- {checked:0,review:0,hold:0}),{checked:119,review:1,hold:4});
+ {checked:0,review:0,hold:0}),{checked:119,review:0,hold:5});
 const source=fs.readFileSync(path.join(root,'pwd-steel-catalog.js'),'utf8');
 const ledger=source.split('/* V49: 24 further WPB variants')[1]?.split('/* V50: 21 exact Table 4 WPB')[0]||'';
 assert.ok(ledger.includes('IS808_V49_ROW_CHECKS'));
