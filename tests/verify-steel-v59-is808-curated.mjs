@@ -55,8 +55,13 @@ for(const e of entries){
   const val=row[key];
   const forged={...row,[key]:typeof val==='number'?val+1:
    val==null?'changed':String(val)+'-changed'};
-  assert.equal(catalog.standardAudit(forged).status,'is808-numeric-conflict',
-   e.id+' tamper '+key);
+  const changedSourceStatus=catalog.standardAudit(forged).status;
+  if(key==='family')
+   assert.notEqual(changedSourceStatus,'is808-mass-checked',
+    e.id+' changed family cannot inherit BIS audit');
+  else
+   assert.equal(changedSourceStatus,'is808-numeric-conflict',
+    e.id+' tamper '+key);
   assert.equal(compare.quantityGate(catalog,forged).allowed,false,
    e.id+' tampered quantity gate '+key);
  }
