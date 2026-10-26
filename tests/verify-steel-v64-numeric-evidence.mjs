@@ -72,7 +72,7 @@ assert.match(html,/<details class="steel-tech" id="steelEvidenceDetails" hidden>
 assert.match(html,/id="steelEvidenceBody"/);
 assert.match(html,/<script src="\.\/pwd-steel-evidence\.js"><\/script>/);
 assert.match(sw,/'\.\/pwd-steel-evidence\.js'/);
-assert.match(sw,/pwd-tools-steel-v64-2026-10-26/);
+assert.match(sw,/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/);
 assert.match(app,/function renderEvidence\(row\)/);
 assert.match(app,/const entry=row\?evidenceRegistry\.byId\[row\.id\]:null/);
 assert.match(app,/if\(!entry\)\{/);
@@ -80,6 +80,6 @@ assert.match(app,/container\.hidden=true;container\.open=false/);
 assert.match(app,/renderEvidence\(selected\)/);
 assert.match(app,/\$\('steelCalculate'\)\.disabled=!quantityState\.allowed/);
 assert.match(app,/HOLD\. The app does not substitute any inferred nominal weight/);
-assert.match(read('scripts/steel-release-readiness.mjs'),/currentVersion:'Steel V64'/);
+assert.match(read('scripts/steel-release-readiness.mjs'),/currentVersion:'Steel V\d{2,}'/);
 assert.ok(!html.includes('third-party-image.png'));
 console.log('STEEL V64 PASS: 21 numeric/internal holds have distinct, traceable read-only evidence, 15 published conflicts and 6 internal discrepancies; 71 remain blocked, 686 source checked, no mass changed.');

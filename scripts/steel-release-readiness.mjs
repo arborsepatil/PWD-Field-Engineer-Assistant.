@@ -30,13 +30,15 @@ const remaining=Object.entries(families).map(([family,n])=>({
 const complete=audit.counts.review===0&&audit.counts.hold===0&&audit.counts.checked===audit.total;
 const result={
  decision:complete?'VERIFIED-NOMINAL-DATA-COMPLETE':'HOLD-DEPLOYMENT',
- currentVersion:'Steel V64',
+ currentVersion:'Steel V65',
  catalogueCount:audit.total,...audit.counts,
  definition:'Source-checked nominal section weights only; structural design and delivered-product approval still require project-specific engineering.',
  incompleteByFamily:remaining,
  holdEvidenceGroups:holdEvidence.groups.map(g=>({reason:g.key,count:g.count,nextEvidence:g.nextEvidence})),
  numericEvidenceCount:numericEvidence.totals,
- numericEvidenceIds:numericEvidence.rows.map(r=>r.id)
+ numericEvidenceIds:numericEvidence.rows.map(r=>r.id),
+ numericEvidencePriorityCounts:numericEvidence.priorityCounts,
+ numericEvidenceFirstPass:numericEvidence.reviewQueue.filter(r=>r.reviewPlan.priority==='P1').map(r=>({id:r.id,route:r.reviewPlan.route}))
 };
 console.log(JSON.stringify(result,null,2));
 if(!complete&&!process.argv.includes('--report-only')){

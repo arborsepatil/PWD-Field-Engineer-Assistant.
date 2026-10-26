@@ -173,6 +173,7 @@ function renderEvidence(row){
  };
  addLine('Source record',entry.id+' · '+entry.designation);
  addLine('Type of hold',entry.reason==='internal'?'Mass / area internal check':'Numeric source conflict');
+ addLine('Review priority (triage only)',entry.reviewPlan.priority+' · '+entry.reviewPlan.route);
  addLine('Published-data origin',entry.sourceLabel+(entry.sourceDate?' ('+entry.sourceDate+')':''));
  addLine('Applicable source under review',entry.sourceStandard);
  if(entry.sourceTable!==null)addLine('Source table',entry.sourceTable);
@@ -187,6 +188,8 @@ function renderEvidence(row){
  }
  addNote('Unresolved evidence:',entry.sourceNote);
  addNote('Required next evidence:',entry.nextEvidence);
+ addNote('Engineering review path:',entry.reviewPlan.action);
+ addNote('Why this needs review:',entry.reviewPlan.explanation);
  addNote('Quantity safety:','HOLD. The app does not substitute any inferred nominal weight or permit quantity calculations for this record.');
 }
 function renderDetail(){
