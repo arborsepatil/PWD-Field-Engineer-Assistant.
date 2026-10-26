@@ -6,9 +6,10 @@
 (function(){
 'use strict';
 const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,comparison=window.PWDSteelCompare,steelStatus=window.PWDSteelStatus,$=id=>document.getElementById(id);
-if(!catalog||!math||!comparison||!steelStatus||!window.PWDSteelDiagram||!$('steelFamilies'))return;
+if(!catalog||!math||!comparison||!steelStatus||!window.PWDSteelDiagram||!window.PWDSteelHolds||!window.PWDSteelEvidence||!$('steelFamilies'))return;
 let family='beam',selected=null,last=null,lastEntry=null,shownLimit=60,compareIds=[];
 const source=id=>catalog.SOURCES[id];
+const evidenceRegistry=window.PWDSteelEvidence.build(catalog,comparison,steelStatus,window.PWDSteelHolds);
 const format=(x,d=2)=>Number(x).toLocaleString('en-IN',{maximumFractionDigits:d,minimumFractionDigits:d});
 const text=(el,value)=>{el.textContent=String(value)};
 function shapeSvg(type,data={}){
@@ -27,6 +28,8 @@ function setFamily(next){
  const custom=next==='calculated';
  $('catalogDetails').hidden=custom;$('customDetails').hidden=!custom;
  if(custom){
+  $('steelEvidenceDetails').hidden=true;
+  $('steelEvidenceDetails').open=false;
   $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
   $('steelTitle').textContent='Theoretical section';
   $('steelStatus').textContent='Calculated';
@@ -146,8 +149,48 @@ function propertyTable(row){
  }
  const table=document.createElement('table');table.append(tbody);return table;
 }
+function renderEvidence(row){
+ const container=$('steelEvidenceDetails'),body=$('steelEvidenceBody');
+ const entry=row?evidenceRegistry.byId[row.id]:null;
+ if(!entry){
+  container.hidden=true;container.open=false;container.dataset.rowId='';
+  body.replaceChildren();return;
+ }
+ if(container.dataset.rowId!==entry.id)container.open=false;
+ container.dataset.rowId=entry.id;container.hidden=false;
+ body.replaceChildren();
+ const addLine=(label,value)=>{
+  if(value===null||value===undefined||value==='')return;
+  const line=document.createElement('div');line.className='steel-evidence-row';
+  const name=document.createElement('span');name.textContent=label;
+  const number=document.createElement('b');number.textContent=String(value);
+  line.append(name,number);body.append(line);
+ };
+ const addNote=(label,value)=>{
+  const p=document.createElement('p');p.className='steel-evidence-note';
+  const title=document.createElement('strong');title.textContent=label+' ';
+  p.append(title,document.createTextNode(String(value)));body.append(p);
+ };
+ addLine('Source record',entry.id+' · '+entry.designation);
+ addLine('Type of hold',entry.reason==='internal'?'Mass / area internal check':'Numeric source conflict');
+ addLine('Published-data origin',entry.sourceLabel+(entry.sourceDate?' ('+entry.sourceDate+')':''));
+ addLine('Applicable source under review',entry.sourceStandard);
+ if(entry.sourceTable!==null)addLine('Source table',entry.sourceTable);
+ if(entry.sourcePdfPage!==null)addLine('Physical PDF page (specific review copy)',entry.sourcePdfPage);
+ addLine('Stored source unit mass',entry.originalKgPerM===null?null:format(entry.originalKgPerM,3)+' kg/m · NOT approved');
+ addLine('Stored section area',entry.originalAreaCm2===null?null:format(entry.originalAreaCm2,3)+' cm²');
+ if(entry.densitySanity){
+  addLine('Mass calculated from stored area',format(entry.densitySanity.impliedKgPerM,3)+' kg/m · diagnostic only');
+  addLine('Stored mass minus area-derived',format(entry.densitySanity.differenceKgPerM,3)+' kg/m ('+
+    format(entry.densitySanity.differencePercentOfRecorded,2)+'% of stored mass)');
+  addNote('Sanity-check limitation:',entry.densitySanity.basis);
+ }
+ addNote('Unresolved evidence:',entry.sourceNote);
+ addNote('Required next evidence:',entry.nextEvidence);
+ addNote('Quantity safety:','HOLD. The app does not substitute any inferred nominal weight or permit quantity calculations for this record.');
+}
 function renderDetail(){
- if(!selected){$('steelDetail').hidden=true;$('steelDetailsEmpty').hidden=false;return;}
+ if(!selected){renderEvidence(null);$('steelDetail').hidden=true;$('steelDetailsEmpty').hidden=false;return;}
  const src=source(selected.sourceId);
  $('steelDetail').hidden=false;$('steelDetailsEmpty').hidden=true;
  $('steelTitle').textContent=selected.designation;
@@ -198,6 +241,7 @@ function renderDetail(){
  const a=$('steelSource');a.href=selected.sourceUrl||src.url;a.textContent=src.label;
  $('steelSourceDate').textContent=src.date+' · Reference value; check the current official standard and MTC';
  $('sourceLinks').hidden=false;
+ renderEvidence(selected);
 }
 function updateCustomInputs(){
  const type=$('steelCustomShape').value;
