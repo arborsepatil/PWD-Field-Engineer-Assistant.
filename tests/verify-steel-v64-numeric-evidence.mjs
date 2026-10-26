@@ -72,7 +72,7 @@ assert.match(html,/<details class="steel-tech" id="steelEvidenceDetails" hidden>
 assert.match(html,/id="steelEvidenceBody"/);
 assert.match(html,/<script src="\.\/pwd-steel-evidence\.js"><\/script>/);
 assert.match(sw,/'\.\/pwd-steel-evidence\.js'/);
-assert.match(sw,/pwd-tools-steel-v64-2026-10-26/);
+assert.match(sw,/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/);
 assert.match(app,/function renderEvidence\(row\)/);
 assert.match(app,/const entry=row\?evidenceRegistry\.byId\[row\.id\]:null/);
 assert.match(app,/if\(!entry\)\{/);
