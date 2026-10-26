@@ -68,7 +68,7 @@ assert.match(app,/if\(value===undefined\|\|value===null\|\|!Number\.isFinite/,
  'Quick facts must never synthesize absent properties');
 assert.ok(sw.includes("'./pwd-steel-reference-ui.css'"),
  'Reference screen must work offline and in the native Android bundle');
-assert.match(sw,/pwd-tools-steel-v62-2026-10-26/);
+assert.match(sw,/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/);
 assert.ok(!html.includes('third-party-image.png')&&!app.includes('loadCapacity'),
  'Keep original diagram logic and never suggest rating/load capacity');
 const sameFamily=cat.sections.filter(r=>r.family==='beam'&&cmp.audit(cat,r).status==='checked');
