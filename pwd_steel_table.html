@@ -71,6 +71,37 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
 .steel-source-inventory{padding:11px 12px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:11px;background:var(--soft);color:var(--ink);font-size:.85rem;line-height:1.5}
 .steel-status-filter select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @media(max-width:480px){.steel-status-filter{grid-template-columns:1fr;gap:5px}.steel-status-filter select{width:100%}}
+
+/* V62: compact, original two-column section picker inspired by user workflow;
+ * no third-party artwork or copied assets. All inputs remain touch accessible. */
+.steel-technical-quickview{display:grid;grid-template-columns:minmax(0,1fr);gap:7px}
+.steel-figure-column{min-width:0}
+.steel-figure-column .figure{margin:8px 0}
+.steel-status-filter{grid-template-columns:1fr 1.7fr}
+#steelCompareCard[hidden]{display:none!important}
+@media(min-width:640px){
+ .steel-technical-quickview{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start}
+ .steel-metrics-column,.steel-figure-column{min-width:0}
+ .steel-figure-column .figure{margin:10px 0}
+}
+@media(max-width:480px){
+ .results{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;max-height:300px}
+ .size-row{position:relative;min-width:0}
+ .size-row .pick{width:100%;padding:9px 8px 41px;min-height:90px}
+ .size-row .pick b{font-size:.81rem;line-height:1.25;overflow-wrap:anywhere}
+ .size-row .pick span{font-size:.70rem;line-height:1.28;overflow-wrap:anywhere}
+ .size-compare{position:absolute;right:6px;bottom:5px;min-width:67px;width:auto;min-height:30px;padding:3px 7px;font-size:.7rem}
+ .steel-status-filter{grid-template-columns:1fr 1.5fr;gap:7px}
+ .steel-status-filter select{min-height:44px;font-size:.83rem;padding:8px}
+ .steel-status-filter label{font-size:.78rem}
+ .steel-key.steel-mass strong{font-size:1.55rem}
+}
+@media(max-width:335px){
+ .size-row .pick{min-height:104px;padding-bottom:42px}
+ .size-row .pick b{font-size:.75rem}
+ .size-compare{font-size:.66rem}
+ .steel-status-filter{grid-template-columns:1fr}
+}
 </style><link rel="stylesheet" href="./app-global.css"></head>
 <body data-pwd-shell="off"><header class="top"><a class="back" href="./index.html">‹ Home</a><b>Steel Table</b></header>
 <main>
@@ -82,7 +113,7 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
  <div id="catalogDetails">
   <label id="steelSearchLabel" for="steelSearch">2 · Find member size</label>
   <input id="steelSearch" type="search" placeholder="Search size: ISMB 300, ISMC 150…" autocomplete="off">
-  <div class="steel-status-filter hide-print"><label for="steelAuditFilter">Source verification</label><select id="steelAuditFilter" aria-describedby="steelAuditSummary"><option value="all">All sections</option><option value="checked">Limited checked · provisional quantity</option><option value="review">Pending verification · reference only</option><option value="hold">On hold · conflicting or outside scope</option></select></div>
+  <div class="steel-status-filter hide-print"><label for="steelAuditFilter">Catalogue view</label><select id="steelAuditFilter" aria-describedby="steelAuditSummary"><option value="checked" selected>Working · source checked</option><option value="hold">Archive · on hold</option><option value="all">All records · including archive</option><option value="review">Pending source review</option></select></div>
   <p class="steel-status-summary" id="steelAuditSummary" role="status" aria-live="polite">Reviewing catalogue status…</p>
   <p class="small hide-print" id="steelCount" aria-live="polite"></p>
   <div class="results" id="steelResults" aria-label="Select steel section"></div>
@@ -107,15 +138,15 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
  <div class="inside">
   <section id="steelDetail" hidden aria-live="polite">
    <div class="titlebar"><h2 id="steelTitle">Section</h2><span class="tag" id="steelStatus">SAIL source</span></div>
-   <div class="steel-key-metrics" aria-label="Most-used section properties">
+   <div class="steel-technical-quickview"><div class="steel-metrics-column"><div class="steel-key-metrics" aria-label="Most-used section properties">
     <div class="steel-key steel-mass"><span>Unit weight</span><strong><b id="steelMass">—</b> <small>kg/m</small></strong></div>
     <div class="steel-key"><span id="steelDepthLabel">Depth / leg</span><strong id="steelMainDepth">—</strong><small>mm</small></div>
     <div class="steel-key"><span id="steelWidthLabel">Width / leg</span><strong id="steelMainWidth">—</strong><small>mm</small></div>
     <div class="steel-key"><span id="steelMainThicknessLabel">Thickness</span><strong id="steelMainThickness">—</strong><small>mm</small></div>
    </div>
    <p id="steelKeyAudit" class="steel-audit-line" role="status" aria-live="polite">Select a section to see source verification status.</p>
-   <div id="steelSectionDiagram" class="figure" aria-label="Dimensioned, source-proportional steel section schematic"></div>
-   <p id="steelDiagramStatus" class="steel-diagram-status" role="note">The section drawing shows sourced outside dimensions; internal profiles are simplified where geometry is not fully verified.</p>
+   </div><div class="steel-figure-column"><div id="steelSectionDiagram" class="figure" aria-label="Dimensioned, source-proportional steel section schematic"></div>
+   <p id="steelDiagramStatus" class="steel-diagram-status" role="note">The section drawing shows sourced outside dimensions; internal profiles are simplified where geometry is not fully verified.</p></div></div>
    <details class="steel-tech"><summary>More section properties</summary><div id="steelProperties"></div></details>
    <div class="warning" id="steelDataCaution"></div>
    <button type="button" class="action secondary compare-add-main" id="steelCompareAdd">+ Add this size to comparison</button>
@@ -124,7 +155,7 @@ footer{font-size:.75rem;text-align:center;color:var(--muted);margin:10px 0 0}
   <div class="subline" id="steelDetailsEmpty">Choose a section to see its dimensions.</div>
  </div>
 </section>
-<section class="card steel-comparison" id="steelCompareCard" aria-label="Compare similar steel members">
+<section class="card steel-comparison" id="steelCompareCard" aria-label="Compare similar steel members" hidden>
  <div class="compare-head"><h2>Compare similar members</h2><button type="button" id="steelCompareClear" class="compare-clear" hidden>Clear</button></div>
  <p class="small">Add any 2, 3 or more sizes of the same member type. Compare dimensions and source-listed properties — not load capacity.</p>
  <div id="steelCompareChips" class="compare-chips" aria-label="Selected comparison members"></div>
