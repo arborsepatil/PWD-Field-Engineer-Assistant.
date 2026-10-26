@@ -80,6 +80,6 @@ assert.match(app,/container\.hidden=true;container\.open=false/);
 assert.match(app,/renderEvidence\(selected\)/);
 assert.match(app,/\$\('steelCalculate'\)\.disabled=!quantityState\.allowed/);
 assert.match(app,/HOLD\. The app does not substitute any inferred nominal weight/);
-assert.match(read('scripts/steel-release-readiness.mjs'),/currentVersion:'Steel V\\d{2,}'/);
+assert.match(read('scripts/steel-release-readiness.mjs'),/currentVersion:'Steel V\d{2,}'/);
 assert.ok(!html.includes('third-party-image.png'));
 console.log('STEEL V64 PASS: 21 numeric/internal holds have distinct, traceable read-only evidence, 15 published conflicts and 6 internal discrepancies; 71 remain blocked, 686 source checked, no mass changed.');
