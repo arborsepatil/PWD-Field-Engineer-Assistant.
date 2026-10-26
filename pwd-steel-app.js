@@ -5,7 +5,7 @@
  */
 (function(){
 'use strict';
-const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,comparison=window.PWDSteelCompare,steelStatus=window.PWDSteelStatus,$=id=>document.getElementById(id);
+const catalog=window.PWDSteelWorking.build(window.PWDSteelCatalog,window.PWDSteelCompare,window.PWDSteelStatus),math=window.PWDSteelMath,comparison=window.PWDSteelCompare,steelStatus=window.PWDSteelStatus,$=id=>document.getElementById(id);
 if(!catalog||!math||!comparison||!steelStatus||!window.PWDSteelDiagram||!window.PWDSteelHolds||!window.PWDSteelEvidence||!$('steelFamilies'))return;
 let family='beam',selected=null,last=null,lastEntry=null,shownLimit=60,compareIds=[];
 const source=id=>catalog.SOURCES[id];
@@ -390,7 +390,7 @@ function renderComparison(){
 }
 function showStandards(){
  const all=steelStatus.summarize(catalog,comparison,catalog.sections);
- $('steelCatalogueAudit').textContent='Catalogue: '+all.total+' records · '+all.counts.checked+' limited source-checked · '+all.counts.review+' pending verification · '+all.counts.hold+' on hold. Quantity calculations remain restricted to checked source rows only.';
+ $('steelCatalogueAudit').textContent='Working steel catalogue: '+all.total+' limited source-checked sections. '+catalog.omittedSourceCount+' unsupported/conflicting historical source records excluded from usable selection. Calculations remain limited to checked nominal values; verify contract, grade and MTC.';
  const evidence=window.PWDSteelHolds.build(catalog,comparison,steelStatus);
  $('steelHoldCount').textContent='On hold: '+evidence.hold+' records · evidence needed';
  const holdList=$('steelHoldBreakdown');holdList.replaceChildren();
