@@ -5,7 +5,8 @@
  */
 (function(){
 'use strict';
-const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,comparison=window.PWDSteelCompare,steelStatus=window.PWDSteelStatus,$=id=>document.getElementById(id);
+const sourceCatalog=window.PWDSteelCatalog,math=window.PWDSteelMath,comparison=window.PWDSteelCompare,steelStatus=window.PWDSteelStatus,$=id=>document.getElementById(id);
+const catalog=window.PWDSteelPublished&&sourceCatalog?window.PWDSteelPublished.create(sourceCatalog,comparison):null;
 if(!catalog||!math||!comparison||!steelStatus||!window.PWDSteelDiagram||!window.PWDSteelHolds||!window.PWDSteelEvidence||!$('steelFamilies'))return;
 let family='beam',selected=null,last=null,lastEntry=null,shownLimit=60,compareIds=[];
 const source=id=>catalog.SOURCES[id];
@@ -90,7 +91,7 @@ function renderRows(){
  const counts=snapshot.counts;
  const mode=$('steelAuditFilter').value;
  $('steelAuditSummary').textContent=mode==='checked'?
-  'Working catalogue · '+rows.length+' source-checked of '+snapshot.total+' matching sizes. Historical holds hidden; provisional nominal weights only.':
+  'Steel library · '+rows.length+' source-checked sizes. Provisional nominal-weight arithmetic only.':
   mode==='hold'?'Historical / unresolved · '+rows.length+' held of '+snapshot.total+' matching sizes. Reference only — weight calculation blocked.':
   'Matching source rows: '+snapshot.total+' · '+counts.checked+' checked · '+counts.review+' pending · '+counts.hold+' on hold. Only checked rows permit provisional weight arithmetic.';
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
@@ -390,9 +391,9 @@ function renderComparison(){
 }
 function showStandards(){
  const all=steelStatus.summarize(catalog,comparison,catalog.sections);
- $('steelCatalogueAudit').textContent='Catalogue: '+all.total+' records · '+all.counts.checked+' limited source-checked · '+all.counts.review+' pending verification · '+all.counts.hold+' on hold. Quantity calculations remain restricted to checked source rows only.';
+ $('steelCatalogueAudit').textContent='Usable library: '+all.total+' individually source-checked sections. '+catalog.publication.excluded+' historic, conflicting or insufficiently checked source records excluded from the available app library. Nominal weights are for provisional quantity arithmetic, not material certification or structural design.';
  const evidence=window.PWDSteelHolds.build(catalog,comparison,steelStatus);
- $('steelHoldCount').textContent='On hold: '+evidence.hold+' records · evidence needed';
+ $('steelHoldCount').textContent='Unavailable reference records excluded from current app catalogue';
  const holdList=$('steelHoldBreakdown');holdList.replaceChildren();
  for(const item of evidence.groups){
   const p=document.createElement('p');p.className='small';
