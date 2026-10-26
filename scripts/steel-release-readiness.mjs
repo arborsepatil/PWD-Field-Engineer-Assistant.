@@ -15,7 +15,9 @@ const comparison=require(path.join(root,'pwd-steel-compare.js'));
 const status=require(path.join(root,'pwd-steel-status.js'));
 const holds=require(path.join(root,'pwd-steel-holds.js'));
 const evidence=require(path.join(root,'pwd-steel-evidence.js'));
+const working=require(path.join(root,'pwd-steel-working.js')).build(catalog,comparison,status);
 const audit=status.summarize(catalog,comparison,catalog.sections);
+const workingAudit=status.summarize(working,comparison,working.sections);
 const holdEvidence=holds.build(catalog,comparison,status);
 const numericEvidence=evidence.build(catalog,comparison,status,holds);
 const families={};
@@ -30,8 +32,12 @@ const remaining=Object.entries(families).map(([family,n])=>({
 const complete=audit.counts.review===0&&audit.counts.hold===0&&audit.counts.checked===audit.total;
 const result={
  decision:complete?'VERIFIED-NOMINAL-DATA-COMPLETE':'HOLD-DEPLOYMENT',
- currentVersion:'Steel V65',
+ currentVersion:'Steel V66',
  catalogueCount:audit.total,...audit.counts,
+ workingScope:Object.freeze({sourceChecked:workingAudit.counts.checked,pending:workingAudit.counts.review,held:workingAudit.counts.hold,excludedFromUsableCatalogue:working.omittedSourceCount}),
+ workingScopeDeviceQaEligible:workingAudit.total>0&&workingAudit.counts.checked===workingAudit.total&&workingAudit.counts.hold===0&&workingAudit.counts.review===0,
+ note:'The 71 unsupported rows are excluded from the app working catalogue but remain in the developer source archive. A separate device QA and release check is still required.',
+
  definition:'Source-checked nominal section weights only; structural design and delivered-product approval still require project-specific engineering.',
  incompleteByFamily:remaining,
  holdEvidenceGroups:holdEvidence.groups.map(g=>({reason:g.key,count:g.count,nextEvidence:g.nextEvidence})),
