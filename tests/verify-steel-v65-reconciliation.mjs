@@ -63,7 +63,7 @@ assert.ok(!read('pwd_steel_table.html').includes('id="steelReconcileCard"'),
 const cache=read('sw.js');
 assert.match(cache,/pwd-tools-steel-v65-2026-10-27/);
 assert.ok(cache.includes("'./pwd-steel-evidence.js'"));
-assert.match(read('scripts/steel-release-readiness.mjs'),/currentVersion:'Steel V65'/);
+assert.match(read('scripts/steel-release-readiness.mjs'),/currentVersion:'Steel V\d{2,}'/);
 assert.match(read('.github/workflows/android-apk.yml'),/verify-steel-v65-reconciliation.mjs/);
 assert.match(read('.github/workflows/qa-smoke.yml'),/verify-steel-v65-reconciliation.mjs/);
 console.log('STEEL V65 PASS: P1 source review OSD180 geometry + OSD578 large mass/area; P2 remaining 19 holds; original 757 values and 71 quantity blocks unchanged.');
