@@ -103,11 +103,12 @@ function renderRows(){
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
   const name=document.createElement('b');name.textContent=row.designation;
   const subtitle=document.createElement('span');
-  const status=catalog.standardAudit(row).status;
-  subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(status==='is808-numeric-conflict'?' · IS 808 source conflict':status==='is808-mass-area-inertia-checked'?' · IS 808 mass/area/inertia checked':status==='is808-mass-checked'?' · IS 808 kg/m checked':status==='spot-checked-match'?' · 2023 spot-check':status==='not-listed-in-replacement'?' · Historical / unlisted':status==='spot-checked-conflict'?' · BIS conflict':status==='outside-current-scope'?' · Outside IS 4923 scope':status==='source-numeric-hold'?' · Source table row on hold':status==='mass-area-conflict'?' · Mass/area inconsistency':status==='shs-row-checked'?' · BIS numeric sample checked':status==='shs-row-conflict'?' · BIS numeric conflict':status==='rhs-weight-checked'?' · BIS kg/m checked':status==='rhs-weight-conflict'?' · BIS kg/m conflict':status==='amendment3-review'?' · Amd.3 not verified':row.basis==='archived-manufacturer-only'?' · Archive':
- row.basis==='osdag-open-unverified'?' · Open source':['secondary-unverified','secondary-amendment-unverified'].includes(row.basis)?' · Secondary':'');
+  // A two-column size card shows just the nominal weight and validity.
+  // Detailed source and numeric audit notes remain visible when selected.
   const quantityState=comparison.quantityGate(catalog,row);
-  if(!quantityState.allowed)subtitle.textContent+=' · '+(quantityState.category==='hold'?'HOLD · no quantity':'Reference only · no quantity');
+  subtitle.textContent=format(row.kgPerM,2)+' kg/m · '+
+   (quantityState.category==='hold'?'HOLD · reference only':
+    quantityState.allowed?'source checked':'not verified');
   btn.append(name,subtitle);
   btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
   const holder=document.createElement('div');holder.className='size-row';
