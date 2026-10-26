@@ -29,7 +29,7 @@ assert.ok(triage.records.every(Object.isFrozen));
 assert.ok(triage.records.every(row=>{
  const origin=cat.byId(row.id);
  return origin&&origin.designation===row.designation
-  &&origin.kgPerM===row.kgPerM&&origin.areaCm2===row.areaCm2
+  &&origin.kgPerM===row.kgPerM&&(origin.areaCm2??null)===row.areaCm2
   &&row.quantityAllowed===false
   &&cmp.audit(cat,origin).status==='hold'
   &&cmp.quantityGate(cat,origin).allowed===false
