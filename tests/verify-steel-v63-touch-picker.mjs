@@ -51,5 +51,5 @@ assert.match(html,/<option value="checked" selected>Working · source-checked<\/
 assert.match(html,/<option value="hold">Historical \/ unresolved · reference only<\/option>/);
 assert.ok(read('sw.js').includes("'./pwd-steel-reference-ui.css'"));
 assert.match(read('sw.js'),/pwd-tools-steel-v\d{2,}-\d{4}-\d{2}-\d{2}/,'Later versions must refresh the same steel asset cache');
-assert.match(read('scripts/steel-release-readiness.mjs'),/currentVersion:'Steel V63'/);
+assert.match(read('scripts/steel-release-readiness.mjs'),/currentVersion:'Steel V\d+'/,'Later source-audit releases keep an explicit version');
 console.log('STEEL V63 PASS: compact two-column picks with larger 40px comparison controls and concise HOLD/source status; 686 working, 71 archived, no release-gate bypass.');
