@@ -65,6 +65,7 @@ jobs:
           node tests/verify-steel-v60-is808-final-six.mjs
           node tests/verify-steel-v61-hold-evidence.mjs
           node tests/verify-steel-v62-reference-ui.mjs
+          node tests/verify-steel-v63-touch-picker.mjs
           node scripts/steel-v59-pending-inventory.mjs
           node scripts/steel-release-readiness.mjs --report-only
           node tests/verify-v20-simple-ux.mjs
