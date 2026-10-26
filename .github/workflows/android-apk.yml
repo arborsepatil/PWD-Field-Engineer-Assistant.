@@ -180,6 +180,10 @@ jobs:
         run: node tests/verify-steel-v65-reconciliation.mjs
       - name: Print Steel V65 reconciliation queue without release approval
         run: node scripts/steel-v65-reconciliation-queue.mjs
+      - name: Verify V66 checked working steel catalogue and exclusion boundary
+        run: node tests/verify-steel-v66-working-catalogue.mjs
+      - name: Check V66 working subset for source readiness (no production deployment)
+        run: node scripts/steel-release-readiness.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens

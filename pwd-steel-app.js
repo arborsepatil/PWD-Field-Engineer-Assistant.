@@ -6,10 +6,11 @@
 (function(){
 'use strict';
 const catalog=window.PWDSteelCatalog,math=window.PWDSteelMath,comparison=window.PWDSteelCompare,steelStatus=window.PWDSteelStatus,$=id=>document.getElementById(id);
-if(!catalog||!math||!comparison||!steelStatus||!window.PWDSteelDiagram||!window.PWDSteelHolds||!window.PWDSteelEvidence||!$('steelFamilies'))return;
+if(!catalog||!math||!comparison||!steelStatus||!window.PWDSteelWorking||!window.PWDSteelDiagram||!window.PWDSteelHolds||!window.PWDSteelEvidence||!$('steelFamilies'))return;
 let family='beam',selected=null,last=null,lastEntry=null,shownLimit=60,compareIds=[];
 const source=id=>catalog.SOURCES[id];
 const evidenceRegistry=window.PWDSteelEvidence.build(catalog,comparison,steelStatus,window.PWDSteelHolds);
+const working=window.PWDSteelWorking.build(catalog,comparison,steelStatus);
 const format=(x,d=2)=>Number(x).toLocaleString('en-IN',{maximumFractionDigits:d,minimumFractionDigits:d});
 const text=(el,value)=>{el.textContent=String(value)};
 function shapeSvg(type,data={}){
@@ -84,15 +85,11 @@ function makeFamilyButtons(){
  }
 }
 function renderRows(){
- const rawRows=catalog.search($('steelSearch').value,family,$('steelSeries').value||'all');
- const snapshot=steelStatus.select(catalog,comparison,rawRows,$('steelAuditFilter').value);
+ const rawRows=working.search($('steelSearch').value,family,$('steelSeries').value||'all');
+ const snapshot=steelStatus.select(catalog,comparison,rawRows,'checked');
  const rows=snapshot.rows;
- const counts=snapshot.counts;
- const mode=$('steelAuditFilter').value;
- $('steelAuditSummary').textContent=mode==='checked'?
-  'Working catalogue · '+rows.length+' source-checked of '+snapshot.total+' matching sizes. Historical holds hidden; provisional nominal weights only.':
-  mode==='hold'?'Historical / unresolved · '+rows.length+' held of '+snapshot.total+' matching sizes. Reference only — weight calculation blocked.':
-  'Matching source rows: '+snapshot.total+' · '+counts.checked+' checked · '+counts.review+' pending · '+counts.hold+' on hold. Only checked rows permit provisional weight arithmetic.';
+ $('steelAuditSummary').textContent='Working steel sizes · '+rows.length+
+  ' matching source-checked sections. Nominal weight arithmetic only; verify project requirements and MTC.';
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
  const root=$('steelResults');root.replaceChildren();
  $('noResults').hidden=rows.length!==0;
@@ -326,7 +323,7 @@ function toggleCompare(row){
 function renderComparison(){
  const chipBox=$('steelCompareChips'),result=$('steelCompareResults');
  chipBox.replaceChildren();result.replaceChildren();
- const items=compareIds.map(id=>catalog.byId(id)).filter(row=>row&&row.family===family);
+ const items=compareIds.map(id=>working.byId(id)).filter(row=>row&&row.family===family);
  const jump=$('steelCompareJump');
  jump.textContent='Compare ('+items.length+')';
  jump.disabled=family==='calculated';
@@ -390,9 +387,9 @@ function renderComparison(){
 }
 function showStandards(){
  const all=steelStatus.summarize(catalog,comparison,catalog.sections);
- $('steelCatalogueAudit').textContent='Catalogue: '+all.total+' records · '+all.counts.checked+' limited source-checked · '+all.counts.review+' pending verification · '+all.counts.hold+' on hold. Quantity calculations remain restricted to checked source rows only.';
+ $('steelCatalogueAudit').textContent='Working steel table: '+working.activeCount+' selected source-checked nominal masses. '+working.excludedCount+' conflicting or historical source records have been removed from working search/quantity use and retained in the development audit history. Source-checked does not certify section design or delivered material.';
  const evidence=window.PWDSteelHolds.build(catalog,comparison,steelStatus);
- $('steelHoldCount').textContent='On hold: '+evidence.hold+' records · evidence needed';
+ $('steelHoldCount').textContent='Archived source exclusions · '+evidence.hold+' (not in working table)';
  const holdList=$('steelHoldBreakdown');holdList.replaceChildren();
  for(const item of evidence.groups){
   const p=document.createElement('p');p.className='small';
