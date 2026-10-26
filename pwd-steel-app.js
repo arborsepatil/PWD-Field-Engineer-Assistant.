@@ -352,6 +352,41 @@ function showStandards(){
   const name=document.createElement('strong');name.textContent=item.label+' ('+item.count+'): ';
   p.append(name,document.createTextNode(item.nextEvidence));holdList.append(p);
  }
+ const triage=window.PWDSteelTriage.build(catalog,comparison,steelStatus,window.PWDSteelHolds);
+ $('steelTriageCount').textContent='Review '+triage.count+' numerical discrepancies · source evidence';
+ const triageRoot=$('steelTriageEntries');triageRoot.replaceChildren();
+ const caution=document.createElement('p');
+ caution.className='small';caution.textContent=triage.caution;triageRoot.append(caution);
+ for(const group of triage.groups){
+  const list=document.createElement('details');list.className='steel-tech steel-triage-group';
+  const heading=document.createElement('summary');
+  heading.textContent=group.label+' ('+group.count+')';list.append(heading);
+  const inside=document.createElement('div');inside.className='inside';
+  for(const row of group.records){
+   const detail=document.createElement('details');detail.className='steel-tech steel-triage-record';
+   const label=document.createElement('summary');
+   label.textContent=row.designation+' · '+row.id+' · HOLD';detail.append(label);
+   const add=(label,value)=>{
+    const p=document.createElement('p');p.className='small';
+    const strong=document.createElement('strong');strong.textContent=label+': ';
+    p.append(strong,document.createTextNode(value));detail.append(p);
+   };
+   add('Source',row.sourceId+' · '+row.sourceStatus);
+   if(row.sourceTable!==null||row.sourcePdfPage!==null)
+    add('Source pointer',[
+     row.sourceTable===null?'':'Table '+row.sourceTable,
+     row.sourcePdfPage===null?'':'PDF page '+row.sourcePdfPage
+    ].filter(Boolean).join(' · '));
+   add('Recorded mass',row.kgPerM===null?'Unavailable':format(row.kgPerM,3)+' kg/m');
+   if(row.areaCm2!==null)add('Recorded area',format(row.areaCm2,3)+' cm²');
+   if(row.massAreaDifferencePct!==null)
+    add('Density diagnostic',format(row.diagnosticMassKgM,3)+' kg/m implied by recorded area · '+format(row.massAreaDifferencePct,2)+'% deviation · NOT a standard tolerance');
+   add('Why held',row.note);
+   add('Evidence needed',row.nextEvidence);
+   inside.append(detail);
+  }
+  list.append(inside);triageRoot.append(list);
+ }
  const c=$('steelStandards');
  for(const s of catalog.codeReferences){
   const p=document.createElement('p');p.className='small';
