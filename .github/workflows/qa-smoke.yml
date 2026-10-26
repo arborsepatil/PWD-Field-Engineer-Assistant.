@@ -68,6 +68,8 @@ jobs:
           node tests/verify-steel-v63-touch-picker.mjs
           node tests/verify-steel-v64-numeric-evidence.mjs
           node tests/verify-steel-v65-reconciliation.mjs
+          node tests/verify-steel-v66-working-catalogue.mjs
+          node scripts/steel-release-readiness.mjs
           node scripts/steel-v65-reconciliation-queue.mjs
           node scripts/steel-v59-pending-inventory.mjs
           node scripts/steel-release-readiness.mjs --report-only
