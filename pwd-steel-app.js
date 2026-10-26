@@ -82,7 +82,13 @@ function renderRows(){
  const snapshot=steelStatus.select(catalog,comparison,rawRows,$('steelAuditFilter').value);
  const rows=snapshot.rows;
  const counts=snapshot.counts;
- $('steelAuditSummary').textContent='Matches: '+snapshot.total+' sections · '+counts.checked+' limited source-checked · '+counts.review+' pending · '+counts.hold+' on hold. Only limited-checked records allow provisional quantity arithmetic.';
+ $('steelAuditSummary').textContent=($('steelAuditFilter').value==='checked'?
+  'Working catalogue · '+rows.length+' source-checked sizes. Provisional nominal-weight calculations only.':
+  $('steelAuditFilter').value==='hold'?
+   'Reference archive · '+rows.length+' held sizes. Quantity calculations are disabled.':
+  $('steelAuditFilter').value==='review'?
+   'Awaiting source verification · '+rows.length+' sizes. Quantity calculations are disabled.':
+   'All sources · '+snapshot.total+' sizes: '+counts.checked+' checked, '+counts.review+' pending, '+counts.hold+' held. Held and pending weights cannot be calculated.');
  if(!selected||!rows.some(x=>x.id===selected.id))selected=rows[0]||null;
  const root=$('steelResults');root.replaceChildren();
  $('noResults').hidden=rows.length!==0;
@@ -96,11 +102,10 @@ function renderRows(){
   btn.setAttribute('aria-pressed',String(selected?.id===row.id));
   const name=document.createElement('b');name.textContent=row.designation;
   const subtitle=document.createElement('span');
-  const status=catalog.standardAudit(row).status;
-  subtitle.textContent=format(row.kgPerM,2)+' kg/m'+(status==='is808-numeric-conflict'?' · IS 808 source conflict':status==='is808-mass-area-inertia-checked'?' · IS 808 mass/area/inertia checked':status==='is808-mass-checked'?' · IS 808 kg/m checked':status==='spot-checked-match'?' · 2023 spot-check':status==='not-listed-in-replacement'?' · Historical / unlisted':status==='spot-checked-conflict'?' · BIS conflict':status==='outside-current-scope'?' · Outside IS 4923 scope':status==='source-numeric-hold'?' · Source table row on hold':status==='mass-area-conflict'?' · Mass/area inconsistency':status==='shs-row-checked'?' · BIS numeric sample checked':status==='shs-row-conflict'?' · BIS numeric conflict':status==='rhs-weight-checked'?' · BIS kg/m checked':status==='rhs-weight-conflict'?' · BIS kg/m conflict':status==='amendment3-review'?' · Amd.3 not verified':row.basis==='archived-manufacturer-only'?' · Archive':
- row.basis==='osdag-open-unverified'?' · Open source':['secondary-unverified','secondary-amendment-unverified'].includes(row.basis)?' · Secondary':'');
   const quantityState=comparison.quantityGate(catalog,row);
-  if(!quantityState.allowed)subtitle.textContent+=' · '+(quantityState.category==='hold'?'HOLD · no quantity':'Reference only · no quantity');
+  subtitle.textContent=format(row.kgPerM,2)+' kg/m · '+(
+   quantityState.category==='hold'?'HOLD · reference':
+   quantityState.allowed?'limited source check':'unverified');
   btn.append(name,subtitle);
   btn.addEventListener('click',()=>{selected=row;renderRows();renderDetail();updateSelectedSummary();updateResult();});
   const holder=document.createElement('div');holder.className='size-row';
@@ -260,7 +265,7 @@ function renderComparison(){
  compareIds=items.map(row=>row.id);
  $('steelCompareEmpty').hidden=items.length!==0;
  $('steelCompareClear').hidden=items.length===0;
- $('steelCompareCard').hidden=family==='calculated';
+ $('steelCompareCard').hidden=family==='calculated'||items.length===0;
  const message=$('steelCompareSummary');
  if(items.length===0){message.textContent='';result.hidden=true;return;}
  for(const row of items){
@@ -284,6 +289,13 @@ function renderComparison(){
  const v=x=>x===null||x===undefined||!Number.isFinite(Number(x))?'—':format(x,3).replace(/0+$/,'').replace(/\.$/,'');
  const properties=[
   ['Weight (kg/m)',x=>x.audit.status==='hold'?format(x.kgPerM,2)+' · HOLD':x.audit.status==='review'?format(x.kgPerM,2)+' · UNVERIFIED':format(x.kgPerM,2)+' · limited check'],
+  ['Weight difference vs first (kg/m)',x=>{
+   if(x.id===rows[0].id)return 'Reference';
+   if(x.audit.status!=='checked'||rows[0].audit.status!=='checked')
+    return '— · unverified comparison';
+   const delta=x.kgPerM-rows[0].kgPerM;
+   return (delta>0?'+':'')+format(delta,2);
+  }],
   ['Depth / leg (mm)',x=>v(x.depthMm)],
   ['Width / leg (mm)',x=>v(x.widthMm)],
   ['Web/wall/leg thickness (mm)',x=>v(x.thicknessMm)],
