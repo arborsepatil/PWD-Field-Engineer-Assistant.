@@ -64,8 +64,8 @@ function inspect(catalog,comparison,item){
  });
 }
 function build(catalog,comparison,holds){
- const source=holds.rows?holds:holds.build();
- const candidates=source.rows.filter(x=>x.reason==='numeric'||x.reason==='internal');
+ if(!holds||!Array.isArray(holds.rows))throw Error('Expected V61 source-evidence register');
+ const candidates=holds.rows.filter(x=>x.reason==='numeric'||x.reason==='internal');
  const entries=Object.freeze(candidates.map(item=>inspect(catalog,comparison,item)));
  const groups=Object.freeze(['internal','numeric'].map(key=>Object.freeze({
   key,count:entries.filter(x=>x.category===key).length
