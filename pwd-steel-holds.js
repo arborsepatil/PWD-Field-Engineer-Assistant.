@@ -24,6 +24,24 @@ function typeFor(row,audit){
  if(audit.sourceStatus==='spot-checked-conflict')return 'provenance';
  return 'other';
 }
+/* Diagnostic only: 1 cm² of cross-sectional area represents 0.785 kg/m
+ * at the conventional assumed steel density 7,850 kg/m³.
+ * This is NOT a replacement for the published nominal mass, approved material
+ * density or a BIS source-table check. Source-area and mass can both be wrong.
+ */
+function diagnosticMassArea(row){
+ const mass=row.kgPerM,area=row.areaCm2;
+ if(!Number.isFinite(mass)||mass<=0||!Number.isFinite(area)||area<=0)
+  return Object.freeze({available:false,reason:'Missing positive source mass or cross-section area'});
+ const massFromArea=area*0.785;
+ const differencePct=100*(mass-massFromArea)/massFromArea;
+ return Object.freeze({
+  available:true,sourceKgPerM:mass,sourceAreaCm2:area,
+  theoreticalKgPerM:Number(massFromArea.toFixed(3)),
+  signedDifferencePct:Number(differencePct.toFixed(2)),
+  meaning:'Arithmetic diagnostic using assumed density 7850 kg/m³ only; not a certified correction.'
+ });
+}
 function build(catalog,comparison,statusView){
  const all=statusView.summarize(catalog,comparison,catalog.sections);
  const categories={};
@@ -42,6 +60,8 @@ function build(catalog,comparison,statusView){
    sourceId:row.sourceId,sourceStatus:evidence.sourceStatus,
    family:row.family,reason:group,
    evidenceNote:evidence.note,
+   sourceLabel:catalog.SOURCES[row.sourceId]?.label||'Source label unavailable',
+   numericSanity:diagnosticMassArea(row),
    nextEvidence,quantityAllowed:false
   }));
  }
@@ -54,7 +74,22 @@ function build(catalog,comparison,statusView){
   hold:all.counts.hold,groups,rows:Object.freeze(rows)
  });
 }
-const api=Object.freeze({TYPES,typeFor,build});
+/* Isolated working queue: the 6 internal source anomalies and 15 published
+ * numerical disagreements. Historical unlisted sizes remain archived separately.
+ * Never upgrades a record or writes a corrected value into the catalogue.
+ */
+function numericReview(register){
+ if(!register||!Array.isArray(register.rows))throw Error('Build the hold register first');
+ const rows=register.rows.filter(item=>item.reason==='internal'||item.reason==='numeric')
+  .sort((a,b)=>Number(a.reason!=='internal')-Number(b.reason!=='internal')||
+   a.series.localeCompare(b.series)||a.designation.localeCompare(b.designation)||a.id.localeCompare(b.id));
+ return Object.freeze({
+  total:rows.length,internal:rows.filter(x=>x.reason==='internal').length,
+  numeric:rows.filter(x=>x.reason==='numeric').length,
+  rows:Object.freeze(rows)
+ });
+}
+const api=Object.freeze({TYPES,typeFor,build,diagnosticMassArea,numericReview});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PWDSteelHolds=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -352,6 +352,33 @@ function showStandards(){
   const name=document.createElement('strong');name.textContent=item.label+' ('+item.count+'): ';
   p.append(name,document.createTextNode(item.nextEvidence));holdList.append(p);
  }
+ const numericQueue=window.PWDSteelHolds.numericReview(evidence);
+ $('steelNumericReviewCount').textContent='Numerical evidence queue · '+numericQueue.total+' held records ('+
+  numericQueue.internal+' mass/area, '+numericQueue.numeric+' source conflicts)';
+ const ledger=$('steelNumericReviewList');ledger.replaceChildren();
+ for(const item of numericQueue.rows){
+  const details=document.createElement('details');
+  const heading=document.createElement('summary');
+  const diag=item.numericSanity;
+  heading.textContent=item.designation+' · '+(item.reason==='internal'?'mass/area concern':'source disagreement')+
+   (diag.available?' · area/mass check '+(diag.signedDifferencePct>0?'+':'')+
+    format(diag.signedDifferencePct,2)+'%':' · insufficient area data');
+  details.append(heading);
+  const source=document.createElement('p');source.className='small';
+  source.textContent='Record '+item.id+' · '+item.sourceLabel+
+   ' · audit '+item.sourceStatus+' · quantity NOT allowed';
+  const note=document.createElement('p');note.className='small';
+  note.textContent='Recorded concern: '+item.evidenceNote;
+  const sanity=document.createElement('p');sanity.className='small';
+  sanity.textContent=diag.available?
+   'Arithmetic check only: source '+format(diag.sourceKgPerM,3)+' kg/m; area '+
+   format(diag.sourceAreaCm2,3)+' cm²; computed mass using assumed 7,850 kg/m³ = '+
+   format(diag.theoreticalKgPerM,3)+' kg/m. Neither number is approved by this check.':
+   'Mass/area diagnostic unavailable because usable source values are missing.';
+  const action=document.createElement('p');action.className='small';
+  action.textContent='Evidence needed: '+item.nextEvidence;
+  details.append(source,note,sanity,action);ledger.append(details);
+ }
  const c=$('steelStandards');
  for(const s of catalog.codeReferences){
   const p=document.createElement('p');p.className='small';

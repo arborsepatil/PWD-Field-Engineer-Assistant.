@@ -172,6 +172,10 @@ jobs:
         run: node tests/verify-steel-v62-reference-ui.mjs
       - name: Verify Steel V63 compact touch-safe two-column source picker
         run: node tests/verify-steel-v63-touch-picker.mjs
+      - name: Verify Steel V64 21-row numerical source-triage and quantity safety
+        run: node tests/verify-steel-v64-numeric-evidence.mjs
+      - name: Report V64 numerical source-conflict inventory (no corrections)
+        run: node scripts/steel-v64-conflict-inventory.mjs
       - name: Report incomplete Steel Table families (no deployment)
         run: node scripts/steel-release-readiness.mjs --report-only
       - name: Verify V20 simplified Home and module screens
