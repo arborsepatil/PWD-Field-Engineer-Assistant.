@@ -352,6 +352,32 @@ function showStandards(){
   const name=document.createElement('strong');name.textContent=item.label+' ('+item.count+'): ';
   p.append(name,document.createTextNode(item.nextEvidence));holdList.append(p);
  }
+ const numeric=window.PWDSteelDiscrepancies.build(catalog,comparison,evidence);
+ $('steelDiscrepancyCount').textContent='Numerical source discrepancies · '+numeric.total+' held records';
+ const destination=$('steelDiscrepancyRows');destination.replaceChildren();
+ const table=document.createElement('table');
+ const thead=document.createElement('thead'),hdr=document.createElement('tr');
+ for(const name of ['Source row','Internal sanity check','Source observation / next evidence']){
+  const th=document.createElement('th');th.textContent=name;hdr.append(th);
+ }
+ thead.append(hdr);table.append(thead);
+ const tbody=document.createElement('tbody');
+ for(const issue of numeric.rows){
+  const tr=document.createElement('tr');
+  const name=document.createElement('td');name.className='steel-hold-title';
+  name.textContent=issue.designation+' · '+issue.id;
+  const figure=document.createElement('td');
+  const d=issue.densityCheck;
+  figure.textContent=d?
+   format(d.nominalKgPerM,2)+' kg/m listed; area '+format(d.listedAreaCm2,2)+' cm² implies '+
+   format(d.densityEquivalentKgPerM,2)+' kg/m ('+format(d.relativeDeviationPct,2)+'% difference).':
+   'Source numbers disagree; density comparison not available.';
+  const evidenceCell=document.createElement('td');evidenceCell.className='steel-hold-evidence';
+  evidenceCell.textContent=(issue.printedDiscrepancyObserved?'Printed pair observed. ':'')+
+   issue.sourceEvidence+' '+issue.nextEvidence+' Quantity HOLD.';
+  tr.append(name,figure,evidenceCell);tbody.append(tr);
+ }
+ table.append(tbody);destination.append(table);
  const c=$('steelStandards');
  for(const s of catalog.codeReferences){
   const p=document.createElement('p');p.className='small';
