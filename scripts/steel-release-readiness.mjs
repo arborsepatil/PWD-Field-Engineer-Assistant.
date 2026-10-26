@@ -15,9 +15,11 @@ const comparison=require(path.join(root,'pwd-steel-compare.js'));
 const status=require(path.join(root,'pwd-steel-status.js'));
 const holds=require(path.join(root,'pwd-steel-holds.js'));
 const evidence=require(path.join(root,'pwd-steel-evidence.js'));
+const publication=require(path.join(root,'pwd-steel-publication.js'));
 const audit=status.summarize(catalog,comparison,catalog.sections);
 const holdEvidence=holds.build(catalog,comparison,status);
 const numericEvidence=evidence.build(catalog,comparison,status,holds);
+const published=publication.create(catalog,comparison);
 const families={};
 for(const record of audit.records){
  const family=record.row.family+' / '+catalog.resolveSeries(record.row);
@@ -30,13 +32,14 @@ const remaining=Object.entries(families).map(([family,n])=>({
 const complete=audit.counts.review===0&&audit.counts.hold===0&&audit.counts.checked===audit.total;
 const result={
  decision:complete?'VERIFIED-NOMINAL-DATA-COMPLETE':'HOLD-DEPLOYMENT',
- currentVersion:'Steel V65',
+ currentVersion:'Steel V66',
  catalogueCount:audit.total,...audit.counts,
  definition:'Source-checked nominal section weights only; structural design and delivered-product approval still require project-specific engineering.',
  incompleteByFamily:remaining,
  holdEvidenceGroups:holdEvidence.groups.map(g=>({reason:g.key,count:g.count,nextEvidence:g.nextEvidence})),
  numericEvidenceCount:numericEvidence.totals,
  numericEvidenceIds:numericEvidence.rows.map(r=>r.id),
+ publishedScope:{verifiedRows:published.publication.total,excludedOriginalRows:published.publication.excluded,scope:published.publication.scope},
  numericEvidencePriorityCounts:numericEvidence.priorityCounts,
  numericEvidenceFirstPass:numericEvidence.reviewQueue.filter(r=>r.reviewPlan.priority==='P1').map(r=>({id:r.id,route:r.reviewPlan.route}))
 };
