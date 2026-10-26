@@ -66,7 +66,7 @@ assert.ok(html.includes('<option value="checked" selected>Working · source-chec
 assert.ok(html.includes('<option value="review">Pending verification'));
 assert.ok(html.includes('<option value="hold">Historical / unresolved · reference only</option>'),'Held records remain inspectable but separated from working library');
 assert.ok(html.includes('src="./pwd-steel-status.js"'));
-assert.ok(html.includes('BIS-amended table'),'Keep standards edition warning');
+assert.ok(html.includes('applicable standard edition')&&html.includes('MTC before engineering approval'),'Keep applicable standards and MTC warning with verified-only working catalogue');
 assert.ok(app.includes('steelStatus.select(catalog,comparison,rawRows'), 'Displayed filters must use source-checked actual records');
 assert.ok(app.includes('steelStatus.summarize(catalog,comparison,catalog.sections)'), 'Source register counts must come from all records');
 assert.ok(app.includes("comparison.quantityGate(catalog,selected)"),'Actual quantity arithmetic gate must remain');
