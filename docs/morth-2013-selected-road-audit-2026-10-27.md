@@ -80,3 +80,11 @@ The QC page stays a read-only reference; automated regression protects all 61 ID
 
 ### Source-checked DLC continuation
 Two daily DLC sampling and in-situ density reference rows were verified from the original printed pp.429–430 (Clauses 903.5.1.1–903.5.1.2). The reference preserves the area-per-day qualifiers and does not auto-determine pass/fail or replace the full thickness and acceptance clauses. PWA cache key was updated for this change. These are user-owned development-branch references, not public-release certification.
+
+## Pavement concrete follow-up — 27 October 2026 (76-row QC branch)
+
+Source: owner-supplied MoRTH Fifth Revision 2013, Table 900-6, **printed pp. 435–436** (PDF pages 454–455), compared against rendered page images and text. Fifteen **paraphrased, selected** field and material-control conditions were added to `qc.html`: joints, surface regularity, dowels/tie bars, cement, aggregate grading/deleterious content/water absorption, aggregate impact/abrasion, soundness, alkali reactivity, water chemistry, slump, pavement-level grid, trial cores and stringline/steel-form checks. These are **not** the complete Table 900-6 or a substitute for specification clauses and contract/Engineer instructions.
+
+**Intentional exclusion:** Table 900-6's concrete beam/cube sampling count is **not** converted to a calculator; detailed Clauses 903.5.2.1–903.5.2.2 contain differing statements and sequencing/Engineer-reduction provisions. Existing `pqcSamplingHold` continues to flag the issue. No hidden reconciliation, automated acceptance, or specimen-count sign-off was introduced. The existing CBR method conflict and Clause 508.2.5 quantity hold remain unchanged.
+
+**Build verification:** 76 unique QC IDs, each matched by a string-exact regression fixture. GitHub Actions run [40509497255](https://github.com/arborsepatil/PWD-Field-Engineer-Assistant./actions/runs/40509497255) passed the MoRTH integration, selected source-table check, QC reference fixture suite, both Android asset-scope modes and private PWA bundle steps on commit `1c03a3e89d46f113477f46e6c4339decae7cf484`. `sw.js` cache key was updated for offline content. This is CI, not manual device proof or engineering authorization.
