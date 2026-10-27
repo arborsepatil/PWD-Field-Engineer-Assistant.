@@ -88,3 +88,16 @@ Source: owner-supplied MoRTH Fifth Revision 2013, Table 900-6, **printed pp. 435
 **Intentional exclusion:** Table 900-6's concrete beam/cube sampling count is **not** converted to a calculator; detailed Clauses 903.5.2.1–903.5.2.2 contain differing statements and sequencing/Engineer-reduction provisions. Existing `pqcSamplingHold` continues to flag the issue. No hidden reconciliation, automated acceptance, or specimen-count sign-off was introduced. The existing CBR method conflict and Clause 508.2.5 quantity hold remain unchanged.
 
 **Build verification:** 76 unique QC IDs, each matched by a string-exact regression fixture. GitHub Actions run [40509497255](https://github.com/arborsepatil/PWD-Field-Engineer-Assistant./actions/runs/40509497255) passed the MoRTH integration, selected source-table check, QC reference fixture suite, both Android asset-scope modes and private PWA bundle steps on commit `1c03a3e89d46f113477f46e6c4339decae7cf484`. `sw.js` cache key was updated for offline content. This is CI, not manual device proof or engineering authorization.
+
+
+## Table 900-4 bituminous QC expansion — 27 October 2026
+
+**Private source audit:** MoRTH *Specifications for Road and Bridge Works*, Fifth Revision (2013), printed pp.423–427 / source PDF pages 442–446. Owner-supplied file SHA-256: `7bc024a285250e171285f86870c0a04505f1e115a1c84b4a88892a6ffdc892e3`. Original PDF and its pages are **not** distributed with the public repository, nor inside the owner-test PWA archive.
+
+The mobile `qc.html` reference now includes **129 distinct controlled QC entries**, partitioned into 23 Table 900-3 rows, 80 **selected** Table 900-4 rows, nine Clause 903.2 rows, two Clause 903.5.1 (DLC) rows, and 15 **selected** Table 900-6 rows.
+
+The Table 900-4 expansion adds 53 paraphrased controls covering seal coat/surface dressing, open-/close-graded premix, bituminous macadam, dense bituminous macadam/bituminous concrete, slurry seal/microsurfacing and stone matrix asphalt. Frequency conditions linked to source changes, aggregate type, plant, individual mix and daily minima have not been turned into numeric auto-pass or batch-count rules. **The 80-row Table 900-4 view is not complete**: other work categories, cross-reference-only conditions and contract-specific provisions remain to be addressed from the licensed source.
+
+**Usability:** An offline text filter on the 80 selected bituminous controls supports searching by work, test or frequency. The filter cannot suppress the adjacent printed-source warnings, cannot approve test results and does not create a test-register record. `sw.js` cache key was bumped, and the GitHub QC regression now freezes all 129 row identifiers/frequency strings and guards the filter and legal/source holds.
+
+**Release gates still open:** fully reconcile printed source anomalies (CBR method and PQC beam/cube schedule, and the held Clause 508.2.5 aggregate quantity), audit the rest of Section 900, review 372 main-clause index entries individually, establish permission for proprietary content and conduct real-device Android acceptance. Private development branch only; no public release sign-off.
