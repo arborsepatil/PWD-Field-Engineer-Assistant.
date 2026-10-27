@@ -72,8 +72,11 @@ The owner's Fifth Revision 2013 PDF was directly inspected at printed p.428 (PDF
 
 **Nine read-only Clause 903.2 QC references** have been added: six borrow-material test entries, two layer-wise density sampling entries, and cut-formation cross-reference. They expressly distinguish the **3,000 m³ per source** borrow-material basis from the **3,000 m² per layer** embankment-compaction basis and the **2,000 m² per layer** subgrade/earthen-shoulder basis. For density, Clause 903.2.2 also requires random test positions and twice as many measurements with non-destructive testing; additional sampling may be needed for variability. No field density result acceptance is automatically decided from the sample count.
 
-The app now shows **59 source-checked QC reference entries in the MoRTH QC page**: 9 from Clause 903.2, all 23 Table 900-3 entries, and 27 selected Table 900-4 entries. These are not a comprehensive MoRTH reference library or signed acceptance rules.
+The app now shows **61 source-checked QC reference entries in the MoRTH QC page**: 9 from Clause 903.2, 2 from Clause 903.5.1, all 23 Table 900-3 entries, and 27 selected Table 900-4 entries. These are not a comprehensive MoRTH reference library or signed acceptance rules.
 
 A separate visible **PQC engineer-review hold** compares the body provisions in Clauses 903.5.2.1 (printed pp.430–431) and 903.5.2.2 (printed p.432) against the summary in Table 900-6 (printed p.436). Their specimen-count and initial-day framing require review of source, errata, approved project requirements and Engineer directions. Automated PQC specimen count/acceptance remains prohibited.
 
-The QC page stays a read-only reference; automated regression protects all 59 IDs and frequencies and guards the separate CBR/PQC warnings, sampling qualifications, and PWA cache revision. Public main is unchanged and no physical Android test or engineer sign-off is implied.
+The QC page stays a read-only reference; automated regression protects all 61 IDs and frequencies and guards the separate CBR/PQC warnings, sampling qualifications, and PWA cache revision. Public main is unchanged and no physical Android test or engineer sign-off is implied.
+
+### Source-checked DLC continuation
+Two daily DLC sampling and in-situ density reference rows were verified from the original printed pp.429–430 (Clauses 903.5.1.1–903.5.1.2). The reference preserves the area-per-day qualifiers and does not auto-determine pass/fail or replace the full thickness and acceptance clauses. PWA cache key was updated for this change. These are user-owned development-branch references, not public-release certification.
