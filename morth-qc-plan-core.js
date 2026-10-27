@@ -1,5 +1,5 @@
-/* Civil Bandhu MoRTH QC draft worksheet: no engineering approval or auto test counts.
- * Pure client-side CSV formatting; never stores or transmits project information.
+/* Civil Bandhu MoRTH QC draft: preserves source references and manual records.
+ * Never computes testing frequencies, compliance, or engineering approvals.
  */
 (function(root){
   'use strict';
@@ -13,19 +13,21 @@
   const STATUS='DRAFT ONLY - NOT TESTED OR APPROVED';
   function cell(value){
     let text=String(value==null?'':value);
-    // Spreadsheet formula injection must not be possible from project text.
+    // Prevent formulas in a CSV opened in spreadsheet applications.
+    // Prefix the entire suspicious field; preserve the original characters.
     if(/^[\s\uFEFF]*[=+\-@]/.test(text)) text="'"+text;
     return '"'+text.replace(/"/g,'""')+'"';
   }
   function sheet(meta,entries){
-    if(!Array.isArray(entries)||!entries.length)throw new Error('Filter for at least one QC reference.');
+    if(!Array.isArray(entries)||!entries.length)throw new Error('Select at least one matching QC reference.');
     meta=meta||{};
     const lines=[COLUMNS];
     entries.forEach(function(entry){
       lines.push([
         STATUS,'MoRTH Fifth Revision (2013)',entry.id,entry.section,
         entry.work,entry.test,entry.frequency,
-        meta.project,meta.site,meta.date,meta.contractor,'','',''
+        meta.project,meta.site,meta.date,meta.contractor,
+        entry.sampleId||'',entry.observed||'',entry.review||''
       ]);
     });
     return '\uFEFF'+lines.map(function(line){return line.map(cell).join(',')}).join('\r\n')+'\r\n';
