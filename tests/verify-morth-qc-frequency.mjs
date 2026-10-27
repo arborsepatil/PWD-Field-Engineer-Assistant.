@@ -82,7 +82,38 @@ const checks=[
  ['9004-sma-density','1 test / 250 m²'],
  ['9004-sma-fractured','1 test / 50 m³ aggregate'],
  ['9004-sma-voids','3 tests / day'],
- ['9004-mastic-hardness','Minimum 2 tests / day']
+ ['9004-mastic-hardness','Minimum 2 tests / day'],
+ ["9004-seal-stripping","1 per source; repeat when aggregate quality changes"],
+ ["9004-seal-absorption","1 per source; repeat when aggregate quality changes"],
+ ["9004-seal-water-sensitivity","1 per source; repeat when aggregate quality changes"],
+ ["9004-seal-soundness","1 per source; repeat when aggregate quality changes"],
+ ["9004-seal-polished","1 per source; repeat when aggregate quality changes"],
+ ["9004-seal-temperature","At regular intervals"],
+ ["9004-seal-fractured","1 test / 100 m³ of aggregate"],
+ ["9004-dbm-quality","Samples per lot and applicable IS 73 / IRC SP 53 / IS 15462 tests"],
+ ["9004-dbm-soundness","1 per source; repeat when aggregate quality changes"],
+ ["9004-dbm-absorption","1 per source; repeat when aggregate quality changes"],
+ ["9004-dbm-sand-equivalent","1 per source; repeat when aggregate quality changes"],
+ ["9004-dbm-plasticity","1 per source; repeat when aggregate quality changes"],
+ ["9004-dbm-polished","1 per source; repeat when aggregate quality changes"],
+ ["9004-dbm-fractured","1 test / 350 m³ of aggregate"],
+ ["9004-dbm-moisture-susceptibility","1 per mix type when coarse/fine aggregate source or quality changes"],
+ ["9004-dbm-temperature","At regular intervals"],
+ ["9004-micro-sand-equivalent","1 per source / site"],
+ ["9004-micro-absorption","1 per source / site"],
+ ["9004-micro-soundness","1 per source / site"],
+ ["9004-micro-slurry-quantity","Daily (machine travel-time basis)"],
+ ["9004-sma-quality","Samples per lot and applicable IS 73 / IRC SP 53 / IS 15462 tests"],
+ ["9004-sma-soundness","1 per test method per source; retest on quality change"],
+ ["9004-sma-absorption","1 per source; repeat when aggregate quality changes"],
+ ["9004-sma-sand-equivalent","1 test / source"],
+ ["9004-sma-plasticity","1 test / source"],
+ ["9004-sma-polished","1 test / source"],
+ ["9004-sma-gradation","1 set / 400 tonnes of mix; minimum 2 tests / day / plant"],
+ ["9004-sma-moisture-susceptibility","1 per mix type when coarse/fine aggregate source or quality changes"],
+ ["9004-sma-temperature","At regular intervals"],
+ ["9004-sma-binder","1 set / 400 tonnes of mix; minimum 2 tests / day / plant"],
+ ["9004-sma-spread","After every 5th truckload"],
 ];
 const inUI=[...qc.matchAll(/<tr data-qc-id="([^"]+)">([\s\S]*?)<\/tr>/g)];
 assert.equal(inUI.length,checks.length,'Unexpected source-frequency table row count');
@@ -119,4 +150,4 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
 assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-9006-ui-2026-10-27"),'Offline cache version not bumped for updated QC page');
-console.log('MoRTH Section 900 QC PASS: 76 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
+console.log('MoRTH Section 900 QC PASS: 107 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
