@@ -1,0 +1,55 @@
+/* Section 900 selected reference frequencies, copied as controlled QA fixtures
+ * after comparison to owner's MoRTH Fifth Revision 2013 (Tables 900-3/900-4).
+ * Checks the UI against a frozen reviewed subset; NOT full Section 900 approval.
+ */
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const qc=fs.readFileSync('qc.html','utf8');
+const checks=[
+ ['9003-gsb-grading','1 test / 400 m³'],
+ ['9003-gsb-atterberg','1 test / 400 m³'],
+ ['9003-gsb-moisture','1 test / 400 m³'],
+ ['9003-gsb-density','1 test / 1,000 m²'],
+ ['9003-wbm-aiv','1 test / 1,000 m³ of aggregate'],
+ ['9003-wbm-grading','1 test / 250 m³'],
+ ['9003-wbm-shape','1 test / 500 m³ of aggregate'],
+ ['9003-wmm-aiv','1 test / 1,000 m³ of aggregate'],
+ ['9003-wmm-grading','1 test / 200 m³ of aggregate'],
+ ['9003-wmm-shape','1 test / 500 m³ of aggregate'],
+ ['9003-wmm-atterberg','1 test / 200 m³ of aggregate'],
+ ['9003-wmm-density','1 set of 3 tests / 1,000 m²'],
+ ['9004-prime-spread','3 tests / day'],
+ ['9004-premix-binder','2 tests / day / plant'],
+ ['9004-bm-shape','1 test / 350 m³ for each source'],
+ ['9004-bm-density','1 test / 700 m²'],
+ ['9004-dbm-aiv','1 test / 350 m³ of aggregate for each source; retest on quality change'],
+ ['9004-dbm-shape','1 test / 350 m³ of aggregate for each source; retest on quality change'],
+ ['9004-dbm-gradation','1 set / 400 tonnes of mix; minimum 2 tests / day / plant'],
+ ['9004-dbm-stability','3 tests / 400 tonnes of mix; minimum 2 tests / day / plant'],
+ ['9004-dbm-binder','1 set / 400 tonnes of mix; minimum 2 tests / day / plant'],
+ ['9004-dbm-spread','After every 5th truckload'],
+ ['9004-dbm-density','1 test / 700 m²'],
+ ['9004-sma-density','1 test / 250 m²']
+];
+const inUI=[...qc.matchAll(/<tr data-qc-id="([^"]+)">([\s\S]*?)<\/tr>/g)];
+assert.equal(inUI.length,checks.length,'Unexpected source-frequency table row count');
+assert.equal(new Set(inUI.map(v=>v[1])).size,checks.length,'Duplicate frequency identifier');
+for(const [id,frequency] of checks){
+ const row=inUI.find(v=>v[1]===id);
+ assert.ok(row,'Missing source-control row '+id);
+ const cells=[...row[2].matchAll(/<td>([^<]*)<\/td>/g)].map(m=>m[1]);
+ assert.equal(cells.length,3,'Expected work, test, and frequency: '+id);
+ assert.equal(cells[2],frequency,'Frequency changed: '+id);
+}
+assert.ok(qc.includes('id="morth9003"')&&qc.includes('id="morth9004"'),'Both tables required');
+assert.ok(qc.includes('overflow-x:auto'),'Mobile horizontal table access was removed');
+assert.ok(qc.includes('not an exhaustive QC plan'),'Selected-list caution missing');
+assert.ok(qc.includes('contract amendments')||qc.includes('Contract amendments'),'Contract caution missing');
+assert.ok(qc.includes('No automatic pass/fail'),'No-auto-approval caution missing');
+assert.ok(qc.includes('id="matGrid"'),'Other QC references lost');
+for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
+                'morth-qc-2900.js','morth-qc-3000.js','morth-qc-3100.js','morth-qc-100-300.js'])
+ assert.ok(qc.includes('src="./'+f+'"'),'Existing QC module removed: '+f);
+const sw=fs.readFileSync('sw.js','utf8');
+assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
+console.log('MoRTH Section 900 QC PASS: 24 independent selected-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
