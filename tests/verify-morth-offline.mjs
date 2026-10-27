@@ -30,8 +30,9 @@ const scripts=[...reader.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].
 scripts.forEach((content,i)=>new vm.Script(content,{filename:'morth-reader-inline-'+i+'.js'}));
 assert.ok(scripts.length>=2,'Reader controller missing');
 const modules=['morth-section-2500.js','morth-section-2600.js','morth-section-2611-2612.js','morth-section-2613-2615.js','morth-section-2700.js','morth-section-2800.js','morth-section-2900.js','morth-section-3000.js','morth-section-3100.js','morth-section-100-300.js'];
+const qcPlanModules=['morth-qc-plan-core.js','morth-qc-plan.js'];
 const qcModules=['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js','morth-qc-2900.js','morth-qc-3000.js','morth-qc-3100.js','morth-qc-100-300.js'];
-for(const f of [...modules,...qcModules]){
+for(const f of [...modules,...qcModules,...qcPlanModules]){
  assert.ok(fs.existsSync(path.join(root,f)),'Missing '+f);
  new vm.Script(read(f),{filename:f});
  assert.ok(sw.includes("'./"+f+"'"),'Offline shell does not precache '+f);
@@ -40,7 +41,7 @@ assert.ok(sw.includes("'./morth_reader.html'")&&sw.includes("'./qc.html'"),'Scre
 assert.ok(shell.includes('function loadMoRTHExtensions'),'Module loader missing');
 for(const f of modules)assert.ok(shell.includes("'./"+f+"'"),'Loader omitted '+f);
 assert.ok(qc.includes('id="matGrid"')&&qc.includes('DLC · Dry Lean Cement Concrete'),'QC anchors missing');
-for(const f of qcModules)assert.ok(qc.includes('src="./'+f+'"'),'QC page omitted '+f);
+for(const f of [...qcModules,...qcPlanModules])assert.ok(qc.includes('src="./'+f+'"'),'QC page omitted '+f);
 const ordered=['morth-qc-2700.js','morth-qc-2800.js','morth-qc-2900.js','morth-qc-3000.js','morth-qc-3100.js'];
 for(let i=1;i<ordered.length;i++)assert.ok(qc.indexOf(ordered[i-1])<qc.indexOf(ordered[i]),'QC dependencies out of order');
 for(const file of ['morth_reader.html','qc.html','sw.js','library.html',...modules,...qcModules]){
@@ -48,4 +49,4 @@ for(const file of ['morth_reader.html','qc.html','sw.js','library.html',...modul
  for(const privateOrigin of ['drive.google.com/file/d/','docs.google.com/document/d/','docs.google.com/spreadsheets/d/'])
   assert.ok(!txt.includes(privateOrigin),file+' leaks a private source URL');
 }
-console.log('MoRTH integration PASS: 260 base + 112 extension main-clause records; 31 sections; 17 module scripts; offline/links/source safety.');
+console.log('MoRTH integration PASS: 260 base + 112 extension main-clause records; 31 sections; 19 module scripts incl. local QC plan; offline/links/source safety.');
