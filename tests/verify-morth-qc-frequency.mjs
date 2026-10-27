@@ -151,6 +151,10 @@ assert.ok(qc.includes('id="morth9003"')&&qc.includes('id="morth9004"'),'Both tab
 assert.ok(qc.includes('id="morth9032"'),'Earthwork QC reference missing');
 assert.ok(qc.includes('id="morth9035DLC"'),'DLC sampling QC reference missing');
 assert.ok(qc.includes('id="morth9006"'),'PQC supplementary-control view missing');
+assert.ok(qc.includes('id="bitumenQcSearch"')&&qc.includes('type="search"'),'Offline QC search missing');
+assert.ok(qc.includes('row.hidden=!match')&&qc.includes("input.addEventListener('input',update)"),'Search filtering stopped working');
+assert.ok(qc.includes('not a complete QC plan'),'Search-count scope limitation missing');
+
 assert.ok(!qc.includes('<td>Source QC control</td>'),'Generic placeholder labels returned in PQC test entries');
 assert.ok(qc.includes('<td>Workability / slump test</td>')&&qc.includes('<td>Water absorption</td>'),'PQC test names missing');
 assert.ok(qc.includes('specimen counts are excluded'),'PQC source discrepancy safeguard missing');
@@ -171,5 +175,5 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
  assert.ok(qc.includes('src="./'+f+'"'),'Existing QC module removed: '+f);
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
-assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-9006-ui-2026-10-27"),'Offline cache version not bumped for updated QC page');
+assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-9004-search-2026-10-27"),'Offline cache version not bumped for updated QC page');
 console.log('MoRTH Section 900 QC PASS: 107 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
