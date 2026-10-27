@@ -15,6 +15,8 @@ const checks=[
  ['9032-compaction-embankment','At least 1 set of 10 measurements / 3,000 m²'],
  ['9032-compaction-subgrade','At least 1 set of 10 measurements / 2,000 m²'],
  ['9032-compaction-cut','Follow Clause 903.2.2 requirements'],
+ ['9035-dlc-samples','3 samples / 1,000 m² or part thereof laid each day'],
+ ['9035-dlc-density','3 holes / 2,000 m² or part thereof laid each day'],
  ['9003-gsb-grading','1 test / 400 m³'],
  ['9003-gsb-atterberg','1 test / 400 m³'],
  ['9003-gsb-moisture','1 test / 400 m³'],
@@ -79,6 +81,7 @@ for(const [id,frequency] of checks){
 }
 assert.ok(qc.includes('id="morth9003"')&&qc.includes('id="morth9004"'),'Both tables required');
 assert.ok(qc.includes('id="morth9032"'),'Earthwork QC reference missing');
+assert.ok(qc.includes('id="morth9035DLC"'),'DLC sampling QC reference missing');
 for(const p of ['id="pqcSamplingHold"','903.5.2.1','903.5.2.2','Table 900-6','ENGINEER REVIEW / NO AUTO COUNT'])
  assert.ok(qc.includes(p),'PQC specimen-sampling hold missing: '+p);
 for(const phrase of ['each source at every 3,000 m³','All density sets apply to each layer','Double the number of density measurements','randomly selected test locations'])
@@ -97,4 +100,4 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
 assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-9032-2026-10-27"),'Offline cache version not bumped for updated QC page');
-console.log('MoRTH Section 900 QC PASS: 59 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
+console.log('MoRTH Section 900 QC PASS: 61 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
