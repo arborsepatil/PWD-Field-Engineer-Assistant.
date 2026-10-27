@@ -57,6 +57,8 @@ assert.ok(qc.includes('overflow-x:auto'),'Mobile horizontal table access was rem
 assert.ok(qc.includes('not an exhaustive QC plan'),'Selected-list caution missing');
 assert.ok(qc.includes('contract amendments')||qc.includes('Contract amendments'),'Contract caution missing');
 assert.ok(qc.includes('No automatic pass/fail'),'No-auto-approval caution missing');
+for(const v of ['id="cbrMethodConflict"','Table 400-2','903.2.1','IS 2720 Part 5','Part 16'])
+ assert.ok(qc.includes(v),'CBR source-method conflict warning missing: '+v);
 assert.ok(qc.includes('id="matGrid"'),'Other QC references lost');
 for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
                 'morth-qc-2900.js','morth-qc-3000.js','morth-qc-3100.js','morth-qc-100-300.js'])
