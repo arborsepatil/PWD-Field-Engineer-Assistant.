@@ -76,6 +76,39 @@ checked+=checkRows('premix','Table 500-19 · Aggregate Gradation for Close-Grade
  ['2.8 mm','14–38','5–25'],
  ['0.090 mm','0–5','0–5']
 ]);
+checked+=checkRows('gsb','Table 400-2 · Physical Requirements for GSB Materials',[
+ ['Aggregate Impact Value','IS 2386 (Part 4) or IS 5640','40 max'],
+ ['Liquid Limit','IS 2720 (Part 5)','25 max'],
+ ['Plasticity Index','IS 2720 (Part 5)','6 max'],
+ ['CBR at 98% dry density','MDD basis: IS 2720 (Part 8)','30 minimum unless otherwise specified in Contract']
+]);
+checked+=checkRows('wmm','Table 400-12 · Physical Requirements of Coarse Aggregates for WMM',[
+ ['Los Angeles Abrasion value','IS 2386 (Part 4)','40% max'],
+ ['OR Aggregate Impact value','IS 2386 (Part 4) / IS 5640','30% max'],
+ ['Combined Flakiness + Elongation Indices','IS 2386 (Part 1)','35% max']
+]);
+checked+=checkRows('bc','Table 500-16 · Physical Requirements for Coarse Aggregate for BC',[
+ ['Cleanliness · grain-size analysis','Max 5% passing 0.075 mm sieve','IS 2386 Part I'],
+ ['Combined Flakiness + Elongation Indices','Max 35%','IS 2386 Part I'],
+ ['Los Angeles Abrasion Value','Max 30%','IS 2386 Part IV'],
+ ['OR Aggregate Impact Value','Max 24%','IS 2386 Part IV'],
+ ['Soundness · Sodium Sulphate','Max 12%','IS 2386 Part V'],
+ ['Soundness · Magnesium Sulphate','Max 18%','IS 2386 Part V'],
+ ['Polished Stone Value','Minimum 55','BS 812-114'],
+ ['Water absorption','Max 2%','IS 2386 Part III'],
+ ['Stripping · retained coating','Minimum 95%','IS 6241'],
+ ['Water sensitivity · retained tensile strength','Minimum 80%','AASHTO T283']
+]);
+checked+=checkRows('bc','Table 500-18 · Permissible Variation in BC Plant Mix from JMF',[
+ ['Aggregate passing 19 mm sieve or larger','±7%','Remain within approved gradation/JMF'],
+ ['Aggregate passing 13.2 mm, 9.5 mm','±6%','Remain within approved gradation/JMF'],
+ ['Aggregate passing 4.75 mm','±5%','Remain within approved gradation/JMF'],
+ ['Aggregate passing 2.36, 1.18, 0.6 mm','±4%','Remain within approved gradation/JMF'],
+ ['Aggregate passing 0.3, 0.15 mm','±3%','Remain within approved gradation/JMF'],
+ ['Aggregate passing 0.075 mm','±1.5%','Remain within approved gradation/JMF'],
+ ['Binder content','±0.3%','Actual mix vs approved JMF'],
+ ['Mixing temperature','±10°C','Actual mix vs approved JMF']
+]);
 const gsb=recordBlock('gsb'),wmm=recordBlock('wmm'),
       bc=recordBlock('bc'),premix=recordBlock('premix');
 for(const v of ['AIV ≤ 40','Liquid Limit ≤ 25','Plasticity Index ≤ 6','minimum 30'])
@@ -90,6 +123,6 @@ for(const v of ['22.0 kg per 10 m²','19.0 kg per 10 m²',
                 '0.27 m³ per square metre area','RECONCILIATION REQUIRED',
                 'No 508 material-quantity calculator is enabled'])
   assert.ok(premix.includes(v),'508.2.5 source hold lost: '+v);
-assert.equal(checked,37,'Unexpected change to manually compared matrix rows');
+assert.equal(checked,62,'Unexpected change to manually compared matrix rows');
 console.log('MoRTH selected-source regression PASS: '+checked+
-  ' matrix rows (400-1, 400-13, 500-17, 500-19); key QC values; 508.2.5 HOLD.');
+  ' matrix rows (400-1/2/12/13, 500-16/17/18/19); key QC values; 508.2.5 HOLD.');
