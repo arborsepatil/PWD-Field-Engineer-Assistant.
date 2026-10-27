@@ -17,6 +17,21 @@ const checks=[
  ['9032-compaction-cut','Follow Clause 903.2.2 requirements'],
  ['9035-dlc-samples','3 samples / 1,000 m² or part thereof laid each day'],
  ['9035-dlc-density','3 holes / 2,000 m² or part thereof laid each day'],
+ ['9006-joint','Check 1 joint per 400 m length or day's work'],
+ ['9006-regularity','Once per day or day's work; avoid disturbing curing'],
+ ['9006-dowels','Check trial length per Clause 602.6.5.2, then once per 2 km'],
+ ['9006-cement','Once for each source; repeat when indicated by prolonged or improper storage; manufacturer test data daily'],
+ ['9006-aggregate-grading','Initially 1 test per day's work for each fraction; Engineer may later relax'],
+ ['9006-aggregate-deleterious','Initially 1 test per day's work for each fraction; Engineer may later relax'],
+ ['9006-water-absorption','At least 1 coarse and 2 fine aggregate tests daily; further tests as needed'],
+ ['9006-impact','Once for each source, then monthly'],
+ ['9006-soundness','Before aggregate approval and monthly thereafter'],
+ ['9006-alkali','Before aggregate approval and monthly thereafter'],
+ ['9006-water','Once when approving source, then if doubt arises'],
+ ['9006-slump','Initially test every dumper load at both sites; later alternate dumpers permitted by source'],
+ ['9006-level-grid','Level grid 5 or 6.25 m longitudinally × 3.5 m transversely'],
+ ['9006-trial-cores','3 cores per trial length'],
+ ['9006-stringline','Check at 5 or 6.25 m intervals; ±2 mm tolerance; approval 1–2 h before concreting'],
  ['9003-gsb-grading','1 test / 400 m³'],
  ['9003-gsb-atterberg','1 test / 400 m³'],
  ['9003-gsb-moisture','1 test / 400 m³'],
@@ -82,6 +97,8 @@ for(const [id,frequency] of checks){
 assert.ok(qc.includes('id="morth9003"')&&qc.includes('id="morth9004"'),'Both tables required');
 assert.ok(qc.includes('id="morth9032"'),'Earthwork QC reference missing');
 assert.ok(qc.includes('id="morth9035DLC"'),'DLC sampling QC reference missing');
+assert.ok(qc.includes('id="morth9006"'),'PQC supplementary-control view missing');
+assert.ok(qc.includes('specimen counts are excluded'),'PQC source discrepancy safeguard missing');
 for(const p of ['id="pqcSamplingHold"','903.5.2.1','903.5.2.2','Table 900-6','ENGINEER REVIEW / NO AUTO COUNT'])
  assert.ok(qc.includes(p),'PQC specimen-sampling hold missing: '+p);
 for(const phrase of ['each source at every 3,000 m³','All density sets apply to each layer','Double the number of density measurements','randomly selected test locations'])
@@ -100,4 +117,4 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
 assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-9035-2026-10-27"),'Offline cache version not bumped for updated QC page');
-console.log('MoRTH Section 900 QC PASS: 61 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
+console.log('MoRTH Section 900 QC PASS: 76 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
