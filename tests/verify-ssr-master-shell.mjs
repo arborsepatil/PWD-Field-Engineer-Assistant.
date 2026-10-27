@@ -13,7 +13,7 @@ for(const x of ['Items & rates','Notes, GR','Rate annexures','Material lead char
 }
 const tasks=[...hub.matchAll(/class="ssr-number">(\d\d)<\/span>/g)].map(x=>x[1]);
 assert.deepEqual(tasks,['01','02','03','04','05','06'],'SSR tasks must show all six');
-assert.equal((hub.match(/aria-disabled="true"/g)||[]).length,5,'Unbundled private source modules must not advertise clickable broken links');
+assert.equal((hub.match(/<div class="ssr-card" aria-disabled="true">/g)||[]).length,5,'Unbundled private source modules must not advertise clickable broken links');
 assert.ok(!hub.includes('href="./ssr_task4_lead.html"'),'Do not link to excluded private lead module in public app');
 assert.ok(!hub.includes('href="./ssr_task5_consumption.html"'),'Do not link to excluded private consumption module');
 assert.ok(!hub.includes('href="./ssr_task6_qc.html"'),'Do not link to excluded private QC module');
