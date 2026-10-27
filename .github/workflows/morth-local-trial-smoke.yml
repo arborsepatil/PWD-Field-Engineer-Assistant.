@@ -1,0 +1,33 @@
+name: MoRTH Local Trial QA (no publication)
+on:
+  push:
+    branches:
+      - morth-reader-v1-library-offline-v66-2026-10-27
+permissions:
+  contents: read
+jobs:
+  morth-local-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Existing public privacy checks
+        run: |
+          node tests/verify-v34-public-privacy.mjs
+          node tests/verify-v35-publisher-access.mjs
+      - name: Build and verify LOCAL-ONLY MoRTH trial assets
+        run: python3 tests/verify-morth-local-trial.py
+      - name: Check current offline/static release regressions
+        run: node tests/verify-release.mjs
+      - name: Check Steel V66 published-record guards
+        run: node tests/verify-steel-v66-publication.mjs
+      - name: Verify no local trial goes into public site
+        run: |
+          test ! -f public-dist/morth_reader.html
+          test ! -f public-dist/pdf_viewer.html
+          test ! -f public-dist/morth-section-2600.js
