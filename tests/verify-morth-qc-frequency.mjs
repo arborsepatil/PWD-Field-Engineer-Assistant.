@@ -10,9 +10,20 @@ const checks=[
  ['9003-gsb-atterberg','1 test / 400 m³'],
  ['9003-gsb-moisture','1 test / 400 m³'],
  ['9003-gsb-density','1 test / 1,000 m²'],
+ ['9003-gsb-deleterious','As required'],
+ ['9003-gsb-cbr','As required'],
+ ['9003-stabilized-quality','Each consignment; minimum 1 test per 5 tonnes'],
+ ['9003-stabilized-content','Regular procedural checks'],
+ ['9003-stabilized-pulverization','Periodically as necessary'],
+ ['9003-stabilized-strength','As required'],
+ ['9003-stabilized-moisture','1 set of 2 tests / 500 m²'],
+ ['9003-stabilized-density','1 set of 2 tests / 500 m²'],
+ ['9003-stabilized-deleterious','As required'],
  ['9003-wbm-aiv','1 test / 1,000 m³ of aggregate'],
  ['9003-wbm-grading','1 test / 250 m³'],
  ['9003-wbm-shape','1 test / 500 m³ of aggregate'],
+ ['9003-wbm-binding-atterberg','1 test / 50 m³ of binding material'],
+ ['9003-wbm-screening-atterberg','1 test / 100 m³ of aggregate'],
  ['9003-wmm-aiv','1 test / 1,000 m³ of aggregate'],
  ['9003-wmm-grading','1 test / 200 m³ of aggregate'],
  ['9003-wmm-shape','1 test / 500 m³ of aggregate'],
@@ -52,4 +63,4 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
  assert.ok(qc.includes('src="./'+f+'"'),'Existing QC module removed: '+f);
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
-console.log('MoRTH Section 900 QC PASS: 24 independent selected-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
+console.log('MoRTH Section 900 QC PASS: 35 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
