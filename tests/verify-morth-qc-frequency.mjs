@@ -70,6 +70,7 @@ for(const [id,frequency] of checks){
 }
 assert.ok(qc.includes('id="morth9003"')&&qc.includes('id="morth9004"'),'Both tables required');
 assert.ok(qc.includes('overflow-x:auto'),'Mobile horizontal table access was removed');
+assert.ok(qc.includes('@media (max-width:600px)')&&qc.includes('content:"Minimum: "'),'Mobile stacked frequency labels removed');
 assert.ok(qc.includes('not an exhaustive QC plan'),'Selected-list caution missing');
 assert.ok(qc.includes('contract amendments')||qc.includes('Contract amendments'),'Contract caution missing');
 assert.ok(qc.includes('No automatic pass/fail'),'No-auto-approval caution missing');
