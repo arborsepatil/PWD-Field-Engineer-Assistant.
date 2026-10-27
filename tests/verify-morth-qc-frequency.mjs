@@ -79,6 +79,8 @@ for(const [id,frequency] of checks){
 }
 assert.ok(qc.includes('id="morth9003"')&&qc.includes('id="morth9004"'),'Both tables required');
 assert.ok(qc.includes('id="morth9032"'),'Earthwork QC reference missing');
+for(const p of ['id="pqcSamplingHold"','903.5.2.1','903.5.2.2','Table 900-6','ENGINEER REVIEW / NO AUTO COUNT'])
+ assert.ok(qc.includes(p),'PQC specimen-sampling hold missing: '+p);
 for(const phrase of ['each source at every 3,000 m³','All density sets apply to each layer','Double the number of density measurements','randomly selected test locations'])
  assert.ok(qc.includes(phrase),'Sampling safeguard missing: '+phrase);
 assert.ok(qc.includes('overflow-x:auto'),'Mobile horizontal table access was removed');
