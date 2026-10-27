@@ -86,6 +86,7 @@ else:
         "morth-qc-2610.js", "morth-qc-2700.js",
         "morth-qc-2800.js", "morth-qc-2900.js",
         "morth-qc-3000.js", "morth-qc-3100.js",
+        "morth-qc-plan-core.js", "morth-qc-plan.js",
     ]
     assert all((OUTPUT / filename).is_file() for filename in required), (
         "Owner-local MoRTH reader/QC asset missing"
