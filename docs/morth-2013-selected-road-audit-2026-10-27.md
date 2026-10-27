@@ -52,3 +52,16 @@ Additional selected QC limits are regression guarded: GSB AIV/LL/PI/CBR; WMM LA/
 - Owner-local opt-in preparation uses `CIVILBANDHU_PRIVATE_MORTH_LOCAL=1 python3 android/scripts/prepare_assets.py`. This includes the MoRTH reference reader and 17 section/QC scripts for **controlled local testing only**; it does not change the default/public package. It still rejects original PDF bytes and private Drive/document URLs.
 - The isolated MoRTH CI workflow now checks both packaging modes **without publishing a private APK** from the public GitHub repository. Physical installation, signature upgrade path, permissions, screen navigation and airplane-mode acceptance remain unverified.
 - No change has been merged into public `main`. New CI execution success and actual Android APK device acceptance must be verified separately.
+
+
+## Further Section 900 source-page audit — 27 October 2026
+
+The owner's original Fifth Revision (2013) PDF was compared at printed pages 110, 193, 422–428 and 435–436 (PDF viewer pages 129, 212, 441–447 and 454–455). The versioned mobile QC page now contains **50 selected reference entries**: all **23 rows of Table 900-3** (granular, lime/cement stabilised sub-base, WBM and WMM) and **27 selected rows from Table 900-4** (bituminous works). These are selected factual test frequencies and conditions, not a replacement for the full licensed book.
+
+Source discrepancies and restrictions remain:
+- Table 400-2 prints IS 2720 (Part 5) in the CBR test-method cell, whereas Clause 903.2.1 cites IS 2720 (Part 16). Both were checked from the PDF pages. A visible source-conflict warning is now in qc.html, guarded by a regression test. Do not silently rewrite the printed record or accept an unverified test procedure.
+- Clause 508.2.5 prints the unusual 0.27 cubic metre per square metre aggregate quantity; existing material-quantity calculator HOLD remains.
+- Clause 903.5.2.1 and Table 900-6 differ in their PQC beam/cube sampling statements. No combined automated acceptance/sampling decision is authorised.
+- Table 900-4 contains additional tests and conditional references beyond the 27 selected entries. Its summary **must not be marked complete**.
+
+Testing: regression fixtures now check 50 distinct IDs and exact displayed reference frequencies, preserve field-use cautions and the CBR conflict, and are executed in the development branch's MoRTH private QA workflow. This is a document/CI check only; physical Android installation, offline UI usability and engineering source sign-off remain pending.
