@@ -179,7 +179,7 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
  assert.ok(qc.includes('src="./'+f+'"'),'Existing QC module removed: '+f);
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
-assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-all-search-2026-10-27"),'Offline cache version not bumped for updated QC page');
+assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-planning-2026-10-27"),'Offline cache version not bumped for updated QC page');
 
 // Execute the actual QC page search controller with small DOM fixtures.
 // This verifies match/clear/restore behavior; it does not verify source frequencies.
