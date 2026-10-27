@@ -6,6 +6,15 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 const qc=fs.readFileSync('qc.html','utf8');
 const checks=[
+ ['9032-borrow-sand','2 tests / 3,000 m³ of soil'],
+ ['9032-borrow-plasticity','2 tests for each soil type'],
+ ['9032-borrow-density','2 tests for each soil type'],
+ ['9032-borrow-deleterious','As required by the Engineer'],
+ ['9032-borrow-moisture','2 tests / 3,000 m³ of soil'],
+ ['9032-borrow-cbr','1 CBR test (average of 3 specimens) / 3,000 m³; closer if directed'],
+ ['9032-compaction-embankment','At least 1 set of 10 measurements / 3,000 m²'],
+ ['9032-compaction-subgrade','At least 1 set of 10 measurements / 2,000 m²'],
+ ['9032-compaction-cut','Follow Clause 903.2.2 requirements'],
  ['9003-gsb-grading','1 test / 400 m³'],
  ['9003-gsb-atterberg','1 test / 400 m³'],
  ['9003-gsb-moisture','1 test / 400 m³'],
@@ -69,6 +78,9 @@ for(const [id,frequency] of checks){
  assert.equal(cells[2],frequency,'Frequency changed: '+id);
 }
 assert.ok(qc.includes('id="morth9003"')&&qc.includes('id="morth9004"'),'Both tables required');
+assert.ok(qc.includes('id="morth9032"'),'Earthwork QC reference missing');
+for(const phrase of ['each source at every 3,000 m³','All density sets apply to each layer','Double the number of density measurements','randomly selected test locations'])
+ assert.ok(qc.includes(phrase),'Sampling safeguard missing: '+phrase);
 assert.ok(qc.includes('overflow-x:auto'),'Mobile horizontal table access was removed');
 assert.ok(qc.includes('@media (max-width:600px)')&&qc.includes('content:"Minimum: "'),'Mobile stacked frequency labels removed');
 assert.ok(qc.includes('not an exhaustive QC plan'),'Selected-list caution missing');
@@ -82,4 +94,4 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
  assert.ok(qc.includes('src="./'+f+'"'),'Existing QC module removed: '+f);
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
-console.log('MoRTH Section 900 QC PASS: 50 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
+console.log('MoRTH Section 900 QC PASS: 59 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
