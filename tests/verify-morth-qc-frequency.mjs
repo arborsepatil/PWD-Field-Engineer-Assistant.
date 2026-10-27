@@ -154,6 +154,7 @@ assert.ok(qc.includes('id="morth9006"'),'PQC supplementary-control view missing'
 assert.ok(qc.includes('id="bitumenQcSearch"')&&qc.includes('type="search"'),'Offline QC search missing');
 assert.ok(qc.includes('row.hidden=!match')&&qc.includes("input.addEventListener('input',update)"),'Search filtering stopped working');
 assert.ok(qc.includes('not a complete QC plan'),'Search-count scope limitation missing');
+assert.ok(qc.includes('<td>Stone matrix asphalt (SMA)</td>')&&qc.includes('<td>Dense BM / bituminous concrete (DBM / BC)</td>'),'Searchable SMA/DBM labels missing');
 for(const ref of ['id="bituminousCrossrefHold"','Serial 6(iii)','Serial 6(viii)','Serial 9(v)'])
  assert.ok(qc.includes(ref),'Unresolved source cross-reference warning missing: '+ref);
 
@@ -177,5 +178,5 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
  assert.ok(qc.includes('src="./'+f+'"'),'Existing QC module removed: '+f);
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
-assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-9004-holds-2026-10-27"),'Offline cache version not bumped for updated QC page');
+assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-9004-search-abbr-2026-10-27"),'Offline cache version not bumped for updated QC page');
 console.log('MoRTH Section 900 QC PASS: 129 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
