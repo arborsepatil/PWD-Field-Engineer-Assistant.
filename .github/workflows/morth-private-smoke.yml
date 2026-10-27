@@ -1,0 +1,46 @@
+name: MoRTH personal development offline bundle QA
+on:
+  push:
+    branches: [morth-reader-finalization-2026-10-27]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  morth-private-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run MoRTH internal reference integration checks
+        run: node tests/verify-morth-offline.mjs
+      - name: Bundle private-test MoRTH reference PWA (no source PDFs)
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile,ZIP_DEFLATED
+          root=Path('.')
+          exclude={'library-drive-catalog.js','library-private-pdf.js','library-offline.js','pdf_viewer.html',
+                   'bridge-local-source.js','bridge-pdf-canvas.js','pwd_rule_book.html','red_book_reader.html'}
+          allowed={'.html','.js','.css','.json','.svg','.png','.webp','.jpg','.jpeg'}
+          files=[p for p in root.iterdir() if p.is_file() and p.suffix.lower() in allowed and p.name not in exclude]
+          assert any(p.name=='morth_reader.html' for p in files)
+          assert any(p.name=='qc.html' for p in files)
+          assert not any(p.suffix.lower()=='.pdf' for p in files)
+          forbidden=['drive.google.com/file/d/','docs.google.com/document/d/','docs.google.com/spreadsheets/d/']
+          for p in files:
+              if p.suffix.lower() in {'.html','.js','.json'}:
+                  body=p.read_text(encoding='utf-8')
+                  if any(x in body for x in forbidden):
+                      raise SystemExit('Private-document URL in '+p.name)
+          with ZipFile('morth-internal-test-pwa.zip','w',compression=ZIP_DEFLATED,compresslevel=7) as z:
+              for p in sorted(files):
+                  z.write(p,p.name)
+          print('Created MoRTH local-development offline PWA with',len(files),'public-code assets and no source PDFs')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CivilBandhu-MoRTH-Private-Test-PWA
+          path: morth-internal-test-pwa.zip
+          retention-days: 7
