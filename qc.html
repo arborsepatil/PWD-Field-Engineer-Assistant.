@@ -21,6 +21,36 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
 .qc-search{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);margin-top:4px}
 .qc-search:focus{outline:2px solid var(--accent);outline-offset:2px}
 .qc-table tr[hidden]{display:none!important}
+.qc-plan-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.qc-plan-form label{font-weight:700;font-size:12px}
+.qc-plan-form input{display:block;width:100%;margin-top:3px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--card);color:var(--ink);font:inherit}
+.qc-plan-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.qc-plan-actions button{font:inherit;font-weight:700;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--ink);cursor:pointer}
+.qc-plan-actions button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qc-plan-preview{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card);margin-bottom:15px;overflow:auto}
+.qc-plan-preview[hidden]{display:none!important}
+.qc-plan-preview h2{margin:4px 0 8px}
+.qc-plan-meta{margin:3px 0;font-weight:600}
+.qc-plan-table{border-collapse:collapse;width:100%;font-size:11px;min-width:590px;margin:12px 0}
+.qc-plan-table th,.qc-plan-table td{border:1px solid #999;padding:7px;text-align:left;vertical-align:top}
+.qc-plan-table th{background:var(--soft)}
+.qc-plan-table th:nth-child(4),.qc-plan-table th:nth-child(5){width:12%}
+.qc-plan-table tbody td:nth-child(4),.qc-plan-table tbody td:nth-child(5){min-height:35px}
+.qc-plan-disclaimer{font-size:11px;color:var(--muted)}
+@media print{
+ @page{size:A4 landscape;margin:12mm}
+ body.qc-print-mode{background:white!important;color:#111!important}
+ body.qc-print-mode main{max-width:none!important;padding:0!important;margin:0!important}
+ body.qc-print-mode main>:not(#qcPlanPrintView){display:none!important}
+ body.qc-print-mode #qcPlanPrintView{display:block!important;position:static!important;border:0!important;padding:0!important;background:white!important;color:#111!important;overflow:visible!important}
+ body.qc-print-mode #qcPlanPrintView *{color:#111!important}
+ body.qc-print-mode .qc-plan-table{min-width:0!important;font-size:9pt}
+ body.qc-print-mode .qc-plan-table th{background:#eee!important}
+ body.qc-print-mode .qc-plan-table tr{break-inside:avoid}
+ body.qc-print-mode .qc-plan-disclaimer{font-size:9pt}
+}
+@media(max-width:600px){.qc-plan-form{grid-template-columns:1fr}}
+
 
 
 @media (max-width:600px){
@@ -47,6 +77,23 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
   <input class="qc-search" id="qcSearch" type="search" placeholder="e.g. WMM density, CBR, DBM binder, slump" autocomplete="off" aria-controls="roadQC2013" />
   <p id="qcSearchCount" class="qc-source" aria-live="polite">129 selected QC controls · not a complete QC plan</p>
 </div>
+<details class="qc-card" id="qcPlanTools">
+ <summary>Prepare field QC planning sheet</summary>
+ <p><strong>Draft only.</strong> First search above for WMM, DBM, GSB, etc. The sheet contains only matching QC reference rows. It does not calculate how many tests are required, verify results, or certify acceptance.</p>
+ <div class="qc-plan-form">
+  <label for="qcPlanProject">Project / work<input id="qcPlanProject" type="text" maxlength="180" placeholder="Work name (optional)"></label>
+  <label for="qcPlanSite">Site / chainage<input id="qcPlanSite" type="text" maxlength="140" placeholder="Chainage, layer, location (optional)"></label>
+  <label for="qcPlanDate">Inspection date<input id="qcPlanDate" type="date"></label>
+  <label for="qcPlanContractor">Contractor<input id="qcPlanContractor" type="text" maxlength="140" placeholder="Optional"></label>
+ </div>
+ <div class="qc-plan-actions">
+  <button type="button" id="qcPlanPreview">Preview matching rows</button>
+  <button type="button" id="qcPlanCsv">Export draft CSV</button>
+  <button type="button" id="qcPlanPrint">Print draft</button>
+ </div>
+ <p class="qc-source" id="qcPlanMessage" role="status" aria-live="polite">No sheet prepared. Project details are processed locally; nothing is stored or sent by this feature.</p>
+ <p class="qc-source">CSV export and printing depend on browser/Android WebView support. Always verify source and project specification before field use.</p>
+</details>
 <section id="roadQC2013" aria-labelledby="roadQCHeading">
 <h2 id="roadQCHeading">Selected minimum field QC frequencies · 2013 edition</h2>
 <p class="note">Read-only reference from MoRTH Fifth Revision (2013), Clauses 903.2 and 903.5.1 / Tables 900-3 and 900-4. These selected rows are not an exhaustive QC plan. Frequencies may also depend on the material source, plant, daily minimum, changed material, Contract amendments and Engineer direction. No automatic pass/fail or test-count approval is provided.</p>
@@ -240,6 +287,7 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
 </details>
 </section>
 
+<section class="qc-plan-preview" id="qcPlanPrintView" aria-label="Draft QC planning sheet" hidden></section>
 <h2>Existing source-checked QC additions</h2>
 <div id="matGrid">
  <div class="qc-card">
@@ -257,6 +305,8 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
 <script src="./morth-qc-3000.js"></script>
 <script src="./morth-qc-3100.js"></script>
 <script src="./morth-qc-100-300.js"></script>
+<script src="./morth-qc-plan-core.js"></script>
+<script src="./morth-qc-plan.js"></script>
 <script>
 (function(){
   const input=document.getElementById('qcSearch');
