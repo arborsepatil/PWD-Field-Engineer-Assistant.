@@ -30,6 +30,11 @@ const checks=[
  ['9003-wmm-atterberg','1 test / 200 m³ of aggregate'],
  ['9003-wmm-density','1 set of 3 tests / 1,000 m²'],
  ['9004-prime-spread','3 tests / day'],
+ ['9004-prime-quality','Samples per lot and tests per applicable IS 73 / 217 / 8887'],
+ ['9004-prime-temperature','At regular close intervals'],
+ ['9004-seal-impact','1 test / 200 m³ each source; on quality change'],
+ ['9004-seal-shape','1 test / 100 m³ aggregate per source; on quality change'],
+ ['9004-seal-grading','2 tests / day'],
  ['9004-premix-binder','2 tests / day / plant'],
  ['9004-bm-shape','1 test / 350 m³ for each source'],
  ['9004-bm-density','1 test / 700 m²'],
@@ -40,7 +45,18 @@ const checks=[
  ['9004-dbm-binder','1 set / 400 tonnes of mix; minimum 2 tests / day / plant'],
  ['9004-dbm-spread','After every 5th truckload'],
  ['9004-dbm-density','1 test / 700 m²'],
- ['9004-sma-density','1 test / 250 m²']
+
+ ['9004-micro-emulsion','1 test / 20-tonne lot as per IS 8887'],
+ ['9004-micro-moisture','2 tests / day'],
+ ['9004-micro-grading','2 tests / day'],
+ ['9004-micro-binder','2 tests / lane / km'],
+ ['9004-micro-calibration','Once per project'],
+ ['9004-sma-impact','1 test / 100 m³ aggregate'],
+ ['9004-sma-shape','1 test / 100 m³ aggregate'],
+ ['9004-sma-density','1 test / 250 m²'],
+ ['9004-sma-fractured','1 test / 50 m³ aggregate'],
+ ['9004-sma-voids','3 tests / day'],
+ ['9004-mastic-hardness','Minimum 2 tests / day']
 ];
 const inUI=[...qc.matchAll(/<tr data-qc-id="([^"]+)">([\s\S]*?)<\/tr>/g)];
 assert.equal(inUI.length,checks.length,'Unexpected source-frequency table row count');
@@ -65,4 +81,4 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
  assert.ok(qc.includes('src="./'+f+'"'),'Existing QC module removed: '+f);
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
-console.log('MoRTH Section 900 QC PASS: 35 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
+console.log('MoRTH Section 900 QC PASS: 50 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
