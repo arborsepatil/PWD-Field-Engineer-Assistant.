@@ -36,6 +36,7 @@ assert.ok(!/ENGINEER_APPROVED|ACCEPTED RESULT|AUTOMATIC PASS/.test(csv),'Draft m
 
 for(const id of ['qcPlanProject','qcPlanSite','qcPlanDate','qcPlanContractor','qcPlanPreview','qcPlanCsv','qcPlanPrint','qcPlanPrintView','qcPlanMessage'])
  assert.ok(html.includes('id="'+id+'"'),'Missing planner control '+id);
+assert.ok(html.indexOf('id="qcPlanPrintView"')<html.indexOf('id="roadQC2013"'),'Draft register must appear immediately after its controls for mobile use');
 for(const script of ['morth-qc-plan-core.js','morth-qc-plan.js']){
  assert.ok(html.includes('src="./'+script+'"'),'QC screen does not load '+script);
  assert.ok(sw.includes("'./"+script+"'"),'Offline PWA does not precache '+script);
