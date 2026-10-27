@@ -1,0 +1,27 @@
+name: SSR Master private integration shell QA
+on:
+  push:
+    branches: [ssr-master-tasks-1-6-private-staging-2026-10-27]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ssr-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate SSR Master navigation and privacy boundaries
+        run: node tests/verify-ssr-master-shell.mjs
+      - name: Prepare public Android assets and verify SSR routing
+        run: |
+          python3 android/scripts/prepare_assets.py
+          test -f android/app/src/main/assets/www/ssr_master.html
+          grep -q 'href="./ssr_master.html"' android/app/src/main/assets/www/index.html
+          grep -q 'href="./ssr_search.html"' android/app/src/main/assets/www/ssr_master.html
+          test ! -f android/app/src/main/assets/www/ssr-private-data.js
+          test ! -f android/app/src/main/assets/www/ssr_task4_lead.html
+          test ! -f android/app/src/main/assets/www/ssr_task5_consumption.html
+          test ! -f android/app/src/main/assets/www/ssr_task6_qc.html
