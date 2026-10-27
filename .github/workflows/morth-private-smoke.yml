@@ -19,6 +19,19 @@ jobs:
         run: node tests/verify-morth-selected-source.mjs
       - name: Verify Table 900-3 and 900-4 selected QC frequency display
         run: node tests/verify-morth-qc-frequency.mjs
+      - name: Validate clean public Android asset scope and owner-local reference scope
+        run: |
+          python3 android/scripts/prepare_assets.py
+          test ! -f android/app/src/main/assets/www/morth_reader.html
+          test ! -f android/app/src/main/assets/www/qc.html
+          ! grep -q 'href="./morth_reader.html"' android/app/src/main/assets/www/library.html
+          CIVILBANDHU_PRIVATE_MORTH_LOCAL=1 python3 android/scripts/prepare_assets.py
+          test -f android/app/src/main/assets/www/morth_reader.html
+          test -f android/app/src/main/assets/www/qc.html
+          test -f android/app/src/main/assets/www/morth-section-100-300.js
+          test -f android/app/src/main/assets/www/morth-qc-3100.js
+          grep -q 'href="./morth_reader.html"' android/app/src/main/assets/www/library.html
+          test "$(find android/app/src/main/assets/www -iname '*.pdf' | wc -l)" -eq 0
       - name: Bundle private-test MoRTH reference PWA (no source PDFs)
         run: |
           python3 - <<'PY'
