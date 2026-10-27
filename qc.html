@@ -17,6 +17,11 @@ p{margin:8px 0;color:var(--muted);font-size:13px}ul{margin:8px 0;padding-left:21
 .qc-table tr:last-child td{border-bottom:0}
 details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height:36px;display:list-item}
 .qc-source{font-size:12px;color:var(--muted);margin-top:9px}
+.qc-search-label{display:block;font-size:12px;font-weight:750;margin-top:10px}
+.qc-search{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);margin-top:4px}
+.qc-search:focus{outline:2px solid var(--accent);outline-offset:2px}
+.qc-table tr[hidden]{display:none!important}
+
 
 @media (max-width:600px){
  .qc-table{min-width:0}
@@ -106,6 +111,9 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
 
 <details class="qc-card" id="morth9004">
 <summary>Bituminous work · Table 900-4</summary>
+<label class="qc-search-label" for="bitumenQcSearch">Find a bituminous test</label>
+<input class="qc-search" id="bitumenQcSearch" type="search" placeholder="e.g. binder, grading, SMA, DBM" autocomplete="off" aria-controls="morth9004" />
+<p id="bitumenQcCount" class="qc-source" aria-live="polite">80 selected controls · table remains incomplete</p>
 <div class="qc-table-wrap"><table class="qc-table">
 <thead><tr><th scope="col">Work</th><th scope="col">Control test</th><th scope="col">2013 minimum</th></tr></thead>
 <tbody>
@@ -244,4 +252,25 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
 <script src="./morth-qc-3000.js"></script>
 <script src="./morth-qc-3100.js"></script>
 <script src="./morth-qc-100-300.js"></script>
+<script>
+(function(){
+  const input=document.getElementById('bitumenQcSearch');
+  const section=document.getElementById('morth9004');
+  const status=document.getElementById('bitumenQcCount');
+  if(!input||!section||!status)return;
+  const rows=Array.from(section.querySelectorAll('tr[data-qc-id]'));
+  function update(){
+    const query=input.value.trim().toLocaleLowerCase();
+    let visible=0;
+    rows.forEach(function(row){
+      const match=!query||row.textContent.toLocaleLowerCase().includes(query);
+      row.hidden=!match;
+      if(match)visible++;
+    });
+    status.textContent=visible+' of '+rows.length+' selected controls shown · not a complete QC plan';
+  }
+  input.addEventListener('input',update);
+  update();
+})();
+</script>
 </body></html>
