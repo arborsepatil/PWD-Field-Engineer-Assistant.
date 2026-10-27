@@ -8,7 +8,7 @@ assert.ok(lib.includes('id="digitalSSR"')&&lib.includes('href="./ssr_master.html
 assert.ok(lib.includes('href="./ssr_search.html"'),'Legacy private Excel index must remain accessible');
 assert.ok(sw.includes("'./ssr_master.html'"),'SSR Master must be cached offline');
 assert.ok(hub.includes('href="./ssr_search.html"'),'Existing local SSR Excel search missing');
-for(const x of ['SSR items','Notes, GR','Rate annexures','Material lead charges','Consumption library','QC & testing charges']){
+for(const x of ['Items & rates','Notes, GR','Rate annexures','Material lead charges','Consumption library','QC & testing charges']){
  assert.ok(hub.toLowerCase().includes(x.toLowerCase()),'Missing SSR workspace '+x);
 }
 const tasks=[...hub.matchAll(/class="ssr-number">(\d\d)<\/span>/g)].map(x=>x[1]);
