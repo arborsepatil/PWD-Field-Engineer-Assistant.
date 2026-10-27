@@ -101,3 +101,13 @@ The Table 900-4 expansion adds 53 paraphrased controls covering seal coat/surfac
 **Usability:** An offline text filter on the 80 selected bituminous controls supports searching by work, test or frequency. The filter cannot suppress the adjacent printed-source warnings, cannot approve test results and does not create a test-register record. `sw.js` cache key was bumped, and the GitHub QC regression now freezes all 129 row identifiers/frequency strings and guards the filter and legal/source holds.
 
 **Release gates still open:** fully reconcile printed source anomalies (CBR method and PQC beam/cube schedule, and the held Clause 508.2.5 aggregate quantity), audit the rest of Section 900, review 372 main-clause index entries individually, establish permission for proprietary content and conduct real-device Android acceptance. Private development branch only; no public release sign-off.
+
+
+### Additional internal cross-reference issues, Table 900-4 (printed pp.425, 427)
+
+These were visually and textually checked against the owner-provided Fifth Revision. They are issues with the printed source cross-references, **not** evidence that the digitisation lost words:
+- **Serial 6(iii)**: sand asphalt base-course sand equivalent points to Serial 2, but that serial does not list a sand equivalent test.
+- **Serial 6(viii)**: sand asphalt base-course layer thickness points to Serial 5, but that serial does not name a layer-thickness test.
+- **Serial 9(v)**: mastic asphalt water-sensitivity test points to Serial 5, which names a moisture-susceptibility test instead. The terms must not be silently equated.
+
+`qc.html` now displays `bituminousCrossrefHold`. None of these three cross-referenced controls is authorised to produce an inferred numeric testing frequency or compliance verdict. Preserve the printed references; seek authoritative project specifications/errata and Engineer review before authorising an automated rule.
