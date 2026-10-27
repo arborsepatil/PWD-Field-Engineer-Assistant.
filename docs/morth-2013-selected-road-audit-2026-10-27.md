@@ -41,14 +41,14 @@ Additional selected QC limits are regression guarded: GSB AIV/LL/PI/CBR; WMM LA/
 
 ## Continuation: Section 900 field QC (27 October 2026)
 - The source's **Table 900-3** (printed pp. 422–423) and **Table 900-4** (printed pp. 423–427) were inspected in the user's original PDF text layer for selected high-use JE frequencies.
-- Added **24 read-only, source-linked minimum-frequency entries** in \`qc.html\`: 12 GSB/WBM/WMM entries and 12 prime/tack, premix, BM, DBM/BC and SMA entries.
+- Added **24 read-only, source-linked minimum-frequency entries** in `qc.html`: 12 GSB/WBM/WMM entries and 12 prime/tack, premix, BM, DBM/BC and SMA entries.
 - Included the distinctions between **m³ of aggregate**, **m² of compacted area**, **tonnes of mix**, **sets of tests**, **source changes**, and **per-day/per-plant minima**; these cannot safely be treated as interchangeable.
-- Added \`tests/verify-morth-qc-frequency.mjs\`, preserving all 24 recorded frequencies, warnings, mobile scrolling, existing seven QC modules and offline shell linkage.
+- Added `tests/verify-morth-qc-frequency.mjs`, preserving all 24 recorded frequencies, warnings, mobile scrolling, existing seven QC modules and offline shell linkage.
 - Bumped the PWA service-worker cache key so revised QC content can replace a previous offline version.
 - These 24 are deliberately a *selected list*: specialized tests, stabilization rows, variable-source approvals and contractual amendments still require original-source review. Do not calculate universal test counts or give automatic pass/fail from this subset.
 
 ## Android packaging issue discovered and mitigated
-- The standard **public APK** preparation excluded \`morth_reader.html\` and \`morth-*.js\` but left a dead Library link plus orphaned \`qc.html\`. The owner-development branch now removes both the dead link and \`qc.html\` from the public-mode Android package.
-- Owner-local opt-in preparation uses \`CIVILBANDHU_PRIVATE_MORTH_LOCAL=1 python3 android/scripts/prepare_assets.py\`. This includes the MoRTH reference reader and 17 section/QC scripts for **controlled local testing only**; it does not change the default/public package. It still rejects original PDF bytes and private Drive/document URLs.
+- The standard **public APK** preparation excluded `morth_reader.html` and `morth-*.js` but left a dead Library link plus orphaned `qc.html`. The owner-development branch now removes both the dead link and `qc.html` from the public-mode Android package.
+- Owner-local opt-in preparation uses `CIVILBANDHU_PRIVATE_MORTH_LOCAL=1 python3 android/scripts/prepare_assets.py`. This includes the MoRTH reference reader and 17 section/QC scripts for **controlled local testing only**; it does not change the default/public package. It still rejects original PDF bytes and private Drive/document URLs.
 - The isolated MoRTH CI workflow now checks both packaging modes **without publishing a private APK** from the public GitHub repository. Physical installation, signature upgrade path, permissions, screen navigation and airplane-mode acceptance remain unverified.
-- No change has been merged into public \`main\`. New CI execution success and actual Android APK device acceptance must be verified separately.
+- No change has been merged into public `main`. New CI execution success and actual Android APK device acceptance must be verified separately.
