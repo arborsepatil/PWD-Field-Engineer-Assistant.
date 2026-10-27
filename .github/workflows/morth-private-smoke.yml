@@ -15,6 +15,8 @@ jobs:
           node-version: '22'
       - name: Run MoRTH internal reference integration checks
         run: node tests/verify-morth-offline.mjs
+      - name: Verify selected source-compared road tables and 508 source hold
+        run: node tests/verify-morth-selected-source.mjs
       - name: Bundle private-test MoRTH reference PWA (no source PDFs)
         run: |
           python3 - <<'PY'
