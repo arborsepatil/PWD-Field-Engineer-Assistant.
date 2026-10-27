@@ -17,6 +17,8 @@ jobs:
         run: node tests/verify-morth-offline.mjs
       - name: Verify selected source-compared road tables and 508 source hold
         run: node tests/verify-morth-selected-source.mjs
+      - name: Verify Table 900-3 and 900-4 selected QC frequency display
+        run: node tests/verify-morth-qc-frequency.mjs
       - name: Bundle private-test MoRTH reference PWA (no source PDFs)
         run: |
           python3 - <<'PY'
