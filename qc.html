@@ -10,11 +10,67 @@ p{margin:8px 0;color:var(--muted);font-size:13px}ul{margin:8px 0;padding-left:21
 .qc-card{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:10px}
 .note{border-left:3px solid var(--accent);background:var(--soft);border-radius:9px;padding:11px 12px;font-size:12px;margin-bottom:14px}
 .warn{border-left-color:var(--warn)}.jump{display:inline-block;padding:8px 0;font-weight:750}
+.qc-table-wrap{overflow-x:auto;margin-top:10px;border:1px solid var(--line);border-radius:10px}
+.qc-table{width:100%;border-collapse:collapse;text-align:left;font-size:12.5px;min-width:560px}
+.qc-table th,.qc-table td{padding:9px 10px;vertical-align:top;border-bottom:1px solid var(--line)}
+.qc-table th{background:var(--soft);font-weight:750}
+.qc-table tr:last-child td{border-bottom:0}
+details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height:36px;display:list-item}
+.qc-source{font-size:12px;color:var(--muted);margin-top:9px}
+
 </style></head>
 <body class="app-page"><main>
 <header class="top"><a href="./morth_reader.html">‹ MoRTH</a><div><h1>MoRTH QC References</h1><p>Fifth Revision 2013 · Field notes</p></div></header>
 <div class="note warn"><strong>Scope:</strong> These are selected documentary QC references and hold points, not complete test procedures, automatic acceptance or structural design. Verify the governing source, contract amendments and Engineer's approvals before use. The copyrighted original publication is not bundled.</div>
 <a class="jump" href="./morth_reader.html?clause=903">View Section 900 QC clauses in the searchable reader</a>
+
+<section id="roadQC2013" aria-labelledby="roadQCHeading">
+<h2 id="roadQCHeading">Selected minimum field QC frequencies · 2013 edition</h2>
+<p class="note">Read-only reference from MoRTH Fifth Revision (2013), Clause 903 / Tables 900-3 and 900-4. These selected rows are not an exhaustive QC plan. Frequencies may also depend on the material source, plant, daily minimum, changed material, Contract amendments and Engineer direction. No automatic pass/fail or test-count approval is provided.</p>
+
+<details class="qc-card" id="morth9003" open>
+<summary>GSB, WBM and WMM · Table 900-3</summary>
+<div class="qc-table-wrap"><table class="qc-table">
+<thead><tr><th scope="col">Work</th><th scope="col">Control test</th><th scope="col">2013 minimum</th></tr></thead>
+<tbody>
+<tr data-qc-id="9003-gsb-grading"><td>Granular sub-base</td><td>Gradation</td><td>1 test / 400 m³</td></tr>
+<tr data-qc-id="9003-gsb-atterberg"><td>Granular sub-base</td><td>Atterberg limits</td><td>1 test / 400 m³</td></tr>
+<tr data-qc-id="9003-gsb-moisture"><td>Granular sub-base</td><td>Moisture before compaction</td><td>1 test / 400 m³</td></tr>
+<tr data-qc-id="9003-gsb-density"><td>Granular sub-base</td><td>Compacted layer density</td><td>1 test / 1,000 m²</td></tr>
+<tr data-qc-id="9003-wbm-aiv"><td>Water-bound macadam</td><td>Aggregate impact value</td><td>1 test / 1,000 m³ of aggregate</td></tr>
+<tr data-qc-id="9003-wbm-grading"><td>Water-bound macadam</td><td>Aggregate grading</td><td>1 test / 250 m³</td></tr>
+<tr data-qc-id="9003-wbm-shape"><td>Water-bound macadam</td><td>Combined flakiness + elongation</td><td>1 test / 500 m³ of aggregate</td></tr>
+<tr data-qc-id="9003-wmm-aiv"><td>Wet mix macadam</td><td>Aggregate impact value</td><td>1 test / 1,000 m³ of aggregate</td></tr>
+<tr data-qc-id="9003-wmm-grading"><td>Wet mix macadam</td><td>Aggregate grading</td><td>1 test / 200 m³ of aggregate</td></tr>
+<tr data-qc-id="9003-wmm-shape"><td>Wet mix macadam</td><td>Combined flakiness + elongation</td><td>1 test / 500 m³ of aggregate</td></tr>
+<tr data-qc-id="9003-wmm-atterberg"><td>Wet mix macadam</td><td>Atterberg limits of material passing 425 µm</td><td>1 test / 200 m³ of aggregate</td></tr>
+<tr data-qc-id="9003-wmm-density"><td>Wet mix macadam</td><td>Compacted layer density</td><td>1 set of 3 tests / 1,000 m²</td></tr>
+</tbody></table></div>
+<p class="qc-source">Source: MoRTH 2013, Table 900-3, printed pp. 422–423. “As required” tests, stabilization and other works are not shown in this short view.</p>
+</details>
+
+<details class="qc-card" id="morth9004">
+<summary>Bituminous work · Table 900-4</summary>
+<div class="qc-table-wrap"><table class="qc-table">
+<thead><tr><th scope="col">Work</th><th scope="col">Control test</th><th scope="col">2013 minimum</th></tr></thead>
+<tbody>
+<tr data-qc-id="9004-prime-spread"><td>Prime / Tack / Fog coat</td><td>Binder spread rate</td><td>3 tests / day</td></tr>
+<tr data-qc-id="9004-premix-binder"><td>Open- or close-graded premix</td><td>Binder content</td><td>2 tests / day / plant</td></tr>
+<tr data-qc-id="9004-bm-shape"><td>Bituminous macadam</td><td>Combined flakiness + elongation</td><td>1 test / 350 m³ for each source</td></tr>
+<tr data-qc-id="9004-bm-density"><td>Bituminous macadam</td><td>Compacted layer density</td><td>1 test / 700 m²</td></tr>
+<tr data-qc-id="9004-dbm-aiv"><td>DBM / BC</td><td>Aggregate impact / LA abrasion</td><td>1 test / 350 m³ of aggregate for each source; retest on quality change</td></tr>
+<tr data-qc-id="9004-dbm-shape"><td>DBM / BC</td><td>Flakiness + elongation indices</td><td>1 test / 350 m³ of aggregate for each source; retest on quality change</td></tr>
+<tr data-qc-id="9004-dbm-gradation"><td>DBM / BC</td><td>Individual and mixed aggregate grading</td><td>1 set / 400 tonnes of mix; minimum 2 tests / day / plant</td></tr>
+<tr data-qc-id="9004-dbm-stability"><td>DBM / BC</td><td>Stability, flow, density and voids</td><td>3 tests / 400 tonnes of mix; minimum 2 tests / day / plant</td></tr>
+<tr data-qc-id="9004-dbm-binder"><td>DBM / BC</td><td>Binder content</td><td>1 set / 400 tonnes of mix; minimum 2 tests / day / plant</td></tr>
+<tr data-qc-id="9004-dbm-spread"><td>DBM / BC</td><td>Mix spread rate</td><td>After every 5th truckload</td></tr>
+<tr data-qc-id="9004-dbm-density"><td>DBM / BC</td><td>Compacted layer density</td><td>1 test / 700 m²</td></tr>
+<tr data-qc-id="9004-sma-density"><td>Stone matrix asphalt</td><td>Compacted layer density</td><td>1 test / 250 m²</td></tr>
+</tbody></table></div>
+<p class="qc-source">Source: MoRTH 2013, Table 900-4, printed pp. 423–427. Source-change checks, other tests, climatic and Contract controls remain mandatory where applicable. Do not interpret a simple ratio as permission to ignore daily minima.</p>
+</details>
+</section>
+
 <h2>Existing source-checked QC additions</h2>
 <div id="matGrid">
  <div class="qc-card">
