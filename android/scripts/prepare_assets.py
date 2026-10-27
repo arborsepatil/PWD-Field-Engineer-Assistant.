@@ -7,10 +7,13 @@ and are imported by the user through the Android file picker after installation.
 from pathlib import Path
 import re
 import shutil
+import os
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "android/app/src/main/assets/www"
 EXTENSIONS = {".html", ".js", ".css", ".json", ".svg", ".png", ".webp", ".jpg", ".jpeg"}
+# Opt-in owner-local development build only. Never use in public release workflows.
+PRIVATE_MORTH_LOCAL = os.environ.get("CIVILBANDHU_PRIVATE_MORTH_LOCAL") == "1"
 # Exclude retired book-import/viewer code: public distribution must never grant
 # user-private Drive or downloaded licensed-PDF access through bundled controls.
 # Bridge index metadata remains available, but original private PDFs do not.
@@ -20,19 +23,22 @@ EXCLUDED = {
     "pdf_viewer.html", "bridge-local-source.js", "bridge-pdf-canvas.js",
     "bridge_book_2002.html", "bridge_book_2023.html",
     "bridge-2002-drawing-audit.js", "bridge-2023-drawing-audit.js",
-    "pwd_rule_book.html", "red_book_reader.html", "morth_reader.html",
+    "pwd_rule_book.html", "red_book_reader.html", "morth_reader.html", "qc.html",
 }
+if PRIVATE_MORTH_LOCAL:
+    EXCLUDED -= {"morth_reader.html", "qc.html"}
 OUTPUT.mkdir(parents=True, exist_ok=True)
 # A previous local build may have copied these files before V34; remove stale
 # assets before packaging rather than trusting exclusions on a clean runner.
 for retired in EXCLUDED:
     (OUTPUT / retired).unlink(missing_ok=True)
-for retired in OUTPUT.glob("morth-*"):
-    retired.unlink(missing_ok=True)
+if not PRIVATE_MORTH_LOCAL:
+    for retired in OUTPUT.glob("morth-*"):
+        retired.unlink(missing_ok=True)
 count = 0
 for file in ROOT.iterdir():
     if (not file.is_file() or file.suffix.lower() not in EXTENSIONS or
-            file.name in EXCLUDED or file.name.startswith("morth-")):
+            file.name in EXCLUDED or (file.name.startswith("morth-") and not PRIVATE_MORTH_LOCAL)):
         continue
     shutil.copy2(file, OUTPUT / file.name)
     count += 1
@@ -59,6 +65,32 @@ assert len(list(OUTPUT.glob("*.html"))) >= 10
 assert not any(p.suffix.lower() == ".pdf" for p in OUTPUT.iterdir())
 # All legacy Drive private/publication IDs have been withdrawn from the distributed
 # catalogue and legacy PDF viewer. A public publisher link is not a redistributed book.
+# A public APK must not advertise a reader deliberately excluded from the bundle.
+library_android = OUTPUT / "library.html"
+if not PRIVATE_MORTH_LOCAL:
+    markup = library_android.read_text(encoding="utf-8")
+    begin = markup.find('<section id="morthEntry"')
+    finish = markup.find('</section>', begin)
+    assert begin >= 0 and finish > begin, "Missing MoRTH library link section"
+    markup = markup[:begin] + markup[finish + len('</section>'):]
+    assert 'href="./morth_reader.html"' not in markup, "Broken public MoRTH reader link"
+    library_android.write_text(markup, encoding="utf-8")
+else:
+    required = [
+        "morth_reader.html", "qc.html", "morth-section-100-300.js",
+        "morth-section-2500.js", "morth-section-2600.js",
+        "morth-section-2611-2612.js", "morth-section-2613-2615.js",
+        "morth-section-2700.js", "morth-section-2800.js",
+        "morth-section-2900.js", "morth-section-3000.js",
+        "morth-section-3100.js", "morth-qc-100-300.js",
+        "morth-qc-2610.js", "morth-qc-2700.js",
+        "morth-qc-2800.js", "morth-qc-2900.js",
+        "morth-qc-3000.js", "morth-qc-3100.js",
+    ]
+    assert all((OUTPUT / filename).is_file() for filename in required), (
+        "Owner-local MoRTH reader/QC asset missing"
+    )
+    assert 'href="./morth_reader.html"' in library_android.read_text(encoding="utf-8")
 assert (OUTPUT / "library-public-catalog.js").exists(), "Public publisher catalogue not packaged"
 assert not (OUTPUT / "library-drive-catalog.js").exists(), "No retired Drive catalogue in shared APK"
 assert not (OUTPUT / "pdf_viewer.html").exists(), "No retired private viewer in shared APK"
@@ -77,11 +109,13 @@ for bundled in OUTPUT.iterdir():
         )
 for retired in EXCLUDED:
     assert not (OUTPUT / retired).exists(), f"Retired or private PDF component must not ship: {retired}"
-assert not list(OUTPUT.glob("morth-*")), "Unapproved MoRTH-derived publication content must not ship"
+if not PRIVATE_MORTH_LOCAL:
+    assert not list(OUTPUT.glob("morth-*")), "MoRTH-derived private modules must not ship"
+    assert not (OUTPUT / "qc.html").exists(), "Orphaned MoRTH QC screen must not ship"
 assert "bridge_book_2002.html" not in (OUTPUT / "pwd_bridge_plans.html").read_text(encoding="utf-8")
 assert "bridge_book_2023.html" not in (OUTPUT / "pwd_bridge_plans.html").read_text(encoding="utf-8")
 assert (OUTPUT / "library-public-catalog.js").exists()
 
 
-print(f"Android offline APK assets prepared: {count} public files, "
+print(f"Android APK assets prepared: {count} files, "
       f"{len(list(OUTPUT.glob('*.html')))} HTML screens, no private PDFs, no PWA registration")
