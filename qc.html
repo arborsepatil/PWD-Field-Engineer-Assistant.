@@ -34,9 +34,29 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
 .qc-plan-table{border-collapse:collapse;width:100%;font-size:11px;min-width:590px;margin:12px 0}
 .qc-plan-table th,.qc-plan-table td{border:1px solid #999;padding:7px;text-align:left;vertical-align:top}
 .qc-plan-table th{background:var(--soft)}
-.qc-plan-table th:nth-child(4),.qc-plan-table th:nth-child(5){width:12%}
-.qc-plan-table tbody td:nth-child(4),.qc-plan-table tbody td:nth-child(5){min-height:35px}
+.qc-plan-table th:first-child{width:40px}
+.qc-plan-table tbody td:first-child{text-align:center}
+.qc-plan-table td input[type="text"]{font:inherit;color:var(--ink);background:var(--card);width:100%;min-width:96px;box-sizing:border-box;border:1px solid var(--line);border-radius:6px;padding:8px}
+.qc-plan-table td input[type="checkbox"]{width:19px;height:19px;accent-color:var(--accent)}
+.qc-plan-table td input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qc-plan-table tr[data-selected="false"]{opacity:.55}
+.qc-plan-print-value{display:none}
 .qc-plan-disclaimer{font-size:11px;color:var(--muted)}
+@media screen and (max-width:700px){
+ .qc-plan-table{min-width:0}
+ .qc-plan-table thead{display:none}
+ .qc-plan-table tbody,.qc-plan-table tbody tr,.qc-plan-table tbody td{display:block}
+ .qc-plan-table tbody tr{border:1px solid var(--line);border-radius:10px;padding:9px;margin:0 0 10px}
+ .qc-plan-table tbody td{border:0;padding:5px 3px}
+ .qc-plan-table tbody td:nth-child(1)::before{content:"Include in draft  ";font-weight:750}
+ .qc-plan-table tbody td:nth-child(2)::before{content:"Work: ";font-weight:750}
+ .qc-plan-table tbody td:nth-child(3)::before{content:"Test: ";font-weight:750}
+ .qc-plan-table tbody td:nth-child(4)::before{content:"2013 reference: ";font-weight:750}
+ .qc-plan-table tbody td:nth-child(5)::before{content:"Test ID / sample number";display:block;font-weight:750}
+ .qc-plan-table tbody td:nth-child(6)::before{content:"Observed result (not verified)";display:block;font-weight:750}
+ .qc-plan-table tbody td:nth-child(7)::before{content:"Engineer remarks (not sign-off)";display:block;font-weight:750}
+ .qc-plan-table td input[type="text"]{min-width:0}
+}
 @media print{
  @page{size:A4 landscape;margin:12mm}
  body.qc-print-mode{background:white!important;color:#111!important}
@@ -45,8 +65,19 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
  body.qc-print-mode #qcPlanPrintView{display:block!important;position:static!important;border:0!important;padding:0!important;background:white!important;color:#111!important;overflow:visible!important}
  body.qc-print-mode #qcPlanPrintView *{color:#111!important}
  body.qc-print-mode .qc-plan-table{min-width:0!important;font-size:9pt}
+ body.qc-print-mode .qc-plan-table thead{display:table-header-group!important}
+ body.qc-print-mode .qc-plan-table tbody{display:table-row-group!important}
+ body.qc-print-mode .qc-plan-table tr{display:table-row!important;break-inside:avoid}
+ body.qc-print-mode .qc-plan-table td{display:table-cell!important}
  body.qc-print-mode .qc-plan-table th{background:#eee!important}
- body.qc-print-mode .qc-plan-table tr{break-inside:avoid}
+ body.qc-print-mode .qc-plan-table th:first-child,
+ body.qc-print-mode .qc-plan-table td:first-child{display:none!important}
+ body.qc-print-mode .qc-plan-table tr[data-selected="false"]{display:none!important}
+ body.qc-print-mode .qc-plan-table td::before{content:none!important}
+ body.qc-print-mode .qc-plan-table input{display:none!important}
+ body.qc-print-mode .qc-plan-print-value{display:inline!important;overflow-wrap:anywhere}
+ body.qc-print-mode .qc-plan-table td{opacity:1!important}
+ body.qc-print-mode .qc-plan-table tr{opacity:1!important}
  body.qc-print-mode .qc-plan-disclaimer{font-size:9pt}
 }
 @media(max-width:600px){.qc-plan-form{grid-template-columns:1fr}}
@@ -78,8 +109,8 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
   <p id="qcSearchCount" class="qc-source" aria-live="polite">129 selected QC controls · not a complete QC plan</p>
 </div>
 <details class="qc-card" id="qcPlanTools">
- <summary>Prepare field QC planning sheet</summary>
- <p><strong>Draft only.</strong> First search above for WMM, DBM, GSB, etc. The sheet contains only matching QC reference rows. It does not calculate how many tests are required, verify results, or certify acceptance.</p>
+ <summary>Prepare field QC draft register</summary>
+ <p><strong>Draft only.</strong> Search above for WMM, DBM, GSB, etc., then preview matching QC references. Untick irrelevant rows, enter test/sample ID, observed result and review remarks manually. Export CSV before leaving the screen; entered data are not saved automatically. No test count, results acceptance, recovery or engineering approval is calculated.</p>
  <div class="qc-plan-form">
   <label for="qcPlanProject">Project / work<input id="qcPlanProject" type="text" maxlength="180" placeholder="Work name (optional)"></label>
   <label for="qcPlanSite">Site / chainage<input id="qcPlanSite" type="text" maxlength="140" placeholder="Chainage, layer, location (optional)"></label>
@@ -87,12 +118,12 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
   <label for="qcPlanContractor">Contractor<input id="qcPlanContractor" type="text" maxlength="140" placeholder="Optional"></label>
  </div>
  <div class="qc-plan-actions">
-  <button type="button" id="qcPlanPreview">Preview matching rows</button>
+  <button type="button" id="qcPlanPreview">Choose tests and enter results</button>
   <button type="button" id="qcPlanCsv">Export draft CSV</button>
   <button type="button" id="qcPlanPrint">Print draft</button>
  </div>
  <p class="qc-source" id="qcPlanMessage" role="status" aria-live="polite">No sheet prepared. Project details are processed locally; nothing is stored or sent by this feature.</p>
- <p class="qc-source">CSV export and printing depend on browser/Android WebView support. Always verify source and project specification before field use.</p>
+ <p class="qc-source">CSV export and printing depend on browser/Android WebView support. Printed source conflicts, contract provisions and approved specifications must be checked independently. This is not a signed laboratory or site acceptance record.</p>
 </details>
 <section id="roadQC2013" aria-labelledby="roadQCHeading">
 <h2 id="roadQCHeading">Selected minimum field QC frequencies · 2013 edition</h2>
