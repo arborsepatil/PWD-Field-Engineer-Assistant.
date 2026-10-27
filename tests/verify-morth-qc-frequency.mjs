@@ -4,6 +4,7 @@
  */
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
+import vm from 'node:vm';
 const qc=fs.readFileSync('qc.html','utf8');
 const checks=[
  ['9032-borrow-sand','2 tests / 3,000 m³ of soil'],
@@ -151,8 +152,8 @@ assert.ok(qc.includes('id="morth9003"')&&qc.includes('id="morth9004"'),'Both tab
 assert.ok(qc.includes('id="morth9032"'),'Earthwork QC reference missing');
 assert.ok(qc.includes('id="morth9035DLC"'),'DLC sampling QC reference missing');
 assert.ok(qc.includes('id="morth9006"'),'PQC supplementary-control view missing');
-assert.ok(qc.includes('id="bitumenQcSearch"')&&qc.includes('type="search"'),'Offline QC search missing');
-assert.ok(qc.includes('row.hidden=!match')&&qc.includes("input.addEventListener('input',update)"),'Search filtering stopped working');
+assert.ok(qc.includes('id="qcSearch"')&&qc.includes('type="search"')&&qc.includes('aria-controls="roadQC2013"'),'Page-wide offline QC search missing');
+assert.ok(qc.includes('row.hidden=!match')&&qc.includes("input.addEventListener('input',update)")&&qc.includes("panel.open=true"),'Page-wide search filtering or auto-open stopped working');
 assert.ok(qc.includes('not a complete QC plan'),'Search-count scope limitation missing');
 assert.ok(qc.includes('<td>Stone matrix asphalt (SMA)</td>')&&qc.includes('<td>Dense BM / bituminous concrete (DBM / BC)</td>'),'Searchable SMA/DBM labels missing');
 for(const ref of ['id="bituminousCrossrefHold"','Serial 6(iii)','Serial 6(viii)','Serial 9(v)'])
@@ -178,5 +179,45 @@ for(const f of ['morth-qc-2610.js','morth-qc-2700.js','morth-qc-2800.js',
  assert.ok(qc.includes('src="./'+f+'"'),'Existing QC module removed: '+f);
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes("'./qc.html'"),'QC page not in offline PWA shell');
-assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-9004-search-abbr-2026-10-27"),'Offline cache version not bumped for updated QC page');
-console.log('MoRTH Section 900 QC PASS: 129 independent source-frequency fixtures, source cautions, offline link, 7 legacy QC modules retained.');
+assert.ok(sw.includes("pwd-tools-steel-v66-morth-qc-all-search-2026-10-27"),'Offline cache version not bumped for updated QC page');
+
+// Execute the actual QC page search controller with small DOM fixtures.
+// This verifies match/clear/restore behavior; it does not verify source frequencies.
+const scripts=[...qc.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+assert.ok(scripts.length>0,'QC search controller script absent');
+const panelA={open:false,querySelector(){return {textContent:'Granular, WBM and WMM'}}};
+const panelB={open:true,querySelector(){return {textContent:'Bituminous works'}}};
+const panelC={open:false,querySelector(){return {textContent:'Earthwork and subgrade'}}};
+function fakeRow(id,label,panel){
+ return {textContent:label,hidden:false,closest(){return panel},getAttribute(name){assert.equal(name,'data-qc-id');return id}};
+}
+const fakeRows=[
+ fakeRow('9003-wmm-density','Wet mix macadam compacted layer density 1 set of 3 tests / 1,000 m²',panelA),
+ fakeRow('9004-dbm-binder','DBM / BC binder content 1 set / 400 tonnes',panelB),
+ fakeRow('9032-borrow-cbr','Borrow soil CBR each source',panelC)
+];
+const listeners={};
+const input={value:'',addEventListener(event,fn){listeners[event]=fn}};
+const status={textContent:''};
+const region={querySelectorAll(selector){
+ if(selector==='tr[data-qc-id]')return fakeRows;
+ if(selector==='details.qc-card')return [panelA,panelB,panelC];
+ throw Error('Unexpected DOM selector '+selector);
+}};
+const document={getElementById(id){
+ return {qcSearch:input,roadQC2013:region,qcSearchCount:status}[id]||null;
+}};
+vm.runInNewContext(scripts.at(-1)[1],{document});
+assert.match(status.textContent,/3 of 3/,'Initial page count wrong');
+input.value='wmm density';listeners.input();
+assert.deepEqual(fakeRows.map(row=>row.hidden),[false,true,true],'Multiple-keyword filtering failed');
+assert.equal(panelA.open,true,'Matching closed QC panel was not expanded');
+assert.equal(panelB.open,true,'Existing hold panels should remain accessible');
+input.value='no-such-control';listeners.input();
+assert.match(status.textContent,/no matches/,'Zero-result feedback missing');
+input.value='';listeners.input();
+assert.deepEqual(fakeRows.map(row=>row.hidden),[false,false,false],'Clearing search must restore all QC rows');
+assert.equal(panelA.open,false,'Original closed state not restored');
+assert.equal(panelB.open,true,'Original open state not restored');
+assert.equal(panelC.open,false,'Original closed state not restored');
+console.log('MoRTH Section 900 QC PASS: 129 independent source-frequency fixtures, page-wide live search, source cautions, offline link, 7 legacy QC modules retained.');
