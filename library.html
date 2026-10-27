@@ -53,10 +53,6 @@
   <p>No private Drive documents, private file IDs or third-party PDF copies are shared here. <b>View</b> opens accessible publisher pages; links that could not be accessed in the audit are labelled separately. Internet may be required.</p>
   <p>Publicly accessible does not mean copyright-free or the latest valid edition. Check the applicable code, amendments, project contract and government directions.</p>
  </section>
- <section id="morthLocalReference" class="ssr-entry" aria-label="Local MoRTH clause reference">
-  <a href="./morth_reader.html">MoRTH 2013 · Search clause reference</a>
-  <p>Offline JE Quick View, selected source-checked engineering facts and printed page references. Partial reference only; confirm contract amendments and original clauses. The private publication PDF is not bundled.</p>
- </section>
  <div class="lib-search"><label for="libSearch">Find a public reference</label><input id="libSearch" type="search" placeholder="Search PWD, SSR, manual, CPWD, BIS, IRC, GR…" autocomplete="off"></div>
  <nav class="categories" id="libraryTabs" aria-label="Library categories"></nav>
  <section id="digitalSSR" class="ssr-entry" hidden><a href="./ssr_search.html">Search SSR items in your own Excel file</a><p>This is a separate local engineering tool. It does not make a private SSR file publicly available.</p></section>
@@ -125,8 +121,6 @@
   get('accessSummary').textContent=verifiedCount+' publisher pages checked · '+(n-verifiedCount)+' access unconfirmed. No private Drive files or PDF downloads in this app.';
   get('emptyResults').hidden=n!==0;
   get('digitalSSR').hidden=section!=='ssr';
-  const localTerms='morth road bridge specifications 2013 fifth revision clauses qc engineering';
-  get('morthLocalReference').hidden=!((section==='all'||section==='spec')&&(!q||localTerms.includes(q)));
  }
  get('libSearch').addEventListener('input',e=>{query=e.target.value;render()});
  render();
