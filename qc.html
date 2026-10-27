@@ -42,6 +42,11 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
 <a class="jump" href="./morth_reader.html?clause=903">View Section 900 QC clauses in the searchable reader</a>
 
 <div class="note warn" id="cbrMethodConflict"><strong>Source conflict · CBR method:</strong> Table 400-2 (printed p.110) cites IS 2720 Part 5 in the CBR test-method column; Clause 903.2.1 (printed p.428) cites Part 16 for subgrade CBR. Both printed pages were checked. Do not infer a valid CBR procedure from the Table 400-2 method cell. Verify the governing test standard, contract requirements and Engineer instructions.</div>
+<div class="qc-card" role="search" aria-label="Search all selected MoRTH QC references">
+  <label class="qc-search-label" for="qcSearch">Find a QC test in all 129 selected references</label>
+  <input class="qc-search" id="qcSearch" type="search" placeholder="e.g. WMM density, CBR, DBM binder, slump" autocomplete="off" aria-controls="roadQC2013" />
+  <p id="qcSearchCount" class="qc-source" aria-live="polite">129 selected QC controls · not a complete QC plan</p>
+</div>
 <section id="roadQC2013" aria-labelledby="roadQCHeading">
 <h2 id="roadQCHeading">Selected minimum field QC frequencies · 2013 edition</h2>
 <p class="note">Read-only reference from MoRTH Fifth Revision (2013), Clauses 903.2 and 903.5.1 / Tables 900-3 and 900-4. These selected rows are not an exhaustive QC plan. Frequencies may also depend on the material source, plant, daily minimum, changed material, Contract amendments and Engineer direction. No automatic pass/fail or test-count approval is provided.</p>
@@ -113,9 +118,7 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
 <summary>Bituminous work · Table 900-4</summary>
 <div class="note warn" id="bituminousCrossrefHold"><strong>Unresolved references in printed Table 900-4:</strong> Serial 6(iii), sand equivalent for sand asphalt base, refers to Serial 2, but Serial 2 does not list sand equivalent. Serial 6(viii), layer thickness, refers to Serial 5, which does not list a layer-thickness test. Serial 9(v), mastic asphalt water sensitivity, refers to Serial 5, whose named test is moisture susceptibility rather than water sensitivity. Refer to printed pp.425 and 427; do not infer a numerical testing frequency or automatic acceptance from these cross-references without engineering confirmation.</div>
 
-<label class="qc-search-label" for="bitumenQcSearch">Find a bituminous test</label>
-<input class="qc-search" id="bitumenQcSearch" type="search" placeholder="e.g. binder, grading, SMA, DBM" autocomplete="off" aria-controls="morth9004" />
-<p id="bitumenQcCount" class="qc-source" aria-live="polite">80 selected controls · table remains incomplete</p>
+<p class="qc-source">80 selected bituminous controls · table remains incomplete. Use the page-wide search above.</p>
 <div class="qc-table-wrap"><table class="qc-table">
 <thead><tr><th scope="col">Work</th><th scope="col">Control test</th><th scope="col">2013 minimum</th></tr></thead>
 <tbody>
@@ -256,20 +259,38 @@ details.qc-card>summary{font-weight:800;font-size:15px;cursor:pointer;min-height
 <script src="./morth-qc-100-300.js"></script>
 <script>
 (function(){
-  const input=document.getElementById('bitumenQcSearch');
-  const section=document.getElementById('morth9004');
-  const status=document.getElementById('bitumenQcCount');
+  const input=document.getElementById('qcSearch');
+  const section=document.getElementById('roadQC2013');
+  const status=document.getElementById('qcSearchCount');
   if(!input||!section||!status)return;
   const rows=Array.from(section.querySelectorAll('tr[data-qc-id]'));
+  const panels=Array.from(section.querySelectorAll('details.qc-card'));
+  let previousQuery='';
+  let openBeforeSearch=null;
   function update(){
     const query=input.value.trim().toLocaleLowerCase();
+    const terms=query.split(/\s+/).filter(Boolean);
+    if(terms.length&&!previousQuery){
+      openBeforeSearch=new Map(panels.map(function(panel){return [panel,panel.open]}));
+    }
+    if(!terms.length&&previousQuery&&openBeforeSearch){
+      openBeforeSearch.forEach(function(wasOpen,panel){panel.open=wasOpen});
+      openBeforeSearch=null;
+    }
     let visible=0;
     rows.forEach(function(row){
-      const match=!query||row.textContent.toLocaleLowerCase().includes(query);
+      const panel=row.closest('details.qc-card');
+      const heading=panel?panel.querySelector('summary'):null;
+      const haystack=[row.textContent,row.getAttribute('data-qc-id'),heading?heading.textContent:''].join(' ').toLocaleLowerCase();
+      const match=terms.every(function(term){return haystack.includes(term)});
       row.hidden=!match;
-      if(match)visible++;
+      if(match){
+        visible++;
+        if(terms.length&&panel)panel.open=true;
+      }
     });
-    status.textContent=visible+' of '+rows.length+' selected controls shown · not a complete QC plan';
+    status.textContent=visible+' of '+rows.length+' selected QC controls shown · not a complete QC plan'+(terms.length&&!visible?' · no matches':'');
+    previousQuery=terms.length?query:'';
   }
   input.addEventListener('input',update);
   update();
