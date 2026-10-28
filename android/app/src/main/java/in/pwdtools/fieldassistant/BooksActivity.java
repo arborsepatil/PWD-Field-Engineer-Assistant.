@@ -136,13 +136,10 @@ public final class BooksActivity extends Activity {
             list.addView(row);
         }
         if (listed == 0) list.addView(label("No saved PDFs found. Use Add PDF to import a document.", 13));
-        search.addTextChangedListener(new android.text.TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s,int start,int count,int after) {}
-            @Override public void onTextChanged(CharSequence s,int start,int before,int count) {
-                if (!s.toString().equals(filter)) showShelf(s.toString());
-            }
-            @Override public void afterTextChanged(android.text.Editable e) {}
-        });
+        list.addView(button("Search saved PDFs", v -> {
+            showShelf(search.getText().toString().trim());
+        }));
+        if (!filter.isEmpty()) list.addView(button("Show all saved PDFs", v -> showShelf("")));
         setContentView(scroll);
     }
 
