@@ -64,6 +64,18 @@ public final class BooksActivity extends Activity {
         String requested = getIntent().getStringExtra("suggested_title");
         if (requested != null && requested.length() <= 170) suggestedTitle = requested;
         showShelf("");
+        String offlineId = getIntent().getStringExtra("open_offline_id");
+        if (offlineId != null && offlineId.matches("[a-f0-9-]{36}")) {
+            JSONArray books = allBooks();
+            for (int i=0;i<books.length();i++) {
+                JSONObject book = books.optJSONObject(i);
+                if (book!=null && offlineId.equals(book.optString("id"))) {
+                    openPdf(offlineId,book.optString("title","PDF"));
+                    return;
+                }
+            }
+            Toast.makeText(this,"Offline book not found.",Toast.LENGTH_LONG).show();
+        }
         String directSource = getIntent().getStringExtra("source_uri");
         if (directSource != null && directSource.startsWith("content://")
                 && directSource.length() <= 2500) {
