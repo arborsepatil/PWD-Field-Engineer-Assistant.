@@ -9,6 +9,7 @@ on:
       - 'my_drive_library.html'
       - 'library.html'
       - 'tests/verify-ssr*'
+      - 'tests/verify-books-references-offline.mjs'
       - '.github/workflows/ssr-private-android-apk.yml'
       - 'android/**'
   workflow_dispatch:
@@ -28,6 +29,7 @@ jobs:
           node tests/verify-ssr-master-shell.mjs
           node tests/verify-ssr-private-workspace.mjs
           node tests/verify-v27-ssr-reader.mjs
+          node tests/verify-books-references-offline.mjs
       - name: Confirm no owner private dataset is committed in the repository
         run: |
           test ! -f ssr-private-data.js
