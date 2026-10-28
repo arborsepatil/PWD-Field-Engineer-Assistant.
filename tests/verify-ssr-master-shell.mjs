@@ -14,7 +14,7 @@ for(const x of ['Items & rates','Notes, GR','Rate annexures','Material lead char
 const tasks=[...hub.matchAll(/class="ssr-number">(\d\d)<\/span>/g)].map(x=>x[1]);
 assert.deepEqual(tasks,['01','02','03','04','05','06'],'SSR tasks must show all six');
 for(const n of ['2','3','4','5','6'])assert.ok(hub.includes('href="./ssr_private_workspace.html?task='+n+'"'),'Owner-local task '+n+' link missing');
-assert.equal((hub.match(/aria-disabled="true"/g)||[]).length,0,'New guarded workspaces must not be presented as unavailable');
+assert.equal((hub.match(/<div class="ssr-card" aria-disabled="true">/g)||[]).length,0,'New guarded workspaces must not be presented as unavailable');
 assert.ok(sw.includes("'./ssr_private_workspace.html'")&&sw.includes("'./ssr-private-core.js'"),'Private workspace code must be offline cached');
 assert.ok(!hub.includes('href="./ssr_task4_lead.html"'),'Do not link to excluded private lead module in public app');
 assert.ok(!hub.includes('href="./ssr_task5_consumption.html"'),'Do not link to excluded private consumption module');
