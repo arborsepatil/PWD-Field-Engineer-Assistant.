@@ -34,6 +34,7 @@ public final class MainActivity extends Activity {
     private static final String PRINT_PROMPT = "__PWD_ANDROID_PRINT_V1__";
     private static final String CSV_PROMPT = "__PWD_ANDROID_CSV_EXPORT_V1__";
     private static final String BOOKS_PROMPT = "__CIVILBANDHU_BOOKS_OPEN_V1__";
+    private static final String BOOKS_IMPORT_PROMPT = "__CIVILBANDHU_BOOKS_IMPORT_V1__";
     private static final int CSV_REQUEST = 905;
     private static final int FILE_REQUEST = 904;
     private WebView webView;
@@ -118,6 +119,31 @@ public final class MainActivity extends Activity {
             @Override
             public boolean onJsPrompt(WebView view, String url, String message,
                                       String defaultValue, JsPromptResult result) {
+                // Launch the Android document picker for the exact catalogue entry.
+                // Its original file stays on the user's Drive; the user authorizes
+                // a local PDF copy by choosing it in the system picker.
+                if (url != null && url.startsWith(BASE_URL) && message != null
+                        && message.startsWith(BOOKS_IMPORT_PROMPT)) {
+                    result.confirm("");
+                    try {
+                        String json = message.substring(BOOKS_IMPORT_PROMPT.length());
+                        if (json.length() > 420) throw new IllegalArgumentException("Book metadata too long");
+                        JSONObject args = new JSONObject(json);
+                        String group = args.optString("category", "Uncategorised");
+                        String title = args.optString("title", "");
+                        if (group.length() > 90 || !group.matches("[A-Za-z0-9 _./()&-]+"))
+                            group = "Uncategorised";
+                        if (title.isEmpty() || title.length() > 170 || title.contains("\\n"))
+                            throw new IllegalArgumentException("Invalid book title");
+                        Intent books = new Intent(MainActivity.this, BooksActivity.class);
+                        books.putExtra("category", group);
+                        books.putExtra("suggested_title", title);
+                        startActivity(books);
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this, "Cannot select this book.", Toast.LENGTH_LONG).show();
+                    }
+                    return true;
+                }
                 if (url != null && url.startsWith(BASE_URL) && message != null
                         && message.startsWith(BOOKS_PROMPT)) {
                     result.confirm("");
