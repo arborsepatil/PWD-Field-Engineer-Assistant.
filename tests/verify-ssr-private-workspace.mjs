@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
+import {readFileSync} from 'node:fs';
+import {Script} from 'node:vm';
 const require=createRequire(import.meta.url);
 const core=require('../ssr-private-core.js');
 const payload={schema:core.SCHEMA,edition:'2022-23',tasks:{
@@ -28,3 +30,10 @@ assert.equal(core.qcPlan(payload.tasks['6'].frequencies[0],-1).ok,false);
 assert.equal(core.validate({...payload,edition:'2025-26'}).ok,false);
 assert.equal(core.validate({...payload,tasks:{...payload.tasks,'4':[{...payload.tasks['4'][0],source:''}]}}).ok,false);
 console.log('Private SSR workspace synthetic regression PASS: schema, search, lead bounds, QC 30/70, engineering review gates.');
+
+const privateHTML=readFileSync('ssr_private_workspace.html','utf8');
+const inlineScripts=[...privateHTML.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)].map(x=>x[1]).filter(x=>x.trim());
+assert.ok(inlineScripts.length>0,'No inline SSR workspace behavior found');
+for(const [i,code] of inlineScripts.entries())new Script(code,{filename:'ssr_private_workspace_inline_'+i+'.js'});
+for(const marker of ['leadQty','function calculateLead()','Source-verified SSR test-frequency records have not been imported','qcCalc']).concat([]).forEach(x=>assert.ok(privateHTML.includes(x),'SSR UI missing '+x));
+console.log('Owner-private SSR workspace inline JavaScript syntax and missing-frequency UX PASS.');
