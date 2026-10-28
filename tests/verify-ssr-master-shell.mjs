@@ -13,7 +13,9 @@ for(const x of ['Items & rates','Notes, GR','Rate annexures','Material lead char
 }
 const tasks=[...hub.matchAll(/class="ssr-number">(\d\d)<\/span>/g)].map(x=>x[1]);
 assert.deepEqual(tasks,['01','02','03','04','05','06'],'SSR tasks must show all six');
-assert.equal((hub.match(/<div class="ssr-card" aria-disabled="true">/g)||[]).length,5,'Unbundled private source modules must not advertise clickable broken links');
+for(const n of ['2','3','4','5','6'])assert.ok(hub.includes('href="./ssr_private_workspace.html?task='+n+'"'),'Owner-local task '+n+' link missing');
+assert.equal((hub.match(/aria-disabled="true"/g)||[]).length,0,'New guarded workspaces must not be presented as unavailable');
+assert.ok(sw.includes("'./ssr_private_workspace.html'")&&sw.includes("'./ssr-private-core.js'"),'Private workspace code must be offline cached');
 assert.ok(!hub.includes('href="./ssr_task4_lead.html"'),'Do not link to excluded private lead module in public app');
 assert.ok(!hub.includes('href="./ssr_task5_consumption.html"'),'Do not link to excluded private consumption module');
 assert.ok(!hub.includes('href="./ssr_task6_qc.html"'),'Do not link to excluded private QC module');
@@ -24,3 +26,11 @@ for(const marker of ['ssr-private-data.js','ssr_task4_lead.html','ssr_task5_cons
 assert.ok(android.includes('EXCLUDED'),'Android public asset scoping regressed');
 assert.ok(!/<script[^>]+ssr-private-data\.js/.test(hub),'Private SSR source bundle must not be embedded in public code');
 console.log('SSR Master public staging PASS: 6 tasks, offline shell, private-source isolation, current Excel search retained.');
+
+assert.ok(android.includes('EXCLUDED'),'Android asset boundary missing');
+const privateWorkspace=read('ssr_private_workspace.html'), privateCore=read('ssr-private-core.js');
+assert.ok(privateWorkspace.includes('civilbandhu.ssr.private.v1'),'Private pack schema guard missing');
+assert.ok(privateWorkspace.includes('ssr-private-core.js'),'Guarded source math import missing');
+assert.ok(privateCore.includes('No extrapolation allowed'),'Lead extrapolation guard missing');
+assert.ok(privateCore.includes('auto_eligible'),'QC eligibility guard missing');
+for(const token of ['drive.google.com/file/d/','docs.google.com/spreadsheets/d/'])assert.ok(!privateWorkspace.includes(token)&&!privateCore.includes(token),'Sensitive link not allowed in public source');
