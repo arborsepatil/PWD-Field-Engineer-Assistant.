@@ -44,5 +44,5 @@ const privateHTML=readFileSync('ssr_private_workspace.html','utf8');
 const inlineScripts=[privateHTML.split('<script>')[1]?.split('</script>')[0]].filter(Boolean);
 assert.ok(inlineScripts.length>0,'No inline SSR workspace behavior found');
 for(const [i,code] of inlineScripts.entries())new Script(code,{filename:'ssr_private_workspace_inline_'+i+'.js'});
-for(const marker of ['leadQty','function calculateLead()','Source-verified SSR test-frequency records have not been imported','qcCalc']) assert.ok(privateHTML.includes(marker),'SSR UI missing '+marker);
+for(const marker of ['qcSearch','fillQCRules()','leadQty','function calculateLead()','No matching QC frequency in this imported data pack.','qcCalc']) assert.ok(privateHTML.includes(marker),'SSR UI missing '+marker);
 console.log('Owner-private SSR workspace inline JavaScript syntax and missing-frequency UX PASS.');
