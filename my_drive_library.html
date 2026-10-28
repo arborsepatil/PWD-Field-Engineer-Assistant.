@@ -44,7 +44,7 @@
  <div class="panel">
   <div class="summary"><div><b id="totalFiles">0</b><span>Documents</span></div><div><b id="totalPDF">0</b><span>PDF books</span></div><div><b id="totalCats">0</b><span>Categories</span></div></div>
   <p class="muted" id="status" role="status" aria-live="polite">Import your private catalogue to browse books.</p>
-  <div class="toolbar"><button class="btn primary" id="connect" type="button" hidden>☁ Open / Refresh Drive LIBRARY</button><button class="btn" id="import" type="button">Import JSON catalogue</button><button class="btn" id="shelf" type="button" hidden>📖 Offline PDF shelf</button><button class="btn" id="reset" type="button" hidden>Clear catalogue</button><input type="file" id="file" accept=".json,application/json"></div>
+  <div class="toolbar"><button class="btn primary" id="connect" type="button" hidden>☁ Connect / Sync Google Drive</button><button class="btn" id="import" type="button">Import JSON catalogue</button><button class="btn" id="shelf" type="button" hidden>📖 Offline PDF shelf</button><button class="btn" id="reset" type="button" hidden>Clear catalogue</button><input type="file" id="file" accept=".json,application/json"></div>
  </div>
  <div class="panel" id="searchPanel">
   <label for="search" style="font-weight:750;font-size:13px;display:block;margin-bottom:8px">Find a book or category</label>
@@ -68,6 +68,17 @@ const SCHEMA='civilbandhu.drive.library.v1',KEY='civilbandhu-drive-library-v1';
 const icons=['📘','📙','🌉','🏢','🛣️','📗','📐','📚','📋','📜','🧪','📕','🏗️','⚖️','🗂️','📁'];
 const onAndroid=/CivilBandhuAndroid\/1\.0/.test(navigator.userAgent);
 function openDrive(){if(!onAndroid)return;window.prompt("__CIVILBANDHU_DRIVE_LIBRARY_OPEN_V1__","");}
+function openOAuthDrive(){
+ if(!onAndroid || !data || !data.root_url)return;
+ try{
+  const uri=new URL(data.root_url);
+  if(uri.hostname!=='drive.google.com')return;
+  const hit=/\/drive\/folders\/([A-Za-z0-9_-]{10,100})/.exec(uri.pathname);
+  if(!hit)return;
+  window.prompt('__CIVILBANDHU_DRIVE_OAUTH_V1__'+JSON.stringify({root_id:hit[1]}),'');
+ }catch(e){}
+}
+window.CivilBandhuAutoOpenDrive=openOAuthDrive;
 let data=null, selected='all';
 function validUrl(value){try{const u=new URL(value);return u.protocol==='https:'&&
  ((u.hostname==='drive.google.com'&&/^\/(drive\/folders\/|file\/d\/)/.test(u.pathname))||
@@ -108,7 +119,7 @@ function render(){
  $('totalFiles').textContent=all.length;$('totalPDF').textContent=pdfs.length;$('totalCats').textContent=data?data.folders.length:0;
  $('reset').hidden=!data;$('shelf').hidden=!onAndroid;$('connect').hidden=!onAndroid;
  $('searchPanel').hidden=onAndroid&&!data;$('categoriesPanel').hidden=onAndroid&&!data;$('documentsPanel').hidden=onAndroid&&!data;
- $('status').textContent=onAndroid?'Open your Drive LIBRARY folder to browse and refresh books directly. JSON is an optional fallback.':data?'Private catalogue loaded · refresh by importing a newer JSON.':'Import your private JSON index to start.';
+ $('status').textContent=onAndroid?(data?'Books ready. Connect Google Drive once for live updates.':'Open your library catalogue to begin.'):(data?'Private catalogue loaded.':'Import your private JSON index to start.');
  renderCats();
  const q=$('search').value.trim().toLowerCase();
  const list=all.filter(x=>(selected==='all'||x.folder===selected)&&(!q||[x.title,x.name,x.folder].join(' ').toLowerCase().includes(q)));
@@ -127,7 +138,7 @@ function render(){
  }
  if(!list.length)out.append(t('div',data?'No matching documents.':'Import your private library index first.','empty'));
 }
-$('connect').onclick=openDrive;
+$('connect').onclick=openOAuthDrive;
 $('import').onclick=()=>$('file').click();
 $('file').onchange=async()=>{const f=$('file').files?.[0];if(!f)return;try{
  if(f.size>4*1024*1024)throw Error('File exceeds 4 MB');
