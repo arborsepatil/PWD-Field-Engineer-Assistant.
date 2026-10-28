@@ -116,6 +116,7 @@ public final class BooksActivity extends Activity {
         list.addView(label("Books downloaded from Drive can be imported here. Your private PDFs stay inside this app; they are not uploaded or distributed.", 14));
         list.addView(button("＋ Add PDF from Files / Google Drive", v -> selectPdf()));
         list.addView(label("Import category: " + category, 12));
+        if (!suggestedTitle.isEmpty()) list.addView(label("Select from Files / Drive: " + suggestedTitle, 12));
         EditText search = new EditText(this);
         search.setSingleLine(true);
         search.setHint("Search saved books");
@@ -222,7 +223,8 @@ public final class BooksActivity extends Activity {
             runOnUiThread(() -> {
                 if (isFinishing()) return;
                 Toast.makeText(this, ok ? "PDF saved for offline reading." : message, Toast.LENGTH_LONG).show();
-                showShelf("");
+                if (ok) openPdf(id, filename);
+                else showShelf("");
             });
         }).start();
     }
