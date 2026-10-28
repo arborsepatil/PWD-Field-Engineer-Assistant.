@@ -42,6 +42,7 @@ public final class BooksActivity extends Activity {
     private static final String PREF = "civilbandhu_offline_books_v1";
     private static final String INDEX = "books";
     private String category = "Uncategorised";
+    private String suggestedTitle = "";
     private PdfRenderer renderer;
     private ParcelFileDescriptor descriptor;
     private Bitmap bitmap;
@@ -60,7 +61,10 @@ public final class BooksActivity extends Activity {
         if (input != null && input.length() <= 90 && input.matches("[A-Za-z0-9 _./()&-]+")) {
             category = input.trim();
         }
+        String requested = getIntent().getStringExtra("suggested_title");
+        if (requested != null && requested.length() <= 170) suggestedTitle = requested;
         showShelf("");
+        if (!suggestedTitle.isEmpty()) selectPdf();
     }
 
     private int dp(int n) { return Math.round(n * getResources().getDisplayMetrics().density); }
