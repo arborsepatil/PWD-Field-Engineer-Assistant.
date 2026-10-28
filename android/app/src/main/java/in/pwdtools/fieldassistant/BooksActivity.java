@@ -69,7 +69,24 @@ public final class BooksActivity extends Activity {
                 && directSource.length() <= 2500) {
             importSelectedPdf(Uri.parse(directSource));
         } else if (!suggestedTitle.isEmpty()) {
-            selectPdf();
+            // Reopen a previously saved PDF immediately. The owner should not
+            // have to select the same book from Google Drive twice.
+            boolean found = false;
+            JSONArray saved = allBooks();
+            for (int i = saved.length()-1; i >= 0; i--) {
+                JSONObject b = saved.optJSONObject(i);
+                if (b == null) continue;
+                String id = b.optString("id","");
+                File file = bookFile(id);
+                if (file != null && file.isFile()
+                        && suggestedTitle.equalsIgnoreCase(b.optString("title",""))
+                        && category.equals(b.optString("category",""))) {
+                    openPdf(id, b.optString("title",suggestedTitle));
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) selectPdf();
         }
     }
 
