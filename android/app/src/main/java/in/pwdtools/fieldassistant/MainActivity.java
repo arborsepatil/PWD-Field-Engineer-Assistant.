@@ -36,6 +36,7 @@ public final class MainActivity extends Activity {
     private static final String BOOKS_PROMPT = "__CIVILBANDHU_BOOKS_OPEN_V1__";
     private static final String BOOKS_IMPORT_PROMPT = "__CIVILBANDHU_BOOKS_IMPORT_V1__";
     private static final String DRIVE_LIBRARY_PROMPT = "__CIVILBANDHU_DRIVE_LIBRARY_OPEN_V1__";
+    private static final String DRIVE_OAUTH_PROMPT = "__CIVILBANDHU_DRIVE_OAUTH_V1__";
     private static final int CSV_REQUEST = 905;
     private static final int FILE_REQUEST = 904;
     private WebView webView;
@@ -91,6 +92,12 @@ public final class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 if (url.startsWith(BASE_URL)) {
+                    if (url.contains("/my_drive_library.html") &&
+                        getSharedPreferences("civilbandhu_drive_oauth_v1", MODE_PRIVATE)
+                            .getBoolean("connected", false)) {
+                        view.evaluateJavascript(
+                            "if(window.CivilBandhuAutoOpenDrive){window.CivilBandhuAutoOpenDrive();}",null);
+                    }
                     // WebView has no built-in window.print implementation. Use an origin-
                     // restricted JS prompt rather than an unsafe globally exposed JS bridge.
                     view.evaluateJavascript(
@@ -120,6 +127,26 @@ public final class MainActivity extends Activity {
             @Override
             public boolean onJsPrompt(WebView view, String url, String message,
                                       String defaultValue, JsPromptResult result) {
+                // Google Identity authorization is handled entirely in native Android.
+                // Only a folder identifier crosses from the owner-local UI.
+                if (url != null && url.startsWith(BASE_URL) && message != null
+                        && message.startsWith(DRIVE_OAUTH_PROMPT)) {
+                    result.confirm("");
+                    try {
+                        String json = message.substring(DRIVE_OAUTH_PROMPT.length());
+                        if (json.length() > 200) throw new IllegalArgumentException();
+                        JSONObject request = new JSONObject(json);
+                        String root = request.optString("root_id","");
+                        if (!root.matches("[A-Za-z0-9_-]{10,100}"))
+                            throw new IllegalArgumentException();
+                        Intent open = new Intent(MainActivity.this,DriveOAuthActivity.class);
+                        open.putExtra("library_root_id",root);
+                        startActivity(open);
+                    } catch(Exception e) {
+                        Toast.makeText(MainActivity.this,"Library folder not recognized.",Toast.LENGTH_LONG).show();
+                    }
+                    return true;
+                }
                 // Opens a private Android DocumentsProvider folder index with no
                 // Google API credentials or public Drive links embedded in the app.
                 if (url != null && url.startsWith(BASE_URL)
