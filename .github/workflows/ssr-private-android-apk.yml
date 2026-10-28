@@ -4,6 +4,8 @@ on:
     branches: [ssr-master-tasks-1-6-private-staging-2026-10-27]
     paths:
       - 'ssr*'
+      - 'library.html'
+      - 'drive_library.html'
       - 'my_drive_library.html'
       - 'library.html'
       - 'tests/verify-ssr*'
