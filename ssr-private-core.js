@@ -22,7 +22,10 @@ function validate(payload){
   if(id==='6'){
     if(!t[id]||!Array.isArray(t[id].frequencies)||!Array.isArray(t[id].charges)){errors.push('Task 6 requires frequencies and charges arrays');continue}
     for(const k of ['frequencies','charges'])if(t[id][k].length>20000)errors.push('Task 6 '+k+' exceeds row cap');
-    for(const x of t[id].frequencies)if(!x||!clean(x.test)||!clean(x.source)||!clean(x.unit))errors.push('QC frequency missing test/source/unit');
+    for(const x of t[id].frequencies){
+     if(!x||!clean(x.test)||!clean(x.source)||!clean(x.unit))errors.push('QC frequency missing test/source/unit');
+     if(x&&x.auto_eligible===true&&(!finiteNonnegative(x.frequency_qty)||number(x.frequency_qty)===0||x.kind!=='test'||x.special_rule===true))errors.push('QC automatic rule has missing/unsafe quantity basis');
+   }
     for(const x of t[id].charges)if(!x||!clean(x.test)||!clean(x.source)||!finiteNonnegative(x.rate))errors.push('QC charge missing valid test/source/rate');
   } else {
     if(!Array.isArray(t[id])){errors.push('Task '+id+' must be an array');continue}
@@ -32,6 +35,7 @@ function validate(payload){
  }
  if(Array.isArray(t['4']))for(const x of t['4']){
    if(!clean(x.material_group)||!clean(x.loading_method)||!clean(x.unit)||!finiteNonnegative(x.lead_km)||!finiteNonnegative(x.rate))errors.push('Lead row missing material/method/unit or numeric distance/rate');
+   if(number(x.lead_km)>1000000||number(x.rate)>1000000000)errors.push('Lead row exceeds safe numeric limit');
  }
  if(Array.isArray(t['5']))for(const x of t['5']){
    if(!clean(x.material)||!clean(x.unit)||!Number.isFinite(number(x.coefficient)))errors.push('Consumption coefficient row incomplete');
@@ -52,7 +56,8 @@ function interpolate(rows,material,method,distance){
  if(at)return {ok:true,rate:number(at.rate),unit:at.unit,from:at,to:at,interpolated:false};
  const lower=[...filtered].reverse().find(x=>Number(x.lead_km)<km),upper=filtered.find(x=>Number(x.lead_km)>km);
  if(!lower||!upper)return {ok:false,error:'Outside verified lead slabs. No extrapolation allowed'};
- if(clean(lower.rate_basis)!==clean(upper.rate_basis))return {ok:false,error:'Rate-basis mismatch: do not interpolate'};
+ if(!clean(lower.rate_basis)||!clean(upper.rate_basis)||clean(lower.rate_basis)!==clean(upper.rate_basis))return {ok:false,error:'Missing or inconsistent source rate basis: do not interpolate'};
+ if(filtered.some((x,i)=>i>0&&number(x.lead_km)===number(filtered[i-1].lead_km)))return {ok:false,error:'Ambiguous duplicate lead distance; verify source schedule'};
  const r0=number(lower.rate),r1=number(upper.rate),d0=number(lower.lead_km),d1=number(upper.lead_km);
  if(!(d1>d0))return {ok:false,error:'Invalid source lead slab sequence'};
  return {ok:true,rate:r0+(r1-r0)*(km-d0)/(d1-d0),unit:lower.unit,from:lower,to:upper,interpolated:true};
@@ -66,8 +71,12 @@ function qcPlan(record,quantity){
  if(!Number.isSafeInteger(minimum)||minimum<0)return {ok:false,error:'Unverified minimum test count'};
  const required=Math.max(Math.ceil(q/per),minimum);
  if(!Number.isSafeInteger(required)||required>1000000)return {ok:false,error:'Calculated count outside safe range'};
- const lab=Math.ceil(required*0.30);
- return {ok:true,required,lab,field:required-lab,unit:record.unit,source:record.source,warning:'30/70 is a project workflow, not a universal SSR mandate. Confirm contract. No shortfall recovery or assumed tariff.'};
+ // For a source-specific test, do NOT split field-only and laboratory-only methods.
+ // A 30/70 allocation is permitted only when an approved test-classification
+ // record explicitly says that BOTH field and laboratory allocation are valid.
+ const alloc=record.allocation_eligible===true;
+ const lab=alloc?Math.ceil(required*0.30):null;
+ return {ok:true,required,lab,field:alloc?required-lab:null,allocationEligible:alloc,unit:record.unit,source:record.source,warning:alloc?'30/70 is a user-selected project workflow, not a universal SSR mandate. Contract and test methods require approval. No shortfall recovery or assumed tariff.':'SSR source quantity-based count only. 30/70 field/lab split is NOT applied to this test. Confirm test method, source, quantity basis and current contract.'};
 }
 return {SCHEMA,validate,count,query,interpolate,qcPlan};
 });
