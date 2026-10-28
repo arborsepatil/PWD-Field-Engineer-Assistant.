@@ -6,6 +6,9 @@ const main=read('android/app/src/main/java/in/pwdtools/fieldassistant/MainActivi
 const manifest=read('android/app/src/main/AndroidManifest.xml');
 const lib=read('my_drive_library.html');
 const pack=read('android/scripts/prepare_assets.py');
+const drive=read('android/app/src/main/java/in/pwdtools/fieldassistant/DriveLibraryActivity.java');
+const route=read('library.html');
+
 assert.match(manifest, /android:name="\.BooksActivity"\s+android:exported="false"/);
 assert.match(main, /url\.startsWith\(BASE_URL\).*message/);
 assert.match(main, /__CIVILBANDHU_BOOKS_OPEN_V1__/);
@@ -29,4 +32,17 @@ assert.match(java, /new AlertDialog\.Builder/);
 assert.ok(!java.includes('INTERNET'), 'Native reader itself must not require network');
 assert.ok(!lib.includes('drive.google.com/file/d/'), 'No user file ID in publicly distributed HTML');
 assert.ok(!pack.includes('"my_drive_library.html"'), 'My Drive Library must remain included in Android assets');
-console.log('Books & References offline shelf checks PASS — native SAF import, local private PDF, reader page/zoom, opt-in delete, no private Drive IDs.');
+assert.match(manifest, /android:name="\.DriveLibraryActivity" android:exported="false"/);
+assert.match(main, /__CIVILBANDHU_DRIVE_LIBRARY_OPEN_V1__/);
+assert.match(lib, /__CIVILBANDHU_DRIVE_LIBRARY_OPEN_V1__/);
+assert.match(drive, /ACTION_OPEN_DOCUMENT_TREE/);
+assert.match(drive, /takePersistableUriPermission/);
+assert.match(drive, /buildChildDocumentsUriUsingTree/);
+assert.match(drive, /FLAG_GRANT_READ_URI_PERMISSION/);
+assert.match(drive, /source_uri/);
+assert.match(java, /importSelectedPdf\(Uri\.parse\(directSource\)\)/);
+assert.match(java, /sourceUri/);
+assert.ok(route.includes('my_drive_library.html'));
+assert.ok(!route.includes('Public publisher reference'));
+assert.ok(pack.includes('"library-public-catalog.js"'));
+console.log('Books & References PASS: private-only route, native SAF folder refresh, direct offline PDF import, reader resume and fallback catalogue.');
