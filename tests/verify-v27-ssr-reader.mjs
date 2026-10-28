@@ -75,7 +75,8 @@ assert.ok(html.includes('Historical SSR 2022–23')&&html.includes('Rates exclud
 assert.ok(html.includes('indexedDB.open(DB_NAME,1)')&&html.includes('privateAccess')&&html.includes('store.put(candidate,KEY)'),'Private offline SSR storage missing');
 for(const id of ['xlsxFile','itemSearch','chapterFilter','itemResults','showMore','status','removeBtn'])assert.ok(html.includes('id="'+id+'"'),'SSR screen missing '+id);
 assert.ok(html.includes('PWDSSR.fromXlsx(file)')&&html.includes('PWDSSR.matching'),'SSR reader not wired to actual importer and search');
-assert.ok(library.includes('href="./ssr_search.html"')&&library.includes("get('digitalSSR').hidden=section!=='ssr'"),'SSR digital entry must appear within the SSR Library tab');
+assert.ok(library.includes('href="./my_drive_library.html"')&&!library.includes('library-public-catalog.js'),'Books & References must be private-only');
+assert.ok(fs.readFileSync(path.join(root,'ssr_master.html'),'utf8').includes('href="./ssr_search.html"'),'Legacy SSR reader remains available from SSR Master');
 assert.ok(cache.includes('./ssr_search.html')&&cache.includes('./ssr-local-core.js'),'New reader/parser must work offline');
 assert.ok(!cache.includes('.xlsx'),'Private workbook must not be shipped in PWA assets');
 assert.ok(html.includes('Original SSR PDFs')&&html.includes('library.html?section=ssr'),'Original source PDFs must remain available');
