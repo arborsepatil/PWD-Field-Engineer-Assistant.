@@ -20,6 +20,7 @@ PRIVATE_MORTH_LOCAL = os.environ.get("CIVILBANDHU_PRIVATE_MORTH_LOCAL") == "1"
 EXCLUDED = {
     "sw.js", "rcc-wall-2023-bbs.js",
     "library-offline.js", "library-drive-catalog.js", "library-private-pdf.js",
+    "library-public-catalog.js",
     "pdf_viewer.html", "bridge-local-source.js", "bridge-pdf-canvas.js",
     "bridge_book_2002.html", "bridge_book_2023.html",
     "bridge-2002-drawing-audit.js", "bridge-2023-drawing-audit.js",
@@ -71,8 +72,8 @@ if not PRIVATE_MORTH_LOCAL:
     markup = library_android.read_text(encoding="utf-8")
     begin = markup.find('<section id="morthEntry"')
     finish = markup.find('</section>', begin)
-    assert begin >= 0 and finish > begin, "Missing MoRTH library link section"
-    markup = markup[:begin] + markup[finish + len('</section>'):]
+    if begin >= 0 and finish > begin:
+        markup = markup[:begin] + markup[finish + len('</section>'):]
     assert 'href="./morth_reader.html"' not in markup, "Broken public MoRTH reader link"
     library_android.write_text(markup, encoding="utf-8")
 else:
@@ -92,7 +93,7 @@ else:
         "Owner-local MoRTH reader/QC asset missing"
     )
     assert 'href="./morth_reader.html"' in library_android.read_text(encoding="utf-8")
-assert (OUTPUT / "library-public-catalog.js").exists(), "Public publisher catalogue not packaged"
+assert not (OUTPUT / "library-public-catalog.js").exists(), "Public references must not ship in APK"
 assert not (OUTPUT / "library-drive-catalog.js").exists(), "No retired Drive catalogue in shared APK"
 assert not (OUTPUT / "pdf_viewer.html").exists(), "No retired private viewer in shared APK"
 assert "drive.google.com/file/d/" not in (OUTPUT / "library.html").read_text(encoding="utf-8")
@@ -115,7 +116,7 @@ if not PRIVATE_MORTH_LOCAL:
     assert not (OUTPUT / "qc.html").exists(), "Orphaned MoRTH QC screen must not ship"
 assert "bridge_book_2002.html" not in (OUTPUT / "pwd_bridge_plans.html").read_text(encoding="utf-8")
 assert "bridge_book_2023.html" not in (OUTPUT / "pwd_bridge_plans.html").read_text(encoding="utf-8")
-assert (OUTPUT / "library-public-catalog.js").exists()
+assert not (OUTPUT / "library-public-catalog.js").exists()
 
 
 print(f"Android APK assets prepared: {count} files, "
