@@ -10,6 +10,7 @@
         android:supportsRtl="true">
         <activity android:name=".BooksActivity" android:exported="false" />
         <activity android:name=".DriveLibraryActivity" android:exported="false" />
+        <activity android:name=".DriveOAuthActivity" android:exported="false" />
         <activity android:name=".MainActivity"
             android:exported="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
