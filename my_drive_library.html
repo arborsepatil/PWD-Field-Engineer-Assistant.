@@ -1,24 +1,134 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102644"><title>My Drive Library · Civil Bandhu</title><link rel="stylesheet" href="./app-shell.css"><style>
-.mdl{max-width:880px;margin:auto;padding:15px 12px 110px}.mdl header{display:flex;gap:12px;align-items:center}.mdl header h1{margin:0;font-size:23px}.mdl-panel{border:1px solid var(--line);background:var(--card);border-radius:15px;padding:16px;margin:14px 0}.mdl-panel p{font-size:13px;line-height:1.55;color:var(--muted)}.mdl-in{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;min-height:44px}.mdl-act{font:inherit;font-weight:800;min-height:44px;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}.mdl-act.primary{background:var(--accent);color:white}.mdl-row{display:flex;gap:8px;flex-wrap:wrap}.mdl-fold{padding:14px;border:1px solid var(--line);background:var(--card);border-radius:12px;margin:9px 0}.mdl-fold summary{cursor:pointer;font-weight:800;min-height:36px}.mdl-fold .mdl-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.mdl-fold a{display:inline-flex;align-items:center;min-height:40px;background:var(--soft);color:var(--accent);font-size:13px;text-decoration:none;border-radius:8px;padding:8px 11px;font-weight:700;overflow-wrap:anywhere}.mdl-files{display:grid;gap:7px;margin:10px 0}.mdl-files a{font-size:12px;justify-content:flex-start}.mdl-counter{color:var(--muted);font-size:12px}.mdl-warn{border-left:3px solid #c78a25;padding:11px;background:var(--soft);border-radius:8px;font-size:12px;line-height:1.5}
-</style></head><body class="app-page"><main class="mdl"><header><a class="icon-btn" href="./library.html" aria-label="Back to library">‹</a><div><h1>My Drive Library</h1><span class="mdl-counter">Civil Bandhu · local owner-only catalogue</span></div></header>
-<div class="mdl-panel"><strong>Same folder order as your Google Drive LIBRARY</strong><p>Import your owner-private library index JSON once. Then browse the folder hierarchy and open Drive folders or files using your Google account. The app does not sign in to Drive or synchronize files. Import PDFs you are permitted to save for private offline reading.</p><div class="mdl-row"><button id="choose" class="mdl-act primary" type="button">Import library index JSON</button><button id="remove" class="mdl-act" type="button" hidden>Remove from device</button><input id="file" type="file" accept="application/json,.json" hidden></div><p id="status" role="status" aria-live="polite">Loading local index…</p><div class="mdl-row"><button class="mdl-act primary" id="offlineShelf" type="button" hidden>📖 Offline PDF shelf · Read / Import</button></div><p class="mdl-counter" id="nativeHint">On Android, select PDF files from Files or your signed-in Google Drive to save locally and read inside Civil Bandhu.</p></div>
-<div class="mdl-warn">Private library links are imported locally only. Files remain in Google Drive with existing access permissions. Internet and your signed-in Google account are required to open them. Do not share the private JSON index publicly.</div>
-<div class="mdl-panel"><label for="filter" style="font-size:13px;font-weight:800">Find a category or document</label><input id="filter" class="mdl-in" type="search" placeholder="SSR, bridge, IRC, IS, GR, testing…"><p class="mdl-counter" id="counts" aria-live="polite"></p><div id="results"></div></div>
-</main><script src="./app-shell.js"></script><script>
-(function(){'use strict';const id=x=>document.getElementById(x),KEY='civilbandhu-drive-library-v1',SCHEMA='civilbandhu.drive.library.v1';
-let data=null;
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102b4b">
+<title>Books & References · Civil Bandhu</title><link rel="stylesheet" href="./app-shell.css">
+<style>
+*{box-sizing:border-box}
+.bookapp{max-width:880px;margin:auto;padding:14px 13px 105px;color:var(--ink)}
+.bookapp h1{font-size:23px;margin:0}
+.bookapp p{line-height:1.5}
+.topline{display:flex;align-items:center;gap:12px;margin:4px 0 15px}
+.topline small,.muted{color:var(--muted);font-size:12px}
+.panel{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:15px;margin:12px 0}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0}
+.head strong{font-size:16px}
+.in{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);min-height:47px;padding:11px 13px;font:inherit;font-size:15px}
+.toolbar{display:flex;flex-wrap:wrap;gap:9px;margin-top:11px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;text-decoration:none;border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--ink);font:inherit;font-size:12px;font-weight:750;min-height:43px;padding:10px 13px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.tiny{min-height:38px;padding:8px 11px}
+.summary{display:flex;gap:9px}
+.summary div{flex:1;background:var(--soft);border-radius:11px;padding:11px}
+.summary b{display:block;font-size:20px}
+.summary span{font-size:11px;color:var(--muted)}
+.categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.cat{display:flex;align-items:center;gap:10px;min-height:73px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);text-align:left;cursor:pointer}
+.cat.active{outline:2px solid var(--accent);outline-offset:-1px;background:var(--soft)}
+.cat .symbol{width:35px;height:38px;display:grid;place-items:center;border-radius:10px;background:var(--soft);font-size:20px;flex-shrink:0}
+.cat b{font-size:12px;line-height:1.32;display:block;overflow-wrap:anywhere}
+.cat small{font-size:11px;color:var(--muted)}
+.doc{display:flex;gap:11px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card);margin:9px 0}
+.cover{display:grid;place-items:center;background:var(--soft);border-left:3px solid var(--accent);border-radius:5px;width:45px;height:58px;flex-shrink:0;color:var(--accent);font-size:11px;font-weight:900}
+.docbody{min-width:0;flex:1}
+.docname{font-size:13px;font-weight:750;line-height:1.4;overflow-wrap:anywhere}
+.docmeta{font-size:11px;color:var(--muted);margin:6px 0}
+.docactions{display:flex;flex-wrap:wrap;gap:7px}
+.alert{padding:11px 13px;border-left:3px solid #be8b34;background:var(--soft);border-radius:9px;font-size:12px;line-height:1.5}
+.empty{padding:20px;color:var(--muted);text-align:center;font-size:12px}
+#file{display:none}
+@media(max-width:380px){.categories{grid-template-columns:1fr}.summary b{font-size:16px}}
+</style></head><body class="app-page">
+<main class="bookapp">
+ <header class="topline"><a href="./library.html" class="icon-btn" aria-label="Back to Library">‹</a><div><h1>Books & References</h1><small>My Drive LIBRARY · Private bookshelf</small></div></header>
+ <div class="panel">
+  <div class="summary"><div><b id="totalFiles">0</b><span>Documents</span></div><div><b id="totalPDF">0</b><span>PDF books</span></div><div><b id="totalCats">0</b><span>Categories</span></div></div>
+  <p class="muted" id="status" role="status" aria-live="polite">Import your private catalogue to browse books.</p>
+  <div class="toolbar"><button class="btn primary" id="import" type="button">＋ Import / Update catalogue</button><button class="btn" id="shelf" type="button" hidden>📖 Offline PDF reader</button><button class="btn" id="reset" type="button" hidden>Clear catalogue</button><input type="file" id="file" accept=".json,application/json"></div>
+ </div>
+ <div class="panel">
+  <label for="search" style="font-weight:750;font-size:13px;display:block;margin-bottom:8px">Find a book or category</label>
+  <input class="in" id="search" type="search" placeholder="e.g. IRC 37, IS 456, Bridge, GR…" autocomplete="off">
+ </div>
+ <section aria-label="Book categories">
+  <div class="head"><strong>Categories</strong><button id="all" class="btn tiny" type="button">All books</button></div>
+  <div class="categories" id="categories"></div>
+ </section>
+ <section aria-label="Documents">
+  <div class="head"><strong id="sectionTitle">All books</strong><small class="muted" id="matched"></small></div>
+  <div id="documents"></div>
+ </section>
+ <div class="alert">Your PDFs stay in Google Drive. <b>View in Drive</b> opens the original with your account permissions. To read offline, save a permitted PDF using Google Drive or Android Files, then select it through <b>Offline PDF reader</b>. No automatic Drive sync or direct private-PDF download is claimed in this build.</div>
+</main>
+<script src="./app-shell.js"></script>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const SCHEMA='civilbandhu.drive.library.v1',KEY='civilbandhu-drive-library-v1';
+const icons=['📘','📙','🌉','🏢','🛣️','📗','📐','📚','📋','📜','🧪','📕','🏗️','⚖️','🗂️','📁'];
 const onAndroid=/CivilBandhuAndroid\/1\.0/.test(navigator.userAgent);
-function openShelf(folder){if(!onAndroid)return;window.prompt('__CIVILBANDHU_BOOKS_OPEN_V1__'+JSON.stringify({category:folder||'Uncategorised'}),'');}
-id('offlineShelf').hidden=!onAndroid;
-id('offlineShelf').onclick=()=>openShelf('Uncategorised');
-function link(text,url){if(typeof url!=='string'||!/^https:\/\/drive\.google\.com\/(drive\/folders\/|file\/d\/)/.test(url)&&!/^https:\/\/docs\.google\.com\/(document|spreadsheets|presentation)\/d\//.test(url))return null;const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;return a}
-function validate(x){if(!x||x.schema!==SCHEMA||!Array.isArray(x.folders)||x.folders.length>100)throw Error('Invalid private library JSON');if(x.folders.some(y=>!y||typeof y.title!=='string'||!Array.isArray(y.files)||y.files.length>3000||!link('test',y.url)))throw Error('Folder index invalid');return x}
-function show(){id('remove').hidden=!data;id('status').textContent=data?'Owner-private Drive index loaded · '+data.folders.length+' categories.':'No private library index loaded.';const q=id('filter').value.toLocaleLowerCase().trim(),out=id('results');out.replaceChildren();if(!data){id('counts').textContent='Import your private JSON index to display Drive folders.';return}let count=0;let shown=0;for(const folder of data.folders){const entries=folder.files.filter(f=>[f.title,f.name].some(t=>String(t||'').toLocaleLowerCase().includes(q)));if(q&&!folder.title.toLocaleLowerCase().includes(q)&&!entries.length)continue;const details=document.createElement('details');details.className='mdl-fold';details.open=!!q;const heading=document.createElement('summary');heading.textContent=folder.title+' ('+folder.files.length+')';details.append(heading);const actions=document.createElement('div');actions.className='mdl-links';const root=link('Open Drive folder',folder.url);if(root)actions.append(root);
-if(onAndroid){const read=document.createElement('button');read.className='mdl-act';read.type='button';read.textContent='Read / Save offline PDF';read.addEventListener('click',()=>openShelf(folder.title));actions.append(read);}
-details.append(actions);const files=document.createElement('div');files.className='mdl-files';const rows=q&&folder.title.toLowerCase().includes(q)?folder.files:entries;for(const f of rows){const a=link(f.title||f.name,f.url);if(a){files.append(a);count++}}details.append(files);out.append(details);shown++;}id('counts').textContent=shown+' categories · '+count+' listed links'+(q?' matching query or category':'');}
-id('choose').onclick=()=>id('file').click();id('file').onchange=async()=>{const f=id('file').files?.[0];if(!f)return;try{if(f.size>4*1024*1024)throw Error('Index file exceeds 4 MB');const x=validate(JSON.parse(await f.text()));localStorage.setItem(KEY,JSON.stringify(x));data=x;show()}catch(e){id('status').textContent='Import not accepted: '+e.message}finally{id('file').value=''}};
-id('remove').onclick=()=>{if(!confirm('Remove local Drive library index? Your Drive documents will not be deleted.'))return;localStorage.removeItem(KEY);data=null;show()};
-id('filter').addEventListener('input',show);try{const x=localStorage.getItem(KEY);if(x)data=validate(JSON.parse(x))}catch(e){data=null}show();
+let data=null, selected='all';
+function validUrl(value){try{const u=new URL(value);return u.protocol==='https:'&&
+ ((u.hostname==='drive.google.com'&&/^\/(drive\/folders\/|file\/d\/)/.test(u.pathname))||
+ (u.hostname==='docs.google.com'&&/^\/(document|spreadsheets|presentation)\/d\//.test(u.pathname)))?u.href:null;}catch{return null}}
+function validate(d){
+ if(!d||d.schema!==SCHEMA||!Array.isArray(d.folders)||d.folders.length>100)throw Error('Invalid library index');
+ for(const f of d.folders){if(typeof f.title!=='string'||!validUrl(f.url)||!Array.isArray(f.files)||f.files.length>3000)throw Error('Invalid folder entry');
+  for(const a of f.files){if(typeof (a.title||a.name)!=='string'||!validUrl(a.url))throw Error('Invalid file entry')}
+ }
+ if(d.root_files!==undefined&&!Array.isArray(d.root_files))throw Error('Invalid root files');
+ return d;
+}
+function t(tag,content,cls){const el=document.createElement(tag);el.textContent=String(content||'');if(cls)el.className=cls;return el}
+function a(label,url,cls){const safe=validUrl(url);if(!safe)return null;const el=t('a',label,'btn tiny'+(cls?' '+cls:''));el.href=safe;el.target='_blank';el.rel='noopener noreferrer';return el}
+function offline(group){
+ if(!onAndroid){alert('Offline PDF shelf is available in the Android app.');return}
+ window.prompt('__CIVILBANDHU_BOOKS_OPEN_V1__'+JSON.stringify({category:(group||'Uncategorised').slice(0,80)}),'');
+}
+function entries(){if(!data)return [];
+ const out=[];for(const f of data.folders)for(const item of f.files)out.push({...item,folder:f.title});
+ for(const item of data.root_files||[])out.push({...item,folder:'LIBRARY root'});
+ return out;
+}
+function renderCats(){
+ const box=$('categories');box.replaceChildren();if(!data)return;
+ data.folders.forEach((f,i)=>{const b=document.createElement('button');b.type='button';b.className='cat'+(selected===f.title?' active':'');
+ b.append(t('span',icons[i]||'📁','symbol'));const label=document.createElement('span');label.append(t('b',f.title.replace(/^\d+_/,'').replaceAll('_',' ')));label.append(t('small',f.files.length+' files'));b.append(label);
+ b.onclick=()=>{selected=f.title;render()};box.append(b)});
+}
+function render(){
+ const all=entries(),pdfs=all.filter(x=>String(x.mime||x.mime_type||x.name||x.title).toLowerCase().includes('pdf'));
+ $('totalFiles').textContent=all.length;$('totalPDF').textContent=pdfs.length;$('totalCats').textContent=data?data.folders.length:0;
+ $('reset').hidden=!data;$('shelf').hidden=!onAndroid;
+ $('status').textContent=data?'Catalogue loaded on this device · '+(data.generated_on||'private index')+'. Refresh by importing an updated index.':'No catalogue loaded. Import your private JSON index to start.';
+ renderCats();
+ const q=$('search').value.trim().toLowerCase();
+ const list=all.filter(x=>(selected==='all'||x.folder===selected)&&(!q||[x.title,x.name,x.folder].join(' ').toLowerCase().includes(q)));
+ $('sectionTitle').textContent=selected==='all'?'All books':selected.replace(/^\d+_/,'').replaceAll('_',' ');
+ $('matched').textContent=list.length+' documents';
+ const out=$('documents');out.replaceChildren();
+ for(const item of list){
+  const name=item.title||item.name||'Document';const pdf=/\.pdf$/i.test(name)||item.mime==='application/pdf'||item.mime_type==='application/pdf';
+  const article=document.createElement('article');article.className='doc';
+  article.append(t('div',pdf?'PDF':'FILE','cover'));const body=document.createElement('div');body.className='docbody';
+  body.append(t('div',name,'docname'));body.append(t('div',(pdf?'PDF':'Document')+' · '+item.folder.replace(/^\d+_/,'').replaceAll('_',' '),'docmeta'));
+  const actions=document.createElement('div');actions.className='docactions';
+  const view=a('View in Drive',item.url,'primary');if(view)actions.append(view);
+  if(pdf&&onAndroid){const offlineBtn=t('button','Save / Read offline','btn tiny');offlineBtn.type='button';offlineBtn.addEventListener('click',()=>offline(item.folder));actions.append(offlineBtn)}
+  body.append(actions);article.append(body);out.append(article);
+ }
+ if(!list.length)out.append(t('div',data?'No matching documents.':'Import your private library index first.','empty'));
+}
+$('import').onclick=()=>$('file').click();
+$('file').onchange=async()=>{const f=$('file').files?.[0];if(!f)return;try{
+ if(f.size>4*1024*1024)throw Error('File exceeds 4 MB');
+ const incoming=validate(JSON.parse(await f.text()));localStorage.setItem(KEY,JSON.stringify(incoming));data=incoming;selected='all';render();
+ }catch(e){$('status').textContent='Catalogue not imported: '+e.message}finally{$('file').value=''}};
+$('all').onclick=()=>{selected='all';render()};
+$('reset').onclick=()=>{if(confirm('Remove catalogue from this device? Drive files and offline PDFs will not be deleted.')){localStorage.removeItem(KEY);data=null;selected='all';render()}};
+$('search').oninput=()=>render();
+$('shelf').onclick=()=>offline('Uncategorised');
+try{const raw=localStorage.getItem(KEY);if(raw)data=validate(JSON.parse(raw))}catch{data=null}
+render();
 })();
 </script></body></html>
