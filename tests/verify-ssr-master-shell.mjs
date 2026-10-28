@@ -4,8 +4,8 @@ import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(p,'utf8');
 const hub=read('ssr_master.html'),home=read('index.html'),lib=read('library.html'),sw=read('sw.js'),android=read('android/scripts/prepare_assets.py');
 assert.ok(home.includes('id="ssr" href="./ssr_master.html"'),'Home does not open SSR Master');
-assert.ok(lib.includes('id="digitalSSR"')&&lib.includes('href="./ssr_master.html"'),'Library SSR Master link missing');
-assert.ok(lib.includes('href="./ssr_search.html"'),'Legacy private Excel index must remain accessible');
+assert.ok(lib.includes('href="./my_drive_library.html"') && !lib.includes('library-public-catalog.js'), 'Books & References must be private only');
+assert.ok(home.includes('href="./ssr_master.html"'), 'SSR Master remains linked independently on Home');
 assert.ok(sw.includes("'./ssr_master.html'"),'SSR Master must be cached offline');
 assert.ok(hub.includes('href="./ssr_search.html"'),'Existing local SSR Excel search missing');
 for(const x of ['Items & rates','Notes, GR','Rate annexures','Material lead charges','Consumption library','QC & testing charges']){
