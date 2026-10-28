@@ -8,15 +8,6 @@
 window.PWDPublicBookCatalogue=Object.freeze([
   {
     "section": "rules",
-    "title": "PWD Rules Manual — official publication",
-    "publisher": "Maharashtra Public Works Department",
-    "url": "https://pwd.maharashtra.gov.in/en/publication/a-book-onpublic-works-department-rules-manual/",
-    "kind": "book",
-    "access": "public-page",
-    "note": "Publisher-hosted PDF accessible from the official page. Confirm the actual edition and amendments."
-  },
-  {
-    "section": "rules",
     "title": "PWD Accounts Manual — official publication",
     "publisher": "Maharashtra Public Works Department",
     "url": "https://pwd.maharashtra.gov.in/en/publication/a-book-onpublic-works-department-accounts-manual/",
