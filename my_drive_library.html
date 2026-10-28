@@ -44,7 +44,7 @@
  <div class="panel">
   <div class="summary"><div><b id="totalFiles">0</b><span>Documents</span></div><div><b id="totalPDF">0</b><span>PDF books</span></div><div><b id="totalCats">0</b><span>Categories</span></div></div>
   <p class="muted" id="status" role="status" aria-live="polite">Import your private catalogue to browse books.</p>
-  <div class="toolbar"><button class="btn primary" id="import" type="button">＋ Import / Update catalogue</button><button class="btn" id="shelf" type="button" hidden>📖 Offline PDF shelf</button><button class="btn" id="reset" type="button" hidden>Clear catalogue</button><input type="file" id="file" accept=".json,application/json"></div>
+  <div class="toolbar"><button class="btn primary" id="import" type="button">＋ Import / Refresh catalogue</button><button class="btn" id="shelf" type="button" hidden>📖 Offline PDF shelf</button><button class="btn" id="reset" type="button" hidden>Clear catalogue</button><input type="file" id="file" accept=".json,application/json"></div>
  </div>
  <div class="panel">
   <label for="search" style="font-weight:750;font-size:13px;display:block;margin-bottom:8px">Find a book or category</label>
@@ -58,7 +58,7 @@
   <div class="head"><strong id="sectionTitle">All books</strong><small class="muted" id="matched"></small></div>
   <div id="documents"></div>
  </section>
- <div class="alert">Your PDFs stay in Google Drive. <b>View in Drive</b> opens the original with your account permissions. To read offline, save a permitted PDF using Google Drive or Android Files, then select it through <b>Offline PDF reader</b>. No automatic Drive sync or direct private-PDF download is claimed in this build.</div>
+ <div class="alert">Your PDFs stay in Google Drive. <b>View in Drive</b> opens the original with your account permissions. For offline reading, tap <b>Read / Save offline PDF</b> beside a book and select the corresponding PDF from the Android picker (Files or your signed-in Drive). The selected PDF is copied into private app storage. No automatic Drive sync or direct private-PDF download is claimed in this build.</div>
 </main>
 <script src="./app-shell.js"></script>
 <script>
@@ -84,6 +84,12 @@ function a(label,url,cls){const safe=validUrl(url);if(!safe)return null;const el
 function offline(group){
  if(!onAndroid){alert('Offline PDF shelf is available in the Android app.');return}
  window.prompt('__CIVILBANDHU_BOOKS_OPEN_V1__'+JSON.stringify({category:(group||'Uncategorised').slice(0,80)}),'');
+}
+function pickBook(item){
+ if(!onAndroid){alert('Offline PDF import is available inside the Android app.');return;}
+ const title=(item.title||item.name||'').slice(0,160);
+ const folder=(item.folder||'Uncategorised').slice(0,80);
+ window.prompt('__CIVILBANDHU_BOOKS_IMPORT_V1__'+JSON.stringify({category:folder,title:title}),'');
 }
 function entries(){if(!data)return [];
  const out=[];for(const f of data.folders)for(const item of f.files)out.push({...item,folder:f.title});
@@ -114,7 +120,7 @@ function render(){
   body.append(t('div',name,'docname'));body.append(t('div',(pdf?'PDF':'Document')+' · '+item.folder.replace(/^\d+_/,'').replaceAll('_',' '),'docmeta'));
   const actions=document.createElement('div');actions.className='docactions';
   const view=a('View in Drive',item.url,'primary');if(view)actions.append(view);
-  if(pdf&&onAndroid){const offlineBtn=t('button','Read / Save offline PDF','btn tiny');offlineBtn.type='button';offlineBtn.addEventListener('click',()=>offline(item.folder));actions.append(offlineBtn)}
+  if(pdf&&onAndroid){const offlineBtn=t('button','Read / Save offline PDF','btn tiny');offlineBtn.type='button';offlineBtn.addEventListener('click',()=>pickBook(item));actions.append(offlineBtn)}
   body.append(actions);article.append(body);out.append(article);
  }
  if(!list.length)out.append(t('div',data?'No matching documents.':'Import your private library index first.','empty'));
