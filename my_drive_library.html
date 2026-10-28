@@ -44,7 +44,7 @@
  <div class="panel">
   <div class="summary"><div><b id="totalFiles">0</b><span>Documents</span></div><div><b id="totalPDF">0</b><span>PDF books</span></div><div><b id="totalCats">0</b><span>Categories</span></div></div>
   <p class="muted" id="status" role="status" aria-live="polite">Import your private catalogue to browse books.</p>
-  <div class="toolbar"><button class="btn primary" id="import" type="button">＋ Import / Update catalogue</button><button class="btn" id="shelf" type="button" hidden>📖 Offline PDF reader</button><button class="btn" id="reset" type="button" hidden>Clear catalogue</button><input type="file" id="file" accept=".json,application/json"></div>
+  <div class="toolbar"><button class="btn primary" id="import" type="button">＋ Import / Update catalogue</button><button class="btn" id="shelf" type="button" hidden>📖 Offline PDF shelf</button><button class="btn" id="reset" type="button" hidden>Clear catalogue</button><input type="file" id="file" accept=".json,application/json"></div>
  </div>
  <div class="panel">
   <label for="search" style="font-weight:750;font-size:13px;display:block;margin-bottom:8px">Find a book or category</label>
@@ -114,7 +114,7 @@ function render(){
   body.append(t('div',name,'docname'));body.append(t('div',(pdf?'PDF':'Document')+' · '+item.folder.replace(/^\d+_/,'').replaceAll('_',' '),'docmeta'));
   const actions=document.createElement('div');actions.className='docactions';
   const view=a('View in Drive',item.url,'primary');if(view)actions.append(view);
-  if(pdf&&onAndroid){const offlineBtn=t('button','Save / Read offline','btn tiny');offlineBtn.type='button';offlineBtn.addEventListener('click',()=>offline(item.folder));actions.append(offlineBtn)}
+  if(pdf&&onAndroid){const offlineBtn=t('button','Read / Save offline PDF','btn tiny');offlineBtn.type='button';offlineBtn.addEventListener('click',()=>offline(item.folder));actions.append(offlineBtn)}
   body.append(actions);article.append(body);out.append(article);
  }
  if(!list.length)out.append(t('div',data?'No matching documents.':'Import your private library index first.','empty'));
