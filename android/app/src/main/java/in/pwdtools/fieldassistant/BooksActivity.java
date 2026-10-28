@@ -64,7 +64,13 @@ public final class BooksActivity extends Activity {
         String requested = getIntent().getStringExtra("suggested_title");
         if (requested != null && requested.length() <= 170) suggestedTitle = requested;
         showShelf("");
-        if (!suggestedTitle.isEmpty()) selectPdf();
+        String directSource = getIntent().getStringExtra("source_uri");
+        if (directSource != null && directSource.startsWith("content://")
+                && directSource.length() <= 2500) {
+            importSelectedPdf(Uri.parse(directSource));
+        } else if (!suggestedTitle.isEmpty()) {
+            selectPdf();
+        }
     }
 
     private int dp(int n) { return Math.round(n * getResources().getDisplayMetrics().density); }
@@ -169,9 +175,24 @@ public final class BooksActivity extends Activity {
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode != PICK_PDF || resultCode != RESULT_OK || data == null || data.getData() == null) return;
-        Uri uri = data.getData();
+        importSelectedPdf(data.getData());
+    }
+
+    private void importSelectedPdf(Uri uri) {
         String filename = displayName(uri);
         String selectedCategory = category;
+        JSONArray saved = allBooks();
+        for (int i=0;i<saved.length();i++) {
+            JSONObject entry = saved.optJSONObject(i);
+            if (entry != null && uri.toString().equals(entry.optString("sourceUri"))) {
+                String id = entry.optString("id");
+                File cached = bookFile(id);
+                if (cached != null && cached.isFile()) {
+                    openPdf(id, entry.optString("title",filename));
+                    return;
+                }
+            }
+        }
         new Thread(() -> {
             String id = UUID.randomUUID().toString();
             File target = bookFile(id);
@@ -213,6 +234,7 @@ public final class BooksActivity extends Activity {
                 item.put("title", filename);
                 item.put("category", selectedCategory);
                 item.put("savedAt", System.currentTimeMillis());
+                item.put("sourceUri", uri.toString());
                 books.put(item);
                 saveBooks(books);
                 success = true;
