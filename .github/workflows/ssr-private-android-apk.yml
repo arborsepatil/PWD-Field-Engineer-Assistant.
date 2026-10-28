@@ -81,7 +81,7 @@ jobs:
         run: |
           test -s android/app/build/outputs/apk/debug/app-debug.apk
           "$ANDROID_SDK_ROOT/build-tools/36.0.0/apksigner" verify --verbose android/app/build/outputs/apk/debug/app-debug.apk
-          "$ANDROID_SDK_ROOT/build-tools/36.0.0/aapt" dump badging android/app/build/outputs/apk/debug/app-debug.apk | grep "package: name='in.pwdtools.fieldassistant'"
+          "$ANDROID_SDK_ROOT/build-tools/36.0.0/aapt" dump badging android/app/build/outputs/apk/debug/app-debug.apk | grep "package: name='in.pwdtools.fieldassistant.preview'"
       - name: Save installable SSR owner-local test APK
         uses: actions/upload-artifact@v4
         with:
