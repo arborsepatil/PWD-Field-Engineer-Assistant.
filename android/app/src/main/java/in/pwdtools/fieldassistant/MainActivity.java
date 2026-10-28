@@ -33,6 +33,7 @@ public final class MainActivity extends Activity {
     private static final String BASE_URL = "https://appassets.androidplatform.net/assets/www/";
     private static final String PRINT_PROMPT = "__PWD_ANDROID_PRINT_V1__";
     private static final String CSV_PROMPT = "__PWD_ANDROID_CSV_EXPORT_V1__";
+    private static final String BOOKS_PROMPT = "__CIVILBANDHU_BOOKS_OPEN_V1__";
     private static final int CSV_REQUEST = 905;
     private static final int FILE_REQUEST = 904;
     private WebView webView;
@@ -55,6 +56,7 @@ public final class MainActivity extends Activity {
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true); // The existing calculations require JavaScript.
+        settings.setUserAgentString(settings.getUserAgentString() + " CivilBandhuAndroid/1.0");
         settings.setDomStorageEnabled(true); // Device-private PDF index / settings.
         settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(false);
@@ -116,6 +118,22 @@ public final class MainActivity extends Activity {
             @Override
             public boolean onJsPrompt(WebView view, String url, String message,
                                       String defaultValue, JsPromptResult result) {
+                if (url != null && url.startsWith(BASE_URL) && message != null
+                        && message.startsWith(BOOKS_PROMPT)) {
+                    result.confirm("");
+                    String group = "Uncategorised";
+                    try {
+                        String json = message.substring(BOOKS_PROMPT.length());
+                        if (json.length() > 150) throw new IllegalArgumentException("Category too long");
+                        JSONObject args = new JSONObject(json);
+                        String requested = args.optString("category", "Uncategorised");
+                        if (requested.length() <= 90 && requested.matches("[A-Za-z0-9 _./()&-]+")) group = requested;
+                    } catch (Exception ignored) {}
+                    Intent books = new Intent(MainActivity.this, BooksActivity.class);
+                    books.putExtra("category", group);
+                    startActivity(books);
+                    return true;
+                }
                 if (url != null && url.startsWith(BASE_URL) && PRINT_PROMPT.equals(message)) {
                     result.confirm("");
                     runOnUiThread(() -> printCurrentPage());
