@@ -15,7 +15,7 @@
 <h2 id="workspaceTitle" style="font-size:17px;margin:0 0 5px"></h2><p id="workNote" class="ssr-muted"></p>
 <div id="lookupWrap"><div class="ssr-fields"><label>Search records<input id="search" type="search" placeholder="Item / material / keyword"></label></div><p class="ssr-muted" id="found"></p><div id="results" class="ssr-results"></div><button id="more" type="button" class="ssr-btn" hidden>Show more</button></div>
 <div id="leadWrap" hidden><div class="ssr-fields"><label>Material group<select id="material"></select></label><label>Loading method<select id="method"></select></label><label>Lead distance (km)<input id="leadKm" type="number" min="0" step="any" inputmode="decimal"></label><label>Material quantity (optional, same source unit)<input id="leadQty" type="number" min="0" step="any" inputmode="decimal" placeholder="For total lead charges"></label></div><button id="leadCalc" type="button" class="ssr-btn primary">Calculate source lead rate</button><div id="leadOutput" role="status" aria-live="polite" class="ssr-panel" hidden></div></div>
-<div id="qcWrap" hidden><div class="ssr-fields"><label>SSR frequency rule<select id="qcTest"></select></label><label>Work quantity (in selected rule unit)<input type="number" id="qcQty" min="0" step="any" inputmode="decimal"></label></div><button class="ssr-btn primary" id="qcCalc" type="button">Calculate test counts</button><div class="ssr-panel" id="qcOutput" role="status" aria-live="polite" hidden></div><h3>Testing charge reference</h3><p class="ssr-muted">Tariff is searchable, but is not automatically billed: units, sample/test-set definitions and validity require verification.</p><input id="chargeSearch" type="search" placeholder="Find charge test or code" style="width:100%;min-height:44px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)"><div class="ssr-results" id="charges"></div></div>
+<div id="qcWrap" hidden><div class="ssr-fields"><label>Find QC frequency (material / test)<input id="qcSearch" type="search" placeholder="GSB / steel / gradation"></label><label>SSR frequency rule<select id="qcTest"></select></label><label>Work quantity (in selected rule unit)<input type="number" id="qcQty" min="0" step="any" inputmode="decimal"></label></div><div class="ssr-muted" id="qcRuleInfo" role="status" aria-live="polite"></div><button class="ssr-btn primary" id="qcCalc" type="button">Calculate source test counts</button><div class="ssr-panel" id="qcOutput" role="status" aria-live="polite" hidden></div><h3>Testing charge reference</h3><p class="ssr-muted">Tariff is searchable, but is not automatically billed: units, sample/test-set definitions and validity require verification.</p><input id="chargeSearch" type="search" placeholder="Find charge test or code" style="width:100%;min-height:44px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)"><div class="ssr-results" id="charges"></div></div>
 </section><section id="empty" class="ssr-panel"><p class="ssr-muted">No usable private pack loaded. Task 1 original XLSX item search remains available separately. The other five workspaces become functional after a valid source-backed private JSON import.</p></section>
 </main><script src="./app-shell.js"></script><script src="./ssr-private-core.js"></script><script>
 (function(){
@@ -37,7 +37,7 @@ function show(){id('workspace').hidden=!pack;id('empty').hidden=!!pack;id('clear
  if(!pack)return;
  id('lookupWrap').hidden=['4','6'].includes(task);id('leadWrap').hidden=task!=='4';id('qcWrap').hidden=task!=='6';
  if(task==='4'){const rows=pack.tasks['4'],m=id('material');m.replaceChildren();unique(rows,'material_group').forEach(x=>option(m,x,x));onMaterial();return}
- if(task==='6'){const sel=id('qcTest');sel.replaceChildren();const rules=pack.tasks['6'].frequencies;rules.forEach((x,i)=>option(sel,String(i),(x.id||('QC '+(i+1)))+' · '+x.test+' / '+x.unit));id('qcCalc').disabled=!rules.length;id('qcQty').disabled=!rules.length;const out=id('qcOutput');out.hidden=!!rules.length;if(!rules.length)replaceText(out,'Source-verified SSR test-frequency records have not been imported. No 30/70 quantity calculation is available until the private QC frequency handover is connected.');renderCharges();return}
+ if(task==='6'){id('qcQty').disabled=!pack.tasks['6'].frequencies.length;fillQCRules();renderCharges();return}
  render();
 }
 function onMaterial(){const m=id('method');m.replaceChildren();const rows=pack.tasks['4'].filter(x=>x.material_group===id('material').value);unique(rows,'loading_method').forEach(x=>option(m,x,x));if(id('leadKm').value)calculateLead();else id('leadOutput').hidden=true}
@@ -53,8 +53,23 @@ function detailsBox(x){
  box.append(element('p','Source: '+x.source,'ssr-source'));return box
 }
 function render(){const rows=P.query(pack.tasks[task],id('search').value),out=id('results');out.replaceChildren(...rows.slice(0,limit).map(detailsBox));id('found').textContent=rows.length+' matching source record(s).';id('more').hidden=rows.length<=limit;}
+function fillQCRules(){
+ const sel=id('qcTest');sel.replaceChildren();
+ const matches=P.query(pack.tasks['6'].frequencies,id('qcSearch').value);
+ for(const x of matches){const index=pack.tasks['6'].frequencies.indexOf(x);option(sel,String(index),(x.material?x.material+' · ':'')+x.test+' / '+x.unit)}
+ updateQCChoice();
+}
+function updateQCChoice(){
+ const n=id('qcTest').value,rec=n!==''?pack.tasks['6'].frequencies[Number(n)]:null;
+ const eligible=!!rec&&rec.kind==='test'&&rec.auto_eligible===true&&rec.special_rule!==true;
+ id('qcCalc').disabled=!eligible;id('qcQty').disabled=!eligible;
+ const info=id('qcRuleInfo');
+ if(!rec){info.textContent='No matching QC frequency in this imported data pack. Full source schedule may not be available.';return;}
+ info.textContent=(rec.material?rec.material+' · ':'')+(rec.frequency_text||'Source record, verify frequency and unit')+' · '+rec.source+(eligible?' · Quantity-based count available; 30/70 split NOT assumed.':' · Special / source-dependent rule: manual calculation required.');
+ id('qcOutput').hidden=true;
+}
 function renderCharges(){const out=id('charges'),rows=P.query(pack.tasks['6'].charges,id('chargeSearch').value);out.replaceChildren(...rows.slice(0,50).map(detailsBox));if(!rows.length)replaceText(out,'No matching testing charge.')}
-id('search').addEventListener('input',()=>{limit=60;render()});id('more').addEventListener('click',()=>{limit+=60;render()});id('material').addEventListener('change',onMaterial);id('chargeSearch').addEventListener('input',renderCharges);
+id('search').addEventListener('input',()=>{limit=60;render()});id('more').addEventListener('click',()=>{limit+=60;render()});id('material').addEventListener('change',onMaterial);id('chargeSearch').addEventListener('input',renderCharges);id('qcSearch').addEventListener('input',fillQCRules);id('qcTest').addEventListener('change',updateQCChoice);
 function calculateLead(){
  const out=id('leadOutput'),kmText=id('leadKm').value;
  if(!kmText){out.hidden=true;return}
