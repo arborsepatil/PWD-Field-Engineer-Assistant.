@@ -14,7 +14,7 @@
 <section id="workspace" class="ssr-panel" hidden>
 <h2 id="workspaceTitle" style="font-size:17px;margin:0 0 5px"></h2><p id="workNote" class="ssr-muted"></p>
 <div id="lookupWrap"><div class="ssr-fields"><label>Search records<input id="search" type="search" placeholder="Item / material / keyword"></label></div><p class="ssr-muted" id="found"></p><div id="results" class="ssr-results"></div><button id="more" type="button" class="ssr-btn" hidden>Show more</button></div>
-<div id="leadWrap" hidden><div class="ssr-fields"><label>Material group<select id="material"></select></label><label>Loading method<select id="method"></select></label><label>Lead distance (km)<input id="leadKm" type="number" min="0" step="any" inputmode="decimal"></label></div><button id="leadCalc" type="button" class="ssr-btn primary">Calculate interpolated lead rate</button><div id="leadOutput" role="status" aria-live="polite" class="ssr-panel" hidden></div></div>
+<div id="leadWrap" hidden><div class="ssr-fields"><label>Material group<select id="material"></select></label><label>Loading method<select id="method"></select></label><label>Lead distance (km)<input id="leadKm" type="number" min="0" step="any" inputmode="decimal"></label><label>Material quantity (optional, same source unit)<input id="leadQty" type="number" min="0" step="any" inputmode="decimal" placeholder="For total lead charges"></label></div><button id="leadCalc" type="button" class="ssr-btn primary">Calculate source lead rate</button><div id="leadOutput" role="status" aria-live="polite" class="ssr-panel" hidden></div></div>
 <div id="qcWrap" hidden><div class="ssr-fields"><label>SSR frequency rule<select id="qcTest"></select></label><label>Work quantity (in selected rule unit)<input type="number" id="qcQty" min="0" step="any" inputmode="decimal"></label></div><button class="ssr-btn primary" id="qcCalc" type="button">Calculate test counts</button><div class="ssr-panel" id="qcOutput" role="status" aria-live="polite" hidden></div><h3>Testing charge reference</h3><p class="ssr-muted">Tariff is searchable, but is not automatically billed: units, sample/test-set definitions and validity require verification.</p><input id="chargeSearch" type="search" placeholder="Find charge test or code" style="width:100%;min-height:44px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)"><div class="ssr-results" id="charges"></div></div>
 </section><section id="empty" class="ssr-panel"><p class="ssr-muted">No usable private pack loaded. Task 1 original XLSX item search remains available separately. The other five workspaces become functional after a valid source-backed private JSON import.</p></section>
 </main><script src="./app-shell.js"></script><script src="./ssr-private-core.js"></script><script>
@@ -37,10 +37,10 @@ function show(){id('workspace').hidden=!pack;id('empty').hidden=!!pack;id('clear
  if(!pack)return;
  id('lookupWrap').hidden=['4','6'].includes(task);id('leadWrap').hidden=task!=='4';id('qcWrap').hidden=task!=='6';
  if(task==='4'){const rows=pack.tasks['4'],m=id('material');m.replaceChildren();unique(rows,'material_group').forEach(x=>option(m,x,x));onMaterial();return}
- if(task==='6'){const sel=id('qcTest');sel.replaceChildren();pack.tasks['6'].frequencies.forEach((x,i)=>option(sel,String(i),(x.id||('QC '+(i+1)))+' · '+x.test+' / '+x.unit));renderCharges();return}
+ if(task==='6'){const sel=id('qcTest');sel.replaceChildren();const rules=pack.tasks['6'].frequencies;rules.forEach((x,i)=>option(sel,String(i),(x.id||('QC '+(i+1)))+' · '+x.test+' / '+x.unit));id('qcCalc').disabled=!rules.length;id('qcQty').disabled=!rules.length;const out=id('qcOutput');out.hidden=!!rules.length;if(!rules.length)replaceText(out,'Source-verified SSR test-frequency records have not been imported. No 30/70 quantity calculation is available until the private QC frequency handover is connected.');renderCharges();return}
  render();
 }
-function onMaterial(){const m=id('method');m.replaceChildren();const rows=pack.tasks['4'].filter(x=>x.material_group===id('material').value);unique(rows,'loading_method').forEach(x=>option(m,x,x));id('leadOutput').hidden=true}
+function onMaterial(){const m=id('method');m.replaceChildren();const rows=pack.tasks['4'].filter(x=>x.material_group===id('material').value);unique(rows,'loading_method').forEach(x=>option(m,x,x));if(id('leadKm').value)calculateLead();else id('leadOutput').hidden=true}
 function detailsBox(x){
  const box=element('article',undefined,'ssr-record');
  const name=x.title||x.test||x.description||x.material||x.id||'Source record';box.append(element('h3',name));
@@ -55,7 +55,31 @@ function detailsBox(x){
 function render(){const rows=P.query(pack.tasks[task],id('search').value),out=id('results');out.replaceChildren(...rows.slice(0,limit).map(detailsBox));id('found').textContent=rows.length+' matching source record(s).';id('more').hidden=rows.length<=limit;}
 function renderCharges(){const out=id('charges'),rows=P.query(pack.tasks['6'].charges,id('chargeSearch').value);out.replaceChildren(...rows.slice(0,50).map(detailsBox));if(!rows.length)replaceText(out,'No matching testing charge.')}
 id('search').addEventListener('input',()=>{limit=60;render()});id('more').addEventListener('click',()=>{limit+=60;render()});id('material').addEventListener('change',onMaterial);id('chargeSearch').addEventListener('input',renderCharges);
-id('leadCalc').addEventListener('click',()=>{const r=P.interpolate(pack.tasks['4'],id('material').value,id('method').value,id('leadKm').value),out=id('leadOutput');out.hidden=false;if(!r.ok){replaceText(out,r.error);return}const b=[element('div',r.rate.toFixed(2)+' per '+r.unit,'ssr-metric'),element('p',(r.interpolated?'Interpolated between':'Exact source slab at')+' '+r.from.lead_km+' km, rate '+r.from.rate+' and '+r.to.lead_km+' km, rate '+r.to.rate),element('p','Sources: '+r.from.source+(r.to.source===r.from.source?'':' | '+r.to.source),'ssr-source')];out.replaceChildren(...b)});
+function calculateLead(){
+ const out=id('leadOutput'),kmText=id('leadKm').value;
+ if(!kmText){out.hidden=true;return}
+ const r=P.interpolate(pack.tasks['4'],id('material').value,id('method').value,kmText);
+ out.hidden=false;
+ if(!r.ok){replaceText(out,r.error);return}
+ const b=[element('div','₹'+r.rate.toFixed(2)+' per '+r.unit,'ssr-metric'),
+ element('p',r.interpolated?'Linear interpolation between two source slabs':'Exact rate from original source slab'),
+ element('p','Before: '+r.from.lead_km+' km · ₹'+Number(r.from.rate).toFixed(2)+' / '+r.unit),
+ element('p','After: '+r.to.lead_km+' km · ₹'+Number(r.to.rate).toFixed(2)+' / '+r.unit)];
+ const qtyText=id('leadQty').value;
+ if(qtyText!==''){const qty=Number(qtyText);
+  if(!Number.isFinite(qty)||qty<0){b.push(element('p','Enter a valid nonnegative quantity.'));}else{
+   const total=qty*r.rate;
+   if(Number.isFinite(total))b.push(element('div','Total for '+qty+' '+r.unit+': ₹'+total.toFixed(2),'ssr-metric'));
+  }}
+ b.push(element('p','Source rate basis: '+String(r.from.rate_basis||'C1 L.F. rate')+'. Fuel component is shown separately in the original source and is not added again.','ssr-muted'));
+ b.push(element('p','Sources: '+r.from.source+(r.to.source===r.from.source?'':' | '+r.to.source),'ssr-source'));
+ b.push(element('p','Historical SSR 2022–23 only. Confirm C1 applicability, approved lead method, unit, contract and current rates before estimate/billing.','ssr-muted'));
+ out.replaceChildren(...b);
+}
+id('leadCalc').addEventListener('click',calculateLead);
+id('leadKm').addEventListener('input',calculateLead);
+id('leadQty').addEventListener('input',calculateLead);
+id('method').addEventListener('change',calculateLead);
 id('qcCalc').addEventListener('click',()=>{const rec=pack.tasks['6'].frequencies[Number(id('qcTest').value)],r=P.qcPlan(rec,id('qcQty').value),out=id('qcOutput');out.hidden=false;if(!r.ok){replaceText(out,r.error);return}out.replaceChildren(element('div','Required '+r.required+' complete tests','ssr-metric'),element('p','Lab (30% ceiling): '+r.lab+' · Field (balance): '+r.field),element('p','Source: '+r.source,'ssr-source'),element('p',r.warning,'ssr-muted'))});
 id('upload').addEventListener('click',()=>id('file').click());id('file').addEventListener('change',async()=>{const file=id('file').files?.[0];if(!file)return;try{if(file.size>20*1024*1024)throw Error('Private JSON exceeds 20 MB import limit');const data=JSON.parse(await file.text()),validation=P.validate(data);if(!validation.ok)throw Error(validation.errors.slice(0,6).join('; '));pack=data;try{await privateStore('readwrite',s=>s.put(data,'2022-23'))}catch(e){storeOk=false}show()}catch(e){id('packStatus').textContent='Private pack not imported: '+e.message}finally{id('file').value=''}});
 id('clear').addEventListener('click',async()=>{if(!confirm('Remove the private SSR JSON pack from this device? Original files are not deleted.'))return;try{await privateStore('readwrite',s=>s.delete('2022-23'))}catch(e){id('packStatus').textContent='Unable to remove local record: '+e.message;return}pack=null;show()});
