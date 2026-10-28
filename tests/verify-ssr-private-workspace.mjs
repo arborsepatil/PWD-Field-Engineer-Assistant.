@@ -11,7 +11,7 @@ const payload={schema:core.SCHEMA,edition:'2022-23',tasks:{
    {id:'L1',material_group:'Aggregate',loading_method:'machine',lead_km:0,rate:10,unit:'cum',source:'Synthetic fixture',rate_basis:'base'},
    {id:'L2',material_group:'Aggregate',loading_method:'machine',lead_km:10,rate:50,unit:'cum',source:'Synthetic fixture',rate_basis:'base'}],
   '5':[{id:'C1',material:'Cement',coefficient:4.5,unit:'kg',source:'Synthetic fixture',mapping_status:'UNAPPROVED'}],
-  '6':{frequencies:[{id:'Q1',test:'Sample test',unit:'cum',frequency_qty:10,kind:'test',auto_eligible:true,source:'Synthetic fixture'}],charges:[{id:'TC1',test:'Sample test',rate:20,unit:'set',source:'Synthetic fixture'}]}
+  '6':{frequencies:[{id:'Q1',test:'Sample test',unit:'cum',frequency_qty:10,kind:'test',auto_eligible:true,allocation_eligible:true,source:'Synthetic fixture'}],charges:[{id:'TC1',test:'Sample test',rate:20,unit:'set',source:'Synthetic fixture'}]}
  }};
 assert.equal(core.validate(payload).ok,true);
 assert.equal(core.query(payload.tasks['2'],'synthetic').length,1);
@@ -30,6 +30,15 @@ assert.equal(core.qcPlan(payload.tasks['6'].frequencies[0],-1).ok,false);
 assert.equal(core.validate({...payload,edition:'2025-26'}).ok,false);
 assert.equal(core.validate({...payload,tasks:{...payload.tasks,'4':[{...payload.tasks['4'][0],source:''}]}}).ok,false);
 console.log('Private SSR workspace synthetic regression PASS: schema, search, lead bounds, QC 30/70, engineering review gates.');
+
+
+const noSplit=core.qcPlan({...payload.tasks['6'].frequencies[0],allocation_eligible:false},42);
+assert.equal(noSplit.ok,true);
+assert.deepEqual([noSplit.required,noSplit.lab,noSplit.field,noSplit.allocationEligible],[5,null,null,false]);
+assert.equal(core.qcPlan({...payload.tasks['6'].frequencies[0],frequency_qty:0},42).ok,false);
+const qcBad={...payload,tasks:{...payload.tasks,'6':{...payload.tasks['6'],frequencies:[{...payload.tasks['6'].frequencies[0],frequency_qty:0}]}}};
+assert.equal(core.validate(qcBad).ok,false);
+assert.equal(core.interpolate([{...payload.tasks['4'][0],rate_basis:''},{...payload.tasks['4'][1],rate_basis:''}],'Aggregate','machine',5).ok,false);
 
 const privateHTML=readFileSync('ssr_private_workspace.html','utf8');
 const inlineScripts=[privateHTML.split('<script>')[1]?.split('</script>')[0]].filter(Boolean);
