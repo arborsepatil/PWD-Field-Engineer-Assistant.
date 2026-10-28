@@ -243,6 +243,7 @@ public final class BooksActivity extends Activity {
                     if (book != null && !id.equals(book.optString("id"))) remaining.put(book);
                 }
                 saveBooks(remaining);
+                getSharedPreferences(PREF, MODE_PRIVATE).edit().remove("last-page-" + id).apply();
                 showShelf("");
             }).show();
     }
@@ -259,7 +260,8 @@ public final class BooksActivity extends Activity {
             descriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
             renderer = new PdfRenderer(descriptor);
             openedId = id;
-            pageIndex = 0;
+            pageIndex = Math.max(0, Math.min(renderer.getPageCount() - 1,
+                getSharedPreferences(PREF, MODE_PRIVATE).getInt("last-page-" + id, 0)));
             zoom = 1;
             LinearLayout parent = column();
             parent.addView(button("‹ Books & References", v -> showShelf("")));
@@ -312,6 +314,8 @@ public final class BooksActivity extends Activity {
             if (bitmap != null) bitmap.recycle();
             bitmap = newBitmap;
             pageCounter.setText("Page " + (pageIndex+1) + " / " + renderer.getPageCount());
+            if (openedId != null) getSharedPreferences(PREF, MODE_PRIVATE)
+                .edit().putInt("last-page-" + openedId, pageIndex).apply();
             pageScroll.scrollTo(0,0);
         } catch (Exception e) {
             Toast.makeText(this, "Page could not be rendered.", Toast.LENGTH_SHORT).show();
