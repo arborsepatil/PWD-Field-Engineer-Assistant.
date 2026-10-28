@@ -1,0 +1,76 @@
+name: SSR Master Android owner-import TEST APK
+on:
+  push:
+    branches: [ssr-master-tasks-1-6-private-staging-2026-10-27]
+    paths:
+      - 'ssr*'
+      - 'tests/verify-ssr*'
+      - '.github/workflows/ssr-private-android-apk.yml'
+      - 'android/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ssr-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check SSR shell and private source calculation boundaries
+        run: |
+          node tests/verify-ssr-master-shell.mjs
+          node tests/verify-ssr-private-workspace.mjs
+          node tests/verify-v27-ssr-reader.mjs
+      - name: Confirm no owner private dataset is committed in the repository
+        run: |
+          test ! -f ssr-private-data.js
+          test ! -f ssr-owner-data.json
+          ! find . -name 'CIVIL_BANDHU_SSR_2022-23_OWNER_LOCAL_PARTIAL_PACK_*.json' | grep -q .
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install Android SDK build tools when missing
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+          test -n "$SDK_ROOT"
+          test -d "$SDK_ROOT"
+          MANAGER="$(find "$SDK_ROOT" -type f -name sdkmanager -print -quit)"
+          if [ -n "$MANAGER" ]; then
+            echo "$(dirname "$MANAGER")" >> "$GITHUB_PATH"
+          fi
+          if [ ! -d "$SDK_ROOT/platforms/android-36" ] || [ ! -x "$SDK_ROOT/build-tools/36.0.0/apksigner" ]; then
+            sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          fi
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+      - name: Assemble public-code APK assets with private import controls
+        run: |
+          python3 android/scripts/prepare_assets.py
+          test -f android/app/src/main/assets/www/ssr_master.html
+          test -f android/app/src/main/assets/www/ssr_private_workspace.html
+          test -f android/app/src/main/assets/www/ssr-private-core.js
+          test ! -f android/app/src/main/assets/www/ssr-private-data.js
+          ! find android/app/src/main/assets/www -iname '*.pdf' | grep -q .
+          ! find android/app/src/main/assets/www -name '*OWNER_LOCAL_PARTIAL_PACK*' | grep -q .
+      - name: Build Android debug APK for owner device trial
+        working-directory: android
+        run: gradle --no-daemon :app:assembleDebug
+      - name: Verify debug APK signature and package
+        run: |
+          test -s android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_SDK_ROOT/build-tools/36.0.0/apksigner" verify --verbose android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_SDK_ROOT/build-tools/36.0.0/aapt" dump badging android/app/build/outputs/apk/debug/app-debug.apk | grep "package: name='in.pwdtools.fieldassistant'"
+      - name: Save installable SSR owner-local test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Civil-Bandhu-SSR-Master-Android-Owner-Import-TEST-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
