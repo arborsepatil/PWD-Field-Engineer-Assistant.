@@ -14,11 +14,17 @@ jobs:
         with:
           node-version: '22'
       - name: Validate SSR Master navigation and privacy boundaries
-        run: node tests/verify-ssr-master-shell.mjs
+        run: |
+          node --check ssr-private-core.js
+          node tests/verify-ssr-master-shell.mjs
+          node tests/verify-ssr-private-workspace.mjs
       - name: Prepare public Android assets and verify SSR routing
         run: |
           python3 android/scripts/prepare_assets.py
           test -f android/app/src/main/assets/www/ssr_master.html
+          test -f android/app/src/main/assets/www/ssr_private_workspace.html
+          test -f android/app/src/main/assets/www/ssr-private-core.js
+          grep -q 'ssr-private-core.js' android/app/src/main/assets/www/ssr_private_workspace.html
           grep -q 'href="./ssr_master.html"' android/app/src/main/assets/www/index.html
           grep -q 'href="./ssr_search.html"' android/app/src/main/assets/www/ssr_master.html
           test ! -f android/app/src/main/assets/www/ssr-private-data.js
