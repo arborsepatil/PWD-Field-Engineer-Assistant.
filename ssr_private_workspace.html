@@ -56,7 +56,7 @@ function render(){const rows=P.query(pack.tasks[task],id('search').value),out=id
 function fillQCRules(){
  const sel=id('qcTest');sel.replaceChildren();
  const matches=P.query(pack.tasks['6'].frequencies,id('qcSearch').value);
- for(const x of matches){const index=pack.tasks['6'].frequencies.indexOf(x);option(sel,String(index),(x.material?x.material+' · ':'')+x.test+' / '+x.unit)}
+ for(const x of matches){const index=pack.tasks['6'].frequencies.indexOf(x);option(sel,String(index),((x.construction||x.material)?(x.construction||x.material)+' · ':'')+x.test+' / '+x.unit)}
  updateQCChoice();
 }
 function updateQCChoice(){
@@ -65,7 +65,7 @@ function updateQCChoice(){
  id('qcCalc').disabled=!eligible;id('qcQty').disabled=!eligible;
  const info=id('qcRuleInfo');
  if(!rec){info.textContent='No matching QC frequency in this imported data pack. Full source schedule may not be available.';return;}
- info.textContent=(rec.material?rec.material+' · ':'')+(rec.frequency_text||'Source record, verify frequency and unit')+' · '+rec.source+(eligible?' · Quantity-based count available; 30/70 split NOT assumed.':' · Special / source-dependent rule: manual calculation required.');
+ info.textContent=((rec.construction||rec.material)?(rec.construction||rec.material)+' · ':'')+(rec.frequency_text||'Source record, verify frequency and unit')+' · '+rec.source+(rec.notes?' · '+rec.notes:'')+(eligible?' · Quantity-based count available; 30/70 split NOT assumed.':' · Special / source-dependent rule: manual calculation required.');
  id('qcOutput').hidden=true;
 }
 function renderCharges(){const out=id('charges'),rows=P.query(pack.tasks['6'].charges,id('chargeSearch').value);out.replaceChildren(...rows.slice(0,50).map(detailsBox));if(!rows.length)replaceText(out,'No matching testing charge.')}
@@ -95,7 +95,7 @@ id('leadCalc').addEventListener('click',calculateLead);
 id('leadKm').addEventListener('input',calculateLead);
 id('leadQty').addEventListener('input',calculateLead);
 id('method').addEventListener('change',calculateLead);
-id('qcCalc').addEventListener('click',()=>{const rec=pack.tasks['6'].frequencies[Number(id('qcTest').value)],r=P.qcPlan(rec,id('qcQty').value),out=id('qcOutput');out.hidden=false;if(!r.ok){replaceText(out,r.error);return}out.replaceChildren(element('div','Required '+r.required+' complete tests','ssr-metric'),...(r.allocationEligible?[element('p','Project lab (30% ceiling): '+r.lab+' · Field (balance): '+r.field)]:[element('p','Field/laboratory split: Not applicable or not source-approved for this test.')]),element('p','Source: '+r.source,'ssr-source'),element('p',r.warning,'ssr-muted'))});
+id('qcCalc').addEventListener('click',()=>{const rec=pack.tasks['6'].frequencies[Number(id('qcTest').value)],r=P.qcPlan(rec,id('qcQty').value),out=id('qcOutput');out.hidden=false;if(!r.ok){replaceText(out,r.error);return}out.replaceChildren(element('div','Required '+r.required+' complete tests','ssr-metric'),...(r.allocationEligible?[element('p','Project lab (30% ceiling): '+r.lab+' · Field (balance): '+r.field)]:[element('p','Field/laboratory split: Not applicable or not source-approved for this test.')]),element('p','Exact SSR frequency: '+(rec.frequency_text||'source row requires review'),'ssr-source'),element('p','Quantity unit: '+rec.unit+(rec.notes?' · '+rec.notes:''),'ssr-muted'),element('p','Source: '+r.source,'ssr-source'),element('p',r.warning,'ssr-muted'))});
 id('upload').addEventListener('click',()=>id('file').click());id('file').addEventListener('change',async()=>{const file=id('file').files?.[0];if(!file)return;try{if(file.size>20*1024*1024)throw Error('Private JSON exceeds 20 MB import limit');const data=JSON.parse(await file.text()),validation=P.validate(data);if(!validation.ok)throw Error(validation.errors.slice(0,6).join('; '));pack=data;try{await privateStore('readwrite',s=>s.put(data,'2022-23'))}catch(e){storeOk=false}show()}catch(e){id('packStatus').textContent='Private pack not imported: '+e.message}finally{id('file').value=''}});
 id('clear').addEventListener('click',async()=>{if(!confirm('Remove the private SSR JSON pack from this device? Original files are not deleted.'))return;try{await privateStore('readwrite',s=>s.delete('2022-23'))}catch(e){id('packStatus').textContent='Unable to remove local record: '+e.message;return}pack=null;show()});
 (async()=>{try{pack=await privateStore('readonly',s=>s.get('2022-23'))||null;if(pack&&!P.validate(pack).ok)pack=null}catch(e){storeOk=false}show()})();
